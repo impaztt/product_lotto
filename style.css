@@ -514,6 +514,33 @@ main {
     font-size: 18px;
 }
 
+.rule-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.rule-group-header h3 {
+    margin: 0;
+}
+
+.group-select {
+    border: 1px solid var(--panel-border);
+    background: transparent;
+    color: var(--text);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.group-select:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+}
+
 .rules-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -523,7 +550,7 @@ main {
 .rule-card {
     display: flex;
     gap: 12px;
-    padding: 12px 14px;
+    padding: 10px 12px;
     border-radius: 14px;
     border: 1px solid var(--panel-border);
     background: var(--bg-soft);
@@ -532,7 +559,7 @@ main {
     transition: border 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     overflow: hidden;
-    min-height: 90px;
+    min-height: 72px;
     align-items: center;
 }
 
@@ -561,7 +588,7 @@ main {
 .rule-body {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     padding: 0;
     width: 100%;
 }
@@ -572,12 +599,12 @@ main {
 
 .rule-desc {
     color: var(--text-muted);
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .rule-stat {
     color: var(--text-muted);
-    font-size: 12px;
+    font-size: 11px;
 }
 
 .rule-card.is-checked {
@@ -830,6 +857,14 @@ main {
     .rule-desc,
     .rule-stat {
         font-size: 12px;
+    }
+
+    .rule-desc {
+        display: none;
+    }
+
+    .rule-stat {
+        font-size: 11px;
     }
 
     .generator-panel {

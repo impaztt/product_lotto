@@ -53,7 +53,7 @@
                 </div>
                 <div class="hero-metrics">
                     <div>
-                        <div class="metric-value">14+</div>
+                        <div class="metric-value">65+</div>
                         <div class="metric-label">규칙 필터</div>
                     </div>
                     <div>
@@ -188,7 +188,10 @@
             </div>
             <div class="rules-groups">
                 <div class="rule-group is-essential" data-group="홀짝 비율">
-                    <h3>홀짝 비율</h3>
+                    <div class="rule-group-header">
+                        <h3>홀짝 비율</h3>
+                        <button class="group-select" type="button" data-group="홀짝 비율">모두 선택</button>
+                    </div>
                     <div class="rules-grid">
                         <label class="rule-card" data-title="모두 홀수" data-group="홀짝 비율">
                             <input class="rule-input" type="checkbox" value="all_odd">
@@ -242,7 +245,10 @@
                 </div>
 
                 <div class="rule-group is-essential" data-group="배수 분포">
-                    <h3>배수 분포</h3>
+                    <div class="rule-group-header">
+                        <h3>배수 분포</h3>
+                        <button class="group-select" type="button" data-group="배수 분포">모두 선택</button>
+                    </div>
                     <div class="rules-grid">
                         <label class="rule-card" data-title="2의 배수 4개 이상" data-group="배수 분포">
                             <input class="rule-input" type="checkbox" value="multiples_of_2_4_plus">
@@ -296,7 +302,10 @@
                 </div>
 
                 <div class="rule-group is-essential" data-group="연속/반복">
-                    <h3>연속/반복</h3>
+                    <div class="rule-group-header">
+                        <h3>연속/반복</h3>
+                        <button class="group-select" type="button" data-group="연속/반복">모두 선택</button>
+                    </div>
                     <div class="rules-grid">
                         <label class="rule-card" data-title="연속수 3개 이상" data-group="연속/반복">
                             <input class="rule-input" type="checkbox" value="consecutive_3_plus">
@@ -314,7 +323,16 @@
                                 <span class="rule-stat" data-rule="consecutive_4_plus">예상 제외: 약 31,929개</span>
                             </span>
                         </label>
-                        <label class="rule-card" data-title="끝자리 동일 3개 이상" data-group="연속/반복">
+                    </div>
+                </div>
+
+                <div class="rule-group is-essential" data-group="끝자리 분포">
+                    <div class="rule-group-header">
+                        <h3>끝자리 분포</h3>
+                        <button class="group-select" type="button" data-group="끝자리 분포">모두 선택</button>
+                    </div>
+                    <div class="rules-grid">
+                        <label class="rule-card" data-title="끝자리 동일 3개 이상" data-group="끝자리 분포">
                             <input class="rule-input" type="checkbox" value="same_last_digit_3_plus">
                             <span class="rule-body">
                                 <span class="rule-title">끝자리 동일 3개 이상</span>
@@ -322,7 +340,7 @@
                                 <span class="rule-stat" data-rule="same_last_digit_3_plus">예상 제외: 약 729,268개</span>
                             </span>
                         </label>
-                        <label class="rule-card is-advanced" data-title="끝자리 동일 4개 이상" data-group="연속/반복">
+                        <label class="rule-card is-advanced" data-title="끝자리 동일 4개 이상" data-group="끝자리 분포">
                             <input class="rule-input" type="checkbox" value="same_last_digit_4_plus">
                             <span class="rule-body">
                                 <span class="rule-title">끝자리 동일 4개 이상</span>
@@ -330,11 +348,30 @@
                                 <span class="rule-stat" data-rule="same_last_digit_4_plus">예상 제외: 약 24,557개</span>
                             </span>
                         </label>
+                        <label class="rule-card" data-title="끝자리 0 포함 2개 이상" data-group="끝자리 분포">
+                            <input class="rule-input" type="checkbox" value="last_digit_zero_2_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">끝자리 0 포함 2개 이상</span>
+                                <span class="rule-desc">10, 20, 30, 40 포함</span>
+                                <span class="rule-stat" data-rule="last_digit_zero_2_plus">예상 제외: 약 652,582개</span>
+                            </span>
+                        </label>
+                        <label class="rule-card is-advanced" data-title="끝자리 5 포함 2개 이상" data-group="끝자리 분포">
+                            <input class="rule-input" type="checkbox" value="last_digit_five_2_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">끝자리 5 포함 2개 이상</span>
+                                <span class="rule-desc">5, 15, 25, 35, 45 포함</span>
+                                <span class="rule-stat" data-rule="last_digit_five_2_plus">예상 제외: 약 1,009,825개</span>
+                            </span>
+                        </label>
                     </div>
                 </div>
 
                 <div class="rule-group is-essential" data-group="구간 분포">
-                    <h3>구간 분포</h3>
+                    <div class="rule-group-header">
+                        <h3>구간 분포</h3>
+                        <button class="group-select" type="button" data-group="구간 분포">모두 선택</button>
+                    </div>
                     <div class="rules-grid">
                         <label class="rule-card" data-title="같은 구간 4개 이상" data-group="구간 분포">
                             <input class="rule-input" type="checkbox" value="same_decade_4_plus">
@@ -379,8 +416,44 @@
                     </div>
                 </div>
 
+                <div class="rule-group is-essential" data-group="구간 세분">
+                    <div class="rule-group-header">
+                        <h3>구간 세분</h3>
+                        <button class="group-select" type="button" data-group="구간 세분">모두 선택</button>
+                    </div>
+                    <div class="rules-grid">
+                        <label class="rule-card" data-title="저구간 4개 이상" data-group="구간 세분">
+                            <input class="rule-input" type="checkbox" value="low_1_15_4_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">저구간 4개 이상</span>
+                                <span class="rule-desc">1-15 구간 몰림</span>
+                                <span class="rule-stat" data-rule="low_1_15_4_plus">예상 제외: 약 690,864개</span>
+                            </span>
+                        </label>
+                        <label class="rule-card" data-title="중간구간 4개 이상" data-group="구간 세분">
+                            <input class="rule-input" type="checkbox" value="mid_16_30_4_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">중간구간 4개 이상</span>
+                                <span class="rule-desc">16-30 구간 몰림</span>
+                                <span class="rule-stat" data-rule="mid_16_30_4_plus">예상 제외: 약 685,407개</span>
+                            </span>
+                        </label>
+                        <label class="rule-card" data-title="고구간 4개 이상" data-group="구간 세분">
+                            <input class="rule-input" type="checkbox" value="high_31_45_4_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">고구간 4개 이상</span>
+                                <span class="rule-desc">31-45 구간 몰림</span>
+                                <span class="rule-stat" data-rule="high_31_45_4_plus">예상 제외: 약 682,841개</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
                 <div class="rule-group is-essential" data-group="합계/소수">
-                    <h3>합계/소수</h3>
+                    <div class="rule-group-header">
+                        <h3>합계/소수</h3>
+                        <button class="group-select" type="button" data-group="합계/소수">모두 선택</button>
+                    </div>
                     <div class="rules-grid">
                         <label class="rule-card" data-title="합계 80 이하 또는 200 이상" data-group="합계/소수">
                             <input class="rule-input" type="checkbox" value="extreme_sum">

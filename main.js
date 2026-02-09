@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const customSaveBtn = document.getElementById('custom-save');
     const customApplyBtn = document.getElementById('custom-apply');
     const ruleStatEls = Array.from(document.querySelectorAll('.rule-stat'));
+    const groupSelectButtons = Array.from(document.querySelectorAll('.group-select'));
     const toggleRulesBtn = document.getElementById('toggle-rules');
     const rulesSection = document.getElementById('rules');
 
@@ -57,10 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
         consecutive_4_plus: { ratio: 0.00392, excluded: 31929 },
         same_last_digit_3_plus: { ratio: 0.089535, excluded: 729268 },
         same_last_digit_4_plus: { ratio: 0.003015, excluded: 24557 },
+        last_digit_zero_2_plus: { ratio: 0.08012, excluded: 652582 },
+        last_digit_five_2_plus: { ratio: 0.12398, excluded: 1009825 },
         same_decade_4_plus: { ratio: 0.06101, excluded: 496930 },
         same_decade_5_plus: { ratio: 0.004055, excluded: 33028 },
         all_low_or_high: { ratio: 0.02172, excluded: 176911 },
         low_or_high_5_plus: { ratio: 0.187055, excluded: 1523574 },
+        low_1_15_4_plus: { ratio: 0.08482, excluded: 690864 },
+        mid_16_30_4_plus: { ratio: 0.08415, excluded: 685407 },
+        high_31_45_4_plus: { ratio: 0.083835, excluded: 682841 },
         tight_range: { ratio: 0.040695, excluded: 331463 },
         extreme_sum: { ratio: 0.045385, excluded: 369664 },
         prime_4_plus: { ratio: 0.065145, excluded: 530610 },
@@ -147,6 +153,25 @@ document.addEventListener('DOMContentLoaded', () => {
             updateCombinedEstimates();
         });
     }
+
+    groupSelectButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const group = button.dataset.group;
+            const groupInputs = ruleInputs.filter(input => {
+                const card = input.closest('.rule-card');
+                return card && card.dataset.group === group;
+            });
+            if (!groupInputs.length) {
+                return;
+            }
+            const allChecked = groupInputs.every(input => input.checked);
+            groupInputs.forEach(input => {
+                input.checked = !allChecked;
+            });
+            updateSelectionCount();
+            updateCombinedEstimates();
+        });
+    });
 
     if (toggleRulesBtn && rulesSection) {
         toggleRulesBtn.addEventListener('click', () => {
@@ -348,6 +373,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const input = card.querySelector('.rule-input');
             card.classList.toggle('is-checked', input && input.checked);
         });
+        updateGroupButtons();
+    }
+
+    function updateGroupButtons() {
+        groupSelectButtons.forEach(button => {
+            const group = button.dataset.group;
+            const groupInputs = ruleInputs.filter(input => {
+                const card = input.closest('.rule-card');
+                return card && card.dataset.group === group;
+            });
+            if (!groupInputs.length) {
+                button.disabled = true;
+                return;
+            }
+            button.disabled = false;
+            const allChecked = groupInputs.every(input => input.checked);
+            button.textContent = allChecked ? '선택 해제' : '모두 선택';
+        });
     }
 
     function updateCombinedEstimates() {
@@ -491,6 +534,14 @@ document.addEventListener('DOMContentLoaded', () => {
             exclude: numbers => maxSameLastDigit(numbers) >= 4
         },
         {
+            id: 'last_digit_zero_2_plus',
+            exclude: numbers => countBy(numbers, number => number % 10 === 0) >= 2
+        },
+        {
+            id: 'last_digit_five_2_plus',
+            exclude: numbers => countBy(numbers, number => number % 10 === 5) >= 2
+        },
+        {
             id: 'same_decade_4_plus',
             exclude: numbers => maxInSameDecade(numbers) >= 4
         },
@@ -505,6 +556,18 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             id: 'low_or_high_5_plus',
             exclude: numbers => Math.max(countLow(numbers), countHigh(numbers)) >= 5
+        },
+        {
+            id: 'low_1_15_4_plus',
+            exclude: numbers => countBy(numbers, number => number <= 15) >= 4
+        },
+        {
+            id: 'mid_16_30_4_plus',
+            exclude: numbers => countBy(numbers, number => number >= 16 && number <= 30) >= 4
+        },
+        {
+            id: 'high_31_45_4_plus',
+            exclude: numbers => countBy(numbers, number => number >= 31) >= 4
         },
         {
             id: 'tight_range',
