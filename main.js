@@ -308,16 +308,22 @@ document.addEventListener('DOMContentLoaded', () => {
         remainingCombosEl.textContent = '계산중';
         excludedCombosEl.textContent = '제외: 계산중';
         const activeRules = getActiveRules();
-        const sampleSize = 18000;
+        const sampleSize = 6000;
+        const requestId = (updateCombinedEstimates.requestId || 0) + 1;
+        updateCombinedEstimates.requestId = requestId;
         window.clearTimeout(updateCombinedEstimates.timerId);
         updateCombinedEstimates.timerId = window.setTimeout(() => {
-            const remainingRatio = estimateRemainingRatio(activeRules, sampleSize);
-            const remainingCombos = Math.max(1, Math.round(TOTAL_COMBOS * remainingRatio));
-            const excludedCombos = Math.max(0, TOTAL_COMBOS - remainingCombos);
-            remainingCombosEl.textContent = `${formatNumber(remainingCombos)}개`;
-            excludedCombosEl.textContent = `제외: ${formatNumber(excludedCombos)}개`;
-            updateAdjustedOdds(remainingRatio);
-        }, 80);
+            estimateRemainingRatioAsync(activeRules, sampleSize, remainingRatio => {
+                if (updateCombinedEstimates.requestId !== requestId) {
+                    return;
+                }
+                const remainingCombos = Math.max(1, Math.round(TOTAL_COMBOS * remainingRatio));
+                const excludedCombos = Math.max(0, TOTAL_COMBOS - remainingCombos);
+                remainingCombosEl.textContent = `${formatNumber(remainingCombos)}개`;
+                excludedCombosEl.textContent = `제외: ${formatNumber(excludedCombos)}개`;
+                updateAdjustedOdds(remainingRatio);
+            });
+        }, 60);
     }
 
     function computeBaseOdds() {
@@ -356,46 +362,66 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function estimateRuleImpact() {
-        const samples = 40000;
+        const samples = 8000;
         const counts = {};
         RULES.forEach(rule => {
             counts[rule.id] = 0;
         });
-        for (let i = 0; i < samples; i += 1) {
+        runSampleLoop(samples, 400, () => {
             const numbers = generateUniqueNumbers(6, 1, 45).sort((a, b) => a - b);
             RULES.forEach(rule => {
                 if (rule.exclude(numbers)) {
                     counts[rule.id] += 1;
                 }
             });
-        }
-        ruleStatEls.forEach(stat => {
-            const id = stat.dataset.rule;
-            if (!id || counts[id] === undefined) {
-                return;
-            }
-            const ratio = counts[id] / samples;
-            const estimate = Math.round(TOTAL_COMBOS * ratio);
-            stat.textContent = `예상 제외: ${formatNumber(estimate)}개`;
+        }, () => {
+            ruleStatEls.forEach(stat => {
+                const id = stat.dataset.rule;
+                if (!id || counts[id] === undefined) {
+                    return;
+                }
+                const ratio = counts[id] / samples;
+                const estimate = Math.round(TOTAL_COMBOS * ratio);
+                stat.textContent = `예상 제외: ${formatNumber(estimate)}개`;
+            });
         });
     }
 
-    function estimateRemainingRatio(activeRules, samples) {
+    function estimateRemainingRatioAsync(activeRules, samples, onDone) {
         if (!activeRules.length) {
-            return 1;
+            onDone(1);
+            return;
         }
         let accepted = 0;
-        for (let i = 0; i < samples; i += 1) {
+        runSampleLoop(samples, 400, () => {
             const numbers = generateUniqueNumbers(6, 1, 45).sort((a, b) => a - b);
             if (!shouldExclude(numbers, activeRules)) {
                 accepted += 1;
             }
-        }
-        return accepted / samples;
+        }, () => {
+            onDone(accepted / samples);
+        });
     }
 
     function formatNumber(value) {
         return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function runSampleLoop(samples, chunkSize, onSample, onComplete) {
+        let processed = 0;
+        const step = () => {
+            const end = Math.min(samples, processed + chunkSize);
+            for (let i = processed; i < end; i += 1) {
+                onSample(i);
+            }
+            processed = end;
+            if (processed < samples) {
+                window.setTimeout(step, 0);
+            } else {
+                onComplete();
+            }
+        };
+        step();
     }
 
     function combination(n, k) {
