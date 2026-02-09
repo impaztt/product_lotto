@@ -353,20 +353,67 @@ main {
     margin: 12px 0;
 }
 
+.rules-groups {
+    display: grid;
+    gap: 24px;
+}
+
+.rule-group h3 {
+    margin: 0 0 12px;
+    font-size: 18px;
+}
+
 .rules-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 12px;
 }
 
-.rule-item {
+.rule-card {
     display: flex;
     gap: 10px;
-    padding: 12px;
-    border-radius: 12px;
+    padding: 0;
+    border-radius: 14px;
     border: 1px solid var(--panel-border);
     background: var(--bg-soft);
     font-size: 14px;
+    cursor: pointer;
+    transition: border 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+}
+
+.rule-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.rule-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.rule-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 16px;
+    width: 100%;
+}
+
+.rule-title {
+    font-weight: 600;
+}
+
+.rule-desc {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.rule-input:checked + .rule-body {
+    border-radius: 14px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
 }
 
 .generator-panel {

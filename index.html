@@ -112,21 +112,204 @@
                 <h2>제외 규칙</h2>
                 <p>원하는 규칙을 켜면 그 패턴을 결과에서 제외합니다.</p>
             </div>
-            <div class="rules-grid">
-                <label class="rule-item"><input type="checkbox" value="all_odd"> 모두 홀수</label>
-                <label class="rule-item"><input type="checkbox" value="all_even"> 모두 짝수</label>
-                <label class="rule-item"><input type="checkbox" value="five_odd_one_even"> 홀수 5 + 짝수 1</label>
-                <label class="rule-item"><input type="checkbox" value="five_even_one_odd"> 짝수 5 + 홀수 1</label>
-                <label class="rule-item"><input type="checkbox" value="multiples_of_2_4_plus"> 2의 배수 4개 이상</label>
-                <label class="rule-item"><input type="checkbox" value="multiples_of_3_3_plus"> 3의 배수 3개 이상</label>
-                <label class="rule-item"><input type="checkbox" value="multiples_of_5_3_plus"> 5의 배수 3개 이상</label>
-                <label class="rule-item"><input type="checkbox" value="multiples_of_7_3_plus"> 7의 배수 3개 이상</label>
-                <label class="rule-item"><input type="checkbox" value="consecutive_3_plus"> 연속수 3개 이상</label>
-                <label class="rule-item"><input type="checkbox" value="same_last_digit_3_plus"> 끝자리 동일 3개 이상</label>
-                <label class="rule-item"><input type="checkbox" value="same_decade_4_plus"> 같은 구간 4개 이상</label>
-                <label class="rule-item"><input type="checkbox" value="all_low_or_high"> 저구간 또는 고구간 몰림</label>
-                <label class="rule-item"><input type="checkbox" value="tight_range"> 범위 20 미만</label>
-                <label class="rule-item"><input type="checkbox" value="extreme_sum"> 합계 80 이하 또는 200 이상</label>
+            <div class="rules-groups">
+                <div class="rule-group">
+                    <h3>홀짝 비율</h3>
+                    <div class="rules-grid">
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="all_odd">
+                            <span class="rule-body">
+                                <span class="rule-title">모두 홀수</span>
+                                <span class="rule-desc">홀수만 6개</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="all_even">
+                            <span class="rule-body">
+                                <span class="rule-title">모두 짝수</span>
+                                <span class="rule-desc">짝수만 6개</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="five_odd_one_even">
+                            <span class="rule-body">
+                                <span class="rule-title">홀수 5 + 짝수 1</span>
+                                <span class="rule-desc">홀수 편중</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="five_even_one_odd">
+                            <span class="rule-body">
+                                <span class="rule-title">짝수 5 + 홀수 1</span>
+                                <span class="rule-desc">짝수 편중</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="four_odd_two_even">
+                            <span class="rule-body">
+                                <span class="rule-title">홀수 4 + 짝수 2</span>
+                                <span class="rule-desc">홀수 우세</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="four_even_two_odd">
+                            <span class="rule-body">
+                                <span class="rule-title">짝수 4 + 홀수 2</span>
+                                <span class="rule-desc">짝수 우세</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="rule-group">
+                    <h3>배수 분포</h3>
+                    <div class="rules-grid">
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="multiples_of_2_4_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">2의 배수 4개 이상</span>
+                                <span class="rule-desc">짝수 과다</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="multiples_of_3_3_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">3의 배수 3개 이상</span>
+                                <span class="rule-desc">3의 배수 과다</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="multiples_of_4_3_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">4의 배수 3개 이상</span>
+                                <span class="rule-desc">4의 배수 과다</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="multiples_of_5_3_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">5의 배수 3개 이상</span>
+                                <span class="rule-desc">5의 배수 과다</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="multiples_of_6_3_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">6의 배수 3개 이상</span>
+                                <span class="rule-desc">6의 배수 과다</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="multiples_of_7_3_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">7의 배수 3개 이상</span>
+                                <span class="rule-desc">7의 배수 과다</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="rule-group">
+                    <h3>연속/반복</h3>
+                    <div class="rules-grid">
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="consecutive_3_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">연속수 3개 이상</span>
+                                <span class="rule-desc">연속수 몰림</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="consecutive_4_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">연속수 4개 이상</span>
+                                <span class="rule-desc">연속수 과다</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="same_last_digit_3_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">끝자리 동일 3개 이상</span>
+                                <span class="rule-desc">끝자리 반복</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="same_last_digit_4_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">끝자리 동일 4개 이상</span>
+                                <span class="rule-desc">끝자리 과다</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="rule-group">
+                    <h3>구간 분포</h3>
+                    <div class="rules-grid">
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="same_decade_4_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">같은 구간 4개 이상</span>
+                                <span class="rule-desc">10단위 몰림</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="same_decade_5_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">같은 구간 5개 이상</span>
+                                <span class="rule-desc">10단위 과다</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="all_low_or_high">
+                            <span class="rule-body">
+                                <span class="rule-title">저구간 또는 고구간 몰림</span>
+                                <span class="rule-desc">1-22 또는 23-45</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="low_or_high_5_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">저구간/고구간 5개 이상</span>
+                                <span class="rule-desc">한쪽 과다</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="tight_range">
+                            <span class="rule-body">
+                                <span class="rule-title">범위 20 미만</span>
+                                <span class="rule-desc">숫자 폭이 좁음</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="rule-group">
+                    <h3>합계/소수</h3>
+                    <div class="rules-grid">
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="extreme_sum">
+                            <span class="rule-body">
+                                <span class="rule-title">합계 80 이하 또는 200 이상</span>
+                                <span class="rule-desc">합계 극단</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="prime_4_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">소수 4개 이상</span>
+                                <span class="rule-desc">소수 과다</span>
+                            </span>
+                        </label>
+                        <label class="rule-card">
+                            <input class="rule-input" type="checkbox" value="prime_1_or_less">
+                            <span class="rule-body">
+                                <span class="rule-title">소수 1개 이하</span>
+                                <span class="rule-desc">소수 부족</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
             </div>
         </section>
 

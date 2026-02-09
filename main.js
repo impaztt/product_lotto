@@ -143,36 +143,68 @@ document.addEventListener('DOMContentLoaded', () => {
             exclude: numbers => countBy(numbers, number => number % 2 === 0) === 5
         },
         {
+            id: 'four_odd_two_even',
+            exclude: numbers => countBy(numbers, number => number % 2 === 1) === 4
+        },
+        {
+            id: 'four_even_two_odd',
+            exclude: numbers => countBy(numbers, number => number % 2 === 0) === 4
+        },
+        {
             id: 'multiples_of_2_4_plus',
-            exclude: numbers => countBy(numbers, number => number % 2 === 0) >= 4
+            exclude: numbers => countMultiples(numbers, 2) >= 4
         },
         {
             id: 'multiples_of_3_3_plus',
-            exclude: numbers => countBy(numbers, number => number % 3 === 0) >= 3
+            exclude: numbers => countMultiples(numbers, 3) >= 3
+        },
+        {
+            id: 'multiples_of_4_3_plus',
+            exclude: numbers => countMultiples(numbers, 4) >= 3
         },
         {
             id: 'multiples_of_5_3_plus',
-            exclude: numbers => countBy(numbers, number => number % 5 === 0) >= 3
+            exclude: numbers => countMultiples(numbers, 5) >= 3
+        },
+        {
+            id: 'multiples_of_6_3_plus',
+            exclude: numbers => countMultiples(numbers, 6) >= 3
         },
         {
             id: 'multiples_of_7_3_plus',
-            exclude: numbers => countBy(numbers, number => number % 7 === 0) >= 3
+            exclude: numbers => countMultiples(numbers, 7) >= 3
         },
         {
             id: 'consecutive_3_plus',
             exclude: numbers => longestConsecutiveRun(numbers) >= 3
         },
         {
+            id: 'consecutive_4_plus',
+            exclude: numbers => longestConsecutiveRun(numbers) >= 4
+        },
+        {
             id: 'same_last_digit_3_plus',
             exclude: numbers => maxSameLastDigit(numbers) >= 3
+        },
+        {
+            id: 'same_last_digit_4_plus',
+            exclude: numbers => maxSameLastDigit(numbers) >= 4
         },
         {
             id: 'same_decade_4_plus',
             exclude: numbers => maxInSameDecade(numbers) >= 4
         },
         {
+            id: 'same_decade_5_plus',
+            exclude: numbers => maxInSameDecade(numbers) >= 5
+        },
+        {
             id: 'all_low_or_high',
             exclude: numbers => numbers.every(number => number <= 22) || numbers.every(number => number >= 23)
+        },
+        {
+            id: 'low_or_high_5_plus',
+            exclude: numbers => Math.max(countLow(numbers), countHigh(numbers)) >= 5
         },
         {
             id: 'tight_range',
@@ -184,11 +216,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 const sum = numbers.reduce((acc, number) => acc + number, 0);
                 return sum <= 80 || sum >= 200;
             }
+        },
+        {
+            id: 'prime_4_plus',
+            exclude: numbers => countPrimes(numbers) >= 4
+        },
+        {
+            id: 'prime_1_or_less',
+            exclude: numbers => countPrimes(numbers) <= 1
         }
     ];
 
     function countBy(numbers, predicate) {
         return numbers.reduce((count, number) => (predicate(number) ? count + 1 : count), 0);
+    }
+
+    function countMultiples(numbers, divisor) {
+        return countBy(numbers, number => number % divisor === 0);
+    }
+
+    function countLow(numbers) {
+        return countBy(numbers, number => number <= 22);
+    }
+
+    function countHigh(numbers) {
+        return countBy(numbers, number => number >= 23);
+    }
+
+    function countPrimes(numbers) {
+        const primes = new Set([2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43]);
+        return countBy(numbers, number => primes.has(number));
     }
 
     function longestConsecutiveRun(numbers) {
