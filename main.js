@@ -38,6 +38,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const ruleStatEls = Array.from(document.querySelectorAll('.rule-stat'));
 
     const TOTAL_COMBOS = Number(combination(45, 6));
+    const RULE_STATS = {
+        all_odd: { ratio: 0.012025, excluded: 97944 },
+        all_even: { ratio: 0.00951, excluded: 77460 },
+        five_odd_one_even: { ratio: 0.09058, excluded: 737780 },
+        five_even_one_odd: { ratio: 0.073665, excluded: 600006 },
+        four_odd_two_even: { ratio: 0.251035, excluded: 2044695 },
+        four_even_two_odd: { ratio: 0.228525, excluded: 1861350 },
+        multiples_of_2_4_plus: { ratio: 0.3117, excluded: 2538815 },
+        multiples_of_3_3_plus: { ratio: 0.31203, excluded: 2541503 },
+        multiples_of_4_3_plus: { ratio: 0.14519, excluded: 1182581 },
+        multiples_of_5_3_plus: { ratio: 0.08387, excluded: 683126 },
+        multiples_of_6_3_plus: { ratio: 0.03924, excluded: 319612 },
+        multiples_of_7_3_plus: { ratio: 0.02339, excluded: 190513 },
+        consecutive_3_plus: { ratio: 0.056345, excluded: 458933 },
+        consecutive_4_plus: { ratio: 0.00392, excluded: 31929 },
+        same_last_digit_3_plus: { ratio: 0.089535, excluded: 729268 },
+        same_last_digit_4_plus: { ratio: 0.003015, excluded: 24557 },
+        same_decade_4_plus: { ratio: 0.06101, excluded: 496930 },
+        same_decade_5_plus: { ratio: 0.004055, excluded: 33028 },
+        all_low_or_high: { ratio: 0.02172, excluded: 176911 },
+        low_or_high_5_plus: { ratio: 0.187055, excluded: 1523574 },
+        tight_range: { ratio: 0.040695, excluded: 331463 },
+        extreme_sum: { ratio: 0.045385, excluded: 369664 },
+        prime_4_plus: { ratio: 0.065145, excluded: 530610 },
+        prime_1_or_less: { ratio: 0.38143, excluded: 3106770 }
+    };
 
     syncThemeToggle();
     syncMenuState(false);
@@ -526,33 +552,6 @@ document.addEventListener('DOMContentLoaded', () => {
         light: '보수형',
         balanced: '균형형',
         aggressive: '공격형'
-    };
-
-    const RULE_STATS = {
-        all_odd: { ratio: 0.012025, excluded: 97944 },
-        all_even: { ratio: 0.00951, excluded: 77460 },
-        five_odd_one_even: { ratio: 0.09058, excluded: 737780 },
-        five_even_one_odd: { ratio: 0.073665, excluded: 600006 },
-        four_odd_two_even: { ratio: 0.251035, excluded: 2044695 },
-        four_even_two_odd: { ratio: 0.228525, excluded: 1861350 },
-        multiples_of_2_4_plus: { ratio: 0.3117, excluded: 2538815 },
-        multiples_of_3_3_plus: { ratio: 0.31203, excluded: 2541503 },
-        multiples_of_4_3_plus: { ratio: 0.14519, excluded: 1182581 },
-        multiples_of_5_3_plus: { ratio: 0.08387, excluded: 683126 },
-        multiples_of_6_3_plus: { ratio: 0.03924, excluded: 319612 },
-        multiples_of_7_3_plus: { ratio: 0.02339, excluded: 190513 },
-        consecutive_3_plus: { ratio: 0.056345, excluded: 458933 },
-        consecutive_4_plus: { ratio: 0.00392, excluded: 31929 },
-        same_last_digit_3_plus: { ratio: 0.089535, excluded: 729268 },
-        same_last_digit_4_plus: { ratio: 0.003015, excluded: 24557 },
-        same_decade_4_plus: { ratio: 0.06101, excluded: 496930 },
-        same_decade_5_plus: { ratio: 0.004055, excluded: 33028 },
-        all_low_or_high: { ratio: 0.02172, excluded: 176911 },
-        low_or_high_5_plus: { ratio: 0.187055, excluded: 1523574 },
-        tight_range: { ratio: 0.040695, excluded: 331463 },
-        extreme_sum: { ratio: 0.045385, excluded: 369664 },
-        prime_4_plus: { ratio: 0.065145, excluded: 530610 },
-        prime_1_or_less: { ratio: 0.38143, excluded: 3106770 }
     };
 
 
