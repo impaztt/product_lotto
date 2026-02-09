@@ -1,37 +1,124 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lotto Number Generator</title>
+    <title>Filtered Lotto Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Lotto Number Generator</h1>
-            <button id="theme-toggle" type="button" aria-label="Toggle theme">Dark</button>
+<body data-theme="dark">
+    <header class="site-header">
+        <div class="logo">Filtered Lotto Studio</div>
+        <nav class="main-nav">
+            <a href="#about">About</a>
+            <a href="#tech">Tech</a>
+            <a href="#rules">Rules</a>
+            <a href="#generator">Generator</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+        </nav>
+        <div class="header-actions">
+            <button id="theme-toggle" type="button">Light</button>
+            <a class="cta" href="#generator">Try Now</a>
         </div>
-        <div class="controls">
-            <label for="draw-count">Draws per click</label>
-            <select id="draw-count">
-                <option value="1" selected>1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-            </select>
-        </div>
-        <div class="rules-panel">
-            <div class="rules-header">
-                <h2>Exclude Rules</h2>
-                <span class="rules-note">Select rules to filter unlikely patterns</span>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <p class="eyebrow">Pattern-Aware Lotto Picks</p>
+                <h1>Filter noisy combinations and focus on cleaner picks.</h1>
+                <p class="hero-copy">
+                    We remove patterns that many players avoid: extreme sums, heavy multiples, or clustered digits.
+                    The goal is not to guarantee outcomes. It is to help you explore options more intentionally.
+                </p>
+                <div class="hero-actions">
+                    <a class="cta" href="#generator">Generate Sets</a>
+                    <a class="ghost" href="#tech">See The Method</a>
+                </div>
+                <div class="hero-metrics">
+                    <div>
+                        <div class="metric-value">14+</div>
+                        <div class="metric-label">Rule Filters</div>
+                    </div>
+                    <div>
+                        <div class="metric-value">1-10</div>
+                        <div class="metric-label">Sets Per Draw</div>
+                    </div>
+                    <div>
+                        <div class="metric-value">1-45</div>
+                        <div class="metric-label">Number Range</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="orb orb-one"></div>
+                <div class="orb orb-two"></div>
+                <div class="card-stack">
+                    <div class="card">
+                        <p class="card-title">Clean Combinations</p>
+                        <p class="card-body">Remove extreme patterns like all odds or heavy multiples.</p>
+                    </div>
+                    <div class="card">
+                        <p class="card-title">Rule Control</p>
+                        <p class="card-body">Pick only the filters that match your strategy.</p>
+                    </div>
+                    <div class="card">
+                        <p class="card-title">Multi-Draw</p>
+                        <p class="card-body">Generate up to 10 sets in one click.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section split">
+            <div>
+                <h2>Lotto picks with more context</h2>
+                <p>
+                    Typical random draws ignore how numbers can cluster. We provide a filtered pipeline that removes
+                    combinations with heavy imbalance or overly repetitive patterns, so your choices feel more curated.
+                </p>
+                <p class="disclaimer">
+                    This tool does not promise wins. It simply narrows the selection space to combinations that feel
+                    less extreme based on common heuristics.
+                </p>
+            </div>
+            <div class="panel">
+                <h3>Why filters help</h3>
+                <ul class="bullets">
+                    <li>Reduce extreme odd-even splits</li>
+                    <li>Limit heavy multiples</li>
+                    <li>Control consecutive runs</li>
+                    <li>Balance low and high numbers</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="tech" class="section tech">
+            <div class="section-title">
+                <h2>Our filtering method</h2>
+                <p>Pick the rules you want. We reject combinations that match those exclusions.</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <h3>Pattern Scoring</h3>
+                    <p>We test parity, multiplicity, and range distribution before any set is shown.</p>
+                </div>
+                <div class="tech-card">
+                    <h3>Rule Chaining</h3>
+                    <p>Stack rules to create a custom filter pipeline tailored to your preferences.</p>
+                </div>
+                <div class="tech-card">
+                    <h3>Instant Draws</h3>
+                    <p>Each draw is validated against the rules in real time for fast iteration.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="rules" class="section rules">
+            <div class="section-title">
+                <h2>Exclusion rules</h2>
+                <p>Activate any rule to remove those patterns from the draw results.</p>
             </div>
             <div class="rules-grid">
                 <label class="rule-item"><input type="checkbox" value="all_odd"> All odd numbers</label>
@@ -49,22 +136,103 @@
                 <label class="rule-item"><input type="checkbox" value="tight_range"> Range under 20</label>
                 <label class="rule-item"><input type="checkbox" value="extreme_sum"> Sum <= 80 or >= 200</label>
             </div>
-        </div>
-        <div class="numbers-container">
-            <!-- Numbers will be generated here -->
-        </div>
-        <button id="generate-btn">Generate Numbers</button>
+        </section>
 
-        <div class="partner-section">
-            <h2>Partnership Inquiry</h2>
+        <section id="generator" class="section generator">
+            <div class="section-title">
+                <h2>Generate filtered sets</h2>
+                <p>Select how many sets to draw and apply your chosen rules.</p>
+            </div>
+            <div class="generator-panel">
+                <div class="controls">
+                    <label for="draw-count">Sets per click</label>
+                    <select id="draw-count">
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                    <button id="generate-btn">Generate Numbers</button>
+                </div>
+                <div class="numbers-container"></div>
+                <p class="helper-text">
+                    Tip: If no valid set appears, reduce the number of active rules.
+                </p>
+            </div>
+        </section>
+
+        <section id="pricing" class="section pricing">
+            <div class="section-title">
+                <h2>Free now, premium later</h2>
+                <p>Start with full access. Premium tiers will be introduced after validation.</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="price-card">
+                    <h3>Free Access</h3>
+                    <p class="price">$0</p>
+                    <ul class="bullets">
+                        <li>All rule filters</li>
+                        <li>Up to 10 sets per click</li>
+                        <li>Multi-draw preview</li>
+                    </ul>
+                </div>
+                <div class="price-card highlight">
+                    <h3>Premium (Coming)</h3>
+                    <p class="price">Planned</p>
+                    <ul class="bullets">
+                        <li>Saved strategies</li>
+                        <li>Long-term history</li>
+                        <li>Advanced rule packs</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="section faq">
+            <div class="section-title">
+                <h2>FAQ</h2>
+                <p>Clear answers about what the system does and does not do.</p>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-card">
+                    <h3>Does this increase the odds?</h3>
+                    <p>No guarantees. The tool filters combinations by selected rules to help you focus.</p>
+                </div>
+                <div class="faq-card">
+                    <h3>Are the rules fixed?</h3>
+                    <p>You choose which exclusions apply each time you generate numbers.</p>
+                </div>
+                <div class="faq-card">
+                    <h3>Can I save my rules?</h3>
+                    <p>Saved strategies are planned for the premium version.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section contact">
+            <div class="section-title">
+                <h2>Partnership inquiry</h2>
+                <p>Reach out for collaborations, data partnerships, or distribution.</p>
+            </div>
             <form class="partner-form" action="https://formspree.io/f/mbdaldqj" method="POST">
                 <input type="text" name="name" placeholder="Name" required>
                 <input type="email" name="email" placeholder="Email" required>
                 <textarea name="message" rows="4" placeholder="Tell us about your proposal" required></textarea>
                 <button type="submit" class="submit-btn">Send</button>
             </form>
-        </div>
-    </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>Filtered Lotto Studio. Built to explore curated combinations, not to promise results.</p>
+    </footer>
+
     <script src="main.js"></script>
 </body>
 </html>

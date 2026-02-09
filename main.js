@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const body = document.body;
     const ruleInputs = Array.from(document.querySelectorAll('.rules-grid input[type="checkbox"]'));
 
+    syncThemeToggle();
+
     generateBtn.addEventListener('click', () => {
         generateAndDisplayNumbers();
     });
@@ -14,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentTheme = body.getAttribute('data-theme') || 'dark';
         const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
         body.setAttribute('data-theme', nextTheme);
-        themeToggle.textContent = nextTheme === 'dark' ? 'Dark' : 'Light';
+        syncThemeToggle();
     });
 
     function generateAndDisplayNumbers() {
@@ -89,6 +91,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             numbersContainer.appendChild(row);
         });
+    }
+
+    function syncThemeToggle() {
+        const currentTheme = body.getAttribute('data-theme') || 'dark';
+        themeToggle.textContent = currentTheme === 'dark' ? 'Light' : 'Dark';
     }
 
     const RULES = [
