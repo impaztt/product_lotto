@@ -137,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (event.target && event.target.tagName === 'INPUT') {
                 return;
             }
-            event.preventDefault();
             const input = card.querySelector('.rule-input');
             if (!input) {
                 return;
