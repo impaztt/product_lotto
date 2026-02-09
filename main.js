@@ -208,7 +208,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function syncThemeToggle() {
         const currentTheme = body.getAttribute('data-theme') || 'dark';
-        themeToggle.textContent = currentTheme === 'dark' ? '라이트' : '다크';
+        themeToggle.setAttribute('aria-label', currentTheme === 'dark' ? '라이트 모드' : '다크 모드');
+        themeToggle.setAttribute('title', currentTheme === 'dark' ? '라이트 모드' : '다크 모드');
     }
 
     function syncMenuState(open) {
