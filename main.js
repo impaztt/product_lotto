@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawCountSelect = document.getElementById('draw-count');
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
+    const ruleInputs = Array.from(document.querySelectorAll('.rules-grid input[type="checkbox"]'));
 
     generateBtn.addEventListener('click', () => {
         generateAndDisplayNumbers();
@@ -18,12 +19,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generateAndDisplayNumbers() {
         const drawCount = parseInt(drawCountSelect.value, 10);
+        const activeRules = getActiveRules();
         const draws = [];
         for (let i = 0; i < drawCount; i += 1) {
-            const numbers = generateUniqueNumbers(6, 1, 45).sort((a, b) => a - b);
+            const numbers = generateNumbersWithRules(activeRules);
             draws.push(numbers);
         }
         displayNumbers(draws);
+    }
+
+    function getActiveRules() {
+        const activeIds = new Set(ruleInputs.filter(input => input.checked).map(input => input.value));
+        return RULES.filter(rule => activeIds.has(rule.id));
+    }
+
+    function generateNumbersWithRules(activeRules) {
+        const maxAttempts = 5000;
+        for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+            const numbers = generateUniqueNumbers(6, 1, 45).sort((a, b) => a - b);
+            if (!shouldExclude(numbers, activeRules)) {
+                return numbers;
+            }
+        }
+        return [];
+    }
+
+    function shouldExclude(numbers, activeRules) {
+        if (numbers.length === 0) {
+            return true;
+        }
+        return activeRules.some(rule => rule.exclude(numbers));
     }
 
     function generateUniqueNumbers(count, min, max) {
@@ -46,6 +71,15 @@ document.addEventListener('DOMContentLoaded', () => {
             label.textContent = `Set ${index + 1}`;
             row.appendChild(label);
 
+            if (numbers.length === 0) {
+                const error = document.createElement('div');
+                error.classList.add('error-text');
+                error.textContent = 'No valid combination found. Try fewer rules.';
+                row.appendChild(error);
+                numbersContainer.appendChild(row);
+                return;
+            }
+
             numbers.forEach(number => {
                 const numberElement = document.createElement('div');
                 numberElement.classList.add('number');
@@ -55,5 +89,103 @@ document.addEventListener('DOMContentLoaded', () => {
 
             numbersContainer.appendChild(row);
         });
+    }
+
+    const RULES = [
+        {
+            id: 'all_odd',
+            exclude: numbers => numbers.every(number => number % 2 === 1)
+        },
+        {
+            id: 'all_even',
+            exclude: numbers => numbers.every(number => number % 2 === 0)
+        },
+        {
+            id: 'five_odd_one_even',
+            exclude: numbers => countBy(numbers, number => number % 2 === 1) === 5
+        },
+        {
+            id: 'five_even_one_odd',
+            exclude: numbers => countBy(numbers, number => number % 2 === 0) === 5
+        },
+        {
+            id: 'multiples_of_2_4_plus',
+            exclude: numbers => countBy(numbers, number => number % 2 === 0) >= 4
+        },
+        {
+            id: 'multiples_of_3_3_plus',
+            exclude: numbers => countBy(numbers, number => number % 3 === 0) >= 3
+        },
+        {
+            id: 'multiples_of_5_3_plus',
+            exclude: numbers => countBy(numbers, number => number % 5 === 0) >= 3
+        },
+        {
+            id: 'multiples_of_7_3_plus',
+            exclude: numbers => countBy(numbers, number => number % 7 === 0) >= 3
+        },
+        {
+            id: 'consecutive_3_plus',
+            exclude: numbers => longestConsecutiveRun(numbers) >= 3
+        },
+        {
+            id: 'same_last_digit_3_plus',
+            exclude: numbers => maxSameLastDigit(numbers) >= 3
+        },
+        {
+            id: 'same_decade_4_plus',
+            exclude: numbers => maxInSameDecade(numbers) >= 4
+        },
+        {
+            id: 'all_low_or_high',
+            exclude: numbers => numbers.every(number => number <= 22) || numbers.every(number => number >= 23)
+        },
+        {
+            id: 'tight_range',
+            exclude: numbers => (numbers[numbers.length - 1] - numbers[0]) < 20
+        },
+        {
+            id: 'extreme_sum',
+            exclude: numbers => {
+                const sum = numbers.reduce((acc, number) => acc + number, 0);
+                return sum <= 80 || sum >= 200;
+            }
+        }
+    ];
+
+    function countBy(numbers, predicate) {
+        return numbers.reduce((count, number) => (predicate(number) ? count + 1 : count), 0);
+    }
+
+    function longestConsecutiveRun(numbers) {
+        let longest = 1;
+        let current = 1;
+        for (let i = 1; i < numbers.length; i += 1) {
+            if (numbers[i] === numbers[i - 1] + 1) {
+                current += 1;
+                longest = Math.max(longest, current);
+            } else {
+                current = 1;
+            }
+        }
+        return longest;
+    }
+
+    function maxSameLastDigit(numbers) {
+        const counts = new Map();
+        numbers.forEach(number => {
+            const key = number % 10;
+            counts.set(key, (counts.get(key) || 0) + 1);
+        });
+        return Math.max(...counts.values());
+    }
+
+    function maxInSameDecade(numbers) {
+        const counts = new Map();
+        numbers.forEach(number => {
+            const key = Math.floor(number / 10);
+            counts.set(key, (counts.get(key) || 0) + 1);
+        });
+        return Math.max(...counts.values());
     }
 });

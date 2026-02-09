@@ -28,6 +28,28 @@
                 <option value="10">10</option>
             </select>
         </div>
+        <div class="rules-panel">
+            <div class="rules-header">
+                <h2>Exclude Rules</h2>
+                <span class="rules-note">Select rules to filter unlikely patterns</span>
+            </div>
+            <div class="rules-grid">
+                <label class="rule-item"><input type="checkbox" value="all_odd"> All odd numbers</label>
+                <label class="rule-item"><input type="checkbox" value="all_even"> All even numbers</label>
+                <label class="rule-item"><input type="checkbox" value="five_odd_one_even"> 5 odd + 1 even</label>
+                <label class="rule-item"><input type="checkbox" value="five_even_one_odd"> 5 even + 1 odd</label>
+                <label class="rule-item"><input type="checkbox" value="multiples_of_2_4_plus"> 4+ multiples of 2</label>
+                <label class="rule-item"><input type="checkbox" value="multiples_of_3_3_plus"> 3+ multiples of 3</label>
+                <label class="rule-item"><input type="checkbox" value="multiples_of_5_3_plus"> 3+ multiples of 5</label>
+                <label class="rule-item"><input type="checkbox" value="multiples_of_7_3_plus"> 3+ multiples of 7</label>
+                <label class="rule-item"><input type="checkbox" value="consecutive_3_plus"> 3+ consecutive numbers</label>
+                <label class="rule-item"><input type="checkbox" value="same_last_digit_3_plus"> 3+ same last digit</label>
+                <label class="rule-item"><input type="checkbox" value="same_decade_4_plus"> 4+ in same decade</label>
+                <label class="rule-item"><input type="checkbox" value="all_low_or_high"> All low (1-22) or high (23-45)</label>
+                <label class="rule-item"><input type="checkbox" value="tight_range"> Range under 20</label>
+                <label class="rule-item"><input type="checkbox" value="extreme_sum"> Sum <= 80 or >= 200</label>
+            </div>
+        </div>
         <div class="numbers-container">
             <!-- Numbers will be generated here -->
         </div>
