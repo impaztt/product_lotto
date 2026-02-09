@@ -153,20 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    ruleCards.forEach(card => {
-        card.addEventListener('click', event => {
-            if (event.target && event.target.tagName === 'INPUT') {
-                return;
-            }
-            const input = card.querySelector('.rule-input');
-            if (!input) {
-                return;
-            }
-            input.checked = !input.checked;
-            input.dispatchEvent(new Event('change', { bubbles: true }));
-        });
-    });
-
     try {
         syncThemeToggle();
         syncMenuState(false);
