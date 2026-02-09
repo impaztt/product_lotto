@@ -24,10 +24,46 @@ h1 {
     margin-bottom: 30px;
 }
 
-.numbers-container {
+.controls {
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    color: white;
+    font-size: 16px;
+}
+
+#draw-count {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.numbers-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
     margin-bottom: 30px;
+}
+
+.number-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.row-label {
+    color: white;
+    font-weight: bold;
+    margin-right: 8px;
+    min-width: 60px;
+    text-align: right;
 }
 
 .number {
