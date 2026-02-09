@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (numbers.length === 0) {
                 const error = document.createElement('div');
                 error.classList.add('error-text');
-                error.textContent = 'No valid combination found. Try fewer rules.';
+                error.textContent = '유효한 조합을 찾지 못했습니다. 규칙 수를 줄여 보세요.';
                 row.appendChild(error);
                 numbersContainer.appendChild(row);
                 return;
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function syncThemeToggle() {
         const currentTheme = body.getAttribute('data-theme') || 'dark';
-        themeToggle.textContent = currentTheme === 'dark' ? 'Light' : 'Dark';
+        themeToggle.textContent = currentTheme === 'dark' ? '라이트' : '다크';
     }
 
     const RULES = [
