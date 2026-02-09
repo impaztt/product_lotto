@@ -152,9 +152,6 @@
                 <p>원하는 규칙을 켜면 그 패턴을 결과에서 제외합니다.</p>
             </div>
             <div class="rules-toolbar">
-                <div class="rules-search">
-                    <input id="rule-search" type="search" placeholder="규칙 검색" aria-label="규칙 검색">
-                </div>
                 <div class="rules-presets">
                     <button class="preset-btn" data-preset="light" type="button">보수형</button>
                     <button class="preset-btn" data-preset="balanced" type="button">균형형</button>
@@ -236,7 +233,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">모두 홀수</span>
                                 <span class="rule-desc">홀수만 6개</span>
-                                <span class="rule-detail" data-detail="6개 숫자가 전부 홀수인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="all_odd">예상 제외: 약 97,944개</span>
                             </span>
                         </label>
@@ -245,7 +241,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">모두 짝수</span>
                                 <span class="rule-desc">짝수만 6개</span>
-                                <span class="rule-detail" data-detail="6개 숫자가 전부 짝수인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="all_even">예상 제외: 약 77,460개</span>
                             </span>
                         </label>
@@ -254,7 +249,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">홀수 5 + 짝수 1</span>
                                 <span class="rule-desc">홀수 편중</span>
-                                <span class="rule-detail" data-detail="홀수가 5개로 과도하게 치우친 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="five_odd_one_even">예상 제외: 약 737,780개</span>
                             </span>
                         </label>
@@ -263,7 +257,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">짝수 5 + 홀수 1</span>
                                 <span class="rule-desc">짝수 편중</span>
-                                <span class="rule-detail" data-detail="짝수가 5개로 과도하게 치우친 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="five_even_one_odd">예상 제외: 약 600,006개</span>
                             </span>
                         </label>
@@ -272,7 +265,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">홀수 4 + 짝수 2</span>
                                 <span class="rule-desc">홀수 우세</span>
-                                <span class="rule-detail" data-detail="홀수가 4개로 우세한 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="four_odd_two_even">예상 제외: 약 2,044,695개</span>
                             </span>
                         </label>
@@ -281,7 +273,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">짝수 4 + 홀수 2</span>
                                 <span class="rule-desc">짝수 우세</span>
-                                <span class="rule-detail" data-detail="짝수가 4개로 우세한 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="four_even_two_odd">예상 제외: 약 1,861,350개</span>
                             </span>
                         </label>
@@ -300,7 +291,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">2의 배수 4개 이상</span>
                                 <span class="rule-desc">짝수 과다</span>
-                                <span class="rule-detail" data-detail="짝수가 4개 이상 포함된 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="multiples_of_2_4_plus">예상 제외: 약 2,538,815개</span>
                             </span>
                         </label>
@@ -309,8 +299,15 @@
                             <span class="rule-body">
                                 <span class="rule-title">3의 배수 3개 이상</span>
                                 <span class="rule-desc">3의 배수 과다</span>
-                                <span class="rule-detail" data-detail="3의 배수가 3개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="multiples_of_3_3_plus">예상 제외: 약 2,541,503개</span>
+                            </span>
+                        </label>
+                        <label class="rule-card is-advanced" data-title="2의 배수 5개 이상" data-group="배수 분포">
+                            <input class="rule-input" type="checkbox" value="multiples_of_2_5_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">2의 배수 5개 이상</span>
+                                <span class="rule-desc">짝수 매우 많음</span>
+                                <span class="rule-stat" data-rule="multiples_of_2_5_plus">예상 제외: 약 672,660개</span>
                             </span>
                         </label>
                         <label class="rule-card is-advanced" data-title="4의 배수 3개 이상" data-group="배수 분포">
@@ -318,7 +315,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">4의 배수 3개 이상</span>
                                 <span class="rule-desc">4의 배수 과다</span>
-                                <span class="rule-detail" data-detail="4의 배수가 3개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="multiples_of_4_3_plus">예상 제외: 약 1,182,581개</span>
                             </span>
                         </label>
@@ -327,7 +323,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">5의 배수 3개 이상</span>
                                 <span class="rule-desc">5의 배수 과다</span>
-                                <span class="rule-detail" data-detail="5의 배수가 3개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="multiples_of_5_3_plus">예상 제외: 약 683,126개</span>
                             </span>
                         </label>
@@ -336,7 +331,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">6의 배수 3개 이상</span>
                                 <span class="rule-desc">6의 배수 과다</span>
-                                <span class="rule-detail" data-detail="6의 배수가 3개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="multiples_of_6_3_plus">예상 제외: 약 319,612개</span>
                             </span>
                         </label>
@@ -345,7 +339,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">7의 배수 3개 이상</span>
                                 <span class="rule-desc">7의 배수 과다</span>
-                                <span class="rule-detail" data-detail="7의 배수가 3개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="multiples_of_7_3_plus">예상 제외: 약 190,513개</span>
                             </span>
                         </label>
@@ -364,7 +357,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">연속수 3개 이상</span>
                                 <span class="rule-desc">연속수 3개 이상</span>
-                                <span class="rule-detail" data-detail="연속된 숫자가 3개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="consecutive_3_plus">예상 제외: 약 458,933개</span>
                             </span>
                         </label>
@@ -373,7 +365,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">연속수 4개 이상</span>
                                 <span class="rule-desc">연속수 4개 이상</span>
-                                <span class="rule-detail" data-detail="연속된 숫자가 4개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="consecutive_4_plus">예상 제외: 약 31,929개</span>
                             </span>
                         </label>
@@ -392,7 +383,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">끝자리 동일 3개 이상</span>
                                 <span class="rule-desc">끝자리 3개 동일</span>
-                                <span class="rule-detail" data-detail="끝자리 숫자가 3개 이상 같은 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="same_last_digit_3_plus">예상 제외: 약 729,268개</span>
                             </span>
                         </label>
@@ -401,8 +391,15 @@
                             <span class="rule-body">
                                 <span class="rule-title">끝자리 동일 4개 이상</span>
                                 <span class="rule-desc">끝자리 4개 동일</span>
-                                <span class="rule-detail" data-detail="끝자리 숫자가 4개 이상 같은 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="same_last_digit_4_plus">예상 제외: 약 24,557개</span>
+                            </span>
+                        </label>
+                        <label class="rule-card is-advanced" data-title="끝자리 동일 2개 이상" data-group="끝자리 분포">
+                            <input class="rule-input" type="checkbox" value="last_digit_2_plus">
+                            <span class="rule-body">
+                                <span class="rule-title">끝자리 동일 2개 이상</span>
+                                <span class="rule-desc">끝자리 중복</span>
+                                <span class="rule-stat" data-rule="last_digit_2_plus">예상 제외: 약 6,440,625개</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="끝자리 0 포함 2개 이상" data-group="끝자리 분포">
@@ -410,7 +407,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">끝자리 0 포함 2개 이상</span>
                                 <span class="rule-desc">끝자리 0 과다</span>
-                                <span class="rule-detail" data-detail="끝자리가 0인 숫자가 2개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="last_digit_zero_2_plus">예상 제외: 약 652,582개</span>
                             </span>
                         </label>
@@ -419,7 +415,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">끝자리 5 포함 2개 이상</span>
                                 <span class="rule-desc">끝자리 5 과다</span>
-                                <span class="rule-detail" data-detail="끝자리가 5인 숫자가 2개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="last_digit_five_2_plus">예상 제외: 약 1,009,825개</span>
                             </span>
                         </label>
@@ -438,7 +433,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">같은 구간 4개 이상</span>
                                 <span class="rule-desc">10단위 몰림</span>
-                                <span class="rule-detail" data-detail="같은 10단위 구간이 4개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="same_decade_4_plus">예상 제외: 약 496,930개</span>
                             </span>
                         </label>
@@ -447,7 +441,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">같은 구간 5개 이상</span>
                                 <span class="rule-desc">10단위 과다</span>
-                                <span class="rule-detail" data-detail="같은 10단위 구간이 5개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="same_decade_5_plus">예상 제외: 약 33,028개</span>
                             </span>
                         </label>
@@ -456,7 +449,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">저구간 또는 고구간 몰림</span>
                                 <span class="rule-desc">저/고 구간 몰림</span>
-                                <span class="rule-detail" data-detail="1-22 또는 23-45에 모두 몰린 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="all_low_or_high">예상 제외: 약 176,911개</span>
                             </span>
                         </label>
@@ -465,7 +457,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">저구간/고구간 5개 이상</span>
                                 <span class="rule-desc">한쪽 과다</span>
-                                <span class="rule-detail" data-detail="저/고 구간 중 한쪽이 5개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="low_or_high_5_plus">예상 제외: 약 1,523,574개</span>
                             </span>
                         </label>
@@ -474,7 +465,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">범위 20 미만</span>
                                 <span class="rule-desc">숫자 폭 좁음</span>
-                                <span class="rule-detail" data-detail="최대-최소 범위가 20 미만인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="tight_range">예상 제외: 약 331,463개</span>
                             </span>
                         </label>
@@ -493,7 +483,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">저구간 4개 이상</span>
                                 <span class="rule-desc">1-15 구간 몰림</span>
-                                <span class="rule-detail" data-detail="1-15 구간이 4개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="low_1_15_4_plus">예상 제외: 약 690,864개</span>
                             </span>
                         </label>
@@ -502,7 +491,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">중간구간 4개 이상</span>
                                 <span class="rule-desc">16-30 구간 몰림</span>
-                                <span class="rule-detail" data-detail="16-30 구간이 4개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="mid_16_30_4_plus">예상 제외: 약 685,407개</span>
                             </span>
                         </label>
@@ -511,7 +499,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">고구간 4개 이상</span>
                                 <span class="rule-desc">31-45 구간 몰림</span>
-                                <span class="rule-detail" data-detail="31-45 구간이 4개 이상인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="high_31_45_4_plus">예상 제외: 약 682,841개</span>
                             </span>
                         </label>
@@ -530,8 +517,23 @@
                             <span class="rule-body">
                                 <span class="rule-title">합계 80 이하 또는 200 이상</span>
                                 <span class="rule-desc">합계 극단</span>
-                                <span class="rule-detail" data-detail="6개 합계가 너무 낮거나 높은 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="extreme_sum">예상 제외: 약 369,664개</span>
+                            </span>
+                        </label>
+                        <label class="rule-card" data-title="합계 100 이하" data-group="합계/소수">
+                            <input class="rule-input" type="checkbox" value="sum_low_100">
+                            <span class="rule-body">
+                                <span class="rule-title">합계 100 이하</span>
+                                <span class="rule-desc">합계 낮음</span>
+                                <span class="rule-stat" data-rule="sum_low_100">예상 제외: 약 888,870개</span>
+                            </span>
+                        </label>
+                        <label class="rule-card is-advanced" data-title="합계 180 이상" data-group="합계/소수">
+                            <input class="rule-input" type="checkbox" value="sum_high_180">
+                            <span class="rule-body">
+                                <span class="rule-title">합계 180 이상</span>
+                                <span class="rule-desc">합계 높음</span>
+                                <span class="rule-stat" data-rule="sum_high_180">예상 제외: 약 692,534개</span>
                             </span>
                         </label>
                         <label class="rule-card is-advanced" data-title="소수 4개 이상" data-group="합계/소수">
@@ -539,7 +541,6 @@
                             <span class="rule-body">
                                 <span class="rule-title">소수 4개 이상</span>
                                 <span class="rule-desc">소수 과다</span>
-                                <span class="rule-detail" data-detail="소수가 4개 이상 포함된 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="prime_4_plus">예상 제외: 약 530,610개</span>
                             </span>
                         </label>
@@ -548,8 +549,15 @@
                             <span class="rule-body">
                                 <span class="rule-title">소수 1개 이하</span>
                                 <span class="rule-desc">소수 부족</span>
-                                <span class="rule-detail" data-detail="소수가 1개 이하인 조합을 제외합니다.">자세히</span>
                                 <span class="rule-stat" data-rule="prime_1_or_less">예상 제외: 약 3,106,770개</span>
+                            </span>
+                        </label>
+                        <label class="rule-card is-advanced" data-title="소수 0개" data-group="합계/소수">
+                            <input class="rule-input" type="checkbox" value="prime_0">
+                            <span class="rule-body">
+                                <span class="rule-title">소수 0개</span>
+                                <span class="rule-desc">소수 없음</span>
+                                <span class="rule-stat" data-rule="prime_0">예상 제외: 약 732,607개</span>
                             </span>
                         </label>
                     </div>
@@ -612,25 +620,27 @@
         <section id="pricing" class="section pricing">
             <div class="section-title">
                 <h2>요금 플랜</h2>
-                <p>구독형과 일회성 결제를 모두 제공합니다.</p>
+                <p>구독형과 일회성 결제를 모두 제공하며, 결제는 국내 PG 연동을 기반으로 설계됩니다.</p>
             </div>
             <div class="pricing-grid">
                 <div class="price-card">
                     <h3>무료</h3>
                     <p class="price">₩0</p>
                     <ul class="bullets">
-                        <li>비회원 하루 5회</li>
-                        <li>1회 1세트</li>
-                        <li>기본 규칙 이용</li>
+                        <li>비회원 하루 5회 제한</li>
+                        <li>1회 1세트 생성</li>
+                        <li>핵심 규칙만 사용</li>
+                        <li>저장/프리셋 미지원</li>
                     </ul>
                 </div>
                 <div class="price-card highlight">
                     <h3>구독형</h3>
                     <p class="price">월 구독</p>
                     <ul class="bullets">
-                        <li>제한 없이 추첨</li>
-                        <li>규칙 저장/프리셋</li>
-                        <li>고급 규칙 팩</li>
+                        <li>무제한 추첨</li>
+                        <li>규칙 저장/프리셋 제공</li>
+                        <li>고급 규칙 팩 사용</li>
+                        <li>추첨 기록 및 히스토리</li>
                     </ul>
                     <button class="pay-btn">구독 시작</button>
                 </div>
@@ -639,8 +649,9 @@
                     <p class="price">건별 결제</p>
                     <ul class="bullets">
                         <li>필요할 때만 결제</li>
-                        <li>추첨 횟수 팩</li>
+                        <li>추첨 횟수 팩 제공</li>
                         <li>결제 즉시 사용</li>
+                        <li>구독 전 테스트용</li>
                     </ul>
                     <button class="pay-btn ghost">일회성 구매</button>
                 </div>
@@ -655,15 +666,23 @@
             <div class="faq-grid">
                 <div class="faq-card">
                     <h3>확률이 올라가나요?</h3>
-                    <p>보장은 없습니다. 규칙으로 조합을 걸러 선택을 돕습니다.</p>
+                    <p>보장은 없습니다. 규칙 기반으로 조합을 정리해 선택 과정을 단순화합니다.</p>
                 </div>
                 <div class="faq-card">
                     <h3>규칙은 고정인가요?</h3>
-                    <p>추첨할 때마다 규칙을 자유롭게 선택합니다.</p>
+                    <p>추첨할 때마다 원하는 규칙을 자유롭게 선택하거나 프리셋으로 적용할 수 있습니다.</p>
                 </div>
                 <div class="faq-card">
                     <h3>규칙을 저장할 수 있나요?</h3>
-                    <p>추후 프리미엄 기능으로 제공할 예정입니다.</p>
+                    <p>회원 전용 기능으로 제공됩니다. 구독형 플랜에서 저장/불러오기가 가능합니다.</p>
+                </div>
+                <div class="faq-card">
+                    <h3>비회원 제한은 어떻게 적용되나요?</h3>
+                    <p>세션 기준으로 하루 5회, 1회 1세트 제한이 적용됩니다. 로그인 시 해제됩니다.</p>
+                </div>
+                <div class="faq-card">
+                    <h3>결제는 어떤 방식인가요?</h3>
+                    <p>국내 PG를 통해 구독형/일회성 결제를 지원하며, 결제 후 즉시 이용 가능합니다.</p>
                 </div>
             </div>
         </section>
@@ -705,6 +724,12 @@
     <footer class="site-footer">
         <p>로또픽스튜디오. 결과를 보장하지 않으며 선택 과정을 돕기 위한 도구입니다.</p>
     </footer>
+
+    <div id="detail-sheet" class="detail-sheet" role="dialog" aria-modal="true">
+        <h4>규칙 상세</h4>
+        <p>설명</p>
+        <button class="sheet-close" type="button">닫기</button>
+    </div>
 
     <script src="main.js?v=20260209"></script>
 </body>

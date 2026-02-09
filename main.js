@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileLinks = mobileMenu ? Array.from(mobileMenu.querySelectorAll('a')) : [];
-    const ruleSearch = document.getElementById('rule-search');
     const presetButtons = Array.from(document.querySelectorAll('.preset-btn'));
     const saveRulesBtn = document.getElementById('save-rules');
     const loadRulesBtn = document.getElementById('load-rules');
@@ -63,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         consecutive_4_plus: { ratio: 0.00392, excluded: 31929 },
         same_last_digit_3_plus: { ratio: 0.089535, excluded: 729268 },
         same_last_digit_4_plus: { ratio: 0.003015, excluded: 24557 },
+        last_digit_2_plus: { ratio: 0.79074, excluded: 6440625 },
         last_digit_zero_2_plus: { ratio: 0.08012, excluded: 652582 },
         last_digit_five_2_plus: { ratio: 0.12398, excluded: 1009825 },
         same_decade_4_plus: { ratio: 0.06101, excluded: 496930 },
@@ -74,8 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
         high_31_45_4_plus: { ratio: 0.083835, excluded: 682841 },
         tight_range: { ratio: 0.040695, excluded: 331463 },
         extreme_sum: { ratio: 0.045385, excluded: 369664 },
+        sum_low_100: { ratio: 0.10913, excluded: 888870 },
+        sum_high_180: { ratio: 0.085025, excluded: 692534 },
         prime_4_plus: { ratio: 0.065145, excluded: 530610 },
-        prime_1_or_less: { ratio: 0.38143, excluded: 3106770 }
+        prime_1_or_less: { ratio: 0.38143, excluded: 3106770 },
+        prime_0: { ratio: 0.089945, excluded: 732607 },
+        multiples_of_2_5_plus: { ratio: 0.082585, excluded: 672660 }
     };
 
     if (generateBtn) {
@@ -110,13 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
             syncMenuState(false);
         });
     });
-
-    if (ruleSearch) {
-        ruleSearch.addEventListener('input', event => {
-            const query = event.target.value.trim().toLowerCase();
-            filterRules(query);
-        });
-    }
 
     presetButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -227,6 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSelectionCount();
         computeBaseOdds();
         updateCombinedEstimates();
+        setupRuleDetails();
         if (rulesSection) {
             rulesSection.classList.add('rules-collapsed');
         }
@@ -419,20 +417,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function filterRules(query) {
-        ruleCards.forEach(card => {
-            const title = (card.dataset.title || '').toLowerCase();
-            const group = (card.dataset.group || '').toLowerCase();
-            const visible = !query || title.includes(query) || group.includes(query);
-            card.classList.toggle('is-hidden', !visible);
-        });
-        ruleGroups.forEach(group => {
-            const visibleCards = group.querySelectorAll('.rule-card:not(.is-hidden)');
-            group.classList.toggle('is-empty', visibleCards.length === 0);
-        });
-        updateSelectionCount();
-    }
-
     function applyPreset(preset) {
         const presetIds = PRESETS[preset] || [];
         if (preset === 'clear') {
@@ -501,6 +485,67 @@ document.addEventListener('DOMContentLoaded', () => {
             button.disabled = false;
             const allChecked = groupInputs.every(input => input.checked);
             button.textContent = allChecked ? '선택 해제' : '모두 선택';
+        });
+    }
+
+    const detailSheet = document.getElementById('detail-sheet');
+    const detailSheetTitle = detailSheet ? detailSheet.querySelector('h4') : null;
+    const detailSheetText = detailSheet ? detailSheet.querySelector('p') : null;
+    const detailSheetClose = detailSheet ? detailSheet.querySelector('.sheet-close') : null;
+
+    if (detailSheetClose) {
+        detailSheetClose.addEventListener('click', () => {
+            closeDetailSheet();
+        });
+    }
+
+    function openDetailSheet(title, text) {
+        if (!detailSheet || !detailSheetTitle || !detailSheetText) {
+            return;
+        }
+        detailSheetTitle.textContent = title;
+        detailSheetText.textContent = text;
+        detailSheet.classList.add('is-open');
+    }
+
+    function closeDetailSheet() {
+        if (!detailSheet) {
+            return;
+        }
+        detailSheet.classList.remove('is-open');
+    }
+
+    function setupRuleDetails() {
+        ruleCards.forEach(card => {
+            const input = card.querySelector('.rule-input');
+            const body = card.querySelector('.rule-body');
+            if (!input || !body) {
+                return;
+            }
+            const detail = RULE_DETAILS[input.value];
+            if (!detail) {
+                return;
+            }
+            const button = document.createElement('button');
+            button.className = 'detail-toggle';
+            button.type = 'button';
+            button.textContent = '자세히';
+
+            const text = document.createElement('div');
+            text.className = 'detail-text';
+            text.textContent = detail;
+
+            button.addEventListener('click', () => {
+                if (window.matchMedia('(max-width: 640px)').matches) {
+                    openDetailSheet(card.dataset.title || '규칙 상세', detail);
+                    return;
+                }
+                text.classList.toggle('is-open');
+                button.textContent = text.classList.contains('is-open') ? '닫기' : '자세히';
+            });
+
+            body.appendChild(button);
+            body.appendChild(text);
         });
     }
 
@@ -609,6 +654,10 @@ document.addEventListener('DOMContentLoaded', () => {
             exclude: numbers => countMultiples(numbers, 2) >= 4
         },
         {
+            id: 'multiples_of_2_5_plus',
+            exclude: numbers => countMultiples(numbers, 2) >= 5
+        },
+        {
             id: 'multiples_of_3_3_plus',
             exclude: numbers => countMultiples(numbers, 3) >= 3
         },
@@ -643,6 +692,10 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             id: 'same_last_digit_4_plus',
             exclude: numbers => maxSameLastDigit(numbers) >= 4
+        },
+        {
+            id: 'last_digit_2_plus',
+            exclude: numbers => maxSameLastDigit(numbers) >= 2
         },
         {
             id: 'last_digit_zero_2_plus',
@@ -692,12 +745,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         {
+            id: 'sum_low_100',
+            exclude: numbers => numbers.reduce((acc, number) => acc + number, 0) <= 100
+        },
+        {
+            id: 'sum_high_180',
+            exclude: numbers => numbers.reduce((acc, number) => acc + number, 0) >= 180
+        },
+        {
             id: 'prime_4_plus',
             exclude: numbers => countPrimes(numbers) >= 4
         },
         {
             id: 'prime_1_or_less',
             exclude: numbers => countPrimes(numbers) <= 1
+        },
+        {
+            id: 'prime_0',
+            exclude: numbers => countPrimes(numbers) === 0
         }
     ];
 
@@ -735,6 +800,43 @@ document.addEventListener('DOMContentLoaded', () => {
         light: '보수형',
         balanced: '균형형',
         aggressive: '공격형'
+    };
+
+    const RULE_DETAILS = {
+        all_odd: '6개 숫자가 전부 홀수인 조합을 제외합니다.',
+        all_even: '6개 숫자가 전부 짝수인 조합을 제외합니다.',
+        five_odd_one_even: '홀수가 5개로 과도하게 치우친 조합을 제외합니다.',
+        five_even_one_odd: '짝수가 5개로 과도하게 치우친 조합을 제외합니다.',
+        four_odd_two_even: '홀수가 4개로 우세한 조합을 제외합니다.',
+        four_even_two_odd: '짝수가 4개로 우세한 조합을 제외합니다.',
+        multiples_of_2_4_plus: '짝수가 4개 이상 포함된 조합을 제외합니다.',
+        multiples_of_2_5_plus: '짝수가 5개 이상 포함된 조합을 제외합니다.',
+        multiples_of_3_3_plus: '3의 배수가 3개 이상인 조합을 제외합니다.',
+        multiples_of_4_3_plus: '4의 배수가 3개 이상인 조합을 제외합니다.',
+        multiples_of_5_3_plus: '5의 배수가 3개 이상인 조합을 제외합니다.',
+        multiples_of_6_3_plus: '6의 배수가 3개 이상인 조합을 제외합니다.',
+        multiples_of_7_3_plus: '7의 배수가 3개 이상인 조합을 제외합니다.',
+        consecutive_3_plus: '연속된 숫자가 3개 이상인 조합을 제외합니다.',
+        consecutive_4_plus: '연속된 숫자가 4개 이상인 조합을 제외합니다.',
+        same_last_digit_3_plus: '끝자리 숫자가 3개 이상 같은 조합을 제외합니다.',
+        same_last_digit_4_plus: '끝자리 숫자가 4개 이상 같은 조합을 제외합니다.',
+        last_digit_2_plus: '끝자리 숫자가 2개 이상 반복되는 조합을 제외합니다.',
+        last_digit_zero_2_plus: '끝자리가 0인 숫자가 2개 이상인 조합을 제외합니다.',
+        last_digit_five_2_plus: '끝자리가 5인 숫자가 2개 이상인 조합을 제외합니다.',
+        same_decade_4_plus: '같은 10단위 구간이 4개 이상인 조합을 제외합니다.',
+        same_decade_5_plus: '같은 10단위 구간이 5개 이상인 조합을 제외합니다.',
+        all_low_or_high: '1-22 또는 23-45에 모두 몰린 조합을 제외합니다.',
+        low_or_high_5_plus: '저/고 구간 중 한쪽이 5개 이상인 조합을 제외합니다.',
+        low_1_15_4_plus: '1-15 구간이 4개 이상인 조합을 제외합니다.',
+        mid_16_30_4_plus: '16-30 구간이 4개 이상인 조합을 제외합니다.',
+        high_31_45_4_plus: '31-45 구간이 4개 이상인 조합을 제외합니다.',
+        tight_range: '최대-최소 범위가 20 미만인 조합을 제외합니다.',
+        extreme_sum: '6개 합계가 너무 낮거나 높은 조합을 제외합니다.',
+        sum_low_100: '6개 합계가 100 이하인 조합을 제외합니다.',
+        sum_high_180: '6개 합계가 180 이상인 조합을 제외합니다.',
+        prime_4_plus: '소수가 4개 이상 포함된 조합을 제외합니다.',
+        prime_1_or_less: '소수가 1개 이하인 조합을 제외합니다.',
+        prime_0: '소수가 하나도 없는 조합을 제외합니다.'
     };
 
 
