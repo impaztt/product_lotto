@@ -65,24 +65,20 @@ document.addEventListener('DOMContentLoaded', () => {
         prime_1_or_less: { ratio: 0.38143, excluded: 3106770 }
     };
 
-    syncThemeToggle();
-    syncMenuState(false);
-    applySavedRules();
-    updateRulesStatus('');
-    updateSelectionCount();
-    computeBaseOdds();
-    updateCombinedEstimates();
+    if (generateBtn) {
+        generateBtn.addEventListener('click', () => {
+            generateAndDisplayNumbers();
+        });
+    }
 
-    generateBtn.addEventListener('click', () => {
-        generateAndDisplayNumbers();
-    });
-
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = body.getAttribute('data-theme') || 'dark';
-        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        body.setAttribute('data-theme', nextTheme);
-        syncThemeToggle();
-    });
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme') || 'dark';
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', nextTheme);
+            syncThemeToggle();
+        });
+    }
 
     if (menuToggle) {
         menuToggle.addEventListener('click', () => {
@@ -170,6 +166,18 @@ document.addEventListener('DOMContentLoaded', () => {
             input.dispatchEvent(new Event('change', { bubbles: true }));
         });
     });
+
+    try {
+        syncThemeToggle();
+        syncMenuState(false);
+        applySavedRules();
+        updateRulesStatus('');
+        updateSelectionCount();
+        computeBaseOdds();
+        updateCombinedEstimates();
+    } catch (error) {
+        console.error('초기화 오류', error);
+    }
 
     function generateAndDisplayNumbers() {
         const drawCount = parseInt(drawCountSelect.value, 10);
