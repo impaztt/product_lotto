@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateRulesStatus('');
     updateSelectionCount();
     computeBaseOdds();
-    setRuleStatsFromTable();
     updateCombinedEstimates();
 
     generateBtn.addEventListener('click', () => {
@@ -361,16 +360,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (oddsAdjEls[rank]) {
                 oddsAdjEls[rank].textContent = `1 / ${formatNumber(adjusted)}`;
             }
-        });
-    }
-
-    function setRuleStatsFromTable() {
-        ruleStatEls.forEach(stat => {
-            const id = stat.dataset.rule;
-            if (!id || !RULE_STATS[id]) {
-                return;
-            }
-            stat.textContent = `예상 제외: 약 ${formatNumber(RULE_STATS[id].excluded)}개`;
         });
     }
 
