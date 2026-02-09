@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,26 +11,39 @@
         <div class="logo">필터드 로또 스튜디오</div>
         <nav class="main-nav">
             <a href="#about">소개</a>
-            <a href="#tech">기술</a>
             <a href="#rules">제외 규칙</a>
             <a href="#generator">추첨</a>
+            <a href="#tech">기술</a>
             <a href="#pricing">요금</a>
             <a href="#faq">자주 묻는 질문</a>
         </nav>
         <div class="header-actions">
             <button id="theme-toggle" type="button">라이트</button>
+            <button id="menu-toggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu">메뉴</button>
             <a class="cta" href="#generator">바로 시작</a>
         </div>
     </header>
+
+    <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+        <nav class="mobile-nav">
+            <a href="#about">소개</a>
+            <a href="#rules">제외 규칙</a>
+            <a href="#generator">추첨</a>
+            <a href="#tech">기술</a>
+            <a href="#pricing">요금</a>
+            <a href="#faq">자주 묻는 질문</a>
+            <a href="#contact">제휴 문의</a>
+        </nav>
+    </div>
 
     <main>
         <section class="hero">
             <div class="hero-content">
                 <p class="eyebrow">패턴 기반 로또 선택</p>
-                <h1>과도한 조합을 걸러내고 더 깔끔한 선택에 집중하세요.</h1>
+                <h1>과도한 조합을 정제해 보다 균형 잡힌 선택을 제안합니다.</h1>
                 <p class="hero-copy">
-                    과도한 합계, 특정 배수 과다, 숫자 군집 등 사람들이 피하는 패턴을 제외합니다.
-                    당첨을 보장하지 않습니다. 선택 과정을 더 의도적으로 만들기 위한 도구입니다.
+                    과도한 합계, 특정 배수 과다, 숫자 군집 등 극단 패턴을 제외합니다.
+                    당첨을 보장하지 않으며, 선택 과정을 보다 체계적으로 돕는 것을 목표로 합니다.
                 </p>
                 <div class="hero-actions">
                     <a class="cta" href="#generator">세트 생성</a>
@@ -57,7 +70,7 @@
                 <div class="card-stack">
                     <div class="card">
                         <p class="card-title">정제된 조합</p>
-                        <p class="card-body">올홀수, 과도한 배수 등 극단 패턴을 제거합니다.</p>
+                        <p class="card-body">올홀수, 특정 배수 과다 등 극단 패턴을 제거합니다.</p>
                     </div>
                     <div class="card">
                         <p class="card-title">규칙 제어</p>
@@ -65,7 +78,7 @@
                     </div>
                     <div class="card">
                         <p class="card-title">다중 추첨</p>
-                        <p class="card-body">한 번에 최대 10세트까지 생성합니다.</p>
+                        <p class="card-body">한 번에 최대 10세트를 생성합니다.</p>
                     </div>
                 </div>
             </div>
@@ -91,27 +104,6 @@
                     <li>연속수 과다를 통제합니다</li>
                     <li>저/고 숫자 비율을 균형화합니다</li>
                 </ul>
-            </div>
-        </section>
-
-        <section id="tech" class="section tech">
-            <div class="section-title">
-                <h2>필터링 방법</h2>
-                <p>원하는 규칙만 선택하세요. 해당 규칙에 맞는 조합은 제외합니다.</p>
-            </div>
-            <div class="tech-grid">
-                <div class="tech-card">
-                    <h3>패턴 스코어</h3>
-                    <p>홀짝, 배수, 범위 분포를 먼저 점검합니다.</p>
-                </div>
-                <div class="tech-card">
-                    <h3>규칙 체이닝</h3>
-                    <p>규칙을 쌓아 개인화된 필터 파이프라인을 만듭니다.</p>
-                </div>
-                <div class="tech-card">
-                    <h3>즉시 검증</h3>
-                    <p>각 추첨을 실시간으로 검증해 빠르게 결과를 제공합니다.</p>
-                </div>
             </div>
         </section>
 
@@ -167,6 +159,27 @@
             </div>
         </section>
 
+        <section id="tech" class="section tech">
+            <div class="section-title">
+                <h2>필터링 방법</h2>
+                <p>원하는 규칙만 선택하면 해당 규칙에 맞는 조합을 제외합니다.</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <h3>패턴 점검</h3>
+                    <p>홀짝, 배수, 범위 분포를 먼저 점검합니다.</p>
+                </div>
+                <div class="tech-card">
+                    <h3>규칙 결합</h3>
+                    <p>규칙을 결합해 개인화된 필터 흐름을 구성합니다.</p>
+                </div>
+                <div class="tech-card">
+                    <h3>즉시 검증</h3>
+                    <p>각 추첨을 실시간으로 검증해 빠르게 결과를 제공합니다.</p>
+                </div>
+            </div>
+        </section>
+
         <section id="pricing" class="section pricing">
             <div class="section-title">
                 <h2>지금은 무료, 이후 유료화</h2>
@@ -202,7 +215,7 @@
             <div class="faq-grid">
                 <div class="faq-card">
                     <h3>확률이 올라가나요?</h3>
-                    <p>보장은 없습니다. 선택한 규칙으로 조합을 걸러 집중을 돕습니다.</p>
+                    <p>보장은 없습니다. 선택한 규칙으로 조합을 걸러 선택을 돕습니다.</p>
                 </div>
                 <div class="faq-card">
                     <h3>규칙은 고정인가요?</h3>
@@ -215,7 +228,7 @@
             </div>
         </section>
 
-        <section class="section contact">
+        <section id="contact" class="section contact">
             <div class="section-title">
                 <h2>제휴 문의</h2>
                 <p>협업, 데이터 제휴, 유통 관련 문의를 받습니다.</p>

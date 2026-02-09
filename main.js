@@ -5,8 +5,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
     const ruleInputs = Array.from(document.querySelectorAll('.rules-grid input[type="checkbox"]'));
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileLinks = mobileMenu ? Array.from(mobileMenu.querySelectorAll('a')) : [];
 
     syncThemeToggle();
+    syncMenuState(false);
 
     generateBtn.addEventListener('click', () => {
         generateAndDisplayNumbers();
@@ -17,6 +21,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
         body.setAttribute('data-theme', nextTheme);
         syncThemeToggle();
+    });
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', () => {
+            const isOpen = body.classList.contains('menu-open');
+            syncMenuState(!isOpen);
+        });
+    }
+
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            syncMenuState(false);
+        });
     });
 
     function generateAndDisplayNumbers() {
@@ -70,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const label = document.createElement('div');
             label.classList.add('row-label');
-            label.textContent = `Set ${index + 1}`;
+            label.textContent = `세트 ${index + 1}`;
             row.appendChild(label);
 
             if (numbers.length === 0) {
@@ -96,6 +113,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function syncThemeToggle() {
         const currentTheme = body.getAttribute('data-theme') || 'dark';
         themeToggle.textContent = currentTheme === 'dark' ? '라이트' : '다크';
+    }
+
+    function syncMenuState(open) {
+        if (!menuToggle || !mobileMenu) {
+            return;
+        }
+        body.classList.toggle('menu-open', open);
+        menuToggle.setAttribute('aria-expanded', String(open));
+        mobileMenu.setAttribute('aria-hidden', String(!open));
+        menuToggle.textContent = open ? '닫기' : '메뉴';
     }
 
     const RULES = [
