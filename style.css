@@ -764,6 +764,44 @@ main {
     letter-spacing: 0.1px;
 }
 
+.rule-group-note {
+    margin: 0 0 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.rule-detail {
+    position: relative;
+    font-size: 11px;
+    color: var(--accent);
+    width: fit-content;
+}
+
+.rule-detail::after {
+    content: attr(data-detail);
+    position: absolute;
+    left: 0;
+    bottom: 140%;
+    background: #0f172a;
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    white-space: normal;
+    width: 220px;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    transform: translateY(4px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 5;
+}
+
+.rule-detail:hover::after {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 .rule-card.is-checked {
     border-color: var(--accent);
     background: linear-gradient(135deg, rgba(255, 120, 73, 0.14), rgba(255, 120, 73, 0.03));
