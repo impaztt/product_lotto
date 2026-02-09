@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const groupSelectButtons = Array.from(document.querySelectorAll('.group-select'));
     const toggleRulesBtn = document.getElementById('toggle-rules');
     const rulesSection = document.getElementById('rules');
+    const guestLimitEl = document.getElementById('guest-limit');
 
     const TOTAL_COMBOS = Number(combination(45, 6));
     const RULE_STATS = {
@@ -75,7 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (generateBtn) {
         generateBtn.addEventListener('click', () => {
+            if (!canGuestGenerate()) {
+                return;
+            }
             generateAndDisplayNumbers();
+            incrementGuestCount();
         });
     }
 
@@ -201,6 +206,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (toggleRulesBtn) {
             toggleRulesBtn.textContent = '모든 규칙 펼치기';
         }
+        if (guestLimitEl) {
+            guestLimitEl.textContent = '비회원은 하루 5회까지 가능 (1회 1세트).';
+            canGuestGenerate();
+        }
     } catch (error) {
         console.error('초기화 오류', error);
     }
@@ -277,6 +286,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
             numbersContainer.appendChild(row);
         });
+    }
+
+    function canGuestGenerate() {
+        if (!guestLimitEl) {
+            return true;
+        }
+        const drawCount = parseInt(drawCountSelect.value, 10);
+        const isMember = false;
+        if (isMember) {
+            return true;
+        }
+        const limit = 5;
+        const todayKey = getTodayKey();
+        const countKey = `guest_count_${todayKey}`;
+        const current = Number(localStorage.getItem(countKey) || 0);
+        if (drawCount > 1) {
+            guestLimitEl.textContent = '비회원은 1회 1세트만 가능합니다. 로그인 후 이용해 주세요.';
+            return false;
+        }
+        if (current >= limit) {
+            guestLimitEl.textContent = '비회원 하루 5회 제한을 초과했습니다. 로그인 후 이용해 주세요.';
+            return false;
+        }
+        guestLimitEl.textContent = `비회원 남은 횟수: ${limit - current}회 (1회 1세트)`;
+        return true;
+    }
+
+    function incrementGuestCount() {
+        if (!guestLimitEl) {
+            return;
+        }
+        const isMember = false;
+        if (isMember) {
+            return;
+        }
+        const todayKey = getTodayKey();
+        const countKey = `guest_count_${todayKey}`;
+        const current = Number(localStorage.getItem(countKey) || 0);
+        const next = current + 1;
+        localStorage.setItem(countKey, String(next));
+        guestLimitEl.textContent = `비회원 남은 횟수: ${Math.max(0, 5 - next)}회 (1회 1세트)`;
+    }
+
+    function getTodayKey() {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        return `${yyyy}${mm}${dd}`;
     }
 
     function syncThemeToggle() {
