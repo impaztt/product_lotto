@@ -727,3 +727,132 @@ main {
         justify-content: center;
     }
 }
+
+@media (max-width: 640px) {
+    .site-header {
+        padding: 14px 5vw;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+
+    main {
+        padding: 20px 5vw 60px;
+        gap: 48px;
+    }
+
+    .hero {
+        gap: 24px;
+        min-height: auto;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+        line-height: 1.2;
+    }
+
+    .hero-copy {
+        font-size: 15px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .hero-actions .cta,
+    .hero-actions .ghost {
+        text-align: center;
+        width: 100%;
+    }
+
+    .hero-metrics {
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .section {
+        padding: 24px;
+        border-radius: 18px;
+    }
+
+    .section-title h2 {
+        font-size: 22px;
+    }
+
+    .split {
+        gap: 20px;
+    }
+
+    .rules-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .rules-presets {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .rules-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .rules-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-card {
+        padding: 14px;
+    }
+
+    .rules-toggle-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .rules-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rule-card {
+        padding: 12px;
+        min-height: 0;
+    }
+
+    .rule-title {
+        font-size: 15px;
+    }
+
+    .rule-desc,
+    .rule-stat {
+        font-size: 12px;
+    }
+
+    .generator-panel {
+        gap: 16px;
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #draw-count,
+    #generate-btn {
+        width: 100%;
+    }
+
+    .number-row {
+        gap: 6px;
+    }
+
+    .number {
+        width: 38px;
+        height: 38px;
+        font-size: 14px;
+    }
+}
