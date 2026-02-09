@@ -1,3 +1,31 @@
+:root {
+    --bg: linear-gradient(to right, #6a11cb, #2575fc);
+    --panel: rgba(255, 255, 255, 0.1);
+    --panel-border: rgba(255, 255, 255, 0.18);
+    --text: #ffffff;
+    --number-bg: #ffffff;
+    --number-text: #333333;
+    --button-bg: #ff4081;
+    --button-bg-hover: #f50057;
+    --button-text: #ffffff;
+    --control-bg: #ffffff;
+    --control-text: #1a1a1a;
+}
+
+body[data-theme="light"] {
+    --bg: linear-gradient(to right, #f8fafc, #e2e8f0);
+    --panel: rgba(255, 255, 255, 0.9);
+    --panel-border: rgba(15, 23, 42, 0.12);
+    --text: #0f172a;
+    --number-bg: #0f172a;
+    --number-text: #ffffff;
+    --button-bg: #0f172a;
+    --button-bg-hover: #111827;
+    --button-text: #ffffff;
+    --control-bg: #ffffff;
+    --control-text: #0f172a;
+}
+
 body {
     font-family: 'Arial', sans-serif;
     display: flex;
@@ -5,23 +33,45 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background: linear-gradient(to right, #6a11cb, #2575fc);
+    background: var(--bg);
 }
 
 .container {
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--panel);
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border: 1px solid var(--panel-border);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
 }
 
 h1 {
-    color: white;
-    margin-bottom: 30px;
+    color: var(--text);
+    margin: 0;
+}
+
+#theme-toggle {
+    background-color: transparent;
+    color: var(--text);
+    border: 1px solid var(--text);
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+#theme-toggle:hover {
+    opacity: 0.85;
 }
 
 .controls {
@@ -30,7 +80,7 @@ h1 {
     align-items: center;
     gap: 12px;
     margin-bottom: 20px;
-    color: white;
+    color: var(--text);
     font-size: 16px;
 }
 
@@ -40,6 +90,8 @@ h1 {
     border: none;
     font-size: 16px;
     cursor: pointer;
+    background-color: var(--control-bg);
+    color: var(--control-text);
 }
 
 .numbers-container {
@@ -59,7 +111,7 @@ h1 {
 }
 
 .row-label {
-    color: white;
+    color: var(--text);
     font-weight: bold;
     margin-right: 8px;
     min-width: 60px;
@@ -73,8 +125,8 @@ h1 {
     width: 50px;
     height: 50px;
     margin: 0 5px;
-    background-color: white;
-    color: #333;
+    background-color: var(--number-bg);
+    color: var(--number-text);
     font-size: 24px;
     font-weight: bold;
     border-radius: 50%;
@@ -86,8 +138,8 @@ h1 {
 }
 
 #generate-btn {
-    background-color: #ff4081;
-    color: white;
+    background-color: var(--button-bg);
+    color: var(--button-text);
     border: none;
     padding: 15px 30px;
     font-size: 18px;
@@ -97,5 +149,5 @@ h1 {
 }
 
 #generate-btn:hover {
-    background-color: #f50057;
+    background-color: var(--button-bg-hover);
 }

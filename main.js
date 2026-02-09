@@ -2,9 +2,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const numbersContainer = document.querySelector('.numbers-container');
     const generateBtn = document.getElementById('generate-btn');
     const drawCountSelect = document.getElementById('draw-count');
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
 
     generateBtn.addEventListener('click', () => {
         generateAndDisplayNumbers();
+    });
+
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = body.getAttribute('data-theme') || 'dark';
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        body.setAttribute('data-theme', nextTheme);
+        themeToggle.textContent = nextTheme === 'dark' ? 'Dark' : 'Light';
     });
 
     function generateAndDisplayNumbers() {
