@@ -8,9 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileLinks = mobileMenu ? Array.from(mobileMenu.querySelectorAll('a')) : [];
+    const ruleSearch = document.getElementById('rule-search');
+    const presetButtons = Array.from(document.querySelectorAll('.preset-btn'));
+    const saveRulesBtn = document.getElementById('save-rules');
+    const loadRulesBtn = document.getElementById('load-rules');
+    const rulesStatus = document.getElementById('rules-status');
+    const ruleCards = Array.from(document.querySelectorAll('.rule-card'));
 
     syncThemeToggle();
     syncMenuState(false);
+    applySavedRules();
+    updateRulesStatus('');
 
     generateBtn.addEventListener('click', () => {
         generateAndDisplayNumbers();
@@ -35,6 +43,34 @@ document.addEventListener('DOMContentLoaded', () => {
             syncMenuState(false);
         });
     });
+
+    if (ruleSearch) {
+        ruleSearch.addEventListener('input', event => {
+            const query = event.target.value.trim().toLowerCase();
+            filterRules(query);
+        });
+    }
+
+    presetButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const preset = button.dataset.preset;
+            applyPreset(preset);
+        });
+    });
+
+    if (saveRulesBtn) {
+        saveRulesBtn.addEventListener('click', () => {
+            const selected = ruleInputs.filter(input => input.checked).map(input => input.value);
+            localStorage.setItem('lotto_rules', JSON.stringify(selected));
+            updateRulesStatus('선택한 규칙을 저장했습니다.');
+        });
+    }
+
+    if (loadRulesBtn) {
+        loadRulesBtn.addEventListener('click', () => {
+            applySavedRules(true);
+        });
+    }
 
     function generateAndDisplayNumbers() {
         const drawCount = parseInt(drawCountSelect.value, 10);
@@ -123,6 +159,60 @@ document.addEventListener('DOMContentLoaded', () => {
         menuToggle.setAttribute('aria-expanded', String(open));
         mobileMenu.setAttribute('aria-hidden', String(!open));
         menuToggle.textContent = open ? '닫기' : '메뉴';
+    }
+
+    function updateRulesStatus(message) {
+        if (!rulesStatus) {
+            return;
+        }
+        rulesStatus.textContent = message;
+        if (message) {
+            window.clearTimeout(updateRulesStatus.timerId);
+            updateRulesStatus.timerId = window.setTimeout(() => {
+                rulesStatus.textContent = '';
+            }, 2400);
+        }
+    }
+
+    function filterRules(query) {
+        ruleCards.forEach(card => {
+            const title = (card.dataset.title || '').toLowerCase();
+            const group = (card.dataset.group || '').toLowerCase();
+            const visible = !query || title.includes(query) || group.includes(query);
+            card.classList.toggle('is-hidden', !visible);
+        });
+    }
+
+    function applyPreset(preset) {
+        const presetIds = PRESETS[preset] || [];
+        if (preset === 'clear') {
+            ruleInputs.forEach(input => {
+                input.checked = false;
+            });
+            updateRulesStatus('모든 선택을 해제했습니다.');
+            return;
+        }
+        ruleInputs.forEach(input => {
+            input.checked = presetIds.includes(input.value);
+        });
+        updateRulesStatus(`${PRESETS_LABEL[preset]} 규칙을 적용했습니다.`);
+    }
+
+    function applySavedRules(fromButton = false) {
+        const saved = localStorage.getItem('lotto_rules');
+        if (!saved) {
+            if (fromButton) {
+                updateRulesStatus('저장된 규칙이 없습니다.');
+            }
+            return;
+        }
+        const savedIds = JSON.parse(saved);
+        ruleInputs.forEach(input => {
+            input.checked = savedIds.includes(input.value);
+        });
+        if (fromButton) {
+            updateRulesStatus('저장된 규칙을 불러왔습니다.');
+        }
     }
 
     const RULES = [
@@ -226,6 +316,42 @@ document.addEventListener('DOMContentLoaded', () => {
             exclude: numbers => countPrimes(numbers) <= 1
         }
     ];
+
+    const PRESETS = {
+        light: [
+            'all_odd',
+            'all_even',
+            'consecutive_4_plus',
+            'same_last_digit_4_plus',
+            'extreme_sum'
+        ],
+        balanced: [
+            'five_odd_one_even',
+            'five_even_one_odd',
+            'multiples_of_2_4_plus',
+            'multiples_of_3_3_plus',
+            'same_decade_4_plus',
+            'tight_range'
+        ],
+        aggressive: [
+            'four_odd_two_even',
+            'four_even_two_odd',
+            'multiples_of_4_3_plus',
+            'multiples_of_5_3_plus',
+            'multiples_of_6_3_plus',
+            'consecutive_3_plus',
+            'same_last_digit_3_plus',
+            'all_low_or_high',
+            'low_or_high_5_plus',
+            'prime_4_plus'
+        ]
+    };
+
+    const PRESETS_LABEL = {
+        light: '보수형',
+        balanced: '균형형',
+        aggressive: '공격형'
+    };
 
     function countBy(numbers, predicate) {
         return numbers.reduce((count, number) => (predicate(number) ? count + 1 : count), 0);

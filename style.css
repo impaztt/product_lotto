@@ -353,6 +353,66 @@ main {
     margin: 12px 0;
 }
 
+.rules-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0 12px;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid var(--panel-border);
+    background: var(--bg-soft);
+}
+
+.rules-search {
+    flex: 1;
+    min-width: 200px;
+}
+
+.rules-search input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--panel-border);
+    background: var(--panel);
+    color: var(--text);
+    font-size: 14px;
+}
+
+.rules-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.preset-btn {
+    border: 1px solid var(--panel-border);
+    background: transparent;
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.preset-btn:hover {
+    border-color: var(--accent);
+}
+
+.rules-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.rules-status {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
 .rules-groups {
     display: grid;
     gap: 24px;
@@ -380,6 +440,7 @@ main {
     cursor: pointer;
     transition: border 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
+    overflow: hidden;
 }
 
 .rule-card:hover {
@@ -414,6 +475,17 @@ main {
     border-radius: 14px;
     background: var(--accent-soft);
     border: 1px solid var(--accent);
+}
+
+.rule-input:checked + .rule-body .rule-title::after {
+    content: "선택됨";
+    margin-left: 8px;
+    font-size: 11px;
+    color: var(--accent);
+}
+
+.rule-card.is-hidden {
+    display: none;
 }
 
 .generator-panel {
