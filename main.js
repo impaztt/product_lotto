@@ -40,6 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleRulesBtn = document.getElementById('toggle-rules');
     const rulesSection = document.getElementById('rules');
     const guestLimitEl = document.getElementById('guest-limit');
+    const guestBannerEl = document.getElementById('guest-banner');
+    const authModal = document.getElementById('auth-modal');
+    const authButtons = Array.from(document.querySelectorAll('[data-auth]'));
+    const authClose = authModal ? authModal.querySelector('.modal-close') : null;
 
     const TOTAL_COMBOS = Number(combination(45, 6));
     const RULE_STATS = {
@@ -77,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (generateBtn) {
         generateBtn.addEventListener('click', () => {
             if (!canGuestGenerate()) {
+                openAuthModal();
                 return;
             }
             generateAndDisplayNumbers();
@@ -156,6 +161,28 @@ document.addEventListener('DOMContentLoaded', () => {
             updateRulesStatus('내 프리셋을 적용했습니다.');
             updateSelectionCount();
             updateCombinedEstimates();
+        });
+    }
+
+    authButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const provider = button.dataset.auth;
+            updateRulesStatus(`${provider === 'google' ? '구글' : '카카오'} 로그인은 준비 중입니다.`);
+            openAuthModal();
+        });
+    });
+
+    if (authClose) {
+        authClose.addEventListener('click', () => {
+            closeAuthModal();
+        });
+    }
+
+    if (authModal) {
+        authModal.addEventListener('click', event => {
+            if (event.target === authModal) {
+                closeAuthModal();
+            }
         });
     }
 
@@ -303,13 +330,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const current = Number(localStorage.getItem(countKey) || 0);
         if (drawCount > 1) {
             guestLimitEl.textContent = '비회원은 1회 1세트만 가능합니다. 로그인 후 이용해 주세요.';
+            if (guestBannerEl) {
+                guestBannerEl.textContent = '비회원 제한으로 1회 1세트만 가능합니다. 로그인하면 제한이 해제됩니다.';
+            }
             return false;
         }
         if (current >= limit) {
             guestLimitEl.textContent = '비회원 하루 5회 제한을 초과했습니다. 로그인 후 이용해 주세요.';
+            if (guestBannerEl) {
+                guestBannerEl.textContent = '비회원 하루 5회 제한을 초과했습니다. 로그인 후 이용해 주세요.';
+            }
             return false;
         }
         guestLimitEl.textContent = `비회원 남은 횟수: ${limit - current}회 (1회 1세트)`;
+        if (guestBannerEl) {
+            guestBannerEl.textContent = `비회원 남은 횟수: ${limit - current}회 (1회 1세트)`;
+        }
         return true;
     }
 
@@ -327,6 +363,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const next = current + 1;
         localStorage.setItem(countKey, String(next));
         guestLimitEl.textContent = `비회원 남은 횟수: ${Math.max(0, 5 - next)}회 (1회 1세트)`;
+        if (guestBannerEl) {
+            guestBannerEl.textContent = `비회원 남은 횟수: ${Math.max(0, 5 - next)}회 (1회 1세트)`;
+        }
+    }
+
+    function openAuthModal() {
+        if (!authModal) {
+            return;
+        }
+        authModal.classList.remove('hidden');
+    }
+
+    function closeAuthModal() {
+        if (!authModal) {
+            return;
+        }
+        authModal.classList.add('hidden');
     }
 
     function getTodayKey() {
