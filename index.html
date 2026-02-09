@@ -121,12 +121,64 @@
                     <button class="preset-btn" data-preset="balanced" type="button">균형형</button>
                     <button class="preset-btn" data-preset="aggressive" type="button">공격형</button>
                     <button class="preset-btn" data-preset="clear" type="button">선택 해제</button>
+                    <button class="preset-btn" id="custom-save" type="button">내 프리셋 저장</button>
+                    <button class="preset-btn" id="custom-apply" type="button">내 프리셋 적용</button>
                 </div>
             </div>
             <div class="rules-actions">
                 <button id="save-rules" class="ghost" type="button">규칙 저장</button>
                 <button id="load-rules" class="ghost" type="button">저장 불러오기</button>
                 <span id="rules-status" class="rules-status" aria-live="polite"></span>
+            </div>
+            <div class="rules-summary">
+                <div class="summary-card">
+                    <div class="summary-label">선택된 규칙</div>
+                    <div class="summary-value" id="rules-selected-count">0개</div>
+                    <div class="summary-sub" id="rules-visible-count">표시: 0/0</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">남은 조합 (가정)</div>
+                    <div class="summary-value" id="remaining-combos">계산중</div>
+                    <div class="summary-sub" id="excluded-combos">제외: -</div>
+                </div>
+                <div class="summary-card odds-card">
+                    <div class="summary-label">당첨확률 (가정)</div>
+                    <div class="odds-grid">
+                        <div class="odds-row">
+                            <span>등수</span>
+                            <span>기본</span>
+                            <span>필터 적용</span>
+                        </div>
+                        <div class="odds-row">
+                            <span>1등</span>
+                            <span id="odds-base-1">-</span>
+                            <span id="odds-adj-1">-</span>
+                        </div>
+                        <div class="odds-row">
+                            <span>2등</span>
+                            <span id="odds-base-2">-</span>
+                            <span id="odds-adj-2">-</span>
+                        </div>
+                        <div class="odds-row">
+                            <span>3등</span>
+                            <span id="odds-base-3">-</span>
+                            <span id="odds-adj-3">-</span>
+                        </div>
+                        <div class="odds-row">
+                            <span>4등</span>
+                            <span id="odds-base-4">-</span>
+                            <span id="odds-adj-4">-</span>
+                        </div>
+                        <div class="odds-row">
+                            <span>5등</span>
+                            <span id="odds-base-5">-</span>
+                            <span id="odds-adj-5">-</span>
+                        </div>
+                    </div>
+                    <div class="summary-sub">
+                        필터 적용은 “당첨 조합도 필터 범위 내에 있다”는 가정값입니다.
+                    </div>
+                </div>
             </div>
             <div class="rules-groups">
                 <div class="rule-group">
@@ -137,6 +189,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">모두 홀수</span>
                                 <span class="rule-desc">홀수만 6개</span>
+                                <span class="rule-stat" data-rule="all_odd">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="모두 짝수" data-group="홀짝 비율">
@@ -144,6 +197,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">모두 짝수</span>
                                 <span class="rule-desc">짝수만 6개</span>
+                                <span class="rule-stat" data-rule="all_even">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="홀수 5 + 짝수 1" data-group="홀짝 비율">
@@ -151,6 +205,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">홀수 5 + 짝수 1</span>
                                 <span class="rule-desc">홀수 편중</span>
+                                <span class="rule-stat" data-rule="five_odd_one_even">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="짝수 5 + 홀수 1" data-group="홀짝 비율">
@@ -158,6 +213,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">짝수 5 + 홀수 1</span>
                                 <span class="rule-desc">짝수 편중</span>
+                                <span class="rule-stat" data-rule="five_even_one_odd">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="홀수 4 + 짝수 2" data-group="홀짝 비율">
@@ -165,6 +221,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">홀수 4 + 짝수 2</span>
                                 <span class="rule-desc">홀수 우세</span>
+                                <span class="rule-stat" data-rule="four_odd_two_even">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="짝수 4 + 홀수 2" data-group="홀짝 비율">
@@ -172,6 +229,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">짝수 4 + 홀수 2</span>
                                 <span class="rule-desc">짝수 우세</span>
+                                <span class="rule-stat" data-rule="four_even_two_odd">예상 제외: 계산중</span>
                             </span>
                         </label>
                     </div>
@@ -185,6 +243,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">2의 배수 4개 이상</span>
                                 <span class="rule-desc">짝수 과다</span>
+                                <span class="rule-stat" data-rule="multiples_of_2_4_plus">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="3의 배수 3개 이상" data-group="배수 분포">
@@ -192,6 +251,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">3의 배수 3개 이상</span>
                                 <span class="rule-desc">3의 배수 과다</span>
+                                <span class="rule-stat" data-rule="multiples_of_3_3_plus">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="4의 배수 3개 이상" data-group="배수 분포">
@@ -199,6 +259,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">4의 배수 3개 이상</span>
                                 <span class="rule-desc">4의 배수 과다</span>
+                                <span class="rule-stat" data-rule="multiples_of_4_3_plus">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="5의 배수 3개 이상" data-group="배수 분포">
@@ -206,6 +267,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">5의 배수 3개 이상</span>
                                 <span class="rule-desc">5의 배수 과다</span>
+                                <span class="rule-stat" data-rule="multiples_of_5_3_plus">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="6의 배수 3개 이상" data-group="배수 분포">
@@ -213,6 +275,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">6의 배수 3개 이상</span>
                                 <span class="rule-desc">6의 배수 과다</span>
+                                <span class="rule-stat" data-rule="multiples_of_6_3_plus">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="7의 배수 3개 이상" data-group="배수 분포">
@@ -220,6 +283,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">7의 배수 3개 이상</span>
                                 <span class="rule-desc">7의 배수 과다</span>
+                                <span class="rule-stat" data-rule="multiples_of_7_3_plus">예상 제외: 계산중</span>
                             </span>
                         </label>
                     </div>
@@ -233,6 +297,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">연속수 3개 이상</span>
                                 <span class="rule-desc">연속수 몰림</span>
+                                <span class="rule-stat" data-rule="consecutive_3_plus">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="연속수 4개 이상" data-group="연속/반복">
@@ -240,6 +305,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">연속수 4개 이상</span>
                                 <span class="rule-desc">연속수 과다</span>
+                                <span class="rule-stat" data-rule="consecutive_4_plus">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="끝자리 동일 3개 이상" data-group="연속/반복">
@@ -247,6 +313,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">끝자리 동일 3개 이상</span>
                                 <span class="rule-desc">끝자리 반복</span>
+                                <span class="rule-stat" data-rule="same_last_digit_3_plus">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="끝자리 동일 4개 이상" data-group="연속/반복">
@@ -254,6 +321,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">끝자리 동일 4개 이상</span>
                                 <span class="rule-desc">끝자리 과다</span>
+                                <span class="rule-stat" data-rule="same_last_digit_4_plus">예상 제외: 계산중</span>
                             </span>
                         </label>
                     </div>
@@ -267,6 +335,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">같은 구간 4개 이상</span>
                                 <span class="rule-desc">10단위 몰림</span>
+                                <span class="rule-stat" data-rule="same_decade_4_plus">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="같은 구간 5개 이상" data-group="구간 분포">
@@ -274,6 +343,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">같은 구간 5개 이상</span>
                                 <span class="rule-desc">10단위 과다</span>
+                                <span class="rule-stat" data-rule="same_decade_5_plus">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="저구간 또는 고구간 몰림" data-group="구간 분포">
@@ -281,6 +351,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">저구간 또는 고구간 몰림</span>
                                 <span class="rule-desc">1-22 또는 23-45</span>
+                                <span class="rule-stat" data-rule="all_low_or_high">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="저구간/고구간 5개 이상" data-group="구간 분포">
@@ -288,6 +359,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">저구간/고구간 5개 이상</span>
                                 <span class="rule-desc">한쪽 과다</span>
+                                <span class="rule-stat" data-rule="low_or_high_5_plus">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="범위 20 미만" data-group="구간 분포">
@@ -295,6 +367,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">범위 20 미만</span>
                                 <span class="rule-desc">숫자 폭이 좁음</span>
+                                <span class="rule-stat" data-rule="tight_range">예상 제외: 계산중</span>
                             </span>
                         </label>
                     </div>
@@ -308,6 +381,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">합계 80 이하 또는 200 이상</span>
                                 <span class="rule-desc">합계 극단</span>
+                                <span class="rule-stat" data-rule="extreme_sum">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="소수 4개 이상" data-group="합계/소수">
@@ -315,6 +389,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">소수 4개 이상</span>
                                 <span class="rule-desc">소수 과다</span>
+                                <span class="rule-stat" data-rule="prime_4_plus">예상 제외: 계산중</span>
                             </span>
                         </label>
                         <label class="rule-card" data-title="소수 1개 이하" data-group="합계/소수">
@@ -322,6 +397,7 @@
                             <span class="rule-body">
                                 <span class="rule-title">소수 1개 이하</span>
                                 <span class="rule-desc">소수 부족</span>
+                                <span class="rule-stat" data-rule="prime_1_or_less">예상 제외: 계산중</span>
                             </span>
                         </label>
                     </div>

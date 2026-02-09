@@ -14,11 +14,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadRulesBtn = document.getElementById('load-rules');
     const rulesStatus = document.getElementById('rules-status');
     const ruleCards = Array.from(document.querySelectorAll('.rule-card'));
+    const ruleGroups = Array.from(document.querySelectorAll('.rule-group'));
+    const rulesSelectedCount = document.getElementById('rules-selected-count');
+    const rulesVisibleCount = document.getElementById('rules-visible-count');
+    const remainingCombosEl = document.getElementById('remaining-combos');
+    const excludedCombosEl = document.getElementById('excluded-combos');
+    const oddsBaseEls = {
+        1: document.getElementById('odds-base-1'),
+        2: document.getElementById('odds-base-2'),
+        3: document.getElementById('odds-base-3'),
+        4: document.getElementById('odds-base-4'),
+        5: document.getElementById('odds-base-5')
+    };
+    const oddsAdjEls = {
+        1: document.getElementById('odds-adj-1'),
+        2: document.getElementById('odds-adj-2'),
+        3: document.getElementById('odds-adj-3'),
+        4: document.getElementById('odds-adj-4'),
+        5: document.getElementById('odds-adj-5')
+    };
+    const customSaveBtn = document.getElementById('custom-save');
+    const customApplyBtn = document.getElementById('custom-apply');
+    const ruleStatEls = Array.from(document.querySelectorAll('.rule-stat'));
+
+    const TOTAL_COMBOS = Number(combination(45, 6));
 
     syncThemeToggle();
     syncMenuState(false);
     applySavedRules();
     updateRulesStatus('');
+    updateSelectionCount();
+    computeBaseOdds();
+    estimateRuleImpact();
+    updateCombinedEstimates();
 
     generateBtn.addEventListener('click', () => {
         generateAndDisplayNumbers();
@@ -71,6 +99,38 @@ document.addEventListener('DOMContentLoaded', () => {
             applySavedRules(true);
         });
     }
+
+    if (customSaveBtn) {
+        customSaveBtn.addEventListener('click', () => {
+            const selected = ruleInputs.filter(input => input.checked).map(input => input.value);
+            localStorage.setItem('lotto_custom_preset', JSON.stringify(selected));
+            updateRulesStatus('내 프리셋을 저장했습니다.');
+        });
+    }
+
+    if (customApplyBtn) {
+        customApplyBtn.addEventListener('click', () => {
+            const saved = localStorage.getItem('lotto_custom_preset');
+            if (!saved) {
+                updateRulesStatus('저장된 내 프리셋이 없습니다.');
+                return;
+            }
+            const ids = JSON.parse(saved);
+            ruleInputs.forEach(input => {
+                input.checked = ids.includes(input.value);
+            });
+            updateRulesStatus('내 프리셋을 적용했습니다.');
+            updateSelectionCount();
+            updateCombinedEstimates();
+        });
+    }
+
+    ruleInputs.forEach(input => {
+        input.addEventListener('change', () => {
+            updateSelectionCount();
+            updateCombinedEstimates();
+        });
+    });
 
     function generateAndDisplayNumbers() {
         const drawCount = parseInt(drawCountSelect.value, 10);
@@ -181,6 +241,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const visible = !query || title.includes(query) || group.includes(query);
             card.classList.toggle('is-hidden', !visible);
         });
+        ruleGroups.forEach(group => {
+            const visibleCards = group.querySelectorAll('.rule-card:not(.is-hidden)');
+            group.classList.toggle('is-empty', visibleCards.length === 0);
+        });
+        updateSelectionCount();
     }
 
     function applyPreset(preset) {
@@ -190,12 +255,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 input.checked = false;
             });
             updateRulesStatus('모든 선택을 해제했습니다.');
+            updateSelectionCount();
+            updateCombinedEstimates();
             return;
         }
         ruleInputs.forEach(input => {
             input.checked = presetIds.includes(input.value);
         });
         updateRulesStatus(`${PRESETS_LABEL[preset]} 규칙을 적용했습니다.`);
+        updateSelectionCount();
+        updateCombinedEstimates();
     }
 
     function applySavedRules(fromButton = false) {
@@ -213,6 +282,128 @@ document.addEventListener('DOMContentLoaded', () => {
         if (fromButton) {
             updateRulesStatus('저장된 규칙을 불러왔습니다.');
         }
+        updateSelectionCount();
+        updateCombinedEstimates();
+    }
+
+    function updateSelectionCount() {
+        if (!rulesSelectedCount || !rulesVisibleCount) {
+            return;
+        }
+        const selectedCount = ruleInputs.filter(input => input.checked).length;
+        const totalCount = ruleCards.length;
+        const visibleCount = ruleCards.filter(card => !card.classList.contains('is-hidden')).length;
+        rulesSelectedCount.textContent = `${selectedCount}개`;
+        rulesVisibleCount.textContent = `표시: ${visibleCount}/${totalCount}`;
+        ruleCards.forEach(card => {
+            const input = card.querySelector('.rule-input');
+            card.classList.toggle('is-checked', input && input.checked);
+        });
+    }
+
+    function updateCombinedEstimates() {
+        if (!remainingCombosEl || !excludedCombosEl) {
+            return;
+        }
+        remainingCombosEl.textContent = '계산중';
+        excludedCombosEl.textContent = '제외: 계산중';
+        const activeRules = getActiveRules();
+        const sampleSize = 18000;
+        window.clearTimeout(updateCombinedEstimates.timerId);
+        updateCombinedEstimates.timerId = window.setTimeout(() => {
+            const remainingRatio = estimateRemainingRatio(activeRules, sampleSize);
+            const remainingCombos = Math.max(1, Math.round(TOTAL_COMBOS * remainingRatio));
+            const excludedCombos = Math.max(0, TOTAL_COMBOS - remainingCombos);
+            remainingCombosEl.textContent = `${formatNumber(remainingCombos)}개`;
+            excludedCombosEl.textContent = `제외: ${formatNumber(excludedCombos)}개`;
+            updateAdjustedOdds(remainingRatio);
+        }, 80);
+    }
+
+    function computeBaseOdds() {
+        const total = TOTAL_COMBOS;
+        const odds = {
+            1: total,
+            2: Math.round(total / 6),
+            3: Math.round(total / 228),
+            4: Math.round(total / (combination(6, 4) * combination(39, 2))),
+            5: Math.round(total / (combination(6, 3) * combination(39, 3)))
+        };
+        Object.entries(odds).forEach(([rank, value]) => {
+            if (oddsBaseEls[rank]) {
+                oddsBaseEls[rank].textContent = `1 / ${formatNumber(Math.round(value))}`;
+            }
+        });
+        updateAdjustedOdds(1);
+    }
+
+    function updateAdjustedOdds(ratio) {
+        const clampRatio = Math.min(1, Math.max(0.000001, ratio));
+        const total = TOTAL_COMBOS;
+        const baseOdds = {
+            1: total,
+            2: Math.round(total / 6),
+            3: Math.round(total / 228),
+            4: Math.round(total / (combination(6, 4) * combination(39, 2))),
+            5: Math.round(total / (combination(6, 3) * combination(39, 3)))
+        };
+        Object.entries(baseOdds).forEach(([rank, value]) => {
+            const adjusted = Math.max(1, Math.round(value * clampRatio));
+            if (oddsAdjEls[rank]) {
+                oddsAdjEls[rank].textContent = `1 / ${formatNumber(adjusted)}`;
+            }
+        });
+    }
+
+    function estimateRuleImpact() {
+        const samples = 40000;
+        const counts = {};
+        RULES.forEach(rule => {
+            counts[rule.id] = 0;
+        });
+        for (let i = 0; i < samples; i += 1) {
+            const numbers = generateUniqueNumbers(6, 1, 45).sort((a, b) => a - b);
+            RULES.forEach(rule => {
+                if (rule.exclude(numbers)) {
+                    counts[rule.id] += 1;
+                }
+            });
+        }
+        ruleStatEls.forEach(stat => {
+            const id = stat.dataset.rule;
+            if (!id || counts[id] === undefined) {
+                return;
+            }
+            const ratio = counts[id] / samples;
+            const estimate = Math.round(TOTAL_COMBOS * ratio);
+            stat.textContent = `예상 제외: ${formatNumber(estimate)}개`;
+        });
+    }
+
+    function estimateRemainingRatio(activeRules, samples) {
+        if (!activeRules.length) {
+            return 1;
+        }
+        let accepted = 0;
+        for (let i = 0; i < samples; i += 1) {
+            const numbers = generateUniqueNumbers(6, 1, 45).sort((a, b) => a - b);
+            if (!shouldExclude(numbers, activeRules)) {
+                accepted += 1;
+            }
+        }
+        return accepted / samples;
+    }
+
+    function formatNumber(value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function combination(n, k) {
+        let result = 1;
+        for (let i = 1; i <= k; i += 1) {
+            result = (result * (n - (k - i))) / i;
+        }
+        return Math.round(result);
     }
 
     const RULES = [
@@ -352,6 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
         balanced: '균형형',
         aggressive: '공격형'
     };
+
 
     function countBy(numbers, predicate) {
         return numbers.reduce((count, number) => (predicate(number) ? count + 1 : count), 0);
