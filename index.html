@@ -6,7 +6,7 @@
     <title>로또픽스튜디오</title>
     <link rel="stylesheet" href="style.css?v=20260209">
 </head>
-<body data-theme="dark">
+<body data-theme="light">
     <header class="site-header">
         <div class="logo">로또픽스튜디오</div>
         <nav class="main-nav">
@@ -182,8 +182,12 @@
                     </div>
                 </div>
             </div>
+            <div class="rules-toggle-row">
+                <button id="toggle-rules" class="ghost" type="button">모든 규칙 펼치기</button>
+                <span class="rules-hint">기본은 핵심 규칙만 보여줍니다</span>
+            </div>
             <div class="rules-groups">
-                <div class="rule-group">
+                <div class="rule-group is-essential" data-group="홀짝 비율">
                     <h3>홀짝 비율</h3>
                     <div class="rules-grid">
                         <label class="rule-card" data-title="모두 홀수" data-group="홀짝 비율">
@@ -218,7 +222,7 @@
                                 <span class="rule-stat" data-rule="five_even_one_odd">예상 제외: 약 600,006개</span>
                             </span>
                         </label>
-                        <label class="rule-card" data-title="홀수 4 + 짝수 2" data-group="홀짝 비율">
+                        <label class="rule-card is-advanced" data-title="홀수 4 + 짝수 2" data-group="홀짝 비율">
                             <input class="rule-input" type="checkbox" value="four_odd_two_even">
                             <span class="rule-body">
                                 <span class="rule-title">홀수 4 + 짝수 2</span>
@@ -226,7 +230,7 @@
                                 <span class="rule-stat" data-rule="four_odd_two_even">예상 제외: 약 2,044,695개</span>
                             </span>
                         </label>
-                        <label class="rule-card" data-title="짝수 4 + 홀수 2" data-group="홀짝 비율">
+                        <label class="rule-card is-advanced" data-title="짝수 4 + 홀수 2" data-group="홀짝 비율">
                             <input class="rule-input" type="checkbox" value="four_even_two_odd">
                             <span class="rule-body">
                                 <span class="rule-title">짝수 4 + 홀수 2</span>
@@ -237,7 +241,7 @@
                     </div>
                 </div>
 
-                <div class="rule-group">
+                <div class="rule-group is-essential" data-group="배수 분포">
                     <h3>배수 분포</h3>
                     <div class="rules-grid">
                         <label class="rule-card" data-title="2의 배수 4개 이상" data-group="배수 분포">
@@ -256,7 +260,7 @@
                                 <span class="rule-stat" data-rule="multiples_of_3_3_plus">예상 제외: 약 2,541,503개</span>
                             </span>
                         </label>
-                        <label class="rule-card" data-title="4의 배수 3개 이상" data-group="배수 분포">
+                        <label class="rule-card is-advanced" data-title="4의 배수 3개 이상" data-group="배수 분포">
                             <input class="rule-input" type="checkbox" value="multiples_of_4_3_plus">
                             <span class="rule-body">
                                 <span class="rule-title">4의 배수 3개 이상</span>
@@ -264,7 +268,7 @@
                                 <span class="rule-stat" data-rule="multiples_of_4_3_plus">예상 제외: 약 1,182,581개</span>
                             </span>
                         </label>
-                        <label class="rule-card" data-title="5의 배수 3개 이상" data-group="배수 분포">
+                        <label class="rule-card is-advanced" data-title="5의 배수 3개 이상" data-group="배수 분포">
                             <input class="rule-input" type="checkbox" value="multiples_of_5_3_plus">
                             <span class="rule-body">
                                 <span class="rule-title">5의 배수 3개 이상</span>
@@ -272,7 +276,7 @@
                                 <span class="rule-stat" data-rule="multiples_of_5_3_plus">예상 제외: 약 683,126개</span>
                             </span>
                         </label>
-                        <label class="rule-card" data-title="6의 배수 3개 이상" data-group="배수 분포">
+                        <label class="rule-card is-advanced" data-title="6의 배수 3개 이상" data-group="배수 분포">
                             <input class="rule-input" type="checkbox" value="multiples_of_6_3_plus">
                             <span class="rule-body">
                                 <span class="rule-title">6의 배수 3개 이상</span>
@@ -280,7 +284,7 @@
                                 <span class="rule-stat" data-rule="multiples_of_6_3_plus">예상 제외: 약 319,612개</span>
                             </span>
                         </label>
-                        <label class="rule-card" data-title="7의 배수 3개 이상" data-group="배수 분포">
+                        <label class="rule-card is-advanced" data-title="7의 배수 3개 이상" data-group="배수 분포">
                             <input class="rule-input" type="checkbox" value="multiples_of_7_3_plus">
                             <span class="rule-body">
                                 <span class="rule-title">7의 배수 3개 이상</span>
@@ -291,7 +295,7 @@
                     </div>
                 </div>
 
-                <div class="rule-group">
+                <div class="rule-group is-essential" data-group="연속/반복">
                     <h3>연속/반복</h3>
                     <div class="rules-grid">
                         <label class="rule-card" data-title="연속수 3개 이상" data-group="연속/반복">
@@ -302,7 +306,7 @@
                                 <span class="rule-stat" data-rule="consecutive_3_plus">예상 제외: 약 458,933개</span>
                             </span>
                         </label>
-                        <label class="rule-card" data-title="연속수 4개 이상" data-group="연속/반복">
+                        <label class="rule-card is-advanced" data-title="연속수 4개 이상" data-group="연속/반복">
                             <input class="rule-input" type="checkbox" value="consecutive_4_plus">
                             <span class="rule-body">
                                 <span class="rule-title">연속수 4개 이상</span>
@@ -318,7 +322,7 @@
                                 <span class="rule-stat" data-rule="same_last_digit_3_plus">예상 제외: 약 729,268개</span>
                             </span>
                         </label>
-                        <label class="rule-card" data-title="끝자리 동일 4개 이상" data-group="연속/반복">
+                        <label class="rule-card is-advanced" data-title="끝자리 동일 4개 이상" data-group="연속/반복">
                             <input class="rule-input" type="checkbox" value="same_last_digit_4_plus">
                             <span class="rule-body">
                                 <span class="rule-title">끝자리 동일 4개 이상</span>
@@ -329,7 +333,7 @@
                     </div>
                 </div>
 
-                <div class="rule-group">
+                <div class="rule-group is-essential" data-group="구간 분포">
                     <h3>구간 분포</h3>
                     <div class="rules-grid">
                         <label class="rule-card" data-title="같은 구간 4개 이상" data-group="구간 분포">
@@ -340,7 +344,7 @@
                                 <span class="rule-stat" data-rule="same_decade_4_plus">예상 제외: 약 496,930개</span>
                             </span>
                         </label>
-                        <label class="rule-card" data-title="같은 구간 5개 이상" data-group="구간 분포">
+                        <label class="rule-card is-advanced" data-title="같은 구간 5개 이상" data-group="구간 분포">
                             <input class="rule-input" type="checkbox" value="same_decade_5_plus">
                             <span class="rule-body">
                                 <span class="rule-title">같은 구간 5개 이상</span>
@@ -356,7 +360,7 @@
                                 <span class="rule-stat" data-rule="all_low_or_high">예상 제외: 약 176,911개</span>
                             </span>
                         </label>
-                        <label class="rule-card" data-title="저구간/고구간 5개 이상" data-group="구간 분포">
+                        <label class="rule-card is-advanced" data-title="저구간/고구간 5개 이상" data-group="구간 분포">
                             <input class="rule-input" type="checkbox" value="low_or_high_5_plus">
                             <span class="rule-body">
                                 <span class="rule-title">저구간/고구간 5개 이상</span>
@@ -375,7 +379,7 @@
                     </div>
                 </div>
 
-                <div class="rule-group">
+                <div class="rule-group is-essential" data-group="합계/소수">
                     <h3>합계/소수</h3>
                     <div class="rules-grid">
                         <label class="rule-card" data-title="합계 80 이하 또는 200 이상" data-group="합계/소수">
@@ -386,7 +390,7 @@
                                 <span class="rule-stat" data-rule="extreme_sum">예상 제외: 약 369,664개</span>
                             </span>
                         </label>
-                        <label class="rule-card" data-title="소수 4개 이상" data-group="합계/소수">
+                        <label class="rule-card is-advanced" data-title="소수 4개 이상" data-group="합계/소수">
                             <input class="rule-input" type="checkbox" value="prime_4_plus">
                             <span class="rule-body">
                                 <span class="rule-title">소수 4개 이상</span>
@@ -394,7 +398,7 @@
                                 <span class="rule-stat" data-rule="prime_4_plus">예상 제외: 약 530,610개</span>
                             </span>
                         </label>
-                        <label class="rule-card" data-title="소수 1개 이하" data-group="합계/소수">
+                        <label class="rule-card is-advanced" data-title="소수 1개 이하" data-group="합계/소수">
                             <input class="rule-input" type="checkbox" value="prime_1_or_less">
                             <span class="rule-body">
                                 <span class="rule-title">소수 1개 이하</span>

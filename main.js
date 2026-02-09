@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const customSaveBtn = document.getElementById('custom-save');
     const customApplyBtn = document.getElementById('custom-apply');
     const ruleStatEls = Array.from(document.querySelectorAll('.rule-stat'));
+    const toggleRulesBtn = document.getElementById('toggle-rules');
+    const rulesSection = document.getElementById('rules');
 
     const TOTAL_COMBOS = Number(combination(45, 6));
     const RULE_STATS = {
@@ -146,6 +148,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    if (toggleRulesBtn && rulesSection) {
+        toggleRulesBtn.addEventListener('click', () => {
+            const collapsed = rulesSection.classList.toggle('rules-collapsed');
+            toggleRulesBtn.textContent = collapsed ? '모든 규칙 펼치기' : '간단히 보기';
+        });
+    }
+
     ruleInputs.forEach(input => {
         input.addEventListener('change', () => {
             updateSelectionCount();
@@ -161,6 +170,12 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSelectionCount();
         computeBaseOdds();
         updateCombinedEstimates();
+        if (rulesSection) {
+            rulesSection.classList.add('rules-collapsed');
+        }
+        if (toggleRulesBtn) {
+            toggleRulesBtn.textContent = '모든 규칙 펼치기';
+        }
     } catch (error) {
         console.error('초기화 오류', error);
     }

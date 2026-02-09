@@ -437,6 +437,19 @@ main {
     flex-wrap: wrap;
 }
 
+.rules-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.rules-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
 .rules-status {
     color: var(--text-muted);
     font-size: 13px;
@@ -503,7 +516,7 @@ main {
 
 .rules-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 12px;
 }
 
@@ -519,7 +532,7 @@ main {
     transition: border 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     overflow: hidden;
-    min-height: 96px;
+    min-height: 90px;
     align-items: center;
 }
 
@@ -588,6 +601,10 @@ main {
 }
 
 .rule-group.is-empty {
+    display: none;
+}
+
+.rules-collapsed .rule-card.is-advanced {
     display: none;
 }
 
