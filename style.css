@@ -714,7 +714,7 @@ main {
     transition: border 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     overflow: hidden;
-    min-height: 72px;
+    min-height: 68px;
     align-items: center;
 }
 
@@ -755,11 +755,13 @@ main {
 .rule-desc {
     color: var(--text-muted);
     font-size: 12px;
+    line-height: 1.4;
 }
 
 .rule-stat {
     color: var(--text-muted);
     font-size: 11px;
+    letter-spacing: 0.1px;
 }
 
 .rule-card.is-checked {
