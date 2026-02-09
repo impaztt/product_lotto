@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateRulesStatus('');
     updateSelectionCount();
     computeBaseOdds();
-    estimateRuleImpact();
+    scheduleRuleImpactEstimate();
     updateCombinedEstimates();
 
     generateBtn.addEventListener('click', () => {
@@ -129,6 +129,21 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('change', () => {
             updateSelectionCount();
             updateCombinedEstimates();
+        });
+    });
+
+    ruleCards.forEach(card => {
+        card.addEventListener('click', event => {
+            if (event.target && event.target.tagName === 'INPUT') {
+                return;
+            }
+            event.preventDefault();
+            const input = card.querySelector('.rule-input');
+            if (!input) {
+                return;
+            }
+            input.checked = !input.checked;
+            input.dispatchEvent(new Event('change', { bubbles: true }));
         });
     });
 
@@ -362,13 +377,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function scheduleRuleImpactEstimate() {
+        window.clearTimeout(scheduleRuleImpactEstimate.timerId);
+        scheduleRuleImpactEstimate.timerId = window.setTimeout(() => {
+            estimateRuleImpact();
+        }, 300);
+    }
+
     function estimateRuleImpact() {
-        const samples = 8000;
+        const samples = 3000;
         const counts = {};
         RULES.forEach(rule => {
             counts[rule.id] = 0;
         });
-        runSampleLoop(samples, 400, () => {
+        runSampleLoop(samples, 200, () => {
             const numbers = generateUniqueNumbers(6, 1, 45).sort((a, b) => a - b);
             RULES.forEach(rule => {
                 if (rule.exclude(numbers)) {
