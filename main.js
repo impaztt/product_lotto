@@ -46,6 +46,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = Array.from(document.querySelectorAll('.tab-btn[data-tab]'));
     const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
     const tabLinks = Array.from(document.querySelectorAll('[data-tab-link]'));
+    const weeklyStatusEl = document.getElementById('weekly-status');
+    const weeklyRoundBadge = document.getElementById('weekly-round-badge');
+    const weeklyNumbersEl = document.getElementById('weekly-numbers');
+    const weeklyBonusEl = document.getElementById('weekly-bonus');
+    const weeklyDateEl = document.getElementById('weekly-date');
+    const weeklyFirstPrizeEl = document.getElementById('weekly-first-prize');
+    const weeklyFirstWinnersEl = document.getElementById('weekly-first-winners');
+    const weeklyTotalSalesEl = document.getElementById('weekly-total-sales');
+    const weeklyAccumulatedEl = document.getElementById('weekly-accumulated');
 
     const TOTAL_COMBOS = Number(combination(45, 6));
     const RULE_STATS = {
@@ -243,6 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCombinedEstimates();
         setupRuleDetails();
         syncInitialTab();
+        fetchLatestDraw();
         if (rulesSection) {
             rulesSection.classList.add('rules-collapsed');
         }
@@ -462,6 +472,116 @@ document.addEventListener('DOMContentLoaded', () => {
         menuToggle.setAttribute('aria-expanded', String(open));
         mobileMenu.setAttribute('aria-hidden', String(!open));
         menuToggle.textContent = open ? '닫기' : '메뉴';
+    }
+
+    async function fetchLatestDraw() {
+        if (!weeklyStatusEl || !weeklyRoundBadge || !weeklyNumbersEl || !weeklyBonusEl) {
+            return;
+        }
+        weeklyStatusEl.textContent = '당첨 정보를 불러오는 중입니다.';
+        weeklyRoundBadge.textContent = '조회중';
+
+        const estimatedRound = estimateLatestRound();
+        const maxAttempts = 12;
+        for (let offset = 0; offset < maxAttempts; offset += 1) {
+            const round = Math.max(1, estimatedRound - offset);
+            try {
+                const data = await fetchDrawData(round);
+                if (data && data.returnValue === 'success') {
+                    renderWeeklyData(data);
+                    return;
+                }
+            } catch (error) {
+                console.warn('당첨 정보 조회 실패', error);
+            }
+        }
+
+        weeklyStatusEl.textContent = '당첨 정보를 가져오지 못했습니다. 잠시 후 다시 시도해 주세요.';
+        weeklyRoundBadge.textContent = '연동 실패';
+        weeklyRoundBadge.classList.add('muted');
+    }
+
+    function estimateLatestRound() {
+        const firstDraw = new Date(Date.UTC(2002, 11, 7, 11, 35, 0));
+        const now = getKstNow();
+        const diffMs = now - firstDraw;
+        const weeks = Math.floor(diffMs / (7 * 24 * 60 * 60 * 1000));
+        const estimated = Math.max(1, weeks + 1);
+        const drawTimeThisWeek = getLatestSaturdayDrawTime(now);
+        if (now < drawTimeThisWeek) {
+            return Math.max(1, estimated - 1);
+        }
+        return estimated;
+    }
+
+    function getKstNow() {
+        const now = new Date();
+        const utc = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
+        return new Date(utc + 9 * 60 * 60 * 1000);
+    }
+
+    function getLatestSaturdayDrawTime(kstNow) {
+        const day = kstNow.getDay();
+        const saturdayOffset = (day >= 6 ? day - 6 : day + 1);
+        const saturday = new Date(kstNow);
+        saturday.setDate(kstNow.getDate() - saturdayOffset);
+        saturday.setHours(20, 35, 0, 0);
+        return saturday;
+    }
+
+    async function fetchDrawData(round) {
+        const url = `https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=${round}`;
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) {
+            throw new Error(`응답 실패: ${response.status}`);
+        }
+        return response.json();
+    }
+
+    function renderWeeklyData(data) {
+        const numbers = [
+            data.drwtNo1,
+            data.drwtNo2,
+            data.drwtNo3,
+            data.drwtNo4,
+            data.drwtNo5,
+            data.drwtNo6
+        ].filter(Boolean);
+
+        weeklyRoundBadge.textContent = `${data.drwNo}회`;
+        weeklyRoundBadge.classList.remove('muted');
+        weeklyNumbersEl.innerHTML = '';
+        numbers.forEach(value => {
+            const el = document.createElement('div');
+            el.className = 'number';
+            el.textContent = value;
+            weeklyNumbersEl.appendChild(el);
+        });
+        weeklyBonusEl.textContent = data.bnusNo || '-';
+        weeklyDateEl.textContent = `추첨일: ${data.drwNoDate || '-'}`;
+
+        if (weeklyFirstPrizeEl) {
+            weeklyFirstPrizeEl.textContent = `1등 당첨금: ${formatCurrency(data.firstWinamnt)}`;
+        }
+        if (weeklyFirstWinnersEl) {
+            weeklyFirstWinnersEl.textContent = `1등 당첨자 수: ${formatNumber(data.firstPrzwnerCo || 0)}명`;
+        }
+        if (weeklyTotalSalesEl) {
+            weeklyTotalSalesEl.textContent = `총 판매액: ${formatCurrency(data.totSellamnt)}`;
+        }
+        if (weeklyAccumulatedEl) {
+            weeklyAccumulatedEl.textContent = `1등 총 당첨금: ${formatCurrency(data.firstAccumamnt)}`;
+        }
+        if (weeklyStatusEl) {
+            weeklyStatusEl.textContent = `${data.drwNo}회차 당첨 정보가 반영되었습니다.`;
+        }
+    }
+
+    function formatCurrency(value) {
+        if (!value && value !== 0) {
+            return '-';
+        }
+        return `${formatNumber(value)}원`;
     }
 
     function updateRulesStatus(message) {

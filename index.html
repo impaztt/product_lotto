@@ -9,77 +9,44 @@
 <body data-theme="light">
     <header class="site-header">
         <div class="logo">로또픽스튜디오</div>
-        <nav class="main-nav">
-            <a href="#tab-weekly" data-tab-link="weekly">이번주 정보</a>
-            <a href="#tab-draw" data-tab-link="draw">추첨</a>
-            <a href="#tab-mypage" data-tab-link="mypage">마이페이지</a>
-        </nav>
         <div class="header-actions">
             <button id="theme-toggle" class="icon-btn" type="button" aria-label="테마 변경" title="테마 변경">
                 <span class="theme-icon" aria-hidden="true"></span>
             </button>
-            <button id="menu-toggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu">메뉴</button>
             <a class="ghost" href="#auth">로그인</a>
             <a class="cta" href="#auth">시작하기</a>
         </div>
     </header>
 
-    <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
-        <nav class="mobile-nav">
-            <a href="#tab-weekly" data-tab-link="weekly">이번주 정보</a>
-            <a href="#tab-draw" data-tab-link="draw">추첨</a>
-            <a href="#tab-mypage" data-tab-link="mypage">마이페이지</a>
-        </nav>
-    </div>
-
     <main class="tab-layout">
-        <div class="tab-bar" role="tablist" aria-label="로또 정보 탭">
-            <button class="tab-btn is-active" id="tab-weekly-btn" type="button" role="tab" aria-selected="true" aria-controls="tab-weekly" data-tab="weekly">
-                이번주 당첨 정보
-            </button>
-            <button class="tab-btn" id="tab-draw-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-draw" data-tab="draw">
-                로또번호 추첨
-            </button>
-            <button class="tab-btn" id="tab-mypage-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-mypage" data-tab="mypage">
-                마이페이지
-            </button>
-        </div>
-
         <section id="tab-weekly" class="tab-panel is-active" role="tabpanel" aria-labelledby="tab-weekly-btn" tabindex="0">
             <div class="section-title">
                 <h2>이번주 당첨번호 & 로또 정보</h2>
-                <p>공식 데이터 연동 전까지는 예시로 표시됩니다.</p>
+                <p id="weekly-status">동행복권 공식 데이터 기준으로 업데이트합니다.</p>
             </div>
             <div class="weekly-grid">
                 <div class="info-card">
                     <div class="info-header">
                         <h3>이번주 당첨번호</h3>
-                        <span class="badge">업데이트 예정</span>
+                        <span class="badge" id="weekly-round-badge">조회중</span>
                     </div>
-                    <div class="winning-numbers">
-                        <div class="number">7</div>
-                        <div class="number">12</div>
-                        <div class="number">19</div>
-                        <div class="number">27</div>
-                        <div class="number">34</div>
-                        <div class="number">41</div>
-                    </div>
+                    <div class="winning-numbers" id="weekly-numbers"></div>
                     <div class="bonus-row">
                         <span class="bonus-label">보너스</span>
-                        <div class="number bonus">5</div>
+                        <div class="number bonus" id="weekly-bonus">-</div>
                     </div>
-                    <p class="muted">정확한 당첨번호는 공식 발표 후 반영됩니다.</p>
+                    <p class="muted" id="weekly-date">추첨일: -</p>
                 </div>
                 <div class="info-card">
                     <div class="info-header">
                         <h3>당첨금 요약</h3>
-                        <span class="badge muted">집계 대기</span>
+                        <span class="badge muted" id="weekly-payout-badge">집계</span>
                     </div>
                     <ul class="info-list">
-                        <li>1등 당첨금: 집계 중</li>
-                        <li>1등 당첨자 수: 집계 중</li>
-                        <li>총 판매액: 집계 중</li>
-                        <li>이월 여부: 미정</li>
+                        <li id="weekly-first-prize">1등 당첨금: -</li>
+                        <li id="weekly-first-winners">1등 당첨자 수: -</li>
+                        <li id="weekly-total-sales">총 판매액: -</li>
+                        <li id="weekly-accumulated">1등 총 당첨금: -</li>
                     </ul>
                 </div>
                 <div class="info-card">
@@ -651,6 +618,21 @@
             </section>
         </section>
     </main>
+
+    <nav class="bottom-tab-bar" role="tablist" aria-label="하단 탭">
+        <button class="tab-btn is-active" id="tab-weekly-btn" type="button" role="tab" aria-selected="true" aria-controls="tab-weekly" data-tab="weekly">
+            <span class="tab-icon">●</span>
+            <span class="tab-label">이번주</span>
+        </button>
+        <button class="tab-btn" id="tab-draw-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-draw" data-tab="draw">
+            <span class="tab-icon">▲</span>
+            <span class="tab-label">추첨</span>
+        </button>
+        <button class="tab-btn" id="tab-mypage-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-mypage" data-tab="mypage">
+            <span class="tab-icon">■</span>
+            <span class="tab-label">마이페이지</span>
+        </button>
+    </nav>
 
     <div id="auth-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="auth-title">
         <div class="modal-content">
