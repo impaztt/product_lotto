@@ -530,7 +530,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function fetchDrawData(round) {
-        const url = `https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=${round}`;
+        const proxyBase = window.LOTTO_PROXY_URL || 'https://product-lotto.pages.dev/api/lotto';
+        const url = `${proxyBase}?drwNo=${round}`;
         const response = await fetch(url, { cache: 'no-store' });
         if (!response.ok) {
             throw new Error(`응답 실패: ${response.status}`);
