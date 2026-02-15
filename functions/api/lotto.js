@@ -35,6 +35,7 @@ export async function onRequest(context) {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (compatible; product-lotto-proxy)',
                 'Accept': 'application/json,text/plain,*/*',
+                'X-Requested-With': 'XMLHttpRequest',
                 'Referer': 'https://www.dhlottery.co.kr/',
                 'Origin': 'https://www.dhlottery.co.kr'
             },
@@ -51,7 +52,26 @@ export async function onRequest(context) {
             });
         }
 
-        const data = await upstream.json();
+        const text = await upstream.text();
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (parseError) {
+            const snippet = text.slice(0, 200);
+            console.log('upstream non-json', snippet);
+            return new Response(
+                JSON.stringify({
+                    returnValue: 'fail',
+                    message: 'upstream non-json',
+                    status: upstream.status,
+                    snippet
+                }),
+                {
+                    status: 502,
+                    headers: buildHeaders()
+                }
+            );
+        }
         const response = new Response(JSON.stringify(data), {
             status: 200,
             headers: buildHeaders()
