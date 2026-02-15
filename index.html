@@ -30,11 +30,31 @@
                 <span class="weekly-hint" id="weekly-round-hint">최신 회차를 불러오는 중</span>
             </div>
             <div class="weekly-recent">
-                <div class="section-title compact">
-                    <h3>최근 회차 빠르게 보기</h3>
-                    <p>좌우로 넘겨 원하는 회차를 선택하세요.</p>
+                <div class="weekly-recent-header">
+                    <div class="section-title compact">
+                        <h3>최근 회차 빠르게 보기</h3>
+                        <p>좌우로 넘겨 원하는 회차를 선택하세요.</p>
+                    </div>
+                    <div class="recent-controls">
+                        <label for="recent-count">표시 개수</label>
+                        <select id="recent-count" aria-label="최근 회차 개수">
+                            <option value="6">6회</option>
+                            <option value="8" selected>8회</option>
+                            <option value="10">10회</option>
+                            <option value="12">12회</option>
+                            <option value="20">20회</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="recent-list" id="recent-rounds"></div>
+            </div>
+            <div class="weekly-chart info-card">
+                <div class="info-header">
+                    <h3>최근 회차 1등 당첨금 추이</h3>
+                    <span class="badge muted">원 단위</span>
+                </div>
+                <div class="trend-chart" id="trend-chart"></div>
+                <p class="muted">그래프는 선택한 최근 회차 기준으로 표시됩니다.</p>
             </div>
             <div class="weekly-grid">
                 <div class="info-card" id="weekly-card">

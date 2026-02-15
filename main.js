@@ -66,7 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const compareBonusInput = document.getElementById('compare-bonus');
     const compareBtn = document.getElementById('compare-btn');
     const compareResult = document.getElementById('compare-result');
+    const recentCountSelect = document.getElementById('recent-count');
+    const trendChart = document.getElementById('trend-chart');
     let currentWeeklyData = null;
+    let latestAvailableRound = null;
 
     const TOTAL_COMBOS = Number(combination(45, 6));
     const RULE_STATS = {
@@ -147,6 +150,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (compareBtn) {
         compareBtn.addEventListener('click', () => {
             handleCompare();
+        });
+    }
+
+    if (recentCountSelect) {
+        recentCountSelect.addEventListener('change', () => {
+            if (latestAvailableRound) {
+                loadRecentRounds(latestAvailableRound);
+            }
         });
     }
 
@@ -531,6 +542,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderWeeklyData(data, { cached: false });
                     cacheWeekly(data);
                     initRoundSelect(data.drwNo);
+                    latestAvailableRound = data.drwNo;
                     loadRecentRounds(data.drwNo);
                     return;
                 }
@@ -549,6 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
             weeklyStatusEl.textContent = '최신 정보를 불러오지 못해 마지막 캐시를 표시합니다.';
             if (cached?.data?.drwNo) {
                 initRoundSelect(cached.data.drwNo);
+                latestAvailableRound = cached.data.drwNo;
                 loadRecentRounds(cached.data.drwNo);
             }
         }
@@ -996,12 +1009,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!recentRoundsEl) {
             return;
         }
+        const count = getRecentCount();
         const rounds = [];
-        for (let i = 0; i < 8; i += 1) {
+        for (let i = 0; i < count; i += 1) {
             rounds.push(Math.max(1, latestRound - i));
         }
         recentRoundsEl.innerHTML = '';
-        rounds.forEach(round => {
+        const fetches = rounds.map(round => {
             const card = document.createElement('button');
             card.type = 'button';
             card.className = 'recent-card';
@@ -1017,9 +1031,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadRound(round);
             });
             recentRoundsEl.appendChild(card);
-            hydrateRecentCard(card, round);
+            return hydrateRecentCard(card, round);
         });
         updateRecentActive(latestRound);
+        const results = await Promise.allSettled(fetches);
+        const chartData = results
+            .map(result => (result.status === 'fulfilled' ? result.value : null))
+            .filter(Boolean);
+        renderTrendChart(chartData);
     }
 
     async function hydrateRecentCard(card, round) {
@@ -1032,10 +1051,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data && data.returnValue === 'success') {
                 fillRecentCard(card, data);
                 cacheWeekly(data);
+                return data;
             }
         } catch (error) {
             logProxyError('recentCard', error, { round });
         }
+        return cached?.data || null;
     }
 
     function fillRecentCard(card, data) {
@@ -1064,6 +1085,39 @@ document.addEventListener('DOMContentLoaded', () => {
         Array.from(recentRoundsEl.querySelectorAll('.recent-card')).forEach(card => {
             card.classList.toggle('is-active', card.dataset.round === String(round));
         });
+    }
+
+    function renderTrendChart(dataList) {
+        if (!trendChart) {
+            return;
+        }
+        if (!dataList.length) {
+            trendChart.innerHTML = '';
+            return;
+        }
+        const sorted = dataList
+            .filter(data => data && data.firstWinamnt)
+            .sort((a, b) => a.drwNo - b.drwNo);
+        const maxValue = Math.max(...sorted.map(item => Number(item.firstWinamnt || 0)), 1);
+        trendChart.innerHTML = '';
+        sorted.forEach(item => {
+            const ratio = Math.max(0.08, Number(item.firstWinamnt || 0) / maxValue);
+            const bar = document.createElement('div');
+            bar.className = 'trend-bar';
+            bar.innerHTML = `
+                <div class="bar" style="height: ${Math.round(ratio * 100)}%"></div>
+                <div class="label">${item.drwNo}회</div>
+            `;
+            trendChart.appendChild(bar);
+        });
+    }
+
+    function getRecentCount() {
+        if (!recentCountSelect) {
+            return 8;
+        }
+        const value = Number(recentCountSelect.value);
+        return Number.isFinite(value) ? value : 8;
     }
 
     function handleCompare() {
