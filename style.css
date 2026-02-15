@@ -336,6 +336,7 @@ body[data-theme="light"] .icon-mypage::before {
 .tab-panel {
     display: none;
     animation: tabFade 0.25s ease;
+    width: 100%;
 }
 
 .tab-panel.is-active {
@@ -1265,8 +1266,9 @@ body[data-theme="light"] .info-list li {
     }
 
     main {
-        padding: 20px 5vw 60px;
+        padding: 20px 5vw calc(150px + env(safe-area-inset-bottom));
         gap: 48px;
+        min-height: calc(100vh - 70px);
     }
 
     .hero {
