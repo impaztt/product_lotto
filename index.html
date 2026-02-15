@@ -29,6 +29,13 @@
                 <select id="weekly-round-select" aria-label="회차 선택"></select>
                 <span class="weekly-hint" id="weekly-round-hint">최신 회차를 불러오는 중</span>
             </div>
+            <div class="weekly-recent">
+                <div class="section-title compact">
+                    <h3>최근 회차 빠르게 보기</h3>
+                    <p>좌우로 넘겨 원하는 회차를 선택하세요.</p>
+                </div>
+                <div class="recent-list" id="recent-rounds"></div>
+            </div>
             <div class="weekly-grid">
                 <div class="info-card" id="weekly-card">
                     <div class="info-header">
@@ -115,6 +122,31 @@
                         </li>
                     </ul>
                     <p class="muted">패턴 정보는 참고용이며 당첨을 보장하지 않습니다.</p>
+                </div>
+            </div>
+            <div class="weekly-actions">
+                <div class="info-card">
+                    <div class="info-header">
+                        <h3>회차 직접 검색</h3>
+                        <span class="badge muted">빠른 이동</span>
+                    </div>
+                    <div class="search-row">
+                        <input id="round-search-input" type="number" min="1" placeholder="회차 번호 입력" inputmode="numeric">
+                        <button id="round-search-btn" type="button">검색</button>
+                    </div>
+                    <p class="muted">숫자만 입력하면 해당 회차 당첨 정보를 불러옵니다.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-header">
+                        <h3>당첨번호 비교</h3>
+                        <span class="badge muted">내 번호</span>
+                    </div>
+                    <div class="compare-grid">
+                        <input id="compare-input" type="text" placeholder="예: 1, 7, 12, 19, 27, 34" aria-label="내 번호 6개">
+                        <input id="compare-bonus" type="number" min="1" max="45" placeholder="보너스(선택)" aria-label="보너스 번호">
+                        <button id="compare-btn" type="button">등수 확인</button>
+                    </div>
+                    <div class="compare-result" id="compare-result">회차 선택 후 번호를 입력하세요.</div>
                 </div>
             </div>
         </section>

@@ -59,6 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const weeklyAccumulatedEl = document.getElementById('weekly-accumulated');
     const weeklyRoundSelect = document.getElementById('weekly-round-select');
     const weeklyRoundHint = document.getElementById('weekly-round-hint');
+    const recentRoundsEl = document.getElementById('recent-rounds');
+    const roundSearchInput = document.getElementById('round-search-input');
+    const roundSearchBtn = document.getElementById('round-search-btn');
+    const compareInput = document.getElementById('compare-input');
+    const compareBonusInput = document.getElementById('compare-bonus');
+    const compareBtn = document.getElementById('compare-btn');
+    const compareResult = document.getElementById('compare-result');
+    let currentWeeklyData = null;
 
     const TOTAL_COMBOS = Number(combination(45, 6));
     const RULE_STATS = {
@@ -122,6 +130,23 @@ document.addEventListener('DOMContentLoaded', () => {
         menuToggle.addEventListener('click', () => {
             const isOpen = body.classList.contains('menu-open');
             syncMenuState(!isOpen);
+        });
+    }
+
+    if (roundSearchBtn) {
+        roundSearchBtn.addEventListener('click', () => {
+            const value = roundSearchInput ? Number(roundSearchInput.value) : 0;
+            if (!value) {
+                updateCompareResult('회차 번호를 입력해 주세요.');
+                return;
+            }
+            loadRound(value);
+        });
+    }
+
+    if (compareBtn) {
+        compareBtn.addEventListener('click', () => {
+            handleCompare();
         });
     }
 
@@ -506,6 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderWeeklyData(data, { cached: false });
                     cacheWeekly(data);
                     initRoundSelect(data.drwNo);
+                    loadRecentRounds(data.drwNo);
                     return;
                 }
             } catch (error) {
@@ -523,6 +549,7 @@ document.addEventListener('DOMContentLoaded', () => {
             weeklyStatusEl.textContent = '최신 정보를 불러오지 못해 마지막 캐시를 표시합니다.';
             if (cached?.data?.drwNo) {
                 initRoundSelect(cached.data.drwNo);
+                loadRecentRounds(cached.data.drwNo);
             }
         }
     }
@@ -581,6 +608,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderWeeklyData(data, { cached }) {
+        currentWeeklyData = data;
         const numbers = [
             data.drwtNo1,
             data.drwtNo2,
@@ -952,6 +980,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data && data.returnValue === 'success') {
                 renderWeeklyData(data, { cached: false });
                 cacheWeekly(data);
+                updateRecentActive(round);
             } else {
                 weeklyStatusEl.textContent = '해당 회차 정보가 아직 없습니다.';
             }
@@ -960,6 +989,138 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!cached) {
                 weeklyStatusEl.textContent = '회차 정보를 가져오지 못했습니다.';
             }
+        }
+    }
+
+    async function loadRecentRounds(latestRound) {
+        if (!recentRoundsEl) {
+            return;
+        }
+        const rounds = [];
+        for (let i = 0; i < 8; i += 1) {
+            rounds.push(Math.max(1, latestRound - i));
+        }
+        recentRoundsEl.innerHTML = '';
+        rounds.forEach(round => {
+            const card = document.createElement('button');
+            card.type = 'button';
+            card.className = 'recent-card';
+            card.dataset.round = String(round);
+            card.innerHTML = `
+                <div class="recent-title">
+                    <span>${round}회</span>
+                    <span class="recent-date">불러오는 중</span>
+                </div>
+                <div class="recent-numbers"></div>
+            `;
+            card.addEventListener('click', () => {
+                loadRound(round);
+            });
+            recentRoundsEl.appendChild(card);
+            hydrateRecentCard(card, round);
+        });
+        updateRecentActive(latestRound);
+    }
+
+    async function hydrateRecentCard(card, round) {
+        const cached = getCachedRound(round);
+        if (cached && cached.data) {
+            fillRecentCard(card, cached.data);
+        }
+        try {
+            const data = await fetchDrawData(round);
+            if (data && data.returnValue === 'success') {
+                fillRecentCard(card, data);
+                cacheWeekly(data);
+            }
+        } catch (error) {
+            logProxyError('recentCard', error, { round });
+        }
+    }
+
+    function fillRecentCard(card, data) {
+        const dateEl = card.querySelector('.recent-date');
+        const numbersEl = card.querySelector('.recent-numbers');
+        if (dateEl) {
+            dateEl.textContent = data.drwNoDate || '-';
+        }
+        if (numbersEl) {
+            numbersEl.innerHTML = '';
+            [data.drwtNo1, data.drwtNo2, data.drwtNo3, data.drwtNo4, data.drwtNo5, data.drwtNo6]
+                .filter(Boolean)
+                .forEach(value => {
+                    const el = document.createElement('div');
+                    el.className = 'number';
+                    el.textContent = value;
+                    numbersEl.appendChild(el);
+                });
+        }
+    }
+
+    function updateRecentActive(round) {
+        if (!recentRoundsEl) {
+            return;
+        }
+        Array.from(recentRoundsEl.querySelectorAll('.recent-card')).forEach(card => {
+            card.classList.toggle('is-active', card.dataset.round === String(round));
+        });
+    }
+
+    function handleCompare() {
+        if (!compareInput || !compareResult) {
+            return;
+        }
+        if (!currentWeeklyData) {
+            updateCompareResult('회차 정보를 불러온 뒤 비교할 수 있습니다.');
+            return;
+        }
+        const raw = compareInput.value || '';
+        const nums = raw
+            .split(/[,\s]+/)
+            .map(value => Number(value))
+            .filter(value => Number.isInteger(value));
+        const unique = Array.from(new Set(nums));
+        if (unique.length !== 6 || unique.some(n => n < 1 || n > 45)) {
+            updateCompareResult('1~45 사이의 숫자 6개를 중복 없이 입력해 주세요.');
+            return;
+        }
+        const bonus = compareBonusInput ? Number(compareBonusInput.value) : 0;
+        const winning = new Set([
+            currentWeeklyData.drwtNo1,
+            currentWeeklyData.drwtNo2,
+            currentWeeklyData.drwtNo3,
+            currentWeeklyData.drwtNo4,
+            currentWeeklyData.drwtNo5,
+            currentWeeklyData.drwtNo6
+        ]);
+        const matchCount = unique.filter(n => winning.has(n)).length;
+        const bonusMatch = bonus ? bonus === currentWeeklyData.bnusNo : false;
+        const rank = getRank(matchCount, bonusMatch);
+        updateCompareResult(`일치 ${matchCount}개${bonusMatch ? ' + 보너스' : ''} → ${rank}`);
+    }
+
+    function getRank(matchCount, bonusMatch) {
+        if (matchCount === 6) {
+            return '1등';
+        }
+        if (matchCount === 5 && bonusMatch) {
+            return '2등';
+        }
+        if (matchCount === 5) {
+            return '3등';
+        }
+        if (matchCount === 4) {
+            return '4등';
+        }
+        if (matchCount === 3) {
+            return '5등';
+        }
+        return '아쉽게도 미당첨';
+    }
+
+    function updateCompareResult(message) {
+        if (compareResult) {
+            compareResult.textContent = message;
         }
     }
 
