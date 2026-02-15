@@ -51,6 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const weeklyNumbersEl = document.getElementById('weekly-numbers');
     const weeklyBonusEl = document.getElementById('weekly-bonus');
     const weeklyDateEl = document.getElementById('weekly-date');
+    const weeklyUpdatedEl = document.getElementById('weekly-updated');
+    const weeklyCard = document.getElementById('weekly-card');
     const weeklyFirstPrizeEl = document.getElementById('weekly-first-prize');
     const weeklyFirstWinnersEl = document.getElementById('weekly-first-winners');
     const weeklyTotalSalesEl = document.getElementById('weekly-total-sales');
@@ -480,25 +482,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         weeklyStatusEl.textContent = '당첨 정보를 불러오는 중입니다.';
         weeklyRoundBadge.textContent = '조회중';
+        if (weeklyCard) {
+            weeklyCard.classList.add('is-loading');
+        }
+
+        const cached = getCachedWeekly();
+        let hasCached = false;
+        if (cached && cached.data) {
+            renderWeeklyData(cached.data, { cached: true });
+            hasCached = true;
+        }
 
         const estimatedRound = estimateLatestRound();
         const maxAttempts = 12;
-        for (let offset = 0; offset < maxAttempts; offset += 1) {
-            const round = Math.max(1, estimatedRound - offset);
+        const roundsToTry = buildRoundCandidates(estimatedRound, cached?.data?.drwNo);
+        for (let index = 0; index < Math.min(maxAttempts, roundsToTry.length); index += 1) {
+            const round = roundsToTry[index];
             try {
                 const data = await fetchDrawData(round);
                 if (data && data.returnValue === 'success') {
-                    renderWeeklyData(data);
+                    renderWeeklyData(data, { cached: false });
+                    cacheWeekly(data);
                     return;
                 }
             } catch (error) {
-                console.warn('당첨 정보 조회 실패', error);
+                logProxyError('fetchLatestDraw', error, { round });
             }
         }
 
         weeklyStatusEl.textContent = '당첨 정보를 가져오지 못했습니다. 잠시 후 다시 시도해 주세요.';
         weeklyRoundBadge.textContent = '연동 실패';
         weeklyRoundBadge.classList.add('muted');
+        if (weeklyCard) {
+            weeklyCard.classList.remove('is-loading');
+        }
+        if (hasCached) {
+            weeklyStatusEl.textContent = '최신 정보를 불러오지 못해 마지막 캐시를 표시합니다.';
+        }
     }
 
     function estimateLatestRound() {
@@ -512,6 +532,15 @@ document.addEventListener('DOMContentLoaded', () => {
             return Math.max(1, estimated - 1);
         }
         return estimated;
+    }
+
+    function buildRoundCandidates(estimated, cachedRound) {
+        const candidates = [];
+        const maxRound = Math.max(estimated, cachedRound || 0);
+        for (let offset = 0; offset <= 10; offset += 1) {
+            candidates.push(Math.max(1, maxRound - offset));
+        }
+        return Array.from(new Set(candidates));
     }
 
     function getKstNow() {
@@ -532,14 +561,20 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchDrawData(round) {
         const proxyBase = window.LOTTO_PROXY_URL || 'https://product-lotto.pages.dev/api/lotto';
         const url = `${proxyBase}?drwNo=${round}`;
-        const response = await fetch(url, { cache: 'no-store' });
+        const controller = new AbortController();
+        const timeoutId = window.setTimeout(() => controller.abort(), 6000);
+        const response = await fetch(url, {
+            cache: 'no-store',
+            signal: controller.signal
+        });
+        window.clearTimeout(timeoutId);
         if (!response.ok) {
             throw new Error(`응답 실패: ${response.status}`);
         }
         return response.json();
     }
 
-    function renderWeeklyData(data) {
+    function renderWeeklyData(data, { cached }) {
         const numbers = [
             data.drwtNo1,
             data.drwtNo2,
@@ -560,21 +595,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         weeklyBonusEl.textContent = data.bnusNo || '-';
         weeklyDateEl.textContent = `추첨일: ${data.drwNoDate || '-'}`;
+        if (weeklyUpdatedEl) {
+            weeklyUpdatedEl.textContent = `업데이트: ${formatKstDateTime(getKstNow())}${cached ? ' (캐시)' : ''}`;
+        }
 
         if (weeklyFirstPrizeEl) {
-            weeklyFirstPrizeEl.textContent = `1등 당첨금: ${formatCurrency(data.firstWinamnt)}`;
+            weeklyFirstPrizeEl.textContent = formatCurrency(data.firstWinamnt);
         }
         if (weeklyFirstWinnersEl) {
-            weeklyFirstWinnersEl.textContent = `1등 당첨자 수: ${formatNumber(data.firstPrzwnerCo || 0)}명`;
+            weeklyFirstWinnersEl.textContent = `${formatNumber(data.firstPrzwnerCo || 0)}명`;
         }
         if (weeklyTotalSalesEl) {
-            weeklyTotalSalesEl.textContent = `총 판매액: ${formatCurrency(data.totSellamnt)}`;
+            weeklyTotalSalesEl.textContent = formatCurrency(data.totSellamnt);
         }
         if (weeklyAccumulatedEl) {
-            weeklyAccumulatedEl.textContent = `1등 총 당첨금: ${formatCurrency(data.firstAccumamnt)}`;
+            weeklyAccumulatedEl.textContent = formatCurrency(data.firstAccumamnt);
         }
         if (weeklyStatusEl) {
-            weeklyStatusEl.textContent = `${data.drwNo}회차 당첨 정보가 반영되었습니다.`;
+            weeklyStatusEl.textContent = `${data.drwNo}회차 당첨 정보가 반영되었습니다.${cached ? ' (캐시)' : ''}`;
+        }
+        if (weeklyCard) {
+            weeklyCard.classList.remove('is-loading');
         }
     }
 
@@ -794,6 +835,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function formatNumber(value) {
         return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function formatKstDateTime(date) {
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const hh = String(date.getHours()).padStart(2, '0');
+        const min = String(date.getMinutes()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd} ${hh}:${min}`;
+    }
+
+    function cacheWeekly(data) {
+        try {
+            const payload = {
+                data,
+                ts: Date.now()
+            };
+            localStorage.setItem('lotto_weekly_cache', JSON.stringify(payload));
+            localStorage.setItem('lotto_last_round', String(data.drwNo));
+        } catch (error) {
+            console.warn('캐시 저장 실패', error);
+        }
+    }
+
+    function getCachedWeekly() {
+        try {
+            const raw = localStorage.getItem('lotto_weekly_cache');
+            if (!raw) {
+                return null;
+            }
+            const parsed = JSON.parse(raw);
+            if (!parsed || !parsed.data) {
+                return null;
+            }
+            const age = Date.now() - Number(parsed.ts || 0);
+            const maxAge = 1000 * 60 * 30;
+            if (age > maxAge) {
+                return { data: parsed.data, stale: true };
+            }
+            return { data: parsed.data, stale: false };
+        } catch (error) {
+            console.warn('캐시 로드 실패', error);
+            return null;
+        }
+    }
+
+    function logProxyError(stage, error, meta = {}) {
+        console.warn(`[lotto-proxy] ${stage}`, { error, ...meta });
     }
 
 

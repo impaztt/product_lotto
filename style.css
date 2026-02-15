@@ -359,6 +359,20 @@ body[data-theme="light"] .icon-mypage::before {
     gap: 14px;
 }
 
+.info-card.is-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.info-card.is-loading::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.08) 45%, transparent 70%);
+    transform: translateX(-100%);
+    animation: shimmer 1.3s infinite;
+}
+
 .info-header {
     display: flex;
     align-items: center;
@@ -395,6 +409,35 @@ body[data-theme="light"] .icon-mypage::before {
     font-size: 14px;
 }
 
+.info-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+}
+
+body[data-theme="light"] .info-list li {
+    border-bottom: 1px dashed rgba(15, 23, 42, 0.1);
+}
+
+.info-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.info-label {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.info-list strong {
+    color: var(--text);
+    font-weight: 600;
+    text-align: right;
+}
+
 .winning-numbers {
     display: flex;
     flex-wrap: wrap;
@@ -415,6 +458,15 @@ body[data-theme="light"] .icon-mypage::before {
 .number.bonus {
     background: rgba(45, 212, 191, 0.25);
     color: var(--teal);
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-120%);
+    }
+    100% {
+        transform: translateX(120%);
+    }
 }
 
 @keyframes tabFade {
@@ -1342,6 +1394,17 @@ body[data-theme="light"] .icon-mypage::before {
     .info-card {
         padding: 18px;
         border-radius: 18px;
+    }
+
+    .info-list li {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        padding: 10px 0;
+    }
+
+    .info-list strong {
+        text-align: left;
     }
 
     .bottom-tab-bar {

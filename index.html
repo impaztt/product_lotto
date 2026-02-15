@@ -25,7 +25,7 @@
                 <p id="weekly-status">동행복권 공식 데이터 기준으로 업데이트합니다.</p>
             </div>
             <div class="weekly-grid">
-                <div class="info-card">
+                <div class="info-card" id="weekly-card">
                     <div class="info-header">
                         <h3>이번주 당첨번호</h3>
                         <span class="badge" id="weekly-round-badge">조회중</span>
@@ -36,6 +36,7 @@
                         <div class="number bonus" id="weekly-bonus">-</div>
                     </div>
                     <p class="muted" id="weekly-date">추첨일: -</p>
+                    <p class="muted" id="weekly-updated">업데이트: -</p>
                 </div>
                 <div class="info-card">
                     <div class="info-header">
@@ -43,10 +44,22 @@
                         <span class="badge muted" id="weekly-payout-badge">집계</span>
                     </div>
                     <ul class="info-list">
-                        <li id="weekly-first-prize">1등 당첨금: -</li>
-                        <li id="weekly-first-winners">1등 당첨자 수: -</li>
-                        <li id="weekly-total-sales">총 판매액: -</li>
-                        <li id="weekly-accumulated">1등 총 당첨금: -</li>
+                        <li>
+                            <span class="info-label">1등 당첨금</span>
+                            <strong id="weekly-first-prize">-</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">1등 당첨자 수</span>
+                            <strong id="weekly-first-winners">-</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">총 판매액</span>
+                            <strong id="weekly-total-sales">-</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">1등 총 당첨금</span>
+                            <strong id="weekly-accumulated">-</strong>
+                        </li>
                     </ul>
                 </div>
                 <div class="info-card">
@@ -55,10 +68,22 @@
                         <span class="badge muted">기준값</span>
                     </div>
                     <ul class="info-list">
-                        <li>추첨일: 매주 토요일 20:35</li>
-                        <li>구매 마감: 토요일 20:00</li>
-                        <li>다음 추첨까지: 계산 예정</li>
-                        <li>공식 발표: 추첨 직후</li>
+                        <li>
+                            <span class="info-label">추첨일</span>
+                            <strong>매주 토요일 20:35</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">구매 마감</span>
+                            <strong>토요일 20:00</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">다음 추첨까지</span>
+                            <strong>계산 예정</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">공식 발표</span>
+                            <strong>추첨 직후</strong>
+                        </li>
                     </ul>
                 </div>
                 <div class="info-card">
@@ -67,10 +92,22 @@
                         <span class="badge muted">참고</span>
                     </div>
                     <ul class="info-list">
-                        <li>홀짝 비율: 3:3 빈도 높음</li>
-                        <li>합계 구간: 100~170 집중</li>
-                        <li>끝자리 반복: 1~2개 등장</li>
-                        <li>연속수: 1~2개 수준</li>
+                        <li>
+                            <span class="info-label">홀짝 비율</span>
+                            <strong>3:3 빈도 높음</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">합계 구간</span>
+                            <strong>100~170 집중</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">끝자리 반복</span>
+                            <strong>1~2개 등장</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">연속수</span>
+                            <strong>1~2개 수준</strong>
+                        </li>
                     </ul>
                     <p class="muted">패턴 정보는 참고용이며 당첨을 보장하지 않습니다.</p>
                 </div>
@@ -546,9 +583,18 @@
                         <span class="badge muted">비회원</span>
                     </div>
                     <ul class="info-list">
-                        <li>닉네임: 미설정</li>
-                        <li>멤버십: 무료</li>
-                        <li>잔여 추첨 횟수: 5회</li>
+                        <li>
+                            <span class="info-label">닉네임</span>
+                            <strong>미설정</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">멤버십</span>
+                            <strong>무료</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">잔여 추첨 횟수</span>
+                            <strong>5회</strong>
+                        </li>
                     </ul>
                 </div>
                 <div class="info-card">
@@ -557,9 +603,18 @@
                         <span class="badge muted">0개</span>
                     </div>
                     <ul class="info-list">
-                        <li>내 프리셋: 미등록</li>
-                        <li>최근 적용: -</li>
-                        <li>공유 설정: 비공개</li>
+                        <li>
+                            <span class="info-label">내 프리셋</span>
+                            <strong>미등록</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">최근 적용</span>
+                            <strong>-</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">공유 설정</span>
+                            <strong>비공개</strong>
+                        </li>
                     </ul>
                 </div>
                 <div class="info-card">
@@ -568,9 +623,18 @@
                         <span class="badge muted">최근 3회</span>
                     </div>
                     <ul class="info-list">
-                        <li>2026-02-15: 1세트 생성</li>
-                        <li>2026-02-14: 2세트 생성</li>
-                        <li>2026-02-13: 1세트 생성</li>
+                        <li>
+                            <span class="info-label">2026-02-15</span>
+                            <strong>1세트 생성</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">2026-02-14</span>
+                            <strong>2세트 생성</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">2026-02-13</span>
+                            <strong>1세트 생성</strong>
+                        </li>
                     </ul>
                 </div>
                 <div class="info-card">
@@ -579,9 +643,18 @@
                         <span class="badge muted">연동 예정</span>
                     </div>
                     <ul class="info-list">
-                        <li>현재 플랜: 무료</li>
-                        <li>다음 결제일: -</li>
-                        <li>구독 관리: 준비 중</li>
+                        <li>
+                            <span class="info-label">현재 플랜</span>
+                            <strong>무료</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">다음 결제일</span>
+                            <strong>-</strong>
+                        </li>
+                        <li>
+                            <span class="info-label">구독 관리</span>
+                            <strong>준비 중</strong>
+                        </li>
                     </ul>
                 </div>
             </div>
