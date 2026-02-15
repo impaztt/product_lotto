@@ -33,15 +33,19 @@ export async function onRequest(context) {
         const timeoutId = setTimeout(() => controller.abort(), 6000);
         const upstream = await fetch(targetUrl, {
             headers: {
-                'User-Agent': 'product-lotto-proxy'
+                'User-Agent': 'Mozilla/5.0 (compatible; product-lotto-proxy)',
+                'Accept': 'application/json,text/plain,*/*',
+                'Referer': 'https://www.dhlottery.co.kr/',
+                'Origin': 'https://www.dhlottery.co.kr'
             },
+            redirect: 'follow',
             signal: controller.signal
         });
         clearTimeout(timeoutId);
 
         if (!upstream.ok) {
             console.log('upstream error', upstream.status);
-            return new Response(JSON.stringify({ returnValue: 'fail', message: 'upstream error' }), {
+            return new Response(JSON.stringify({ returnValue: 'fail', message: 'upstream error', status: upstream.status }), {
                 status: 502,
                 headers: buildHeaders()
             });
@@ -57,10 +61,17 @@ export async function onRequest(context) {
         return response;
     } catch (error) {
         console.log('proxy exception', error);
-        return new Response(JSON.stringify({ returnValue: 'fail', message: 'proxy error' }), {
-            status: 502,
-            headers: buildHeaders()
-        });
+        return new Response(
+            JSON.stringify({
+                returnValue: 'fail',
+                message: 'proxy error',
+                error: error && error.message ? error.message : String(error)
+            }),
+            {
+                status: 502,
+                headers: buildHeaders()
+            }
+        );
     }
 }
 
