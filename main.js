@@ -43,6 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const authModal = document.getElementById('auth-modal');
     const authButtons = Array.from(document.querySelectorAll('[data-auth]'));
     const authClose = authModal ? authModal.querySelector('.modal-close') : null;
+    const tabButtons = Array.from(document.querySelectorAll('.tab-btn[data-tab]'));
+    const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
+    const tabLinks = Array.from(document.querySelectorAll('[data-tab-link]'));
 
     const TOTAL_COMBOS = Number(combination(45, 6));
     const RULE_STATS = {
@@ -108,6 +111,20 @@ document.addEventListener('DOMContentLoaded', () => {
             syncMenuState(!isOpen);
         });
     }
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            setActiveTab(button.dataset.tab, true);
+        });
+    });
+
+    tabLinks.forEach(link => {
+        link.addEventListener('click', event => {
+            event.preventDefault();
+            setActiveTab(link.dataset.tabLink, false);
+            syncMenuState(false);
+        });
+    });
 
     mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
@@ -225,6 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
         computeBaseOdds();
         updateCombinedEstimates();
         setupRuleDetails();
+        syncInitialTab();
         if (rulesSection) {
             rulesSection.classList.add('rules-collapsed');
         }
@@ -392,6 +410,48 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentTheme = body.getAttribute('data-theme') || 'dark';
         themeToggle.setAttribute('aria-label', currentTheme === 'dark' ? '라이트 모드' : '다크 모드');
         themeToggle.setAttribute('title', currentTheme === 'dark' ? '라이트 모드' : '다크 모드');
+    }
+
+    function syncInitialTab() {
+        if (!tabButtons.length || !tabPanels.length) {
+            return;
+        }
+        const hash = window.location.hash;
+        if (hash && hash.startsWith('#tab-')) {
+            const target = hash.replace('#tab-', '');
+            setActiveTab(target, false, false);
+        } else {
+            setActiveTab('weekly', false, false);
+        }
+    }
+
+    function setActiveTab(tabId, focusPanel, updateHash = true) {
+        if (!tabId) {
+            return;
+        }
+        const targetPanelId = `tab-${tabId}`;
+        const targetPanel = tabPanels.find(panel => panel.id === targetPanelId);
+        if (!targetPanel) {
+            return;
+        }
+        tabButtons.forEach(button => {
+            const isActive = button.dataset.tab === tabId;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-selected', String(isActive));
+        });
+        tabPanels.forEach(panel => {
+            panel.classList.toggle('is-active', panel.id === targetPanelId);
+        });
+        tabLinks.forEach(link => {
+            link.classList.toggle('is-active', link.dataset.tabLink === tabId);
+        });
+        if (updateHash) {
+            history.replaceState(null, '', `#${targetPanelId}`);
+        }
+        if (focusPanel) {
+            targetPanel.focus({ preventScroll: true });
+            targetPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     }
 
     function syncMenuState(open) {
