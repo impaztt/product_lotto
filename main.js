@@ -57,6 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const weeklyFirstWinnersEl = document.getElementById('weekly-first-winners');
     const weeklyTotalSalesEl = document.getElementById('weekly-total-sales');
     const weeklyAccumulatedEl = document.getElementById('weekly-accumulated');
+    const weeklyRoundSelect = document.getElementById('weekly-round-select');
+    const weeklyRoundHint = document.getElementById('weekly-round-hint');
 
     const TOTAL_COMBOS = Number(combination(45, 6));
     const RULE_STATS = {
@@ -503,6 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data && data.returnValue === 'success') {
                     renderWeeklyData(data, { cached: false });
                     cacheWeekly(data);
+                    initRoundSelect(data.drwNo);
                     return;
                 }
             } catch (error) {
@@ -518,6 +521,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (hasCached) {
             weeklyStatusEl.textContent = '최신 정보를 불러오지 못해 마지막 캐시를 표시합니다.';
+            if (cached?.data?.drwNo) {
+                initRoundSelect(cached.data.drwNo);
+            }
         }
     }
 
@@ -586,6 +592,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         weeklyRoundBadge.textContent = `${data.drwNo}회`;
         weeklyRoundBadge.classList.remove('muted');
+        if (weeklyRoundSelect) {
+            weeklyRoundSelect.value = String(data.drwNo);
+        }
         weeklyNumbersEl.innerHTML = '';
         numbers.forEach(value => {
             const el = document.createElement('div');
@@ -597,6 +606,9 @@ document.addEventListener('DOMContentLoaded', () => {
         weeklyDateEl.textContent = `추첨일: ${data.drwNoDate || '-'}`;
         if (weeklyUpdatedEl) {
             weeklyUpdatedEl.textContent = `업데이트: ${formatKstDateTime(getKstNow())}${cached ? ' (캐시)' : ''}`;
+        }
+        if (weeklyRoundHint) {
+            weeklyRoundHint.textContent = `선택된 회차: ${data.drwNo}회`;
         }
 
         if (weeklyFirstPrizeEl) {
@@ -854,6 +866,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             localStorage.setItem('lotto_weekly_cache', JSON.stringify(payload));
             localStorage.setItem('lotto_last_round', String(data.drwNo));
+            localStorage.setItem(`lotto_round_${data.drwNo}`, JSON.stringify(payload));
         } catch (error) {
             console.warn('캐시 저장 실패', error);
         }
@@ -878,6 +891,75 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.warn('캐시 로드 실패', error);
             return null;
+        }
+    }
+
+    function getCachedRound(round) {
+        try {
+            const raw = localStorage.getItem(`lotto_round_${round}`);
+            if (!raw) {
+                return null;
+            }
+            return JSON.parse(raw);
+        } catch (error) {
+            console.warn('회차 캐시 로드 실패', error);
+            return null;
+        }
+    }
+
+    function initRoundSelect(latestRound) {
+        if (!weeklyRoundSelect) {
+            return;
+        }
+        const rounds = [];
+        for (let i = 0; i < 12; i += 1) {
+            rounds.push(Math.max(1, latestRound - i));
+        }
+        weeklyRoundSelect.innerHTML = '';
+        rounds.forEach(round => {
+            const option = document.createElement('option');
+            option.value = String(round);
+            option.textContent = `${round}회`;
+            weeklyRoundSelect.appendChild(option);
+        });
+        weeklyRoundSelect.value = String(latestRound);
+        if (weeklyRoundHint) {
+            weeklyRoundHint.textContent = `최신 당첨 회차: ${latestRound}회`;
+        }
+        weeklyRoundSelect.onchange = () => {
+            const round = Number(weeklyRoundSelect.value);
+            if (!round) {
+                return;
+            }
+            loadRound(round);
+        };
+    }
+
+    async function loadRound(round) {
+        if (!weeklyStatusEl) {
+            return;
+        }
+        weeklyStatusEl.textContent = `${round}회차 정보를 불러오는 중입니다.`;
+        if (weeklyCard) {
+            weeklyCard.classList.add('is-loading');
+        }
+        const cached = getCachedRound(round);
+        if (cached && cached.data) {
+            renderWeeklyData(cached.data, { cached: true });
+        }
+        try {
+            const data = await fetchDrawData(round);
+            if (data && data.returnValue === 'success') {
+                renderWeeklyData(data, { cached: false });
+                cacheWeekly(data);
+            } else {
+                weeklyStatusEl.textContent = '해당 회차 정보가 아직 없습니다.';
+            }
+        } catch (error) {
+            logProxyError('loadRound', error, { round });
+            if (!cached) {
+                weeklyStatusEl.textContent = '회차 정보를 가져오지 못했습니다.';
+            }
         }
     }
 
