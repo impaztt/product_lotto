@@ -532,6 +532,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const estimatedRound = estimateLatestRound();
+        latestAvailableRound = estimatedRound;
+        loadRecentRounds(estimatedRound);
         const maxAttempts = 12;
         const roundsToTry = buildRoundCandidates(estimatedRound, cached?.data?.drwNo);
         for (let index = 0; index < Math.min(maxAttempts, roundsToTry.length); index += 1) {
@@ -1015,6 +1017,7 @@ document.addEventListener('DOMContentLoaded', () => {
             rounds.push(Math.max(1, latestRound - i));
         }
         recentRoundsEl.innerHTML = '';
+        recentRoundsEl.classList.add('is-loading');
         const fetches = rounds.map(round => {
             const card = document.createElement('button');
             card.type = 'button';
@@ -1039,6 +1042,10 @@ document.addEventListener('DOMContentLoaded', () => {
             .map(result => (result.status === 'fulfilled' ? result.value : null))
             .filter(Boolean);
         renderTrendChart(chartData);
+        recentRoundsEl.classList.remove('is-loading');
+        if (!recentRoundsEl.children.length) {
+            recentRoundsEl.innerHTML = '<div class="recent-empty">최근 회차 정보를 불러오지 못했습니다.</div>';
+        }
     }
 
     async function hydrateRecentCard(card, round) {
@@ -1055,6 +1062,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             logProxyError('recentCard', error, { round });
+        }
+        if (!cached?.data) {
+            fillRecentCard(card, { drwNo: round, drwNoDate: '-', drwtNo1: '-', drwtNo2: '-', drwtNo3: '-', drwtNo4: '-', drwtNo5: '-', drwtNo6: '-' });
         }
         return cached?.data || null;
     }

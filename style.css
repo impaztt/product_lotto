@@ -440,6 +440,7 @@ body[data-theme="light"] .icon-mypage::before {
     overflow-x: auto;
     padding-bottom: 6px;
     scroll-snap-type: x mandatory;
+    min-height: 120px;
 }
 
 .recent-card {
@@ -457,6 +458,19 @@ body[data-theme="light"] .icon-mypage::before {
 .recent-card.is-active {
     border-color: var(--accent);
     box-shadow: 0 16px 40px rgba(255, 120, 73, 0.2);
+}
+
+.recent-list.is-loading::after {
+    content: "최근 회차 불러오는 중...";
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 6px 2px;
+}
+
+.recent-empty {
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 8px 2px;
 }
 
 .recent-title {
