@@ -76,6 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const storeMapEl = document.getElementById('store-map');
     const storeTableBodyEl = document.getElementById('store-table-body');
     const storeTableEmptyEl = document.getElementById('store-table-empty');
+    const storeGridEl = document.getElementById('store-grid');
+    const storeGridEmptyEl = document.getElementById('store-grid-empty');
     const storeNearestRouteBtn = document.getElementById('store-nearest-route-btn');
     const storeSwitchQrBtn = document.getElementById('store-switch-qr-btn');
     const qrStatusEl = document.getElementById('qr-status');
@@ -726,12 +728,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (storeUserMarker) {
             storeUserMarker.setLatLng([position.lat, position.lng]);
         } else {
-            storeUserMarker = window.L.circleMarker([position.lat, position.lng], {
-                radius: 7,
-                color: '#2f7bff',
-                weight: 2,
-                fillColor: '#2f7bff',
-                fillOpacity: 0.9
+            storeUserMarker = window.L.marker([position.lat, position.lng], {
+                icon: window.L.divIcon({
+                    className: 'user-pin',
+                    iconSize: [14, 14],
+                    iconAnchor: [7, 7]
+                }),
+                title: '현재 위치'
             }).addTo(map).bindPopup('현재 위치');
         }
 
@@ -829,20 +832,30 @@ out center tags;
         if (storeTableEmptyEl) {
             storeTableEmptyEl.hidden = true;
         }
+        if (storeGridEl) {
+            storeGridEl.innerHTML = '';
+        }
+        if (storeGridEmptyEl) {
+            storeGridEmptyEl.hidden = true;
+        }
         if (!stores.length) {
             if (storeTableEmptyEl) {
                 storeTableEmptyEl.hidden = false;
+            }
+            if (storeGridEmptyEl) {
+                storeGridEmptyEl.hidden = false;
             }
             return;
         }
         stores.forEach((store, index) => {
             if (storeMarkersLayer) {
-                window.L.circleMarker([store.lat, store.lng], {
-                    radius: 6,
-                    color: '#35b779',
-                    weight: 2,
-                    fillColor: '#35b779',
-                    fillOpacity: 0.85
+                window.L.marker([store.lat, store.lng], {
+                    icon: window.L.divIcon({
+                        className: 'store-pin',
+                        iconSize: [14, 14],
+                        iconAnchor: [7, 7]
+                    }),
+                    title: store.name
                 })
                     .addTo(storeMarkersLayer)
                     .bindPopup(`${escapeHtml(store.name)}<br>${escapeHtml(store.address || '')}<br>${formatDistance(store.distance)}`);
@@ -852,11 +865,13 @@ out center tags;
             }
             const row = document.createElement('tr');
             row.tabIndex = 0;
+            const routeUrl = getRouteUrl(store);
             row.innerHTML = `
                 <td class="store-rank">${index + 1}</td>
                 <td><strong>${escapeHtml(store.name)}</strong></td>
                 <td>${escapeHtml(store.address || '주소 정보 없음')}</td>
                 <td class="store-distance">${formatDistance(store.distance)}</td>
+                <td class="store-action"><button type="button" class="store-route-btn">길찾기</button></td>
             `;
             row.addEventListener('click', () => {
                 if (storeMap) {
@@ -869,7 +884,38 @@ out center tags;
                     row.click();
                 }
             });
+            const routeBtn = row.querySelector('.store-route-btn');
+            if (routeBtn) {
+                routeBtn.addEventListener('click', event => {
+                    event.stopPropagation();
+                    window.open(routeUrl, '_blank');
+                });
+            }
             storeTableBodyEl.appendChild(row);
+
+            if (storeGridEl) {
+                const card = document.createElement('div');
+                card.className = 'store-card';
+                card.innerHTML = `
+                    <strong>${escapeHtml(store.name)}</strong>
+                    <div class="store-meta">${escapeHtml(store.address || '주소 정보 없음')}</div>
+                    <div class="store-distance">${formatDistance(store.distance)}</div>
+                    <button type="button" class="store-route-btn">길찾기</button>
+                `;
+                card.addEventListener('click', () => {
+                    if (storeMap) {
+                        storeMap.setView([store.lat, store.lng], 17);
+                    }
+                });
+                const cardBtn = card.querySelector('.store-route-btn');
+                if (cardBtn) {
+                    cardBtn.addEventListener('click', event => {
+                        event.stopPropagation();
+                        window.open(routeUrl, '_blank');
+                    });
+                }
+                storeGridEl.appendChild(card);
+            }
         });
 
         if (storeMap && stores.length) {
@@ -878,7 +924,14 @@ out center tags;
                 ...stores.map(store => [store.lat, store.lng])
             ]);
             storeMap.fitBounds(bounds, { padding: [24, 24], maxZoom: 16 });
+            window.setTimeout(() => {
+                storeMap.invalidateSize();
+            }, 60);
         }
+    }
+
+    function getRouteUrl(store) {
+        return `https://www.google.com/maps/dir/?api=1&destination=${store.lat},${store.lng}`;
     }
 
     function getStoreRadius() {

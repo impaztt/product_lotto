@@ -764,19 +764,26 @@
             </div>
             <div class="store-layout">
                 <div id="store-map" class="store-map" role="img" aria-label="주변 로또 판매점 지도"></div>
-                <div class="store-table-wrap">
-                    <table class="store-table" aria-label="가까운 판매점 목록">
-                        <thead>
-                            <tr>
-                                <th scope="col">순서</th>
-                                <th scope="col">판매점</th>
-                                <th scope="col">주소</th>
-                                <th scope="col">거리</th>
-                            </tr>
-                        </thead>
-                        <tbody id="store-table-body"></tbody>
-                    </table>
-                    <div id="store-table-empty" class="store-empty" hidden>표시할 판매점이 없습니다.</div>
+                <div class="store-results">
+                    <div class="store-table-wrap">
+                        <table class="store-table" aria-label="가까운 판매점 목록">
+                            <thead>
+                                <tr>
+                                    <th scope="col">순서</th>
+                                    <th scope="col">판매점</th>
+                                    <th scope="col">주소</th>
+                                    <th scope="col">거리</th>
+                                    <th scope="col">길찾기</th>
+                                </tr>
+                            </thead>
+                            <tbody id="store-table-body"></tbody>
+                        </table>
+                        <div id="store-table-empty" class="store-empty" hidden>표시할 판매점이 없습니다.</div>
+                    </div>
+                    <div class="store-grid-wrap">
+                        <div id="store-grid" class="store-grid" aria-label="가까운 판매점 카드"></div>
+                        <div id="store-grid-empty" class="store-empty" hidden>표시할 판매점이 없습니다.</div>
+                    </div>
                 </div>
             </div>
             <div class="store-next-actions">
