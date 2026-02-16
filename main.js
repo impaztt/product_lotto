@@ -607,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function fetchDrawData(round) {
-        const proxyBase = window.LOTTO_PROXY_URL || 'https://product-lotto.pages.dev/api/lotto';
+        const proxyBase = window.LOTTO_PROXY_URL || '/api/lotto';
         const url = `${proxyBase}?drwNo=${round}`;
         const controller = new AbortController();
         const timeoutId = window.setTimeout(() => controller.abort(), 6000);
