@@ -76,8 +76,16 @@ document.addEventListener('DOMContentLoaded', () => {
     latestAvailableRound = estimateLatestRound();
     initRoundSelect(latestAvailableRound);
     syncRoundSearchDefault(latestAvailableRound, { force: true });
+    const initialCached = getCachedWeekly();
+    if (initialCached?.data) {
+        renderTrendChart([initialCached.data]);
+    }
     // 첫 진입 시 기본 선택된 최신 회차를 즉시 조회한다.
     loadRound(latestAvailableRound);
+    // 첫 진입 시 최근 회차 추이도 백그라운드에서 즉시 로드한다.
+    loadRecentRounds(latestAvailableRound).catch(error => {
+        logProxyError('initialRecentRounds', error, { latestRound: latestAvailableRound });
+    });
 
     const TOTAL_COMBOS = Number(combination(45, 6));
     const RULE_STATS = {
@@ -1097,12 +1105,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const cached = getCachedRound(round);
         if (cached && cached.data) {
             renderWeeklyData(cached.data, { cached: true });
+            if (trendChart && (trendChart.classList.contains('is-empty') || !trendChart.children.length)) {
+                renderTrendChart([cached.data]);
+            }
         }
         try {
             const data = await fetchDrawData(round);
             if (data && data.returnValue === 'success') {
                 renderWeeklyData(data, { cached: false });
                 cacheWeekly(data);
+                if (trendChart && (trendChart.classList.contains('is-empty') || !trendChart.children.length)) {
+                    renderTrendChart([data]);
+                }
                 updateRecentActive(round);
             } else {
                 weeklyStatusEl.textContent = '해당 회차 정보가 아직 없습니다.';
