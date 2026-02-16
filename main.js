@@ -1126,7 +1126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         recentRoundsEl.innerHTML = '';
         recentRoundsEl.classList.add('is-loading');
-        const fetches = rounds.map(round => {
+        const cards = rounds.map(round => {
             const card = document.createElement('button');
             card.type = 'button';
             card.className = 'recent-card';
@@ -1142,13 +1142,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadRound(round);
             });
             recentRoundsEl.appendChild(card);
-            return hydrateRecentCard(card, round);
+            return { card, round };
         });
         updateRecentActive(latestRound);
-        const results = await Promise.allSettled(fetches);
-        const chartData = results
-            .map(result => (result.status === 'fulfilled' ? result.value : null))
-            .filter(Boolean);
+        const chartData = [];
+        for (const item of cards) {
+            const data = await hydrateRecentCard(item.card, item.round);
+            if (data) {
+                chartData.push(data);
+            }
+        }
+        if (!chartData.length && currentWeeklyData) {
+            chartData.push(currentWeeklyData);
+        }
         renderTrendChart(chartData);
         recentRoundsEl.classList.remove('is-loading');
         if (!recentRoundsEl.children.length) {
