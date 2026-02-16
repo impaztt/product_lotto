@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const weeklyAccumulatedEl = document.getElementById('weekly-accumulated');
     const weeklyRoundSelect = document.getElementById('weekly-round-select');
     const weeklyRoundHint = document.getElementById('weekly-round-hint');
+    const weeklyNextDrawEl = document.getElementById('weekly-next-draw');
     const recentRoundsEl = document.getElementById('recent-rounds');
     const roundSearchInput = document.getElementById('round-search-input');
     const roundSearchBtn = document.getElementById('round-search-btn');
@@ -73,7 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const storeRetryBtn = document.getElementById('store-retry-btn');
     const storeRadiusSelect = document.getElementById('store-radius');
     const storeMapEl = document.getElementById('store-map');
-    const storeListEl = document.getElementById('store-list');
+    const storeTableBodyEl = document.getElementById('store-table-body');
+    const storeTableEmptyEl = document.getElementById('store-table-empty');
+    const storeNearestRouteBtn = document.getElementById('store-nearest-route-btn');
+    const storeSwitchQrBtn = document.getElementById('store-switch-qr-btn');
     const qrStatusEl = document.getElementById('qr-status');
     const qrVideoEl = document.getElementById('qr-video');
     const qrCanvasEl = document.getElementById('qr-canvas');
@@ -83,6 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const qrTicketNumbersEl = document.getElementById('qr-ticket-numbers');
     const qrMatchResultEl = document.getElementById('qr-match-result');
     const qrPayloadEl = document.getElementById('qr-payload');
+    const qrOpenRoundBtn = document.getElementById('qr-open-round-btn');
+    const qrCopyNumbersBtn = document.getElementById('qr-copy-numbers-btn');
     let currentWeeklyData = null;
     let latestAvailableRound = null;
     const roundMetaByNo = new Map();
@@ -90,11 +96,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let storeMarkersLayer = null;
     let storeUserMarker = null;
     let storeLastPosition = null;
+    let storeLastResults = [];
     let qrStream = null;
     let qrScanRafId = null;
     let qrCanvasCtx = null;
     let qrLastPayload = '';
     let qrBarcodeDetector = null;
+    let qrLastNumbers = [];
+    let qrLastMatchedRound = null;
 
     // 네트워크/초기화 오류와 무관하게 회차 리스트는 먼저 표시한다.
     latestAvailableRound = estimateLatestRound();
@@ -110,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadRecentRounds(latestAvailableRound).catch(error => {
         logProxyError('initialRecentRounds', error, { latestRound: latestAvailableRound });
     });
+    updateWeeklyNextDrawDisplay();
 
     const TOTAL_COMBOS = Number(combination(45, 6));
     const RULE_STATS = {
@@ -241,6 +251,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    if (storeNearestRouteBtn) {
+        storeNearestRouteBtn.addEventListener('click', () => {
+            if (!storeLastResults.length) {
+                if (storeStatusEl) {
+                    storeStatusEl.textContent = '먼저 현재 위치로 판매점을 조회한 뒤 길찾기를 이용해 주세요.';
+                }
+                return;
+            }
+            const nearest = storeLastResults[0];
+            const url = `https://www.google.com/maps/dir/?api=1&destination=${nearest.lat},${nearest.lng}`;
+            window.open(url, '_blank', 'noopener');
+        });
+    }
+
+    if (storeSwitchQrBtn) {
+        storeSwitchQrBtn.addEventListener('click', () => {
+            setActiveTab('qr', true);
+        });
+    }
+
     if (qrStartBtn) {
         qrStartBtn.addEventListener('click', () => {
             startQrScanner();
@@ -250,6 +280,47 @@ document.addEventListener('DOMContentLoaded', () => {
     if (qrStopBtn) {
         qrStopBtn.addEventListener('click', () => {
             stopQrScanner('스캔이 중지되었습니다.');
+        });
+    }
+
+    if (qrOpenRoundBtn) {
+        qrOpenRoundBtn.addEventListener('click', () => {
+            const round = qrLastMatchedRound || currentWeeklyData?.drwNo;
+            if (!round) {
+                if (qrStatusEl) {
+                    qrStatusEl.textContent = '먼저 QR을 스캔하거나 기준 회차를 불러와 주세요.';
+                }
+                return;
+            }
+            setActiveTab('weekly', true);
+            loadRound(Number(round));
+        });
+    }
+
+    if (qrCopyNumbersBtn) {
+        qrCopyNumbersBtn.addEventListener('click', async () => {
+            if (!qrLastNumbers.length) {
+                if (qrStatusEl) {
+                    qrStatusEl.textContent = '복사할 번호가 없습니다. QR을 먼저 스캔해 주세요.';
+                }
+                return;
+            }
+            const text = qrLastNumbers.join(', ');
+            if (compareInput) {
+                compareInput.value = text;
+            }
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(text);
+                }
+                if (qrStatusEl) {
+                    qrStatusEl.textContent = '번호를 복사했습니다. 이번주 탭에서 바로 비교할 수 있습니다.';
+                }
+            } catch {
+                if (qrStatusEl) {
+                    qrStatusEl.textContent = '번호를 입력칸에 채웠습니다. 이번주 탭에서 확인해 주세요.';
+                }
+            }
         });
     }
 
@@ -614,7 +685,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (!navigator.geolocation) {
-            storeStatusEl.textContent = '이 브라우저에서는 위치 조회를 지원하지 않습니다.';
+            storeStatusEl.textContent = '현재 브라우저에서는 위치 조회를 지원하지 않습니다.';
             return;
         }
         storeStatusEl.textContent = '현재 위치 확인 중입니다. 위치 권한을 허용해 주세요.';
@@ -645,7 +716,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!storeStatusEl) {
             return;
         }
-        storeStatusEl.textContent = '주변 판매점 데이터를 불러오는 중입니다.';
+        storeStatusEl.textContent = '주변 판매점을 조회하고 있습니다. 잠시만 기다려 주세요.';
         const map = ensureStoreMap(position);
         if (!map) {
             return;
@@ -655,8 +726,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (storeUserMarker) {
             storeUserMarker.setLatLng([position.lat, position.lng]);
         } else {
-            storeUserMarker = window.L.marker([position.lat, position.lng], {
-                title: '현재 위치'
+            storeUserMarker = window.L.circleMarker([position.lat, position.lng], {
+                radius: 7,
+                color: '#2f7bff',
+                weight: 2,
+                fillColor: '#2f7bff',
+                fillOpacity: 0.9
             }).addTo(map).bindPopup('현재 위치');
         }
 
@@ -665,18 +740,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const stores = await fetchNearbyStores(position, radius);
             renderStoreResults(stores, position);
             storeStatusEl.textContent = stores.length
-                ? `반경 ${Math.round(radius / 1000 * 10) / 10}km 내 판매점 ${stores.length}곳을 찾았습니다.`
-                : '주변 판매점 데이터를 찾지 못했습니다. 반경을 넓혀 다시 시도해 주세요.';
+                ? `반경 ${Math.round(radius / 1000 * 10) / 10}km 내 판매점 ${stores.length}곳을 찾았습니다. 하단 버튼으로 길찾기 또는 QR 스캔으로 이동하세요.`
+                : '주변 판매점이 적게 검색되었습니다. 반경을 3km 이상으로 넓혀 다시 조회해 주세요.';
         } catch (error) {
             logProxyError('storeFinder', error, { position, radius });
-            storeStatusEl.textContent = '판매점 데이터를 가져오지 못했습니다. 잠시 후 다시 시도해 주세요.';
+            storeStatusEl.textContent = '판매점 데이터를 불러오지 못했습니다. 네트워크를 확인한 뒤 다시 조회해 주세요.';
         }
     }
 
     function ensureStoreMap(center) {
         if (!storeMapEl || !window.L) {
             if (storeStatusEl) {
-                storeStatusEl.textContent = '지도 라이브러리를 불러오지 못했습니다.';
+                storeStatusEl.textContent = '지도를 초기화하지 못했습니다. 페이지를 새로고침해 주세요.';
             }
             return null;
         }
@@ -744,43 +819,57 @@ out center tags;
     }
 
     function renderStoreResults(stores, position) {
+        storeLastResults = Array.isArray(stores) ? stores : [];
         if (storeMarkersLayer) {
             storeMarkersLayer.clearLayers();
         }
-        if (storeListEl) {
-            storeListEl.innerHTML = '';
+        if (storeTableBodyEl) {
+            storeTableBodyEl.innerHTML = '';
+        }
+        if (storeTableEmptyEl) {
+            storeTableEmptyEl.hidden = true;
         }
         if (!stores.length) {
-            if (storeListEl) {
-                storeListEl.innerHTML = '<div class="store-empty">표시할 판매점이 없습니다.</div>';
+            if (storeTableEmptyEl) {
+                storeTableEmptyEl.hidden = false;
             }
             return;
         }
         stores.forEach((store, index) => {
             if (storeMarkersLayer) {
-                window.L.marker([store.lat, store.lng], { title: store.name })
+                window.L.circleMarker([store.lat, store.lng], {
+                    radius: 6,
+                    color: '#35b779',
+                    weight: 2,
+                    fillColor: '#35b779',
+                    fillOpacity: 0.85
+                })
                     .addTo(storeMarkersLayer)
                     .bindPopup(`${escapeHtml(store.name)}<br>${escapeHtml(store.address || '')}<br>${formatDistance(store.distance)}`);
             }
-            if (!storeListEl) {
+            if (!storeTableBodyEl) {
                 return;
             }
-            const row = document.createElement('button');
-            row.type = 'button';
-            row.className = 'store-item';
+            const row = document.createElement('tr');
+            row.tabIndex = 0;
             row.innerHTML = `
-                <div class="store-item-head">
-                    <strong>${index + 1}. ${escapeHtml(store.name)}</strong>
-                    <span>${formatDistance(store.distance)}</span>
-                </div>
-                <div class="store-item-sub">${escapeHtml(store.address || '주소 정보 없음')}</div>
+                <td class="store-rank">${index + 1}</td>
+                <td><strong>${escapeHtml(store.name)}</strong></td>
+                <td>${escapeHtml(store.address || '주소 정보 없음')}</td>
+                <td class="store-distance">${formatDistance(store.distance)}</td>
             `;
             row.addEventListener('click', () => {
                 if (storeMap) {
                     storeMap.setView([store.lat, store.lng], 17);
                 }
             });
-            storeListEl.appendChild(row);
+            row.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    row.click();
+                }
+            });
+            storeTableBodyEl.appendChild(row);
         });
 
         if (storeMap && stores.length) {
@@ -850,15 +939,15 @@ out center tags;
             return;
         }
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            qrStatusEl.textContent = '이 브라우저에서는 카메라 스캔을 지원하지 않습니다.';
+            qrStatusEl.textContent = '현재 브라우저에서는 카메라 스캔을 지원하지 않습니다.';
             return;
         }
         if (qrStream) {
-            qrStatusEl.textContent = 'QR 스캔이 이미 실행 중입니다.';
+            qrStatusEl.textContent = 'QR 스캔이 이미 실행 중입니다. 코드를 프레임 안에 맞춰 주세요.';
             return;
         }
         try {
-            qrStatusEl.textContent = '카메라를 여는 중입니다. 권한을 허용해 주세요.';
+            qrStatusEl.textContent = '카메라를 준비하는 중입니다. 권한 요청을 허용해 주세요.';
             qrResultBadgeEl.textContent = '스캔 중';
             qrResultBadgeEl.classList.remove('muted');
             qrStream = await navigator.mediaDevices.getUserMedia({
@@ -871,14 +960,16 @@ out center tags;
             });
             qrVideoEl.srcObject = qrStream;
             await qrVideoEl.play();
-            qrStatusEl.textContent = 'QR 코드를 프레임 안에 맞춰 주세요.';
+            qrStatusEl.textContent = 'QR 코드를 프레임 중앙에 맞춰 주세요.';
             qrLastPayload = '';
+            qrLastNumbers = [];
+            qrLastMatchedRound = null;
             runQrScanLoop();
         } catch (error) {
             logProxyError('startQrScanner', error);
             qrResultBadgeEl.textContent = '오류';
             qrResultBadgeEl.classList.add('muted');
-            qrStatusEl.textContent = '카메라를 열지 못했습니다. 브라우저 권한 설정을 확인해 주세요.';
+            qrStatusEl.textContent = '카메라를 열지 못했습니다. 브라우저의 카메라 권한을 확인해 주세요.';
         }
     }
 
@@ -972,10 +1063,12 @@ out center tags;
         qrPayloadEl.textContent = payload || '-';
         qrStatusEl.textContent = 'QR을 인식했습니다. 당첨번호를 비교 중입니다.';
         const numbers = extractTicketNumbersFromQr(payload);
+        qrLastNumbers = numbers.slice();
         renderQrNumbers(numbers);
 
         if (numbers.length < 6) {
-            qrMatchResultEl.textContent = 'QR에서 로또 번호 6개를 인식하지 못했습니다. 다른 각도로 다시 스캔해 주세요.';
+            qrLastMatchedRound = null;
+            qrMatchResultEl.textContent = 'QR에서 로또 번호 6개를 인식하지 못했습니다. QR을 가까이 비추고 다시 스캔해 주세요.';
             qrResultBadgeEl.textContent = '재시도';
             qrResultBadgeEl.classList.remove('muted');
             return;
@@ -994,7 +1087,8 @@ out center tags;
             }
         }
         if (!drawData || drawData.returnValue !== 'success') {
-            qrMatchResultEl.textContent = '비교할 회차 데이터를 아직 불러오지 못했습니다. 잠시 후 다시 스캔해 주세요.';
+            qrLastMatchedRound = null;
+            qrMatchResultEl.textContent = '비교할 회차 데이터를 아직 준비하지 못했습니다. 회차를 불러온 뒤 다시 스캔해 주세요.';
             qrResultBadgeEl.textContent = '대기';
             qrResultBadgeEl.classList.add('muted');
             return;
@@ -1012,10 +1106,11 @@ out center tags;
         const bonusMatch = numbers.includes(Number(drawData.bnusNo));
         const rank = getRank(matchCount, bonusMatch);
         const roundLabel = `${drawData.drwNo}회`;
+        qrLastMatchedRound = Number(drawData.drwNo);
         qrMatchResultEl.textContent = `${roundLabel} 기준 일치 ${matchCount}개${bonusMatch ? ' + 보너스' : ''} → ${rank}`;
         qrResultBadgeEl.textContent = matchCount >= 3 ? '확인 완료' : '미당첨';
         qrResultBadgeEl.classList.remove('muted');
-        qrStatusEl.textContent = '스캔 완료. 다른 QR도 계속 스캔할 수 있습니다.';
+        qrStatusEl.textContent = '스캔이 완료되었습니다. 아래 버튼으로 다음 동작을 선택하세요.';
     }
 
     function extractTicketNumbersFromQr(payload) {
@@ -1086,7 +1181,7 @@ out center tags;
         if (!weeklyStatusEl || !weeklyRoundBadge || !weeklyNumbersEl || !weeklyBonusEl) {
             return;
         }
-        weeklyStatusEl.textContent = '당첨 정보를 불러오는 중입니다.';
+        weeklyStatusEl.textContent = '최신 회차 데이터를 확인하고 있습니다. 잠시만 기다려 주세요.';
         weeklyRoundBadge.textContent = '조회중';
         if (weeklyCard) {
             weeklyCard.classList.add('is-loading');
@@ -1123,14 +1218,14 @@ out center tags;
             }
         }
 
-        weeklyStatusEl.textContent = '당첨 정보를 가져오지 못했습니다. 잠시 후 다시 시도해 주세요.';
+        weeklyStatusEl.textContent = '최신 회차 연결이 지연되고 있습니다. 새로고침하거나 잠시 후 다시 시도해 주세요.';
         weeklyRoundBadge.textContent = '연동 실패';
         weeklyRoundBadge.classList.add('muted');
         if (weeklyCard) {
             weeklyCard.classList.remove('is-loading');
         }
         if (hasCached) {
-            weeklyStatusEl.textContent = '최신 정보를 불러오지 못해 마지막 캐시를 표시합니다.';
+            weeklyStatusEl.textContent = '실시간 연결이 지연되어 마지막 저장 데이터를 표시합니다.';
             if (cached?.data?.drwNo) {
                 initRoundSelect(cached.data.drwNo);
                 latestAvailableRound = cached.data.drwNo;
@@ -1175,6 +1270,24 @@ out center tags;
         saturday.setDate(kstNow.getDate() - saturdayOffset);
         saturday.setHours(20, 35, 0, 0);
         return saturday;
+    }
+
+    function updateWeeklyNextDrawDisplay() {
+        if (!weeklyNextDrawEl) {
+            return;
+        }
+        const now = getKstNow();
+        const latestSaturday = getLatestSaturdayDrawTime(now);
+        let nextDraw = new Date(latestSaturday);
+        if (now >= latestSaturday) {
+            nextDraw.setDate(nextDraw.getDate() + 7);
+        }
+        const diffMs = Math.max(0, nextDraw.getTime() - now.getTime());
+        const totalMinutes = Math.floor(diffMs / (1000 * 60));
+        const days = Math.floor(totalMinutes / (60 * 24));
+        const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+        const minutes = totalMinutes % 60;
+        weeklyNextDrawEl.textContent = `${days}일 ${hours}시간 ${minutes}분`;
     }
 
     async function fetchDrawData(round) {
@@ -1222,6 +1335,7 @@ out center tags;
         if (weeklyUpdatedEl) {
             weeklyUpdatedEl.textContent = `업데이트: ${formatKstDateTime(getKstNow())}${cached ? ' (캐시)' : ''}`;
         }
+        updateWeeklyNextDrawDisplay();
         if (weeklyRoundHint) {
             weeklyRoundHint.textContent = `선택된 회차: ${data.drwNo}회`;
         }
@@ -1631,7 +1745,7 @@ out center tags;
         if (!weeklyStatusEl) {
             return;
         }
-        weeklyStatusEl.textContent = `${round}회차 정보를 불러오는 중입니다.`;
+        weeklyStatusEl.textContent = `${round}회차 데이터를 조회하고 있습니다.`;
         if (weeklyCard) {
             weeklyCard.classList.add('is-loading');
         }
@@ -1652,12 +1766,12 @@ out center tags;
                 }
                 updateRecentActive(round);
             } else {
-                weeklyStatusEl.textContent = '해당 회차 정보가 아직 없습니다.';
+                weeklyStatusEl.textContent = '해당 회차 데이터가 아직 공개되지 않았습니다.';
             }
         } catch (error) {
             logProxyError('loadRound', error, { round });
             if (!cached) {
-                weeklyStatusEl.textContent = '회차 정보를 가져오지 못했습니다.';
+                weeklyStatusEl.textContent = '회차 조회에 실패했습니다. 네트워크를 확인하고 다시 시도해 주세요.';
             }
         }
     }
@@ -1765,7 +1879,7 @@ out center tags;
         }
         if (!dataList.length) {
             trendChart.classList.add('is-empty');
-            trendChart.innerHTML = '<div class="trend-empty">추이 데이터를 불러오는 중입니다.</div>';
+            trendChart.innerHTML = '<div class="trend-empty">최근 회차 데이터를 불러오는 중입니다.</div>';
             return;
         }
         const byRoundAsc = dataList
@@ -1779,7 +1893,7 @@ out center tags;
             .sort((a, b) => a.drwNo - b.drwNo);
         if (!byRoundAsc.length) {
             trendChart.classList.add('is-empty');
-            trendChart.innerHTML = '<div class="trend-empty">표시할 최근 당첨금 데이터가 없습니다.</div>';
+            trendChart.innerHTML = '<div class="trend-empty">표시할 당첨금 데이터가 부족합니다. 회차를 변경해 주세요.</div>';
             return;
         }
         trendChart.classList.remove('is-empty');

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로또픽스튜디오</title>
-    <link rel="stylesheet" href="style.css?v=20260226">
+    <link rel="stylesheet" href="style.css?v=20260227">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body data-theme="light">
@@ -30,37 +30,10 @@
                 <select id="weekly-round-select" aria-label="회차 선택"></select>
                 <span class="weekly-hint" id="weekly-round-hint">최신 회차를 불러오는 중</span>
             </div>
-            <div class="weekly-recent">
-                <div class="weekly-recent-header">
-                    <div class="section-title compact">
-                        <h3>최근 회차 빠르게 보기</h3>
-                        <p>좌우로 넘겨 원하는 회차를 선택하세요.</p>
-                    </div>
-                    <div class="recent-controls">
-                        <label for="recent-count">표시 개수</label>
-                        <select id="recent-count" aria-label="최근 회차 개수">
-                            <option value="6">6회</option>
-                            <option value="8" selected>8회</option>
-                            <option value="10">10회</option>
-                            <option value="12">12회</option>
-                            <option value="20">20회</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="recent-list" id="recent-rounds"></div>
-            </div>
-            <div class="weekly-chart info-card">
-                <div class="info-header">
-                    <h3>최근 회차 1등 당첨금 추이</h3>
-                    <span class="badge muted">원 단위</span>
-                </div>
-                <div class="trend-chart" id="trend-chart"></div>
-                <p class="muted">그래프는 선택한 최근 회차 기준으로 표시됩니다.</p>
-            </div>
-            <div class="weekly-grid">
+            <div class="weekly-primary">
                 <div class="info-card" id="weekly-card">
                     <div class="info-header">
-                        <h3>이번주 당첨번호</h3>
+                        <h3>기준 회차 당첨번호</h3>
                         <span class="badge" id="weekly-round-badge">조회중</span>
                     </div>
                     <div class="winning-numbers" id="weekly-numbers"></div>
@@ -73,7 +46,25 @@
                 </div>
                 <div class="info-card">
                     <div class="info-header">
-                        <h3>당첨금 요약</h3>
+                        <h3>내 번호 바로 확인</h3>
+                        <span class="badge muted">핵심</span>
+                    </div>
+                    <div class="search-row">
+                        <input id="round-search-input" type="number" min="1" placeholder="조회할 회차 입력" inputmode="numeric">
+                        <button id="round-search-btn" type="button">회차 조회</button>
+                    </div>
+                    <div class="compare-grid">
+                        <input id="compare-input" type="text" placeholder="예: 1, 7, 12, 19, 27, 34" aria-label="내 번호 6개">
+                        <input id="compare-bonus" type="number" min="1" max="45" placeholder="보너스(선택)" aria-label="보너스 번호">
+                        <button id="compare-btn" type="button">당첨 확인</button>
+                    </div>
+                    <div class="compare-result" id="compare-result">번호 6개를 입력하고 당첨 확인을 누르세요.</div>
+                </div>
+            </div>
+            <div class="weekly-insight-grid">
+                <div class="info-card">
+                    <div class="info-header">
+                        <h3>당첨금 핵심 요약</h3>
                         <span class="badge muted" id="weekly-payout-badge">집계</span>
                     </div>
                     <ul class="info-list">
@@ -97,8 +88,8 @@
                 </div>
                 <div class="info-card">
                     <div class="info-header">
-                        <h3>이번주 추첨 안내</h3>
-                        <span class="badge muted">기준값</span>
+                        <h3>추첨 일정 안내</h3>
+                        <span class="badge muted">안내</span>
                     </div>
                     <ul class="info-list">
                         <li>
@@ -111,7 +102,7 @@
                         </li>
                         <li>
                             <span class="info-label">다음 추첨까지</span>
-                            <strong>계산 예정</strong>
+                            <strong id="weekly-next-draw">업데이트 중</strong>
                         </li>
                         <li>
                             <span class="info-label">공식 발표</span>
@@ -119,10 +110,40 @@
                         </li>
                     </ul>
                 </div>
+            </div>
+            <div class="weekly-recent">
+                <div class="weekly-recent-header">
+                    <div class="section-title compact">
+                        <h3>최근 회차 빠르게 보기</h3>
+                        <p>슬라이드로 회차를 선택하면 바로 결과를 갱신합니다.</p>
+                    </div>
+                    <div class="recent-controls">
+                        <label for="recent-count">표시 개수</label>
+                        <select id="recent-count" aria-label="최근 회차 개수">
+                            <option value="6">6회</option>
+                            <option value="8" selected>8회</option>
+                            <option value="10">10회</option>
+                            <option value="12">12회</option>
+                            <option value="20">20회</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="recent-list" id="recent-rounds"></div>
+            </div>
+            <div class="weekly-chart info-card">
+                <div class="info-header">
+                    <h3>최근 회차 1등 당첨금 분석</h3>
+                    <span class="badge muted">최근 데이터</span>
+                </div>
+                <div class="trend-chart" id="trend-chart"></div>
+            </div>
+            <details class="weekly-more">
+                <summary>추가 참고 정보</summary>
+                <div class="weekly-grid">
                 <div class="info-card">
                     <div class="info-header">
                         <h3>최근 패턴 브리핑</h3>
-                        <span class="badge muted">참고</span>
+                        <span class="badge muted">참고용</span>
                     </div>
                     <ul class="info-list">
                         <li>
@@ -142,34 +163,10 @@
                             <strong>1~2개 수준</strong>
                         </li>
                     </ul>
-                    <p class="muted">패턴 정보는 참고용이며 당첨을 보장하지 않습니다.</p>
+                    <p class="muted">패턴은 의사결정 참고 자료이며, 결과를 보장하지 않습니다.</p>
                 </div>
-            </div>
-            <div class="weekly-actions">
-                <div class="info-card">
-                    <div class="info-header">
-                        <h3>회차 직접 검색</h3>
-                        <span class="badge muted">빠른 이동</span>
-                    </div>
-                    <div class="search-row">
-                        <input id="round-search-input" type="number" min="1" placeholder="회차 번호 입력" inputmode="numeric">
-                        <button id="round-search-btn" type="button">검색</button>
-                    </div>
-                    <p class="muted">숫자만 입력하면 해당 회차 당첨 정보를 불러옵니다.</p>
                 </div>
-                <div class="info-card">
-                    <div class="info-header">
-                        <h3>당첨번호 비교</h3>
-                        <span class="badge muted">내 번호</span>
-                    </div>
-                    <div class="compare-grid">
-                        <input id="compare-input" type="text" placeholder="예: 1, 7, 12, 19, 27, 34" aria-label="내 번호 6개">
-                        <input id="compare-bonus" type="number" min="1" max="45" placeholder="보너스(선택)" aria-label="보너스 번호">
-                        <button id="compare-btn" type="button">등수 확인</button>
-                    </div>
-                    <div class="compare-result" id="compare-result">회차 선택 후 번호를 입력하세요.</div>
-                </div>
-            </div>
+            </details>
         </section>
 
         <section id="tab-draw" class="tab-panel" role="tabpanel" aria-labelledby="tab-draw-btn" tabindex="0">
@@ -643,7 +640,7 @@
                     <ul class="info-list">
                         <li>
                             <span class="info-label">닉네임</span>
-                            <strong>미설정</strong>
+                            <strong>로그인 시 자동 설정</strong>
                         </li>
                         <li>
                             <span class="info-label">멤버십</span>
@@ -663,7 +660,7 @@
                     <ul class="info-list">
                         <li>
                             <span class="info-label">내 프리셋</span>
-                            <strong>미등록</strong>
+                            <strong>저장된 프리셋 없음</strong>
                         </li>
                         <li>
                             <span class="info-label">최근 적용</span>
@@ -698,7 +695,7 @@
                 <div class="info-card">
                     <div class="info-header">
                         <h3>결제/구독</h3>
-                        <span class="badge muted">연동 예정</span>
+                        <span class="badge muted">설정</span>
                     </div>
                     <ul class="info-list">
                         <li>
@@ -711,7 +708,7 @@
                         </li>
                         <li>
                             <span class="info-label">구독 관리</span>
-                            <strong>준비 중</strong>
+                            <strong>문의 후 안내</strong>
                         </li>
                     </ul>
                 </div>
@@ -767,7 +764,24 @@
             </div>
             <div class="store-layout">
                 <div id="store-map" class="store-map" role="img" aria-label="주변 로또 판매점 지도"></div>
-                <div id="store-list" class="store-list"></div>
+                <div class="store-table-wrap">
+                    <table class="store-table" aria-label="가까운 판매점 목록">
+                        <thead>
+                            <tr>
+                                <th scope="col">순서</th>
+                                <th scope="col">판매점</th>
+                                <th scope="col">주소</th>
+                                <th scope="col">거리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="store-table-body"></tbody>
+                    </table>
+                    <div id="store-table-empty" class="store-empty" hidden>표시할 판매점이 없습니다.</div>
+                </div>
+            </div>
+            <div class="store-next-actions">
+                <button id="store-nearest-route-btn" type="button">가장 가까운 판매점 길찾기</button>
+                <button id="store-switch-qr-btn" type="button" class="ghost">QR 스캔으로 이동</button>
             </div>
         </section>
 
@@ -808,6 +822,10 @@
                     <div class="qr-block">
                         <span class="qr-label">원본 QR 데이터</span>
                         <pre id="qr-payload" class="qr-payload">-</pre>
+                    </div>
+                    <div class="qr-next-actions">
+                        <button id="qr-open-round-btn" type="button">해당 회차 보기</button>
+                        <button id="qr-copy-numbers-btn" type="button" class="ghost">번호 복사</button>
                     </div>
                 </div>
             </div>
@@ -869,6 +887,6 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
-    <script src="main.js?v=20260226"></script>
+    <script src="main.js?v=20260227"></script>
 </body>
 </html>
