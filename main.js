@@ -1235,33 +1235,99 @@ document.addEventListener('DOMContentLoaded', () => {
             trendChart.innerHTML = '<div class="trend-empty">추이 데이터를 불러오는 중입니다.</div>';
             return;
         }
-        const sorted = dataList
+        const byRoundAsc = dataList
             .filter(Boolean)
             .map(data => ({
                 ...data,
-                firstWinamntNum: Number(data.firstWinamnt || 0)
+                firstWinamntNum: Number(data.firstWinamnt || 0),
+                firstPrzwnerCoNum: Number(data.firstPrzwnerCo || 0)
             }))
             .filter(data => Number.isFinite(data.firstWinamntNum) && data.firstWinamntNum > 0)
             .sort((a, b) => a.drwNo - b.drwNo);
-        if (!sorted.length) {
+        if (!byRoundAsc.length) {
             trendChart.classList.add('is-empty');
             trendChart.innerHTML = '<div class="trend-empty">표시할 최근 당첨금 데이터가 없습니다.</div>';
             return;
         }
         trendChart.classList.remove('is-empty');
-        const maxValue = Math.max(...sorted.map(item => item.firstWinamntNum), 1);
-        trendChart.innerHTML = '';
-        sorted.forEach(item => {
+        const rows = byRoundAsc.slice().sort((a, b) => b.drwNo - a.drwNo);
+        const latest = byRoundAsc[byRoundAsc.length - 1];
+        const previous = byRoundAsc.length > 1 ? byRoundAsc[byRoundAsc.length - 2] : null;
+        const peak = byRoundAsc.reduce((best, current) => (current.firstWinamntNum > best.firstWinamntNum ? current : best), byRoundAsc[0]);
+        const average = Math.round(
+            byRoundAsc.reduce((sum, item) => sum + item.firstWinamntNum, 0) / byRoundAsc.length
+        );
+        const changeRate = previous && previous.firstWinamntNum > 0
+            ? ((latest.firstWinamntNum - previous.firstWinamntNum) / previous.firstWinamntNum) * 100
+            : null;
+        const maxValue = Math.max(...byRoundAsc.map(item => item.firstWinamntNum), 1);
+
+        trendChart.innerHTML = `
+            <div class="trend-insight-grid">
+                <div class="trend-metric">
+                    <span class="trend-metric-label">최신 1등 당첨금</span>
+                    <strong>${formatKrwCompact(latest.firstWinamntNum)}</strong>
+                    <span class="trend-metric-sub">${latest.drwNo}회</span>
+                </div>
+                <div class="trend-metric">
+                    <span class="trend-metric-label">최근 최대 당첨금</span>
+                    <strong>${formatKrwCompact(peak.firstWinamntNum)}</strong>
+                    <span class="trend-metric-sub">${peak.drwNo}회</span>
+                </div>
+                <div class="trend-metric">
+                    <span class="trend-metric-label">최근 평균 당첨금</span>
+                    <strong>${formatKrwCompact(average)}</strong>
+                    <span class="trend-metric-sub">${byRoundAsc.length}회 평균</span>
+                </div>
+                <div class="trend-metric">
+                    <span class="trend-metric-label">직전 회차 대비</span>
+                    <strong>${formatChangePercent(changeRate)}</strong>
+                    <span class="trend-metric-sub">${previous ? `${previous.drwNo}회 대비` : '비교 데이터 없음'}</span>
+                </div>
+            </div>
+            <div class="trend-rows"></div>
+        `;
+
+        const rowsEl = trendChart.querySelector('.trend-rows');
+        rows.forEach(item => {
             const ratio = Math.max(0.08, item.firstWinamntNum / maxValue);
-            const bar = document.createElement('div');
-            bar.className = 'trend-bar';
-            bar.title = `${item.drwNo}회 1등 당첨금 ${formatNumber(item.firstWinamntNum)}원`;
-            bar.innerHTML = `
-                <div class="bar" style="height: ${Math.round(ratio * 100)}%"></div>
-                <div class="label">${item.drwNo}회</div>
+            const perWinner = item.firstPrzwnerCoNum > 0
+                ? Math.round(item.firstWinamntNum / item.firstPrzwnerCoNum)
+                : item.firstWinamntNum;
+            const row = document.createElement('div');
+            row.className = 'trend-row';
+            row.innerHTML = `
+                <div class="trend-row-head">
+                    <span class="trend-round">${item.drwNo}회 ${normalizeRoundDate(item.drwNoDate) || ''}</span>
+                    <strong class="trend-amount">${formatKrwCompact(item.firstWinamntNum)}</strong>
+                </div>
+                <div class="trend-track"><div class="trend-fill" style="width:${Math.round(ratio * 100)}%"></div></div>
+                <div class="trend-row-sub">당첨자 ${formatNumber(item.firstPrzwnerCoNum || 0)}명 · 1인당 약 ${formatKrwCompact(perWinner)}</div>
             `;
-            trendChart.appendChild(bar);
+            rowsEl.appendChild(row);
         });
+    }
+
+    function formatKrwCompact(value) {
+        const amount = Number(value || 0);
+        if (!Number.isFinite(amount) || amount <= 0) {
+            return '-';
+        }
+        if (amount >= 100000000) {
+            return `${(amount / 100000000).toFixed(1)}억원`;
+        }
+        if (amount >= 10000) {
+            return `${Math.round(amount / 10000).toLocaleString('ko-KR')}만원`;
+        }
+        return `${formatNumber(Math.round(amount))}원`;
+    }
+
+    function formatChangePercent(value) {
+        if (!Number.isFinite(value)) {
+            return '-';
+        }
+        const sign = value > 0 ? '+' : '';
+        return `${sign}${value.toFixed(1)}%`;
     }
 
     function getRecentCount() {
