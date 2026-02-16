@@ -138,7 +138,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (roundSearchBtn) {
         roundSearchBtn.addEventListener('click', () => {
+            const fallbackRound = latestAvailableRound || estimateLatestRound();
             const value = roundSearchInput ? Number(roundSearchInput.value) : 0;
+            if (!value && fallbackRound) {
+                syncRoundSearchDefault(fallbackRound, { force: true });
+                loadRound(fallbackRound);
+                return;
+            }
             if (!value) {
                 updateCompareResult('회차 번호를 입력해 주세요.');
                 return;
@@ -533,6 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const estimatedRound = estimateLatestRound();
         latestAvailableRound = estimatedRound;
+        syncRoundSearchDefault(estimatedRound);
         loadRecentRounds(estimatedRound);
         const maxAttempts = 12;
         const roundsToTry = buildRoundCandidates(estimatedRound, cached?.data?.drwNo);
@@ -545,6 +552,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     cacheWeekly(data);
                     initRoundSelect(data.drwNo);
                     latestAvailableRound = data.drwNo;
+                    syncRoundSearchDefault(data.drwNo, { force: true });
                     loadRecentRounds(data.drwNo);
                     return;
                 }
@@ -564,6 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (cached?.data?.drwNo) {
                 initRoundSelect(cached.data.drwNo);
                 latestAvailableRound = cached.data.drwNo;
+                syncRoundSearchDefault(cached.data.drwNo, { force: true });
                 loadRecentRounds(cached.data.drwNo);
             }
         }
@@ -976,6 +985,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             loadRound(round);
         };
+    }
+
+    function syncRoundSearchDefault(round, { force = false } = {}) {
+        if (!roundSearchInput || !Number.isFinite(round) || round < 1) {
+            return;
+        }
+        const normalized = String(Math.trunc(round));
+        const current = (roundSearchInput.value || '').trim();
+        if (force || !current) {
+            roundSearchInput.value = normalized;
+        }
     }
 
     async function loadRound(round) {
