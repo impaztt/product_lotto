@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const trendChart = document.getElementById('trend-chart');
     let currentWeeklyData = null;
     let latestAvailableRound = null;
+    const roundMetaByNo = new Map();
 
     const TOTAL_COMBOS = Number(combination(45, 6));
     const RULE_STATS = {
@@ -150,6 +151,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             loadRound(value);
+        });
+    }
+    if (roundSearchInput) {
+        roundSearchInput.addEventListener('keydown', event => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                if (roundSearchBtn) {
+                    roundSearchBtn.click();
+                }
+            }
         });
     }
 
@@ -632,6 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderWeeklyData(data, { cached }) {
+        rememberRoundMeta(data);
         currentWeeklyData = data;
         const numbers = [
             data.drwtNo1,
@@ -964,14 +976,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const rounds = [];
-        for (let i = 0; i < 12; i += 1) {
+        for (let i = 0; i < 20; i += 1) {
             rounds.push(Math.max(1, latestRound - i));
         }
         weeklyRoundSelect.innerHTML = '';
         rounds.forEach(round => {
             const option = document.createElement('option');
             option.value = String(round);
-            option.textContent = `${round}회`;
+            option.textContent = formatRoundOptionLabel(round);
             weeklyRoundSelect.appendChild(option);
         });
         weeklyRoundSelect.value = String(latestRound);
@@ -985,6 +997,47 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             loadRound(round);
         };
+    }
+
+    function rememberRoundMeta(data) {
+        if (!data || !Number.isFinite(Number(data.drwNo))) {
+            return;
+        }
+        const round = Number(data.drwNo);
+        const normalizedDate = normalizeRoundDate(data.drwNoDate);
+        if (normalizedDate) {
+            roundMetaByNo.set(round, normalizedDate);
+            refreshRoundSelectLabels();
+        }
+    }
+
+    function normalizeRoundDate(value) {
+        const raw = String(value || '').trim();
+        if (!raw) {
+            return '';
+        }
+        const digits = raw.replace(/[^\d]/g, '');
+        if (!/^\d{8}$/.test(digits)) {
+            return '';
+        }
+        return `${digits.slice(0, 4)}.${digits.slice(4, 6)}.${digits.slice(6, 8)}`;
+    }
+
+    function formatRoundOptionLabel(round) {
+        const date = roundMetaByNo.get(Number(round));
+        return date ? `${round}회차(${date})` : `${round}회차`;
+    }
+
+    function refreshRoundSelectLabels() {
+        if (!weeklyRoundSelect) {
+            return;
+        }
+        Array.from(weeklyRoundSelect.options).forEach(option => {
+            const round = Number(option.value);
+            if (Number.isFinite(round) && round > 0) {
+                option.textContent = formatRoundOptionLabel(round);
+            }
+        });
     }
 
     function syncRoundSearchDefault(round, { force = false } = {}) {
@@ -1090,6 +1143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function fillRecentCard(card, data) {
+        rememberRoundMeta(data);
         const dateEl = card.querySelector('.recent-date');
         const numbersEl = card.querySelector('.recent-numbers');
         if (dateEl) {
