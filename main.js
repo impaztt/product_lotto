@@ -474,6 +474,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function syncThemeToggle() {
+        if (!themeToggle) {
+            return;
+        }
         const currentTheme = body.getAttribute('data-theme') || 'dark';
         themeToggle.setAttribute('aria-label', currentTheme === 'dark' ? '라이트 모드' : '다크 모드');
         themeToggle.setAttribute('title', currentTheme === 'dark' ? '라이트 모드' : '다크 모드');
@@ -742,15 +745,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return;
         }
-        const savedIds = JSON.parse(saved);
-        ruleInputs.forEach(input => {
-            input.checked = savedIds.includes(input.value);
-        });
-        if (fromButton) {
-            updateRulesStatus('저장된 규칙을 불러왔습니다.');
+        try {
+            const savedIdsRaw = JSON.parse(saved);
+            const savedIds = Array.isArray(savedIdsRaw) ? savedIdsRaw : [];
+            ruleInputs.forEach(input => {
+                input.checked = savedIds.includes(input.value);
+            });
+            if (fromButton) {
+                updateRulesStatus('저장된 규칙을 불러왔습니다.');
+            }
+            updateSelectionCount();
+            updateCombinedEstimates();
+        } catch (error) {
+            console.warn('저장된 규칙 파싱 실패', error);
+            localStorage.removeItem('lotto_rules');
+            if (fromButton) {
+                updateRulesStatus('저장된 규칙이 손상되어 초기화했습니다.');
+            }
         }
-        updateSelectionCount();
-        updateCombinedEstimates();
     }
 
     function updateSelectionCount() {
