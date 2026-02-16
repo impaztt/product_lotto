@@ -551,6 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const estimatedRound = estimateLatestRound();
         latestAvailableRound = estimatedRound;
         syncRoundSearchDefault(estimatedRound);
+        initRoundSelect(estimatedRound);
         loadRecentRounds(estimatedRound);
         const maxAttempts = 12;
         const roundsToTry = buildRoundCandidates(estimatedRound, cached?.data?.drwNo);
@@ -975,9 +976,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!weeklyRoundSelect) {
             return;
         }
+        const normalizedLatestRound = Math.max(1, Math.trunc(Number(latestRound) || 1));
         const rounds = [];
-        for (let i = 0; i < 20; i += 1) {
-            rounds.push(Math.max(1, latestRound - i));
+        for (let round = normalizedLatestRound; round >= 1; round -= 1) {
+            rounds.push(round);
         }
         weeklyRoundSelect.innerHTML = '';
         rounds.forEach(round => {
@@ -986,9 +988,9 @@ document.addEventListener('DOMContentLoaded', () => {
             option.textContent = formatRoundOptionLabel(round);
             weeklyRoundSelect.appendChild(option);
         });
-        weeklyRoundSelect.value = String(latestRound);
+        weeklyRoundSelect.value = String(normalizedLatestRound);
         if (weeklyRoundHint) {
-            weeklyRoundHint.textContent = `최신 당첨 회차: ${latestRound}회`;
+            weeklyRoundHint.textContent = `최신 당첨 회차: ${normalizedLatestRound}회`;
         }
         weeklyRoundSelect.onchange = () => {
             const round = Number(weeklyRoundSelect.value);
