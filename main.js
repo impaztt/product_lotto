@@ -1122,18 +1122,31 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (!dataList.length) {
-            trendChart.innerHTML = '';
+            trendChart.classList.add('is-empty');
+            trendChart.innerHTML = '<div class="trend-empty">추이 데이터를 불러오는 중입니다.</div>';
             return;
         }
         const sorted = dataList
-            .filter(data => data && data.firstWinamnt)
+            .filter(Boolean)
+            .map(data => ({
+                ...data,
+                firstWinamntNum: Number(data.firstWinamnt || 0)
+            }))
+            .filter(data => Number.isFinite(data.firstWinamntNum) && data.firstWinamntNum > 0)
             .sort((a, b) => a.drwNo - b.drwNo);
-        const maxValue = Math.max(...sorted.map(item => Number(item.firstWinamnt || 0)), 1);
+        if (!sorted.length) {
+            trendChart.classList.add('is-empty');
+            trendChart.innerHTML = '<div class="trend-empty">표시할 최근 당첨금 데이터가 없습니다.</div>';
+            return;
+        }
+        trendChart.classList.remove('is-empty');
+        const maxValue = Math.max(...sorted.map(item => item.firstWinamntNum), 1);
         trendChart.innerHTML = '';
         sorted.forEach(item => {
-            const ratio = Math.max(0.08, Number(item.firstWinamnt || 0) / maxValue);
+            const ratio = Math.max(0.08, item.firstWinamntNum / maxValue);
             const bar = document.createElement('div');
             bar.className = 'trend-bar';
+            bar.title = `${item.drwNo}회 1등 당첨금 ${formatNumber(item.firstWinamntNum)}원`;
             bar.innerHTML = `
                 <div class="bar" style="height: ${Math.round(ratio * 100)}%"></div>
                 <div class="label">${item.drwNo}회</div>
