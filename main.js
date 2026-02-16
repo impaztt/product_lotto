@@ -72,6 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let latestAvailableRound = null;
     const roundMetaByNo = new Map();
 
+    // 네트워크/초기화 오류와 무관하게 회차 리스트는 먼저 표시한다.
+    latestAvailableRound = estimateLatestRound();
+    initRoundSelect(latestAvailableRound);
+    syncRoundSearchDefault(latestAvailableRound, { force: true });
+
     const TOTAL_COMBOS = Number(combination(45, 6));
     const RULE_STATS = {
         all_odd: { ratio: 0.012025, excluded: 97944 },
