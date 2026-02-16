@@ -76,6 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
     latestAvailableRound = estimateLatestRound();
     initRoundSelect(latestAvailableRound);
     syncRoundSearchDefault(latestAvailableRound, { force: true });
+    // 첫 진입 시 기본 선택된 최신 회차를 즉시 조회한다.
+    loadRound(latestAvailableRound);
 
     const TOTAL_COMBOS = Number(combination(45, 6));
     const RULE_STATS = {
