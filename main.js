@@ -1042,8 +1042,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function formatRoundOptionLabel(round) {
-        const date = roundMetaByNo.get(Number(round));
-        return date ? `${round}회차(${date})` : `${round}회차`;
+        const roundNo = Number(round);
+        const date = roundMetaByNo.get(roundNo) || estimateRoundDateLabel(roundNo);
+        return date ? `${roundNo}회차(${date})` : `${roundNo}회차`;
+    }
+
+    function estimateRoundDateLabel(round) {
+        if (!Number.isFinite(round) || round < 1) {
+            return '';
+        }
+        // 1회 추첨일(2002-12-07)을 기준으로 주 단위 계산
+        const firstDrawUtcMs = Date.UTC(2002, 11, 7);
+        const targetUtcMs = firstDrawUtcMs + (Math.trunc(round) - 1) * 7 * 24 * 60 * 60 * 1000;
+        const target = new Date(targetUtcMs);
+        const yyyy = target.getUTCFullYear();
+        const mm = String(target.getUTCMonth() + 1).padStart(2, '0');
+        const dd = String(target.getUTCDate()).padStart(2, '0');
+        return `${yyyy}.${mm}.${dd}`;
     }
 
     function refreshRoundSelectLabels() {
