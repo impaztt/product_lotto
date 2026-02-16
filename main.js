@@ -68,9 +68,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const compareResult = document.getElementById('compare-result');
     const recentCountSelect = document.getElementById('recent-count');
     const trendChart = document.getElementById('trend-chart');
+    const storeStatusEl = document.getElementById('store-status');
+    const storeLocateBtn = document.getElementById('store-locate-btn');
+    const storeRetryBtn = document.getElementById('store-retry-btn');
+    const storeRadiusSelect = document.getElementById('store-radius');
+    const storeMapEl = document.getElementById('store-map');
+    const storeListEl = document.getElementById('store-list');
     let currentWeeklyData = null;
     let latestAvailableRound = null;
     const roundMetaByNo = new Map();
+    let storeMap = null;
+    let storeMarkersLayer = null;
+    let storeUserMarker = null;
+    let storeLastPosition = null;
 
     // 네트워크/초기화 오류와 무관하게 회차 리스트는 먼저 표시한다.
     latestAvailableRound = estimateLatestRound();
@@ -189,6 +199,30 @@ document.addEventListener('DOMContentLoaded', () => {
         recentCountSelect.addEventListener('change', () => {
             if (latestAvailableRound) {
                 loadRecentRounds(latestAvailableRound);
+            }
+        });
+    }
+
+    if (storeLocateBtn) {
+        storeLocateBtn.addEventListener('click', () => {
+            locateAndLoadStores();
+        });
+    }
+
+    if (storeRetryBtn) {
+        storeRetryBtn.addEventListener('click', () => {
+            if (storeLastPosition) {
+                loadNearbyStores(storeLastPosition);
+                return;
+            }
+            locateAndLoadStores();
+        });
+    }
+
+    if (storeRadiusSelect) {
+        storeRadiusSelect.addEventListener('change', () => {
+            if (storeLastPosition) {
+                loadNearbyStores(storeLastPosition);
             }
         });
     }
@@ -533,10 +567,253 @@ document.addEventListener('DOMContentLoaded', () => {
         if (updateHash) {
             history.replaceState(null, '', `#${targetPanelId}`);
         }
+        if (tabId === 'store') {
+            window.setTimeout(() => {
+                if (storeMap && typeof storeMap.invalidateSize === 'function') {
+                    storeMap.invalidateSize();
+                }
+            }, 80);
+        }
         if (focusPanel) {
             targetPanel.focus({ preventScroll: true });
             targetPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+    }
+
+    function locateAndLoadStores() {
+        if (!storeStatusEl) {
+            return;
+        }
+        if (!navigator.geolocation) {
+            storeStatusEl.textContent = '이 브라우저에서는 위치 조회를 지원하지 않습니다.';
+            return;
+        }
+        storeStatusEl.textContent = '현재 위치 확인 중입니다. 위치 권한을 허용해 주세요.';
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                storeLastPosition = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                loadNearbyStores(storeLastPosition);
+            },
+            error => {
+                const message = mapGeoError(error);
+                storeStatusEl.textContent = message;
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 60000
+            }
+        );
+    }
+
+    async function loadNearbyStores(position) {
+        if (!position || !Number.isFinite(position.lat) || !Number.isFinite(position.lng)) {
+            return;
+        }
+        if (!storeStatusEl) {
+            return;
+        }
+        storeStatusEl.textContent = '주변 판매점 데이터를 불러오는 중입니다.';
+        const map = ensureStoreMap(position);
+        if (!map) {
+            return;
+        }
+        map.setView([position.lat, position.lng], 15);
+
+        if (storeUserMarker) {
+            storeUserMarker.setLatLng([position.lat, position.lng]);
+        } else {
+            storeUserMarker = window.L.marker([position.lat, position.lng], {
+                title: '현재 위치'
+            }).addTo(map).bindPopup('현재 위치');
+        }
+
+        const radius = getStoreRadius();
+        try {
+            const stores = await fetchNearbyStores(position, radius);
+            renderStoreResults(stores, position);
+            storeStatusEl.textContent = stores.length
+                ? `반경 ${Math.round(radius / 1000 * 10) / 10}km 내 판매점 ${stores.length}곳을 찾았습니다.`
+                : '주변 판매점 데이터를 찾지 못했습니다. 반경을 넓혀 다시 시도해 주세요.';
+        } catch (error) {
+            logProxyError('storeFinder', error, { position, radius });
+            storeStatusEl.textContent = '판매점 데이터를 가져오지 못했습니다. 잠시 후 다시 시도해 주세요.';
+        }
+    }
+
+    function ensureStoreMap(center) {
+        if (!storeMapEl || !window.L) {
+            if (storeStatusEl) {
+                storeStatusEl.textContent = '지도 라이브러리를 불러오지 못했습니다.';
+            }
+            return null;
+        }
+        if (!storeMap) {
+            storeMap = window.L.map(storeMapEl, {
+                zoomControl: true
+            }).setView([center.lat, center.lng], 14);
+            window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(storeMap);
+            storeMarkersLayer = window.L.layerGroup().addTo(storeMap);
+        }
+        return storeMap;
+    }
+
+    async function fetchNearbyStores(position, radius) {
+        const query = `
+[out:json][timeout:20];
+(
+  node(around:${radius},${position.lat},${position.lng})["shop"="lottery"];
+  node(around:${radius},${position.lat},${position.lng})["amenity"="lottery"];
+  node(around:${radius},${position.lat},${position.lng})["name"~"로또|복권|lotto|Lottery",i];
+  way(around:${radius},${position.lat},${position.lng})["shop"="lottery"];
+  way(around:${radius},${position.lat},${position.lng})["amenity"="lottery"];
+  way(around:${radius},${position.lat},${position.lng})["name"~"로또|복권|lotto|Lottery",i];
+);
+out center tags;
+        `.trim();
+
+        const response = await fetch('https://overpass-api.de/api/interpreter', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            },
+            body: `data=${encodeURIComponent(query)}`
+        });
+        if (!response.ok) {
+            throw new Error(`overpass error: ${response.status}`);
+        }
+        const payload = await response.json();
+        const elements = Array.isArray(payload.elements) ? payload.elements : [];
+        const dedup = new Map();
+        elements.forEach(element => {
+            const lat = Number(element.lat ?? element.center?.lat);
+            const lng = Number(element.lon ?? element.center?.lon);
+            if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+                return;
+            }
+            const name = (element.tags && (element.tags.name || element.tags.brand)) || '복권 판매점';
+            const address = element.tags
+                ? [element.tags['addr:full'], element.tags['addr:street'], element.tags['addr:city']].filter(Boolean).join(' ')
+                : '';
+            const key = `${lat.toFixed(6)}:${lng.toFixed(6)}:${name}`;
+            dedup.set(key, { name, address, lat, lng });
+        });
+
+        return Array.from(dedup.values())
+            .map(item => ({
+                ...item,
+                distance: distanceInMeters(position.lat, position.lng, item.lat, item.lng)
+            }))
+            .sort((a, b) => a.distance - b.distance)
+            .slice(0, 30);
+    }
+
+    function renderStoreResults(stores, position) {
+        if (storeMarkersLayer) {
+            storeMarkersLayer.clearLayers();
+        }
+        if (storeListEl) {
+            storeListEl.innerHTML = '';
+        }
+        if (!stores.length) {
+            if (storeListEl) {
+                storeListEl.innerHTML = '<div class="store-empty">표시할 판매점이 없습니다.</div>';
+            }
+            return;
+        }
+        stores.forEach((store, index) => {
+            if (storeMarkersLayer) {
+                window.L.marker([store.lat, store.lng], { title: store.name })
+                    .addTo(storeMarkersLayer)
+                    .bindPopup(`${escapeHtml(store.name)}<br>${escapeHtml(store.address || '')}<br>${formatDistance(store.distance)}`);
+            }
+            if (!storeListEl) {
+                return;
+            }
+            const row = document.createElement('button');
+            row.type = 'button';
+            row.className = 'store-item';
+            row.innerHTML = `
+                <div class="store-item-head">
+                    <strong>${index + 1}. ${escapeHtml(store.name)}</strong>
+                    <span>${formatDistance(store.distance)}</span>
+                </div>
+                <div class="store-item-sub">${escapeHtml(store.address || '주소 정보 없음')}</div>
+            `;
+            row.addEventListener('click', () => {
+                if (storeMap) {
+                    storeMap.setView([store.lat, store.lng], 17);
+                }
+            });
+            storeListEl.appendChild(row);
+        });
+
+        if (storeMap && stores.length) {
+            const bounds = window.L.latLngBounds([
+                [position.lat, position.lng],
+                ...stores.map(store => [store.lat, store.lng])
+            ]);
+            storeMap.fitBounds(bounds, { padding: [24, 24], maxZoom: 16 });
+        }
+    }
+
+    function getStoreRadius() {
+        const value = Number(storeRadiusSelect ? storeRadiusSelect.value : 2000);
+        if (!Number.isFinite(value) || value <= 0) {
+            return 2000;
+        }
+        return value;
+    }
+
+    function formatDistance(meters) {
+        if (!Number.isFinite(meters) || meters < 0) {
+            return '-';
+        }
+        if (meters < 1000) {
+            return `${Math.round(meters)}m`;
+        }
+        return `${(meters / 1000).toFixed(2)}km`;
+    }
+
+    function distanceInMeters(lat1, lon1, lat2, lon2) {
+        const toRad = degree => degree * (Math.PI / 180);
+        const earth = 6371000;
+        const dLat = toRad(lat2 - lat1);
+        const dLon = toRad(lon2 - lon1);
+        const a = Math.sin(dLat / 2) ** 2
+            + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+        return 2 * earth * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function mapGeoError(error) {
+        if (!error || typeof error.code !== 'number') {
+            return '위치 정보를 가져오지 못했습니다.';
+        }
+        if (error.code === 1) {
+            return '위치 권한이 거부되었습니다. 브라우저 권한을 허용해 주세요.';
+        }
+        if (error.code === 2) {
+            return '현재 위치를 확인할 수 없습니다. GPS/네트워크 상태를 확인해 주세요.';
+        }
+        if (error.code === 3) {
+            return '위치 요청 시간이 초과되었습니다. 다시 시도해 주세요.';
+        }
+        return '위치 정보를 가져오지 못했습니다.';
+    }
+
+    function escapeHtml(value) {
+        return String(value || '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
     }
 
     function syncMenuState(open) {

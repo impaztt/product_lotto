@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로또픽스튜디오</title>
-    <link rel="stylesheet" href="style.css?v=20260223">
+    <link rel="stylesheet" href="style.css?v=20260224">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body data-theme="light">
     <header class="site-header">
@@ -747,6 +748,28 @@
                 </div>
             </section>
         </section>
+
+        <section id="tab-store" class="tab-panel" role="tabpanel" aria-labelledby="tab-store-btn" tabindex="0">
+            <div class="section-title">
+                <h2>내 주변 로또 판매점</h2>
+                <p id="store-status">현재 위치 동의 후 주변 판매점을 지도에서 확인할 수 있습니다.</p>
+            </div>
+            <div class="store-controls">
+                <button id="store-locate-btn" type="button">현재 위치로 찾기</button>
+                <button id="store-retry-btn" type="button" class="ghost">다시 조회</button>
+                <label for="store-radius">반경</label>
+                <select id="store-radius" aria-label="검색 반경">
+                    <option value="1000">1km</option>
+                    <option value="2000" selected>2km</option>
+                    <option value="3000">3km</option>
+                    <option value="5000">5km</option>
+                </select>
+            </div>
+            <div class="store-layout">
+                <div id="store-map" class="store-map" role="img" aria-label="주변 로또 판매점 지도"></div>
+                <div id="store-list" class="store-list"></div>
+            </div>
+        </section>
     </main>
 
     <nav class="bottom-tab-bar" role="tablist" aria-label="하단 탭">
@@ -761,6 +784,10 @@
         <button class="tab-btn" id="tab-mypage-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-mypage" data-tab="mypage">
             <span class="tab-icon icon-mypage" aria-hidden="true"></span>
             <span class="tab-label">마이페이지</span>
+        </button>
+        <button class="tab-btn" id="tab-store-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-store" data-tab="store">
+            <span class="tab-icon icon-store" aria-hidden="true"></span>
+            <span class="tab-label">판매점</span>
         </button>
     </nav>
 
@@ -794,6 +821,7 @@
         <button class="sheet-close" type="button">닫기</button>
     </div>
 
-    <script src="main.js?v=20260223"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="main.js?v=20260224"></script>
 </body>
 </html>
