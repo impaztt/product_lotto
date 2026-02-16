@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로또픽스튜디오</title>
-    <link rel="stylesheet" href="style.css?v=20260225">
+    <link rel="stylesheet" href="style.css?v=20260226">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body data-theme="light">
@@ -770,6 +770,48 @@
                 <div id="store-list" class="store-list"></div>
             </div>
         </section>
+
+        <section id="tab-qr" class="tab-panel" role="tabpanel" aria-labelledby="tab-qr-btn" tabindex="0">
+            <div class="section-title">
+                <h2>QR 스캔</h2>
+                <p id="qr-status">카메라 권한을 허용한 뒤 로또 QR을 비춰 당첨 여부를 확인하세요.</p>
+            </div>
+            <div class="qr-layout">
+                <div class="qr-camera-card">
+                    <div class="qr-camera-head">
+                        <h3>실시간 스캔</h3>
+                        <span class="badge muted">카메라</span>
+                    </div>
+                    <div class="qr-preview">
+                        <video id="qr-video" autoplay playsinline muted></video>
+                        <div class="qr-frame" aria-hidden="true"></div>
+                    </div>
+                    <canvas id="qr-canvas" class="qr-canvas" aria-hidden="true"></canvas>
+                    <div class="qr-actions">
+                        <button id="qr-start-btn" type="button">스캔 시작</button>
+                        <button id="qr-stop-btn" type="button" class="ghost">스캔 중지</button>
+                    </div>
+                </div>
+                <div class="qr-result-card">
+                    <div class="qr-result-head">
+                        <h3>스캔 결과</h3>
+                        <span class="badge muted" id="qr-result-badge">대기 중</span>
+                    </div>
+                    <div class="qr-block">
+                        <span class="qr-label">인식된 번호</span>
+                        <div id="qr-ticket-numbers" class="qr-numbers">-</div>
+                    </div>
+                    <div class="qr-block">
+                        <span class="qr-label">당첨 비교</span>
+                        <div id="qr-match-result" class="qr-match">QR을 스캔하면 결과가 표시됩니다.</div>
+                    </div>
+                    <div class="qr-block">
+                        <span class="qr-label">원본 QR 데이터</span>
+                        <pre id="qr-payload" class="qr-payload">-</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <nav class="bottom-tab-bar" role="tablist" aria-label="하단 탭">
@@ -788,6 +830,10 @@
         <button class="tab-btn" id="tab-store-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-store" data-tab="store">
             <span class="tab-icon icon-store" aria-hidden="true"></span>
             <span class="tab-label">판매점</span>
+        </button>
+        <button class="tab-btn" id="tab-qr-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-qr" data-tab="qr">
+            <span class="tab-icon icon-qr" aria-hidden="true"></span>
+            <span class="tab-label">QR스캔</span>
         </button>
     </nav>
 
@@ -822,6 +868,7 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="main.js?v=20260224"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script src="main.js?v=20260226"></script>
 </body>
 </html>

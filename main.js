@@ -74,6 +74,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const storeRadiusSelect = document.getElementById('store-radius');
     const storeMapEl = document.getElementById('store-map');
     const storeListEl = document.getElementById('store-list');
+    const qrStatusEl = document.getElementById('qr-status');
+    const qrVideoEl = document.getElementById('qr-video');
+    const qrCanvasEl = document.getElementById('qr-canvas');
+    const qrStartBtn = document.getElementById('qr-start-btn');
+    const qrStopBtn = document.getElementById('qr-stop-btn');
+    const qrResultBadgeEl = document.getElementById('qr-result-badge');
+    const qrTicketNumbersEl = document.getElementById('qr-ticket-numbers');
+    const qrMatchResultEl = document.getElementById('qr-match-result');
+    const qrPayloadEl = document.getElementById('qr-payload');
     let currentWeeklyData = null;
     let latestAvailableRound = null;
     const roundMetaByNo = new Map();
@@ -81,6 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let storeMarkersLayer = null;
     let storeUserMarker = null;
     let storeLastPosition = null;
+    let qrStream = null;
+    let qrScanRafId = null;
+    let qrCanvasCtx = null;
+    let qrLastPayload = '';
+    let qrBarcodeDetector = null;
 
     // 네트워크/초기화 오류와 무관하게 회차 리스트는 먼저 표시한다.
     latestAvailableRound = estimateLatestRound();
@@ -224,6 +238,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (storeLastPosition) {
                 loadNearbyStores(storeLastPosition);
             }
+        });
+    }
+
+    if (qrStartBtn) {
+        qrStartBtn.addEventListener('click', () => {
+            startQrScanner();
+        });
+    }
+
+    if (qrStopBtn) {
+        qrStopBtn.addEventListener('click', () => {
+            stopQrScanner('스캔이 중지되었습니다.');
         });
     }
 
@@ -574,6 +600,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }, 80);
         }
+        if (tabId !== 'qr' && qrStream) {
+            stopQrScanner('QR 탭을 벗어나 스캔을 중지했습니다.');
+        }
         if (focusPanel) {
             targetPanel.focus({ preventScroll: true });
             targetPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -814,6 +843,233 @@ out center tags;
             .replaceAll('>', '&gt;')
             .replaceAll('"', '&quot;')
             .replaceAll("'", '&#39;');
+    }
+
+    async function startQrScanner() {
+        if (!qrVideoEl || !qrStatusEl) {
+            return;
+        }
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            qrStatusEl.textContent = '이 브라우저에서는 카메라 스캔을 지원하지 않습니다.';
+            return;
+        }
+        if (qrStream) {
+            qrStatusEl.textContent = 'QR 스캔이 이미 실행 중입니다.';
+            return;
+        }
+        try {
+            qrStatusEl.textContent = '카메라를 여는 중입니다. 권한을 허용해 주세요.';
+            qrResultBadgeEl.textContent = '스캔 중';
+            qrResultBadgeEl.classList.remove('muted');
+            qrStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: { ideal: 'environment' },
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                },
+                audio: false
+            });
+            qrVideoEl.srcObject = qrStream;
+            await qrVideoEl.play();
+            qrStatusEl.textContent = 'QR 코드를 프레임 안에 맞춰 주세요.';
+            qrLastPayload = '';
+            runQrScanLoop();
+        } catch (error) {
+            logProxyError('startQrScanner', error);
+            qrResultBadgeEl.textContent = '오류';
+            qrResultBadgeEl.classList.add('muted');
+            qrStatusEl.textContent = '카메라를 열지 못했습니다. 브라우저 권한 설정을 확인해 주세요.';
+        }
+    }
+
+    function stopQrScanner(statusMessage = 'QR 스캔이 중지되었습니다.') {
+        if (qrScanRafId) {
+            window.cancelAnimationFrame(qrScanRafId);
+            qrScanRafId = null;
+        }
+        if (qrVideoEl) {
+            qrVideoEl.pause();
+            qrVideoEl.srcObject = null;
+        }
+        if (qrStream) {
+            qrStream.getTracks().forEach(track => track.stop());
+            qrStream = null;
+        }
+        if (qrStatusEl) {
+            qrStatusEl.textContent = statusMessage;
+        }
+        if (qrResultBadgeEl) {
+            qrResultBadgeEl.textContent = '대기 중';
+            qrResultBadgeEl.classList.add('muted');
+        }
+    }
+
+    function runQrScanLoop() {
+        if (!qrVideoEl || !qrCanvasEl || !qrStream) {
+            return;
+        }
+        qrScanRafId = window.requestAnimationFrame(async () => {
+            if (!qrVideoEl.videoWidth || !qrVideoEl.videoHeight) {
+                runQrScanLoop();
+                return;
+            }
+            qrCanvasEl.width = qrVideoEl.videoWidth;
+            qrCanvasEl.height = qrVideoEl.videoHeight;
+            if (!qrCanvasCtx) {
+                qrCanvasCtx = qrCanvasEl.getContext('2d', { willReadFrequently: true });
+            }
+            if (!qrCanvasCtx) {
+                runQrScanLoop();
+                return;
+            }
+            qrCanvasCtx.drawImage(qrVideoEl, 0, 0, qrCanvasEl.width, qrCanvasEl.height);
+            const payload = await decodeQrFromCanvas();
+            if (payload && payload !== qrLastPayload) {
+                qrLastPayload = payload;
+                await processDecodedQr(payload);
+            }
+            runQrScanLoop();
+        });
+    }
+
+    async function decodeQrFromCanvas() {
+        if (!qrCanvasEl) {
+            return '';
+        }
+        if (!qrBarcodeDetector && 'BarcodeDetector' in window) {
+            try {
+                qrBarcodeDetector = new window.BarcodeDetector({ formats: ['qr_code'] });
+            } catch {
+                qrBarcodeDetector = null;
+            }
+        }
+        if (qrBarcodeDetector) {
+            try {
+                const codes = await qrBarcodeDetector.detect(qrCanvasEl);
+                if (codes && codes.length && codes[0].rawValue) {
+                    return String(codes[0].rawValue);
+                }
+            } catch {
+                // ignore and try fallback
+            }
+        }
+        if (typeof window.jsQR === 'function' && qrCanvasCtx) {
+            const imageData = qrCanvasCtx.getImageData(0, 0, qrCanvasEl.width, qrCanvasEl.height);
+            const code = window.jsQR(imageData.data, imageData.width, imageData.height, {
+                inversionAttempts: 'dontInvert'
+            });
+            if (code && code.data) {
+                return String(code.data);
+            }
+        }
+        return '';
+    }
+
+    async function processDecodedQr(payload) {
+        if (!qrStatusEl || !qrPayloadEl || !qrTicketNumbersEl || !qrMatchResultEl) {
+            return;
+        }
+        qrPayloadEl.textContent = payload || '-';
+        qrStatusEl.textContent = 'QR을 인식했습니다. 당첨번호를 비교 중입니다.';
+        const numbers = extractTicketNumbersFromQr(payload);
+        renderQrNumbers(numbers);
+
+        if (numbers.length < 6) {
+            qrMatchResultEl.textContent = 'QR에서 로또 번호 6개를 인식하지 못했습니다. 다른 각도로 다시 스캔해 주세요.';
+            qrResultBadgeEl.textContent = '재시도';
+            qrResultBadgeEl.classList.remove('muted');
+            return;
+        }
+
+        const roundHint = extractRoundHintFromQr(payload);
+        let drawData = currentWeeklyData;
+        if (roundHint && Number.isFinite(roundHint)) {
+            try {
+                const hinted = await fetchDrawData(roundHint);
+                if (hinted && hinted.returnValue === 'success') {
+                    drawData = hinted;
+                }
+            } catch (error) {
+                logProxyError('qrRoundHint', error, { roundHint });
+            }
+        }
+        if (!drawData || drawData.returnValue !== 'success') {
+            qrMatchResultEl.textContent = '비교할 회차 데이터를 아직 불러오지 못했습니다. 잠시 후 다시 스캔해 주세요.';
+            qrResultBadgeEl.textContent = '대기';
+            qrResultBadgeEl.classList.add('muted');
+            return;
+        }
+
+        const winning = new Set([
+            drawData.drwtNo1,
+            drawData.drwtNo2,
+            drawData.drwtNo3,
+            drawData.drwtNo4,
+            drawData.drwtNo5,
+            drawData.drwtNo6
+        ].map(Number));
+        const matchCount = numbers.filter(number => winning.has(number)).length;
+        const bonusMatch = numbers.includes(Number(drawData.bnusNo));
+        const rank = getRank(matchCount, bonusMatch);
+        const roundLabel = `${drawData.drwNo}회`;
+        qrMatchResultEl.textContent = `${roundLabel} 기준 일치 ${matchCount}개${bonusMatch ? ' + 보너스' : ''} → ${rank}`;
+        qrResultBadgeEl.textContent = matchCount >= 3 ? '확인 완료' : '미당첨';
+        qrResultBadgeEl.classList.remove('muted');
+        qrStatusEl.textContent = '스캔 완료. 다른 QR도 계속 스캔할 수 있습니다.';
+    }
+
+    function extractTicketNumbersFromQr(payload) {
+        const matches = String(payload || '').match(/\d+/g) || [];
+        const unique = [];
+        matches.forEach(token => {
+            const value = Number(token);
+            if (!Number.isInteger(value) || value < 1 || value > 45) {
+                return;
+            }
+            if (!unique.includes(value)) {
+                unique.push(value);
+            }
+        });
+        if (unique.length < 6) {
+            return [];
+        }
+        return unique.slice(0, 6).sort((a, b) => a - b);
+    }
+
+    function extractRoundHintFromQr(payload) {
+        const text = String(payload || '');
+        try {
+            const parsed = new URL(text);
+            const queryRound = Number(parsed.searchParams.get('drwNo') || parsed.searchParams.get('round'));
+            if (Number.isInteger(queryRound) && queryRound > 0) {
+                return queryRound;
+            }
+        } catch {
+            // not a URL
+        }
+        const match = text.match(/(?:drwNo|round|회차)\D{0,3}(\d{1,4})/i);
+        if (!match) {
+            return null;
+        }
+        const round = Number(match[1]);
+        return Number.isInteger(round) && round > 0 ? round : null;
+    }
+
+    function renderQrNumbers(numbers) {
+        if (!qrTicketNumbersEl) {
+            return;
+        }
+        if (!numbers || !numbers.length) {
+            qrTicketNumbersEl.textContent = '-';
+            return;
+        }
+        qrTicketNumbersEl.innerHTML = '';
+        numbers.forEach(number => {
+            const chip = document.createElement('span');
+            chip.className = 'qr-num-chip';
+            chip.textContent = String(number);
+            qrTicketNumbersEl.appendChild(chip);
+        });
     }
 
     function syncMenuState(open) {
