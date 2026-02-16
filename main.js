@@ -552,7 +552,6 @@ document.addEventListener('DOMContentLoaded', () => {
         latestAvailableRound = estimatedRound;
         syncRoundSearchDefault(estimatedRound);
         initRoundSelect(estimatedRound);
-        loadRecentRounds(estimatedRound);
         const maxAttempts = 12;
         const roundsToTry = buildRoundCandidates(estimatedRound, cached?.data?.drwNo);
         for (let index = 0; index < Math.min(maxAttempts, roundsToTry.length); index += 1) {
