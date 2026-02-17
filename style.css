@@ -2009,6 +2009,43 @@ body[data-theme="light"] .draw-studio-header {
     padding: 14px 16px 18px;
 }
 
+.draw-rules-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.draw-rules-header h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+}
+
+.draw-rules-header p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.draw-rules-legend {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.legend-chip {
+    border: 1px solid var(--panel-border);
+    border-radius: 999px;
+    padding: 4px 8px;
+    font-size: 11px;
+    background: var(--bg-soft);
+}
+
+.legend-chip.muted {
+    color: var(--text-muted);
+}
+
 .draw-workspace {
     display: grid;
     grid-template-columns: minmax(0, 0.32fr) minmax(0, 0.68fr);
@@ -2302,12 +2339,13 @@ body[data-theme="light"] .draw-studio-header {
 
 .rules-groups {
     display: grid;
-    gap: 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
 }
 
 .rule-group h3 {
-    margin: 0 0 12px;
-    font-size: 18px;
+    margin: 0 0 8px;
+    font-size: 16px;
 }
 
 .rule-group-header {
@@ -2413,11 +2451,15 @@ body[data-theme="light"] .draw-studio-header {
     align-items: center;
     gap: 4px;
     font-size: 10px;
-    color: var(--text-muted);
+    color: var(--text);
+    background: rgba(15, 23, 42, 0.08);
+    border: 1px solid var(--panel-border);
+    border-radius: 999px;
+    padding: 2px 6px;
 }
 
 .rule-stat::before {
-    content: "·";
+    content: "↓";
     color: var(--text-muted);
 }
 
@@ -2425,6 +2467,14 @@ body[data-theme="light"] .draw-studio-header {
     margin: 0 0 12px;
     font-size: 12px;
     color: var(--text-muted);
+}
+
+.rule-group {
+    border: 1px solid var(--panel-border);
+    background: var(--bg-soft);
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: var(--shadow);
 }
 
 .detail-toggle {
@@ -2651,6 +2701,10 @@ body[data-theme="light"] .draw-studio-header {
     }
 
     .draw-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rules-groups {
         grid-template-columns: 1fr;
     }
 
