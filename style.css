@@ -2231,6 +2231,7 @@ body[data-theme="light"] .draw-hero {
     gap: 6px;
     padding: 0;
     width: auto;
+    flex-wrap: wrap;
 }
 
 .rule-title {
@@ -2238,9 +2239,21 @@ body[data-theme="light"] .draw-hero {
     font-size: 12px;
 }
 
-.rule-desc,
-.rule-stat {
+.rule-desc {
     display: none;
+}
+
+.rule-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+.rule-stat::before {
+    content: "·";
+    color: var(--text-muted);
 }
 
 .rule-group-note {
