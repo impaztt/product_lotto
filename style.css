@@ -1673,20 +1673,76 @@ body[data-theme="light"] .info-list li {
     font-size: 13px;
 }
 
-.draw-layout {
+.draw-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
-    gap: 20px;
-    align-items: start;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 24px;
+    padding: 18px;
+    border-radius: 22px;
+    border: 1px solid var(--panel-border);
+    background: linear-gradient(160deg, rgba(23, 30, 46, 0.92), rgba(17, 23, 31, 0.92));
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
 }
 
-.rules-summary {
+body[data-theme="light"] .draw-hero {
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(245, 246, 248, 0.96));
+}
+
+.draw-kicker {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.draw-hero-main h2 {
+    margin: 10px 0 8px;
+    font-size: clamp(22px, 2.4vw, 30px);
+}
+
+.draw-hero-main p {
+    margin: 0 0 16px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.draw-steps {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-    margin-bottom: 0;
-    grid-column: 2;
-    grid-row: 1 / span 2;
+    gap: 10px;
+}
+
+.draw-step {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background: var(--bg-soft);
+    border: 1px solid var(--panel-border);
+    padding: 8px 10px;
+    border-radius: 12px;
+}
+
+.draw-step-index {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    background: var(--accent);
+    color: #fff;
+    font-size: 12px;
+}
+
+.draw-step-text {
+    font-size: 13px;
+}
+
+.draw-live-panel {
+    display: grid;
+    gap: 12px;
     position: sticky;
     top: 110px;
     align-self: start;
@@ -1728,6 +1784,65 @@ body[data-theme="light"] .info-list li {
 .draw-live-sub {
     font-size: 12px;
     color: var(--text-muted);
+}
+
+.draw-pill-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.draw-pill {
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 10px 12px;
+    background: var(--panel);
+    display: grid;
+    gap: 6px;
+}
+
+.draw-pill-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.draw-pill-value {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.draw-pill-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.draw-odds-card {
+    border: 1px solid var(--panel-border);
+    border-radius: 16px;
+    background: var(--panel);
+    box-shadow: var(--shadow);
+    padding: 12px;
+}
+
+.draw-odds-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.draw-control-bar {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.draw-control-bar .rules-actions {
+    margin-bottom: 0;
 }
 
 .summary-card {
@@ -2112,13 +2227,11 @@ body[data-theme="light"] .info-list li {
         grid-template-columns: 1fr;
     }
 
-    .draw-layout {
+    .draw-hero {
         grid-template-columns: 1fr;
     }
 
-    .rules-summary {
-        grid-column: 1;
-        grid-row: auto;
+    .draw-live-panel {
         position: static;
     }
 

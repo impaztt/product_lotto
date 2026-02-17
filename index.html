@@ -192,7 +192,90 @@
                     <h2>제외 규칙</h2>
                     <p>원하는 규칙을 켜면 그 패턴을 결과에서 제외합니다.</p>
                 </div>
-            <div class="rules-toolbar">
+            <div class="draw-hero">
+                <div class="draw-hero-main">
+                    <span class="draw-kicker">필터 전략 콘솔</span>
+                    <h2>규칙을 고르면, 남은 조합과 확률 변화를 즉시 보여드립니다.</h2>
+                    <p>필터링은 “당첨 조합도 함께 제거될 수 있다”는 가정으로 계산합니다. 실제 확률은 변하지 않으며 참고용으로만 사용하세요.</p>
+                    <div class="draw-steps">
+                        <div class="draw-step">
+                            <span class="draw-step-index">1</span>
+                            <span class="draw-step-text">규칙을 선택해 제외 조건을 추가</span>
+                        </div>
+                        <div class="draw-step">
+                            <span class="draw-step-index">2</span>
+                            <span class="draw-step-text">남은 조합과 확률 변화를 즉시 확인</span>
+                        </div>
+                        <div class="draw-step">
+                            <span class="draw-step-index">3</span>
+                            <span class="draw-step-text">필터 적용 후 번호 생성</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="draw-live-panel">
+                    <div class="draw-live-card">
+                        <div class="draw-live-title">실시간 확률 변화</div>
+                        <div class="draw-live-meter">
+                            <div class="draw-live-fill" id="remaining-meter-fill"></div>
+                        </div>
+                        <div class="draw-live-sub" id="remaining-meter-label">남은 조합 비중: -</div>
+                    </div>
+                    <div class="draw-pill-grid">
+                        <div class="draw-pill">
+                            <span class="draw-pill-label">선택된 규칙</span>
+                            <strong class="draw-pill-value" id="rules-selected-count">0개</strong>
+                            <span class="draw-pill-sub" id="rules-visible-count">표시: 0/0</span>
+                        </div>
+                        <div class="draw-pill">
+                            <span class="draw-pill-label">남은 조합</span>
+                            <strong class="draw-pill-value" id="remaining-combos">계산중</strong>
+                            <span class="draw-pill-sub" id="excluded-combos">제외: -</span>
+                        </div>
+                    </div>
+                    <div class="draw-odds-card">
+                        <div class="draw-odds-title">당첨확률 (가정)</div>
+                        <div class="odds-grid">
+                            <div class="odds-row">
+                                <span>등수</span>
+                                <span>기본</span>
+                                <span>필터 적용</span>
+                                <span>변화</span>
+                            </div>
+                            <div class="odds-row">
+                                <span>1등</span>
+                                <span id="odds-base-1">1 / 8,145,060</span>
+                                <span id="odds-adj-1">-</span>
+                                <span class="odds-delta" id="odds-delta-1">-</span>
+                            </div>
+                            <div class="odds-row">
+                                <span>2등</span>
+                                <span id="odds-base-2">1 / 1,357,510</span>
+                                <span id="odds-adj-2">-</span>
+                                <span class="odds-delta" id="odds-delta-2">-</span>
+                            </div>
+                            <div class="odds-row">
+                                <span>3등</span>
+                                <span id="odds-base-3">1 / 35,724</span>
+                                <span id="odds-adj-3">-</span>
+                                <span class="odds-delta" id="odds-delta-3">-</span>
+                            </div>
+                            <div class="odds-row">
+                                <span>4등</span>
+                                <span id="odds-base-4">1 / 733</span>
+                                <span id="odds-adj-4">-</span>
+                                <span class="odds-delta" id="odds-delta-4">-</span>
+                            </div>
+                            <div class="odds-row">
+                                <span>5등</span>
+                                <span id="odds-base-5">1 / 45</span>
+                                <span id="odds-adj-5">-</span>
+                                <span class="odds-delta" id="odds-delta-5">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="draw-control-bar">
                 <div class="rules-presets">
                     <button class="preset-btn" data-preset="light" type="button">보수형</button>
                     <button class="preset-btn" data-preset="balanced" type="button">균형형</button>
@@ -201,74 +284,10 @@
                     <button class="preset-btn" id="custom-save" type="button">내 프리셋 저장</button>
                     <button class="preset-btn" id="custom-apply" type="button">내 프리셋 적용</button>
                 </div>
-            </div>
-            <div class="rules-actions">
-                <button id="save-rules" class="ghost" type="button">규칙 저장</button>
-                <button id="load-rules" class="ghost" type="button">저장 불러오기</button>
-                <span id="rules-status" class="rules-status" aria-live="polite"></span>
-            </div>
-            <div class="draw-layout">
-            <div class="rules-summary">
-                <div class="draw-live-card">
-                    <div class="draw-live-title">실시간 확률 변화</div>
-                    <div class="draw-live-meter">
-                        <div class="draw-live-fill" id="remaining-meter-fill"></div>
-                    </div>
-                    <div class="draw-live-sub" id="remaining-meter-label">남은 조합 비중: -</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">선택된 규칙</div>
-                    <div class="summary-value" id="rules-selected-count">0개</div>
-                    <div class="summary-sub" id="rules-visible-count">표시: 0/0</div>
-                </div>
-                <div class="summary-card">
-                    <div class="summary-label">남은 조합 (가정)</div>
-                    <div class="summary-value" id="remaining-combos">계산중</div>
-                    <div class="summary-sub" id="excluded-combos">제외: -</div>
-                </div>
-                <div class="summary-card odds-card">
-                    <div class="summary-label">당첨확률 (가정)</div>
-                    <div class="odds-grid">
-                        <div class="odds-row">
-                            <span>등수</span>
-                            <span>기본</span>
-                            <span>필터 적용</span>
-                            <span>변화</span>
-                        </div>
-                        <div class="odds-row">
-                            <span>1등</span>
-                            <span id="odds-base-1">1 / 8,145,060</span>
-                            <span id="odds-adj-1">-</span>
-                            <span class="odds-delta" id="odds-delta-1">-</span>
-                        </div>
-                        <div class="odds-row">
-                            <span>2등</span>
-                            <span id="odds-base-2">1 / 1,357,510</span>
-                            <span id="odds-adj-2">-</span>
-                            <span class="odds-delta" id="odds-delta-2">-</span>
-                        </div>
-                        <div class="odds-row">
-                            <span>3등</span>
-                            <span id="odds-base-3">1 / 35,724</span>
-                            <span id="odds-adj-3">-</span>
-                            <span class="odds-delta" id="odds-delta-3">-</span>
-                        </div>
-                        <div class="odds-row">
-                            <span>4등</span>
-                            <span id="odds-base-4">1 / 733</span>
-                            <span id="odds-adj-4">-</span>
-                            <span class="odds-delta" id="odds-delta-4">-</span>
-                        </div>
-                        <div class="odds-row">
-                            <span>5등</span>
-                            <span id="odds-base-5">1 / 45</span>
-                            <span id="odds-adj-5">-</span>
-                            <span class="odds-delta" id="odds-delta-5">-</span>
-                        </div>
-                    </div>
-                    <div class="summary-sub">
-                        필터는 “당첨 조합까지 함께 제거될 수 있다”는 가정으로 계산합니다. 실제 당첨 확률은 변하지 않으며, 표시는 참고용입니다.
-                    </div>
+                <div class="rules-actions">
+                    <button id="save-rules" class="ghost" type="button">규칙 저장</button>
+                    <button id="load-rules" class="ghost" type="button">저장 불러오기</button>
+                    <span id="rules-status" class="rules-status" aria-live="polite"></span>
                 </div>
             </div>
             <div class="rules-toggle-row">
