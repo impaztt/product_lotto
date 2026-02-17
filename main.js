@@ -1732,7 +1732,7 @@ document.addEventListener('DOMContentLoaded', () => {
             5: Math.round(total / (combination(6, 3) * combination(39, 3)))
         };
         Object.entries(baseOdds).forEach(([rank, value]) => {
-            const adjusted = Math.max(1, Math.round(value / clampRatio));
+            const adjusted = Math.max(1, Math.round(value * clampRatio));
             if (oddsAdjEls[rank]) {
                 oddsAdjEls[rank].textContent = `1 / ${formatNumber(adjusted)}`;
             }
@@ -1741,9 +1741,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     oddsDeltaEls[rank].textContent = '변화 없음';
                     oddsDeltaEls[rank].dataset.trend = 'neutral';
                 } else {
-                    const worsePct = Math.round((1 / clampRatio - 1) * 100);
-                    oddsDeltaEls[rank].textContent = `불리 +${worsePct}%`;
-                    oddsDeltaEls[rank].dataset.trend = 'down';
+                    const betterPct = Math.round((1 - clampRatio) * 100);
+                    oddsDeltaEls[rank].textContent = `유리 ${betterPct}%`;
+                    oddsDeltaEls[rank].dataset.trend = 'up';
                 }
             }
         });

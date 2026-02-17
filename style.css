@@ -1742,6 +1742,10 @@ body[data-theme="light"] .info-list li {
     color: #f97316;
 }
 
+.odds-delta[data-trend="up"] {
+    color: #22c55e;
+}
+
 .odds-delta[data-trend="neutral"] {
     color: var(--text-muted);
 }
