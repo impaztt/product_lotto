@@ -730,7 +730,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             storeUserMarker = window.L.marker([position.lat, position.lng], {
                 icon: window.L.divIcon({
-                    className: 'user-pin',
+                    className: 'user-pin leaflet-div-icon',
                     iconSize: [14, 14],
                     iconAnchor: [7, 7]
                 }),
@@ -772,51 +772,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function fetchNearbyStores(position, radius) {
-        const query = `
-[out:json][timeout:20];
-(
-  node(around:${radius},${position.lat},${position.lng})["shop"="lottery"];
-  node(around:${radius},${position.lat},${position.lng})["amenity"="lottery"];
-  node(around:${radius},${position.lat},${position.lng})["name"~"로또|복권|lotto|Lottery",i];
-  way(around:${radius},${position.lat},${position.lng})["shop"="lottery"];
-  way(around:${radius},${position.lat},${position.lng})["amenity"="lottery"];
-  way(around:${radius},${position.lat},${position.lng})["name"~"로또|복권|lotto|Lottery",i];
-);
-out center tags;
-        `.trim();
-
-        const response = await fetch('https://overpass-api.de/api/interpreter', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-            },
-            body: `data=${encodeURIComponent(query)}`
+        const proxyBase = window.STORE_PROXY_URL || '/api/stores';
+        const url = `${proxyBase}?lat=${position.lat}&lng=${position.lng}&radius=${radius}`;
+        const controller = new AbortController();
+        const timeoutId = window.setTimeout(() => controller.abort(), 8000);
+        const response = await fetch(url, {
+            cache: 'no-store',
+            signal: controller.signal
         });
+        window.clearTimeout(timeoutId);
         if (!response.ok) {
-            throw new Error(`overpass error: ${response.status}`);
+            throw new Error(`store proxy error: ${response.status}`);
         }
         const payload = await response.json();
-        const elements = Array.isArray(payload.elements) ? payload.elements : [];
-        const dedup = new Map();
-        elements.forEach(element => {
-            const lat = Number(element.lat ?? element.center?.lat);
-            const lng = Number(element.lon ?? element.center?.lon);
-            if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-                return;
-            }
-            const name = (element.tags && (element.tags.name || element.tags.brand)) || '복권 판매점';
-            const address = element.tags
-                ? [element.tags['addr:full'], element.tags['addr:street'], element.tags['addr:city']].filter(Boolean).join(' ')
-                : '';
-            const key = `${lat.toFixed(6)}:${lng.toFixed(6)}:${name}`;
-            dedup.set(key, { name, address, lat, lng });
-        });
-
-        return Array.from(dedup.values())
+        if (!payload || payload.returnValue !== 'success') {
+            throw new Error(payload?.message || 'store data fail');
+        }
+        const list = Array.isArray(payload.stores) ? payload.stores : [];
+        return list
             .map(item => ({
-                ...item,
-                distance: distanceInMeters(position.lat, position.lng, item.lat, item.lng)
+                name: item.name || '복권 판매점',
+                address: item.address || '',
+                lat: Number(item.lat),
+                lng: Number(item.lng),
+                distance: Number.isFinite(Number(item.distance))
+                    ? Number(item.distance)
+                    : distanceInMeters(position.lat, position.lng, Number(item.lat), Number(item.lng))
             }))
+            .filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lng))
             .sort((a, b) => a.distance - b.distance)
             .slice(0, 30);
     }
@@ -851,7 +834,7 @@ out center tags;
             if (storeMarkersLayer) {
                 window.L.marker([store.lat, store.lng], {
                     icon: window.L.divIcon({
-                        className: 'store-pin',
+                        className: 'store-pin leaflet-div-icon',
                         iconSize: [14, 14],
                         iconAnchor: [7, 7]
                     }),
