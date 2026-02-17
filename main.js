@@ -45,11 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         5: document.getElementById('odds-delta-5')
     };
     const oddsBarEls = {
-        1: document.getElementById('odds-bar-1'),
-        2: document.getElementById('odds-bar-2'),
-        3: document.getElementById('odds-bar-3'),
-        4: document.getElementById('odds-bar-4'),
-        5: document.getElementById('odds-bar-5')
+        1: document.getElementById('odds-bar-1')
     };
     const customSaveBtn = document.getElementById('custom-save');
     const customApplyBtn = document.getElementById('custom-apply');

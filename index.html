@@ -236,7 +236,7 @@
                         <div class="draw-odds-title">확률 변화 그래프</div>
                         <div class="odds-graph">
                             <div class="odds-graph-row">
-                                <span class="odds-rank">1등</span>
+                                <span class="odds-rank">1등 기준</span>
                                 <div class="odds-bar">
                                     <span class="odds-bar-base"></span>
                                     <span class="odds-bar-adj" id="odds-bar-1"></span>
@@ -244,41 +244,20 @@
                                 <span class="odds-delta" id="odds-delta-1">-</span>
                                 <span class="odds-graph-sub"><span id="odds-base-1">1 / 8,145,060</span> → <span id="odds-adj-1">-</span></span>
                             </div>
-                            <div class="odds-graph-row">
-                                <span class="odds-rank">2등</span>
-                                <div class="odds-bar">
-                                    <span class="odds-bar-base"></span>
-                                    <span class="odds-bar-adj" id="odds-bar-2"></span>
-                                </div>
-                                <span class="odds-delta" id="odds-delta-2">-</span>
-                                <span class="odds-graph-sub"><span id="odds-base-2">1 / 1,357,510</span> → <span id="odds-adj-2">-</span></span>
+                        </div>
+                        <div class="odds-graph-note">
+                            2~5등도 동일 비율로 변화합니다.
+                            <div class="odds-graph-inline">
+                                2등 <span id="odds-base-2">1 / 1,357,510</span> → <span id="odds-adj-2">-</span>
                             </div>
-                            <div class="odds-graph-row">
-                                <span class="odds-rank">3등</span>
-                                <div class="odds-bar">
-                                    <span class="odds-bar-base"></span>
-                                    <span class="odds-bar-adj" id="odds-bar-3"></span>
-                                </div>
-                                <span class="odds-delta" id="odds-delta-3">-</span>
-                                <span class="odds-graph-sub"><span id="odds-base-3">1 / 35,724</span> → <span id="odds-adj-3">-</span></span>
+                            <div class="odds-graph-inline">
+                                3등 <span id="odds-base-3">1 / 35,724</span> → <span id="odds-adj-3">-</span>
                             </div>
-                            <div class="odds-graph-row">
-                                <span class="odds-rank">4등</span>
-                                <div class="odds-bar">
-                                    <span class="odds-bar-base"></span>
-                                    <span class="odds-bar-adj" id="odds-bar-4"></span>
-                                </div>
-                                <span class="odds-delta" id="odds-delta-4">-</span>
-                                <span class="odds-graph-sub"><span id="odds-base-4">1 / 733</span> → <span id="odds-adj-4">-</span></span>
+                            <div class="odds-graph-inline">
+                                4등 <span id="odds-base-4">1 / 733</span> → <span id="odds-adj-4">-</span>
                             </div>
-                            <div class="odds-graph-row">
-                                <span class="odds-rank">5등</span>
-                                <div class="odds-bar">
-                                    <span class="odds-bar-base"></span>
-                                    <span class="odds-bar-adj" id="odds-bar-5"></span>
-                                </div>
-                                <span class="odds-delta" id="odds-delta-5">-</span>
-                                <span class="odds-graph-sub"><span id="odds-base-5">1 / 45</span> → <span id="odds-adj-5">-</span></span>
+                            <div class="odds-graph-inline">
+                                5등 <span id="odds-base-5">1 / 45</span> → <span id="odds-adj-5">-</span>
                             </div>
                         </div>
                     </div>
@@ -305,6 +284,12 @@
                         <div class="draw-selected-header">
                             <h3>선택한 필터</h3>
                             <span class="draw-selected-count" id="rules-selected-count">0개</span>
+                        </div>
+                        <div class="draw-selected-presets">
+                            <button class="preset-btn" data-preset="light" type="button">보수형</button>
+                            <button class="preset-btn" data-preset="balanced" type="button">균형형</button>
+                            <button class="preset-btn" data-preset="aggressive" type="button">공격형</button>
+                            <button class="preset-btn" data-preset="clear" type="button">선택 해제</button>
                         </div>
                         <div class="draw-selected-sub" id="rules-visible-count">표시: 0/0</div>
                         <div id="selected-rules-list" class="draw-selected-list"></div>

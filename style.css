@@ -1893,6 +1893,18 @@ body[data-theme="light"] .draw-hero {
     color: var(--text-muted);
 }
 
+.draw-selected-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.draw-selected-presets .preset-btn {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+}
+
 .draw-selected-list {
     display: grid;
     gap: 8px;
@@ -1991,12 +2003,45 @@ body[data-theme="light"] .draw-hero {
     width: 0%;
     background: linear-gradient(90deg, rgba(34, 197, 94, 0.9), rgba(16, 185, 129, 0.9));
     transition: width 0.35s ease;
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.45);
 }
 
 .odds-graph-sub {
     grid-column: 2 / -1;
     font-size: 11px;
     color: var(--text-muted);
+}
+
+.odds-graph-note {
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+    display: grid;
+    gap: 4px;
+}
+
+.odds-graph-inline {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.draw-live-fill,
+.odds-bar-adj {
+    animation: oddsPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes oddsPulse {
+    0% {
+        filter: saturate(1);
+    }
+    50% {
+        filter: saturate(1.35);
+    }
+    100% {
+        filter: saturate(1);
+    }
 }
 
 .summary-card {
@@ -2108,16 +2153,16 @@ body[data-theme="light"] .draw-hero {
 }
 
 .rules-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .rule-card {
-    display: flex;
+    display: inline-flex;
     gap: 12px;
-    padding: 10px 12px;
-    border-radius: 14px;
+    padding: 8px 12px;
+    border-radius: 999px;
     border: 1px solid var(--panel-border);
     background: var(--bg-soft);
     font-size: 14px;
@@ -2125,8 +2170,24 @@ body[data-theme="light"] .draw-hero {
     transition: border 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     overflow: hidden;
-    min-height: 60px;
+    min-height: auto;
     align-items: center;
+}
+
+.rule-body {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rule-desc,
+.rule-stat {
+    display: none;
+}
+
+.rule-title {
+    font-size: 12px;
+    font-weight: 600;
 }
 
 .rule-card:hover {
