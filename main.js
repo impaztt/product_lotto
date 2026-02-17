@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const remainingMeterLabel = document.getElementById('remaining-meter-label');
     const selectedRulesListEl = document.getElementById('selected-rules-list');
     const selectedRulesEmptyEl = document.getElementById('selected-rules-empty');
+    const selectedClearBtn = document.getElementById('selected-clear-btn');
     const oddsBenefitSummaryEl = document.getElementById('odds-benefit-summary');
     const oddsBaseEls = {
         1: document.getElementById('odds-base-1'),
@@ -474,7 +475,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (selectedRulesListEl) {
         selectedRulesListEl.addEventListener('click', event => {
-            const button = event.target.closest('.draw-selected-remove');
+            const button = event.target.closest('.draw-selected-chip');
             if (!button) {
                 return;
             }
@@ -487,6 +488,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetInput.checked = false;
                 targetInput.dispatchEvent(new Event('change', { bubbles: true }));
             }
+        });
+    }
+
+    if (selectedClearBtn) {
+        selectedClearBtn.addEventListener('click', () => {
+            ruleInputs.forEach(input => {
+                input.checked = false;
+            });
+            updateSelectionCount();
+            updateCombinedEstimates();
         });
     }
 
@@ -1663,24 +1674,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 || card.querySelector('.rule-title')?.textContent
                 || '규칙';
             const group = card.dataset.group || '';
-            const item = document.createElement('div');
-            item.className = 'draw-selected-item';
-            const text = document.createElement('div');
-            text.className = 'draw-selected-text';
-            const strong = document.createElement('strong');
-            strong.textContent = title;
-            const span = document.createElement('span');
-            span.textContent = group;
-            text.appendChild(strong);
-            text.appendChild(span);
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'draw-selected-remove';
-            btn.dataset.value = input.value;
-            btn.textContent = '해제';
-            item.appendChild(text);
-            item.appendChild(btn);
-            selectedRulesListEl.appendChild(item);
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'draw-selected-chip';
+            chip.dataset.value = input.value;
+            chip.innerHTML = `<strong>${escapeHtml(title)}</strong><span>${escapeHtml(group)}</span>`;
+            selectedRulesListEl.appendChild(chip);
         });
     }
 

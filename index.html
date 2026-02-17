@@ -283,7 +283,10 @@
                     <div class="draw-selected-card">
                         <div class="draw-selected-header">
                             <h3>선택한 필터</h3>
-                            <span class="draw-selected-count" id="rules-selected-count">0개</span>
+                            <div class="draw-selected-actions">
+                                <span class="draw-selected-count" id="rules-selected-count">0개</span>
+                                <button class="draw-selected-clear" id="selected-clear-btn" type="button">전체 해제</button>
+                            </div>
                         </div>
                         <div class="draw-selected-presets">
                             <button class="preset-btn" data-preset="light" type="button">보수형</button>
@@ -292,6 +295,7 @@
                             <button class="preset-btn" data-preset="clear" type="button">선택 해제</button>
                         </div>
                         <div class="draw-selected-sub" id="rules-visible-count">표시: 0/0</div>
+                        <div class="draw-selected-helper">필터를 누르면 해제됩니다.</div>
                         <div id="selected-rules-list" class="draw-selected-list"></div>
                         <div id="selected-rules-empty" class="draw-selected-empty">아직 선택된 규칙이 없습니다.</div>
                     </div>
