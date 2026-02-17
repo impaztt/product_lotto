@@ -2708,6 +2708,44 @@ body[data-theme="light"] .draw-studio-header {
         grid-template-columns: 1fr;
     }
 
+    main {
+        padding: 18px 4vw calc(140px + env(safe-area-inset-bottom));
+    }
+
+    .draw-studio-header,
+    .draw-panel,
+    .draw-metric-card,
+    .draw-rules-panel {
+        width: 100%;
+    }
+
+    .draw-studio-header {
+        padding: 12px 14px;
+    }
+
+    .draw-cta-card {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .draw-cta-card button {
+        width: 100%;
+    }
+
+    .draw-selected-list {
+        max-height: none;
+    }
+
+    .draw-selected-chip,
+    .rule-card {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .rules-grid {
+        gap: 8px;
+    }
+
     .weekly-hero {
         grid-template-columns: 1fr;
     }
@@ -2770,7 +2808,7 @@ body[data-theme="light"] .draw-studio-header {
     }
 
     main {
-        padding: 20px 5vw calc(150px + env(safe-area-inset-bottom));
+        padding: 16px 4vw calc(140px + env(safe-area-inset-bottom));
         gap: 48px;
         min-height: calc(100vh - 70px);
     }
