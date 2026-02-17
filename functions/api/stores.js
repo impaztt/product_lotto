@@ -127,7 +127,7 @@ async function fetchStorePages(region, { radius, max }) {
 async function fetchStorePagesInternal(region, { radius, max }) {
     const stores = new Map();
     const perPage = 200;
-    const maxPages = 5;
+    const maxPages = region.ctpv ? 5 : 12;
     let total = 0;
     let fetchedPages = 0;
 
@@ -170,14 +170,22 @@ async function fetchStorePagesInternal(region, { radius, max }) {
         lat: region.lat,
         lng: region.lng
     };
-    const filtered = Array.from(stores.values())
+    const allWithDistance = Array.from(stores.values())
         .map(item => ({
             ...item,
             distance: distanceInMeters(origin.lat, origin.lng, item.lat, item.lng)
         }))
-        .filter(item => Number.isFinite(item.distance) && item.distance <= radius)
+        .filter(item => Number.isFinite(item.distance));
+
+    const withinRadius = allWithDistance
+        .filter(item => item.distance <= radius)
         .sort((a, b) => a.distance - b.distance)
         .slice(0, max);
+
+    const radiusRelaxed = withinRadius.length === 0 && allWithDistance.length > 0;
+    const finalStores = radiusRelaxed
+        ? allWithDistance.sort((a, b) => a.distance - b.distance).slice(0, max)
+        : withinRadius;
 
     return {
         returnValue: 'success',
@@ -189,7 +197,9 @@ async function fetchStorePagesInternal(region, { radius, max }) {
         total,
         fetchedPages,
         radius,
-        stores: filtered
+        radiusRelaxed,
+        candidateCount: allWithDistance.length,
+        stores: finalStores
     };
 }
 

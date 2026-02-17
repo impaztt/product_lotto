@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const nearest = storeLastResults[0];
             const url = `https://www.google.com/maps/dir/?api=1&destination=${nearest.lat},${nearest.lng}`;
-            window.open(url, '_blank', 'noopener');
+            window.location.assign(url);
         });
     }
 
@@ -936,7 +936,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (routeBtn) {
                 routeBtn.addEventListener('click', event => {
                     event.stopPropagation();
-                    window.open(routeUrl, '_blank');
+                    window.location.assign(routeUrl);
                 });
             }
             storeTableBodyEl.appendChild(row);
@@ -959,7 +959,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (cardBtn) {
                     cardBtn.addEventListener('click', event => {
                         event.stopPropagation();
-                        window.open(routeUrl, '_blank');
+                        window.location.assign(routeUrl);
                     });
                 }
                 storeGridEl.appendChild(card);
