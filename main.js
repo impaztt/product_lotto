@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const excludedCombosEl = document.getElementById('excluded-combos');
     const remainingMeterFill = document.getElementById('remaining-meter-fill');
     const remainingMeterLabel = document.getElementById('remaining-meter-label');
+    const selectedRulesListEl = document.getElementById('selected-rules-list');
+    const selectedRulesEmptyEl = document.getElementById('selected-rules-empty');
+    const oddsBenefitSummaryEl = document.getElementById('odds-benefit-summary');
     const oddsBaseEls = {
         1: document.getElementById('odds-base-1'),
         2: document.getElementById('odds-base-2'),
@@ -40,6 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
         3: document.getElementById('odds-delta-3'),
         4: document.getElementById('odds-delta-4'),
         5: document.getElementById('odds-delta-5')
+    };
+    const oddsBarEls = {
+        1: document.getElementById('odds-bar-1'),
+        2: document.getElementById('odds-bar-2'),
+        3: document.getElementById('odds-bar-3'),
+        4: document.getElementById('odds-bar-4'),
+        5: document.getElementById('odds-bar-5')
     };
     const customSaveBtn = document.getElementById('custom-save');
     const customApplyBtn = document.getElementById('custom-apply');
@@ -465,6 +475,24 @@ document.addEventListener('DOMContentLoaded', () => {
             updateCombinedEstimates();
         });
     });
+
+    if (selectedRulesListEl) {
+        selectedRulesListEl.addEventListener('click', event => {
+            const button = event.target.closest('.draw-selected-remove');
+            if (!button) {
+                return;
+            }
+            const value = button.dataset.value;
+            if (!value) {
+                return;
+            }
+            const targetInput = ruleInputs.find(input => input.value === value);
+            if (targetInput) {
+                targetInput.checked = false;
+                targetInput.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        });
+    }
 
     try {
         syncThemeToggle();
@@ -1612,7 +1640,52 @@ document.addEventListener('DOMContentLoaded', () => {
             const input = card.querySelector('.rule-input');
             card.classList.toggle('is-checked', input && input.checked);
         });
+        renderSelectedRules();
         updateGroupButtons();
+    }
+
+    function renderSelectedRules() {
+        if (!selectedRulesListEl || !selectedRulesEmptyEl) {
+            return;
+        }
+        selectedRulesListEl.innerHTML = '';
+        const selectedCards = ruleCards.filter(card => {
+            const input = card.querySelector('.rule-input');
+            return input && input.checked;
+        });
+        if (!selectedCards.length) {
+            selectedRulesEmptyEl.hidden = false;
+            return;
+        }
+        selectedRulesEmptyEl.hidden = true;
+        selectedCards.forEach(card => {
+            const input = card.querySelector('.rule-input');
+            if (!input) {
+                return;
+            }
+            const title = card.dataset.title
+                || card.querySelector('.rule-title')?.textContent
+                || '규칙';
+            const group = card.dataset.group || '';
+            const item = document.createElement('div');
+            item.className = 'draw-selected-item';
+            const text = document.createElement('div');
+            text.className = 'draw-selected-text';
+            const strong = document.createElement('strong');
+            strong.textContent = title;
+            const span = document.createElement('span');
+            span.textContent = group;
+            text.appendChild(strong);
+            text.appendChild(span);
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'draw-selected-remove';
+            btn.dataset.value = input.value;
+            btn.textContent = '해제';
+            item.appendChild(text);
+            item.appendChild(btn);
+            selectedRulesListEl.appendChild(item);
+        });
     }
 
     function updateGroupButtons() {
@@ -1741,10 +1814,18 @@ document.addEventListener('DOMContentLoaded', () => {
             4: Math.round(total / (combination(6, 4) * combination(39, 2))),
             5: Math.round(total / (combination(6, 3) * combination(39, 3)))
         };
+        if (oddsBenefitSummaryEl) {
+            const benefitPct = Math.round((1 - clampRatio) * 100);
+            oddsBenefitSummaryEl.textContent = benefitPct > 0 ? `유리 ${benefitPct}%` : '변화 없음';
+        }
         Object.entries(baseOdds).forEach(([rank, value]) => {
             const adjusted = Math.max(1, Math.round(value * clampRatio));
             if (oddsAdjEls[rank]) {
                 oddsAdjEls[rank].textContent = `1 / ${formatNumber(adjusted)}`;
+            }
+            if (oddsBarEls[rank]) {
+                const width = Math.max(2, Math.round(clampRatio * 1000) / 10);
+                oddsBarEls[rank].style.width = `${width}%`;
             }
             if (oddsDeltaEls[rank]) {
                 if (clampRatio === 1) {

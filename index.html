@@ -222,54 +222,63 @@
                     </div>
                     <div class="draw-pill-grid">
                         <div class="draw-pill">
-                            <span class="draw-pill-label">선택된 규칙</span>
-                            <strong class="draw-pill-value" id="rules-selected-count">0개</strong>
-                            <span class="draw-pill-sub" id="rules-visible-count">표시: 0/0</span>
-                        </div>
-                        <div class="draw-pill">
                             <span class="draw-pill-label">남은 조합</span>
                             <strong class="draw-pill-value" id="remaining-combos">계산중</strong>
                             <span class="draw-pill-sub" id="excluded-combos">제외: -</span>
                         </div>
+                        <div class="draw-pill">
+                            <span class="draw-pill-label">필터 영향</span>
+                            <strong class="draw-pill-value" id="odds-benefit-summary">-</strong>
+                            <span class="draw-pill-sub">조합 감소율</span>
+                        </div>
                     </div>
                     <div class="draw-odds-card">
-                        <div class="draw-odds-title">당첨확률 (가정)</div>
-                        <div class="odds-grid">
-                            <div class="odds-row">
-                                <span>등수</span>
-                                <span>기본</span>
-                                <span>필터 적용</span>
-                                <span>변화</span>
-                            </div>
-                            <div class="odds-row">
-                                <span>1등</span>
-                                <span id="odds-base-1">1 / 8,145,060</span>
-                                <span id="odds-adj-1">-</span>
+                        <div class="draw-odds-title">확률 변화 그래프</div>
+                        <div class="odds-graph">
+                            <div class="odds-graph-row">
+                                <span class="odds-rank">1등</span>
+                                <div class="odds-bar">
+                                    <span class="odds-bar-base"></span>
+                                    <span class="odds-bar-adj" id="odds-bar-1"></span>
+                                </div>
                                 <span class="odds-delta" id="odds-delta-1">-</span>
+                                <span class="odds-graph-sub"><span id="odds-base-1">1 / 8,145,060</span> → <span id="odds-adj-1">-</span></span>
                             </div>
-                            <div class="odds-row">
-                                <span>2등</span>
-                                <span id="odds-base-2">1 / 1,357,510</span>
-                                <span id="odds-adj-2">-</span>
+                            <div class="odds-graph-row">
+                                <span class="odds-rank">2등</span>
+                                <div class="odds-bar">
+                                    <span class="odds-bar-base"></span>
+                                    <span class="odds-bar-adj" id="odds-bar-2"></span>
+                                </div>
                                 <span class="odds-delta" id="odds-delta-2">-</span>
+                                <span class="odds-graph-sub"><span id="odds-base-2">1 / 1,357,510</span> → <span id="odds-adj-2">-</span></span>
                             </div>
-                            <div class="odds-row">
-                                <span>3등</span>
-                                <span id="odds-base-3">1 / 35,724</span>
-                                <span id="odds-adj-3">-</span>
+                            <div class="odds-graph-row">
+                                <span class="odds-rank">3등</span>
+                                <div class="odds-bar">
+                                    <span class="odds-bar-base"></span>
+                                    <span class="odds-bar-adj" id="odds-bar-3"></span>
+                                </div>
                                 <span class="odds-delta" id="odds-delta-3">-</span>
+                                <span class="odds-graph-sub"><span id="odds-base-3">1 / 35,724</span> → <span id="odds-adj-3">-</span></span>
                             </div>
-                            <div class="odds-row">
-                                <span>4등</span>
-                                <span id="odds-base-4">1 / 733</span>
-                                <span id="odds-adj-4">-</span>
+                            <div class="odds-graph-row">
+                                <span class="odds-rank">4등</span>
+                                <div class="odds-bar">
+                                    <span class="odds-bar-base"></span>
+                                    <span class="odds-bar-adj" id="odds-bar-4"></span>
+                                </div>
                                 <span class="odds-delta" id="odds-delta-4">-</span>
+                                <span class="odds-graph-sub"><span id="odds-base-4">1 / 733</span> → <span id="odds-adj-4">-</span></span>
                             </div>
-                            <div class="odds-row">
-                                <span>5등</span>
-                                <span id="odds-base-5">1 / 45</span>
-                                <span id="odds-adj-5">-</span>
+                            <div class="odds-graph-row">
+                                <span class="odds-rank">5등</span>
+                                <div class="odds-bar">
+                                    <span class="odds-bar-base"></span>
+                                    <span class="odds-bar-adj" id="odds-bar-5"></span>
+                                </div>
                                 <span class="odds-delta" id="odds-delta-5">-</span>
+                                <span class="odds-graph-sub"><span id="odds-base-5">1 / 45</span> → <span id="odds-adj-5">-</span></span>
                             </div>
                         </div>
                     </div>
@@ -290,11 +299,24 @@
                     <span id="rules-status" class="rules-status" aria-live="polite"></span>
                 </div>
             </div>
-            <div class="rules-toggle-row">
-                <button id="toggle-rules" class="ghost" type="button">모든 규칙 펼치기</button>
-                <span class="rules-hint">기본은 핵심 규칙만 보여줍니다</span>
-            </div>
-            <div class="rules-groups">
+            <div class="draw-workspace">
+                <aside class="draw-selected">
+                    <div class="draw-selected-card">
+                        <div class="draw-selected-header">
+                            <h3>선택한 필터</h3>
+                            <span class="draw-selected-count" id="rules-selected-count">0개</span>
+                        </div>
+                        <div class="draw-selected-sub" id="rules-visible-count">표시: 0/0</div>
+                        <div id="selected-rules-list" class="draw-selected-list"></div>
+                        <div id="selected-rules-empty" class="draw-selected-empty">아직 선택된 규칙이 없습니다.</div>
+                    </div>
+                </aside>
+                <div class="draw-rules">
+                    <div class="rules-toggle-row">
+                        <button id="toggle-rules" class="ghost" type="button">모든 규칙 펼치기</button>
+                        <span class="rules-hint">기본은 핵심 규칙만 보여줍니다</span>
+                    </div>
+                    <div class="rules-groups">
                 <div class="rule-group is-essential" data-group="홀짝 비율">
                     <div class="rule-group-header">
                         <h3>홀짝 비율</h3>
@@ -636,7 +658,9 @@
                         </label>
                     </div>
                 </div>
+                </div>
             </div>
+                </div>
             </div>
             </section>
 
