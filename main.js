@@ -60,6 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const weeklyRoundSelect = document.getElementById('weekly-round-select');
     const weeklyRoundHint = document.getElementById('weekly-round-hint');
     const weeklyNextDrawEl = document.getElementById('weekly-next-draw');
+    const weeklyCountdownEl = document.getElementById('weekly-countdown');
+    const weeklyCountdownSubEl = document.getElementById('weekly-countdown-sub');
+    const weeklyExpectedAmountEl = document.getElementById('weekly-expected-amount');
+    const weeklyExpectedNoteEl = document.getElementById('weekly-expected-note');
     const recentRoundsEl = document.getElementById('recent-rounds');
     const roundSearchInput = document.getElementById('round-search-input');
     const roundSearchBtn = document.getElementById('round-search-btn');
@@ -122,7 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
     loadRecentRounds(latestAvailableRound).catch(error => {
         logProxyError('initialRecentRounds', error, { latestRound: latestAvailableRound });
     });
+    updateWeeklyCountdownDisplay();
     updateWeeklyNextDrawDisplay();
+    window.setInterval(() => {
+        updateWeeklyCountdownDisplay();
+        updateWeeklyNextDrawDisplay();
+    }, 1000);
 
     const TOTAL_COMBOS = Number(combination(45, 6));
     const RULE_STATS = {
@@ -1393,16 +1402,39 @@ document.addEventListener('DOMContentLoaded', () => {
         return saturday;
     }
 
+    function getNextSaturdayDrawTime(kstNow) {
+        const latestSaturday = getLatestSaturdayDrawTime(kstNow);
+        if (kstNow >= latestSaturday) {
+            latestSaturday.setDate(latestSaturday.getDate() + 7);
+        }
+        return latestSaturday;
+    }
+
+    function updateWeeklyCountdownDisplay() {
+        if (!weeklyCountdownEl) {
+            return;
+        }
+        const now = getKstNow();
+        const nextDraw = getNextSaturdayDrawTime(now);
+        const diffMs = Math.max(0, nextDraw.getTime() - now.getTime());
+        const totalSeconds = Math.floor(diffMs / 1000);
+        const days = Math.floor(totalSeconds / (24 * 60 * 60));
+        const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        const pad = value => String(value).padStart(2, '0');
+        weeklyCountdownEl.textContent = `${days}일 ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+        if (weeklyCountdownSubEl) {
+            weeklyCountdownSubEl.textContent = `다음 추첨: ${formatKstDateTime(nextDraw)} (KST)`;
+        }
+    }
+
     function updateWeeklyNextDrawDisplay() {
         if (!weeklyNextDrawEl) {
             return;
         }
         const now = getKstNow();
-        const latestSaturday = getLatestSaturdayDrawTime(now);
-        let nextDraw = new Date(latestSaturday);
-        if (now >= latestSaturday) {
-            nextDraw.setDate(nextDraw.getDate() + 7);
-        }
+        const nextDraw = getNextSaturdayDrawTime(now);
         const diffMs = Math.max(0, nextDraw.getTime() - now.getTime());
         const totalMinutes = Math.floor(diffMs / (1000 * 60));
         const days = Math.floor(totalMinutes / (60 * 24));
@@ -1472,6 +1504,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (weeklyAccumulatedEl) {
             weeklyAccumulatedEl.textContent = formatCurrency(data.firstAccumamnt);
+        }
+        if (weeklyExpectedAmountEl) {
+            const expected = data.firstAccumamnt || data.firstWinamnt;
+            weeklyExpectedAmountEl.textContent = formatCurrency(expected);
+        }
+        if (weeklyExpectedNoteEl) {
+            weeklyExpectedNoteEl.textContent = `${data.drwNo}회차 기준`;
         }
         if (weeklyStatusEl) {
             weeklyStatusEl.textContent = `${data.drwNo}회차 당첨 정보가 반영되었습니다.${cached ? ' (캐시)' : ''}`;

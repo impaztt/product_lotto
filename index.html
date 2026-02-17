@@ -25,6 +25,18 @@
                 <h2>이번주 당첨번호 & 로또 정보</h2>
                 <p id="weekly-status">동행복권 공식 데이터 기준으로 업데이트합니다.</p>
             </div>
+            <div class="weekly-hero" aria-live="polite">
+                <div class="weekly-hero-card">
+                    <div class="weekly-hero-title">이번주 추첨까지</div>
+                    <div class="weekly-hero-countdown" id="weekly-countdown">-</div>
+                    <div class="weekly-hero-sub" id="weekly-countdown-sub">다음 추첨 시간 계산 중</div>
+                </div>
+                <div class="weekly-hero-card accent">
+                    <div class="weekly-hero-title">예상 1등 당첨금</div>
+                    <div class="weekly-hero-amount" id="weekly-expected-amount">-</div>
+                    <div class="weekly-hero-sub" id="weekly-expected-note">전회 기준 추정</div>
+                </div>
+            </div>
             <div class="weekly-controls">
                 <label for="weekly-round-select">회차 선택</label>
                 <select id="weekly-round-select" aria-label="회차 선택"></select>
