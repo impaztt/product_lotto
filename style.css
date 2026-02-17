@@ -417,6 +417,16 @@ body[data-theme="light"] .icon-qr::before {
     border-color: rgba(255, 190, 120, 0.35);
 }
 
+body[data-theme="light"] .weekly-hero-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(247, 248, 250, 0.95));
+    border-color: rgba(15, 23, 42, 0.16);
+}
+
+body[data-theme="light"] .weekly-hero-card.accent {
+    background: linear-gradient(135deg, rgba(255, 214, 170, 0.4), rgba(255, 235, 210, 0.5));
+    border-color: rgba(255, 170, 90, 0.5);
+}
+
 .weekly-hero-title {
     font-size: 12px;
     text-transform: uppercase;
