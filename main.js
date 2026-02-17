@@ -32,6 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
         4: document.getElementById('odds-adj-4'),
         5: document.getElementById('odds-adj-5')
     };
+    const oddsDeltaEls = {
+        1: document.getElementById('odds-delta-1'),
+        2: document.getElementById('odds-delta-2'),
+        3: document.getElementById('odds-delta-3'),
+        4: document.getElementById('odds-delta-4'),
+        5: document.getElementById('odds-delta-5')
+    };
     const customSaveBtn = document.getElementById('custom-save');
     const customApplyBtn = document.getElementById('custom-apply');
     const ruleStatEls = Array.from(document.querySelectorAll('.rule-stat'));
@@ -1722,9 +1729,19 @@ document.addEventListener('DOMContentLoaded', () => {
             5: Math.round(total / (combination(6, 3) * combination(39, 3)))
         };
         Object.entries(baseOdds).forEach(([rank, value]) => {
-            const adjusted = Math.max(1, Math.round(value * clampRatio));
+            const adjusted = Math.max(1, Math.round(value / clampRatio));
             if (oddsAdjEls[rank]) {
                 oddsAdjEls[rank].textContent = `1 / ${formatNumber(adjusted)}`;
+            }
+            if (oddsDeltaEls[rank]) {
+                if (clampRatio === 1) {
+                    oddsDeltaEls[rank].textContent = '변화 없음';
+                    oddsDeltaEls[rank].dataset.trend = 'neutral';
+                } else {
+                    const worsePct = Math.round((1 / clampRatio - 1) * 100);
+                    oddsDeltaEls[rank].textContent = `불리 +${worsePct}%`;
+                    oddsDeltaEls[rank].dataset.trend = 'down';
+                }
             }
         });
     }
