@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const numbersContainer = document.querySelector('.numbers-container');
     const generateBtn = document.getElementById('generate-btn');
+    const generateCtaBtn = document.querySelector('[data-generate-cta]');
     const drawCountSelect = document.getElementById('draw-count');
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
@@ -244,6 +245,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (compareBtn) {
         compareBtn.addEventListener('click', () => {
             handleCompare();
+        });
+    }
+
+    if (generateCtaBtn) {
+        generateCtaBtn.addEventListener('click', () => {
+            if (typeof generateAndDisplayNumbers === 'function') {
+                generateAndDisplayNumbers();
+            } else if (generateBtn) {
+                generateBtn.click();
+            }
         });
     }
 

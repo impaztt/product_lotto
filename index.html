@@ -182,130 +182,113 @@
         </section>
 
         <section id="tab-draw" class="tab-panel" role="tabpanel" aria-labelledby="tab-draw-btn" tabindex="0">
-            <div class="section-title">
-                <h2>지금 만든 로또번호 추첨</h2>
-                <p>원하는 규칙을 선택하고 바로 번호를 생성하세요.</p>
+            <div class="draw-studio-header">
+                <div class="draw-studio-title">
+                    <span class="draw-studio-kicker">Filter Studio</span>
+                    <h2>제외 규칙을 설계하면, 확률 변화가 바로 나타납니다.</h2>
+                    <p>필터는 “당첨 조합까지 함께 제거될 수 있다”는 가정으로 계산합니다. 실제 당첨 확률은 변하지 않으며 참고용으로만 사용하세요.</p>
+                </div>
+                <div class="draw-studio-cta">
+                    <div class="draw-cta-card">
+                        <div class="draw-cta-label">이번 규칙으로 바로 추첨</div>
+                        <button type="button" data-generate-cta>번호 생성</button>
+                    </div>
+                </div>
             </div>
 
-            <section id="rules" class="section rules">
-                <div class="section-title">
-                    <h2>제외 규칙</h2>
-                    <p>원하는 규칙을 켜면 그 패턴을 결과에서 제외합니다.</p>
-                </div>
-            <div class="draw-hero">
-                <div class="draw-hero-main">
-                    <span class="draw-kicker">필터 전략 콘솔</span>
-                    <h2>규칙을 고르면, 남은 조합과 확률 변화를 즉시 보여드립니다.</h2>
-                    <p>필터링은 “당첨 조합도 함께 제거될 수 있다”는 가정으로 계산합니다. 실제 확률은 변하지 않으며 참고용으로만 사용하세요.</p>
-                    <div class="draw-steps">
-                        <div class="draw-step">
-                            <span class="draw-step-index">1</span>
-                            <span class="draw-step-text">규칙을 선택해 제외 조건을 추가</span>
-                        </div>
-                        <div class="draw-step">
-                            <span class="draw-step-index">2</span>
-                            <span class="draw-step-text">남은 조합과 확률 변화를 즉시 확인</span>
-                        </div>
-                        <div class="draw-step">
-                            <span class="draw-step-index">3</span>
-                            <span class="draw-step-text">필터 적용 후 번호 생성</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="draw-live-panel">
-                    <div class="draw-live-card">
-                        <div class="draw-live-title">실시간 확률 변화</div>
-                        <div class="draw-live-meter">
-                            <div class="draw-live-fill" id="remaining-meter-fill"></div>
-                        </div>
-                        <div class="draw-live-sub" id="remaining-meter-label">남은 조합 비중: -</div>
-                    </div>
-                    <div class="draw-pill-grid">
-                        <div class="draw-pill">
-                            <span class="draw-pill-label">남은 조합</span>
-                            <strong class="draw-pill-value" id="remaining-combos">계산중</strong>
-                            <span class="draw-pill-sub" id="excluded-combos">제외: -</span>
-                        </div>
-                        <div class="draw-pill">
-                            <span class="draw-pill-label">필터 영향</span>
-                            <strong class="draw-pill-value" id="odds-benefit-summary">-</strong>
-                            <span class="draw-pill-sub">조합 감소율</span>
-                        </div>
-                    </div>
-                    <div class="draw-odds-card">
-                        <div class="draw-odds-title">확률 변화 그래프</div>
-                        <div class="odds-graph">
-                            <div class="odds-graph-row">
-                                <span class="odds-rank">1등 기준</span>
-                                <div class="odds-bar">
-                                    <span class="odds-bar-base"></span>
-                                    <span class="odds-bar-adj" id="odds-bar-1"></span>
+            <section id="rules" class="section rules draw-studio">
+                <div class="draw-studio-body">
+                    <aside class="draw-builder">
+                        <div class="draw-panel">
+                            <div class="draw-panel-header">
+                                <h3>선택한 필터</h3>
+                                <div class="draw-selected-actions">
+                                    <span class="draw-selected-count" id="rules-selected-count">0개</span>
+                                    <button class="draw-selected-clear" id="selected-clear-btn" type="button">전체 해제</button>
                                 </div>
-                                <span class="odds-delta" id="odds-delta-1">-</span>
-                                <span class="odds-graph-sub"><span id="odds-base-1">1 / 8,145,060</span> → <span id="odds-adj-1">-</span></span>
+                            </div>
+                            <div class="draw-selected-presets">
+                                <button class="preset-btn" data-preset="light" type="button">보수형</button>
+                                <button class="preset-btn" data-preset="balanced" type="button">균형형</button>
+                                <button class="preset-btn" data-preset="aggressive" type="button">공격형</button>
+                                <button class="preset-btn" data-preset="clear" type="button">선택 해제</button>
+                                <button class="preset-btn" id="custom-save" type="button">내 프리셋 저장</button>
+                                <button class="preset-btn" id="custom-apply" type="button">내 프리셋 적용</button>
+                            </div>
+                            <div class="draw-selected-sub" id="rules-visible-count">표시: 0/0</div>
+                            <div class="draw-selected-helper">선택된 칩을 누르면 즉시 해제됩니다.</div>
+                            <div id="selected-rules-list" class="draw-selected-list"></div>
+                            <div id="selected-rules-empty" class="draw-selected-empty">아직 선택된 규칙이 없습니다.</div>
+                        </div>
+
+                        <div class="draw-panel">
+                            <div class="draw-panel-header">
+                                <h3>저장/불러오기</h3>
+                            </div>
+                            <div class="rules-actions">
+                                <button id="save-rules" class="ghost" type="button">규칙 저장</button>
+                                <button id="load-rules" class="ghost" type="button">저장 불러오기</button>
+                                <span id="rules-status" class="rules-status" aria-live="polite"></span>
                             </div>
                         </div>
-                        <div class="odds-graph-note">
-                            2~5등도 동일 비율로 변화합니다.
-                            <div class="odds-graph-inline">
-                                2등 <span id="odds-base-2">1 / 1,357,510</span> → <span id="odds-adj-2">-</span>
+                    </aside>
+
+                    <main class="draw-dashboard">
+                        <div class="draw-dashboard-grid">
+                            <div class="draw-metric-card primary">
+                                <div class="draw-metric-title">남은 조합 비중</div>
+                                <div class="draw-live-meter">
+                                    <div class="draw-live-fill" id="remaining-meter-fill"></div>
+                                </div>
+                                <div class="draw-metric-value" id="remaining-meter-label">남은 조합 비중: -</div>
                             </div>
-                            <div class="odds-graph-inline">
-                                3등 <span id="odds-base-3">1 / 35,724</span> → <span id="odds-adj-3">-</span>
+                            <div class="draw-metric-card">
+                                <div class="draw-metric-title">남은 조합</div>
+                                <div class="draw-metric-value" id="remaining-combos">계산중</div>
+                                <div class="draw-metric-sub" id="excluded-combos">제외: -</div>
                             </div>
-                            <div class="odds-graph-inline">
-                                4등 <span id="odds-base-4">1 / 733</span> → <span id="odds-adj-4">-</span>
+                            <div class="draw-metric-card">
+                                <div class="draw-metric-title">필터 영향</div>
+                                <div class="draw-metric-value" id="odds-benefit-summary">-</div>
+                                <div class="draw-metric-sub">조합 감소율</div>
                             </div>
-                            <div class="odds-graph-inline">
-                                5등 <span id="odds-base-5">1 / 45</span> → <span id="odds-adj-5">-</span>
+                            <div class="draw-metric-card wide">
+                                <div class="draw-odds-title">확률 변화 그래프 (1등 기준)</div>
+                                <div class="odds-graph">
+                                    <div class="odds-graph-row">
+                                        <span class="odds-rank">1등</span>
+                                        <div class="odds-bar">
+                                            <span class="odds-bar-base"></span>
+                                            <span class="odds-bar-adj" id="odds-bar-1"></span>
+                                        </div>
+                                        <span class="odds-delta" id="odds-delta-1">-</span>
+                                        <span class="odds-graph-sub"><span id="odds-base-1">1 / 8,145,060</span> → <span id="odds-adj-1">-</span></span>
+                                    </div>
+                                </div>
+                                <div class="odds-graph-note">
+                                    2~5등도 동일 비율로 변화합니다.
+                                    <div class="odds-graph-inline">
+                                        2등 <span id="odds-base-2">1 / 1,357,510</span> → <span id="odds-adj-2">-</span>
+                                    </div>
+                                    <div class="odds-graph-inline">
+                                        3등 <span id="odds-base-3">1 / 35,724</span> → <span id="odds-adj-3">-</span>
+                                    </div>
+                                    <div class="odds-graph-inline">
+                                        4등 <span id="odds-base-4">1 / 733</span> → <span id="odds-adj-4">-</span>
+                                    </div>
+                                    <div class="odds-graph-inline">
+                                        5등 <span id="odds-base-5">1 / 45</span> → <span id="odds-adj-5">-</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="draw-control-bar">
-                <div class="rules-presets">
-                    <button class="preset-btn" data-preset="light" type="button">보수형</button>
-                    <button class="preset-btn" data-preset="balanced" type="button">균형형</button>
-                    <button class="preset-btn" data-preset="aggressive" type="button">공격형</button>
-                    <button class="preset-btn" data-preset="clear" type="button">선택 해제</button>
-                    <button class="preset-btn" id="custom-save" type="button">내 프리셋 저장</button>
-                    <button class="preset-btn" id="custom-apply" type="button">내 프리셋 적용</button>
-                </div>
-                <div class="rules-actions">
-                    <button id="save-rules" class="ghost" type="button">규칙 저장</button>
-                    <button id="load-rules" class="ghost" type="button">저장 불러오기</button>
-                    <span id="rules-status" class="rules-status" aria-live="polite"></span>
-                </div>
-            </div>
-            <div class="draw-workspace">
-                <aside class="draw-selected">
-                    <div class="draw-selected-card">
-                        <div class="draw-selected-header">
-                            <h3>선택한 필터</h3>
-                            <div class="draw-selected-actions">
-                                <span class="draw-selected-count" id="rules-selected-count">0개</span>
-                                <button class="draw-selected-clear" id="selected-clear-btn" type="button">전체 해제</button>
+
+                        <div class="draw-rules-panel">
+                            <div class="rules-toggle-row">
+                                <button id="toggle-rules" class="ghost" type="button">모든 규칙 펼치기</button>
+                                <span class="rules-hint">기본은 핵심 규칙만 보여줍니다</span>
                             </div>
-                        </div>
-                        <div class="draw-selected-presets">
-                            <button class="preset-btn" data-preset="light" type="button">보수형</button>
-                            <button class="preset-btn" data-preset="balanced" type="button">균형형</button>
-                            <button class="preset-btn" data-preset="aggressive" type="button">공격형</button>
-                            <button class="preset-btn" data-preset="clear" type="button">선택 해제</button>
-                        </div>
-                        <div class="draw-selected-sub" id="rules-visible-count">표시: 0/0</div>
-                        <div class="draw-selected-helper">필터를 누르면 해제됩니다.</div>
-                        <div id="selected-rules-list" class="draw-selected-list"></div>
-                        <div id="selected-rules-empty" class="draw-selected-empty">아직 선택된 규칙이 없습니다.</div>
-                    </div>
-                </aside>
-                <div class="draw-rules">
-                    <div class="rules-toggle-row">
-                        <button id="toggle-rules" class="ghost" type="button">모든 규칙 펼치기</button>
-                        <span class="rules-hint">기본은 핵심 규칙만 보여줍니다</span>
-                    </div>
-                    <div class="rules-groups">
+                            <div class="rules-groups">
                 <div class="rule-group is-essential" data-group="홀짝 비율">
                     <div class="rule-group-header">
                         <h3>홀짝 비율</h3>
@@ -647,11 +630,11 @@
                         </label>
                     </div>
                 </div>
-                </div>
             </div>
-                </div>
-            </div>
-            </section>
+        </div>
+            </main>
+        </div>
+    </section>
 
             <section id="generator" class="section generator">
                 <div class="section-title">
