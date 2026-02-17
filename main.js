@@ -694,6 +694,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 locateAndLoadStores();
             }
         }
+        if (tabId === 'qr') {
+            startQrScanner();
+        }
         if (tabId !== 'qr' && qrStream) {
             stopQrScanner('QR 탭을 벗어나 스캔을 중지했습니다.');
         }
