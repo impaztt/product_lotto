@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const rulesVisibleCount = document.getElementById('rules-visible-count');
     const remainingCombosEl = document.getElementById('remaining-combos');
     const excludedCombosEl = document.getElementById('excluded-combos');
+    const remainingMeterFill = document.getElementById('remaining-meter-fill');
+    const remainingMeterLabel = document.getElementById('remaining-meter-label');
     const oddsBaseEls = {
         1: document.getElementById('odds-base-1'),
         2: document.getElementById('odds-base-2'),
@@ -1701,6 +1703,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const excludedCombos = Math.max(0, TOTAL_COMBOS - remainingCombos);
         remainingCombosEl.textContent = `${formatNumber(remainingCombos)}개`;
         excludedCombosEl.textContent = `제외: ${formatNumber(excludedCombos)}개`;
+        if (remainingMeterFill) {
+            const pct = Math.max(0, Math.min(100, Math.round(remainingRatio * 1000) / 10));
+            remainingMeterFill.style.width = `${pct}%`;
+        }
+        if (remainingMeterLabel) {
+            const pctLabel = Math.max(0, Math.min(100, Math.round(remainingRatio * 1000) / 10));
+            remainingMeterLabel.textContent = `남은 조합 비중: ${pctLabel}%`;
+        }
         updateAdjustedOdds(remainingRatio);
     }
 

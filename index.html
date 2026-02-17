@@ -207,7 +207,15 @@
                 <button id="load-rules" class="ghost" type="button">저장 불러오기</button>
                 <span id="rules-status" class="rules-status" aria-live="polite"></span>
             </div>
+            <div class="draw-layout">
             <div class="rules-summary">
+                <div class="draw-live-card">
+                    <div class="draw-live-title">실시간 확률 변화</div>
+                    <div class="draw-live-meter">
+                        <div class="draw-live-fill" id="remaining-meter-fill"></div>
+                    </div>
+                    <div class="draw-live-sub" id="remaining-meter-label">남은 조합 비중: -</div>
+                </div>
                 <div class="summary-card">
                     <div class="summary-label">선택된 규칙</div>
                     <div class="summary-value" id="rules-selected-count">0개</div>
@@ -609,6 +617,7 @@
                         </label>
                     </div>
                 </div>
+            </div>
             </div>
             </section>
 
