@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let storeUserMarker = null;
     let storeLastPosition = null;
     let storeLastResults = [];
+    let storeAutoLoaded = false;
     let qrStream = null;
     let qrScanRafId = null;
     let qrCanvasCtx = null;
@@ -672,6 +673,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     storeMap.invalidateSize();
                 }
             }, 80);
+            if (!storeAutoLoaded) {
+                storeAutoLoaded = true;
+                locateAndLoadStores();
+            }
         }
         if (tabId !== 'qr' && qrStream) {
             stopQrScanner('QR 탭을 벗어나 스캔을 중지했습니다.');
