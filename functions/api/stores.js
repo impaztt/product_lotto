@@ -25,13 +25,6 @@ export async function onRequest(context) {
 
     try {
         const region = await resolveRegion(lat, lng, url.searchParams);
-        if (!region.ctpv) {
-            return new Response(JSON.stringify({ returnValue: 'fail', message: 'region not found' }), {
-                status: 422,
-                headers: buildHeaders()
-            });
-        }
-
         const result = await fetchStorePages(region, {
             radius,
             max
