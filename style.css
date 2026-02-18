@@ -1855,7 +1855,7 @@ body[data-theme="light"] .draw-hero {
     border-radius: 12px;
     border: 1px solid var(--draw-border, var(--panel-border));
     background: var(--draw-card, var(--panel));
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
 }
 
 #tab-draw {
@@ -1966,7 +1966,7 @@ body[data-theme="light"] .draw-studio-header {
     border-radius: 12px;
     border: 1px solid var(--draw-border, var(--panel-border));
     background: var(--draw-card, var(--panel));
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
     padding: 14px 16px;
     display: grid;
     gap: 12px;
@@ -1999,7 +1999,7 @@ body[data-theme="light"] .draw-studio-header {
     border-radius: 12px;
     border: 1px solid var(--draw-border, var(--panel-border));
     background: var(--draw-card, var(--panel));
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
     padding: 14px 16px;
     display: grid;
     gap: 10px;
@@ -2035,7 +2035,7 @@ body[data-theme="light"] .draw-studio-header {
     border-radius: 12px;
     border: 1px solid var(--draw-border, var(--panel-border));
     background: var(--draw-card, var(--panel));
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
     padding: 14px 16px 18px;
 }
 
@@ -2093,7 +2093,7 @@ body[data-theme="light"] .draw-studio-header {
     border-radius: 12px;
     border: 1px solid var(--draw-border, var(--panel-border));
     background: var(--draw-card, var(--panel));
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
     padding: 14px 16px;
     display: grid;
     gap: 10px;
@@ -2841,59 +2841,6 @@ body[data-theme="light"] .draw-studio-header {
         padding: 16px 4vw calc(140px + env(safe-area-inset-bottom));
         gap: 48px;
         min-height: calc(100vh - 70px);
-    }
-
-    #tab-draw .draw-studio-header {
-        padding: 12px;
-        gap: 12px;
-    }
-
-    #tab-draw .draw-studio-title h2 {
-        font-size: 22px;
-        line-height: 1.25;
-    }
-
-    #tab-draw .draw-panel,
-    #tab-draw .draw-metric-card,
-    #tab-draw .draw-rules-panel,
-    #tab-draw .draw-selected-card,
-    #tab-draw .draw-cta-card {
-        padding: 12px;
-    }
-
-    #tab-draw .draw-dashboard {
-        gap: 12px;
-    }
-
-    #tab-draw .draw-dashboard-grid {
-        gap: 10px;
-    }
-
-    #tab-draw .draw-builder {
-        gap: 12px;
-    }
-
-    #tab-draw .draw-selected-list {
-        gap: 6px;
-    }
-
-    #tab-draw .rules-groups {
-        gap: 12px;
-    }
-
-    #tab-draw .rules-grid {
-        gap: 6px;
-    }
-
-    #tab-draw .rule-card {
-        width: 100%;
-        justify-content: space-between;
-        padding: 8px 10px;
-    }
-
-    #tab-draw .draw-selected-chip {
-        width: 100%;
-        justify-content: space-between;
     }
 
     .hero {
