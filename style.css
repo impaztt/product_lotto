@@ -2745,24 +2745,8 @@ body[data-theme="light"] .draw-studio-header {
     .draw-studio-header,
     .draw-panel,
     .draw-metric-card,
-    .draw-rules-panel,
-    .draw-selected-card,
-    .draw-cta-card {
-        width: calc(100% + 8vw);
-        margin-left: -4vw;
-        margin-right: -4vw;
-        padding-left: 4vw;
-        padding-right: 4vw;
-        border-radius: 0;
-    }
-
-    .draw-panel,
-    .draw-metric-card,
-    .draw-rules-panel,
-    .draw-selected-card,
-    .draw-cta-card {
-        border: none;
-        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    .draw-rules-panel {
+        width: 100%;
     }
 
     .draw-studio-header {
