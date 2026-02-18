@@ -132,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let qrBarcodeDetector = null;
     let qrLastNumbers = [];
     let qrLastMatchedRound = null;
+    let weeklyNextDrawOverride = null;
 
     // 네트워크/초기화 오류와 무관하게 회차 리스트는 먼저 표시한다.
     latestAvailableRound = estimateLatestRound();
@@ -527,6 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setupRuleDetails();
         syncInitialTab();
         fetchLatestDraw();
+        fetchWeeklyIntroInfo();
         if (rulesSection) {
             rulesSection.classList.add('rules-collapsed');
         }
@@ -1477,7 +1479,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const now = getKstNow();
-        const nextDraw = getNextSaturdayDrawTime(now);
+        const nextDraw = weeklyNextDrawOverride ? new Date(weeklyNextDrawOverride) : getNextSaturdayDrawTime(now);
         const diffMs = Math.max(0, nextDraw.getTime() - now.getTime());
         const totalSeconds = Math.floor(diffMs / 1000);
         const days = Math.floor(totalSeconds / (24 * 60 * 60));
@@ -1510,13 +1512,48 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const now = getKstNow();
-        const nextDraw = getNextSaturdayDrawTime(now);
+        const nextDraw = weeklyNextDrawOverride ? new Date(weeklyNextDrawOverride) : getNextSaturdayDrawTime(now);
         const diffMs = Math.max(0, nextDraw.getTime() - now.getTime());
         const totalMinutes = Math.floor(diffMs / (1000 * 60));
         const days = Math.floor(totalMinutes / (60 * 24));
         const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
         const minutes = totalMinutes % 60;
         weeklyNextDrawEl.textContent = `${days}일 ${hours}시간 ${minutes}분`;
+    }
+
+    async function fetchWeeklyIntroInfo() {
+        try {
+            const response = await fetch('/api/lt645-intro', { cache: 'no-store' });
+            if (!response.ok) {
+                return;
+            }
+            const payload = await response.json();
+            if (!payload || payload.returnValue !== 'success') {
+                return;
+            }
+            const expected = payload.expected;
+            const current = payload.current;
+            if (expected?.rnk1ExpcAmt && weeklyExpectedAmountEl) {
+                weeklyExpectedAmountEl.textContent = formatCurrency(expected.rnk1ExpcAmt);
+                if (weeklyExpectedNoteEl) {
+                    weeklyExpectedNoteEl.textContent = '공식 예상';
+                }
+            }
+            if (current?.ltRflYmd && current?.ltRflHh != null && current?.ltRflMm != null) {
+                const date = new Date(`${String(current.ltRflYmd).slice(0, 4)}-${String(current.ltRflYmd).slice(4, 6)}-${String(current.ltRflYmd).slice(6, 8)}T00:00:00+09:00`);
+                date.setHours(Number(current.ltRflHh));
+                date.setMinutes(Number(current.ltRflMm));
+                date.setSeconds(0);
+                weeklyNextDrawOverride = date;
+                updateWeeklyCountdownDisplay();
+                updateWeeklyNextDrawDisplay();
+                if (weeklyCountdownSubEl && current?.ltEpsd) {
+                    weeklyCountdownSubEl.textContent = `제${current.ltEpsd}회 추첨: ${formatKstDateTime(date)} (KST)`;
+                }
+            }
+        } catch (error) {
+            console.warn('intro info fetch failed', error);
+        }
     }
 
     async function fetchDrawData(round) {
