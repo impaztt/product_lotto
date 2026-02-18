@@ -207,6 +207,7 @@
                                     <button class="draw-selected-clear" id="selected-clear-btn" type="button">전체 해제</button>
                                 </div>
                             </div>
+                            <button class="draw-selected-open" id="selected-open-btn" type="button">선택한 필터 보기</button>
                             <div class="draw-selected-presets">
                                 <button class="preset-btn" data-preset="light" type="button">보수형</button>
                                 <button class="preset-btn" data-preset="balanced" type="button">균형형</button>
@@ -647,6 +648,17 @@
             </section>
             <div class="draw-fixed-cta">
                 <button type="button" data-generate-cta>번호 생성</button>
+            </div>
+            <div class="selected-sheet" id="selected-sheet" aria-hidden="true">
+                <div class="selected-sheet-inner">
+                    <div class="selected-sheet-header">
+                        <h3>선택한 필터</h3>
+                        <button type="button" id="selected-close-btn">닫기</button>
+                    </div>
+                    <div class="draw-selected-helper">필터를 누르면 즉시 해제됩니다.</div>
+                    <div id="selected-rules-list-sheet" class="draw-selected-list"></div>
+                    <div id="selected-rules-empty-sheet" class="draw-selected-empty">아직 선택된 규칙이 없습니다.</div>
+                </div>
             </div>
 
             <section id="generator" class="section generator">

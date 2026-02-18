@@ -1866,6 +1866,7 @@ body[data-theme="light"] .draw-hero {
     --draw-muted: #64748b;
     --draw-blue: #2563eb;
     --draw-blue-soft: rgba(37, 99, 235, 0.12);
+    background: #ffffff;
 }
 
 body[data-theme="dark"] #tab-draw {
@@ -1988,6 +1989,17 @@ body[data-theme="light"] .draw-studio-header {
     font-size: 16px;
 }
 
+.draw-selected-open {
+    border: 1px solid var(--draw-border, var(--panel-border));
+    background: var(--draw-card, var(--bg-soft));
+    color: var(--draw-text, var(--text));
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    text-align: left;
+}
+
 .draw-dashboard {
     display: grid;
     gap: 18px;
@@ -2041,6 +2053,79 @@ body[data-theme="light"] .draw-studio-header {
     background: var(--draw-card, var(--panel));
     box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
     padding: 14px 16px 18px;
+}
+
+#tab-draw .rules-groups {
+    grid-template-columns: 1fr;
+}
+
+#tab-draw .rule-group {
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    box-shadow: none;
+    padding: 10px 0 12px;
+    background: transparent;
+}
+
+#tab-draw .rule-group + .rule-group {
+    border-top: 1px solid var(--draw-border, var(--panel-border));
+}
+
+#tab-draw .rule-group-header {
+    padding: 8px 0;
+    background: transparent;
+}
+
+#tab-draw .rules-grid {
+    gap: 6px;
+}
+
+#tab-draw .rule-card {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.selected-sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: -100%;
+    background: var(--draw-card, #fff);
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -10px 24px rgba(15, 23, 42, 0.18);
+    transition: bottom 0.25s ease;
+    z-index: 70;
+}
+
+.selected-sheet.is-open {
+    bottom: 0;
+}
+
+.selected-sheet-inner {
+    padding: 16px 4vw 24px;
+    display: grid;
+    gap: 12px;
+}
+
+.selected-sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.selected-sheet-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.selected-sheet-header button {
+    border: 1px solid var(--draw-border, var(--panel-border));
+    background: var(--draw-card, var(--bg-soft));
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
 }
 
 .draw-rules-header {
@@ -2930,6 +3015,18 @@ body[data-theme="light"] .draw-studio-header {
     #tab-draw .draw-selected-chip {
         width: 100%;
         justify-content: space-between;
+    }
+
+    .draw-selected-presets,
+    .draw-selected-sub,
+    .draw-selected-list,
+    .draw-selected-empty,
+    .draw-selected-helper {
+        display: none;
+    }
+
+    .draw-selected-open {
+        display: block;
     }
 
     .draw-fixed-cta {
