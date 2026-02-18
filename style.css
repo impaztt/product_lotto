@@ -42,6 +42,10 @@ body {
     min-height: 100vh;
 }
 
+#tab-weekly {
+    background: #ffffff;
+}
+
 a {
     color: inherit;
     text-decoration: none;
@@ -403,35 +407,34 @@ body[data-theme="light"] .icon-qr::before {
 }
 
 .weekly-feature-card {
-    border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: linear-gradient(160deg, rgba(24, 30, 44, 0.96), rgba(18, 22, 34, 0.96));
-    box-shadow: 0 18px 40px rgba(10, 14, 25, 0.35);
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06);
     padding: 18px 20px;
     display: grid;
     gap: 12px;
 }
 
 body[data-theme="light"] .weekly-feature-card {
-    border-color: rgba(15, 23, 42, 0.08);
-    background: linear-gradient(160deg, #ffffff, #f7f8fb);
-    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    border-color: #e5e7eb;
+    background: #ffffff;
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06);
 }
 
 .weekly-feature-card.primary {
-    border-color: rgba(59, 130, 246, 0.3);
-    background: linear-gradient(150deg, rgba(24, 40, 74, 0.98), rgba(14, 24, 48, 0.98));
+    border-color: #dbe7ff;
+    background: #f6f9ff;
 }
 
 body[data-theme="light"] .weekly-feature-card.primary {
-    background: linear-gradient(150deg, #eaf1ff, #f6f8ff);
+    background: #f6f9ff;
 }
 
 .weekly-feature-title {
-    font-size: 12px;
-    letter-spacing: 0.04em;
-    color: var(--text-muted);
-    font-weight: 700;
+    font-size: 13px;
+    color: #475569;
+    font-weight: 600;
 }
 
 .weekly-countdown-grid {
@@ -442,8 +445,8 @@ body[data-theme="light"] .weekly-feature-card.primary {
 
 .weekly-countdown-box {
     border-radius: 10px;
-    background: rgba(9, 12, 20, 0.75);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
     padding: 10px 8px;
     display: grid;
     gap: 6px;
@@ -453,29 +456,60 @@ body[data-theme="light"] .weekly-feature-card.primary {
 
 body[data-theme="light"] .weekly-countdown-box {
     background: #ffffff;
-    border-color: rgba(15, 23, 42, 0.12);
+    border-color: #e5e7eb;
 }
 
 .weekly-countdown-value {
     font-size: 22px;
     font-weight: 800;
     letter-spacing: 0.02em;
+    color: #2563eb;
 }
 
 .weekly-countdown-label {
     font-size: 11px;
-    color: var(--text-muted);
+    color: #64748b;
 }
 
 .weekly-feature-amount {
     font-size: clamp(24px, 2.8vw, 34px);
     font-weight: 800;
     letter-spacing: 0.01em;
+    color: #0f172a;
 }
 
 .weekly-feature-sub {
     font-size: 12px;
-    color: var(--text-muted);
+    color: #64748b;
+}
+
+#tab-weekly .info-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.05);
+}
+
+#tab-weekly .info-header h3 {
+    font-size: 16px;
+}
+
+#tab-weekly .badge {
+    background: #eef2ff;
+    color: #1d4ed8;
+    border: 1px solid #dbe7ff;
+}
+
+#tab-weekly .badge.muted {
+    background: #f8fafc;
+    color: #64748b;
+    border: 1px solid #e5e7eb;
+}
+
+#tab-weekly .weekly-controls {
+    border-radius: 12px;
+    padding: 12px 14px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
 }
 
 .weekly-controls {
