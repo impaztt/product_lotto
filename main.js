@@ -79,6 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const weeklyNextDrawEl = document.getElementById('weekly-next-draw');
     const weeklyCountdownEl = document.getElementById('weekly-countdown');
     const weeklyCountdownSubEl = document.getElementById('weekly-countdown-sub');
+    const weeklyCountdownDaysEl = document.getElementById('weekly-countdown-days');
+    const weeklyCountdownHoursEl = document.getElementById('weekly-countdown-hours');
+    const weeklyCountdownMinutesEl = document.getElementById('weekly-countdown-minutes');
+    const weeklyCountdownSecondsEl = document.getElementById('weekly-countdown-seconds');
     const weeklyExpectedAmountEl = document.getElementById('weekly-expected-amount');
     const weeklyExpectedNoteEl = document.getElementById('weekly-expected-note');
     const recentRoundsEl = document.getElementById('recent-rounds');
@@ -1469,7 +1473,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateWeeklyCountdownDisplay() {
-        if (!weeklyCountdownEl) {
+        if (!weeklyCountdownEl && !weeklyCountdownDaysEl) {
             return;
         }
         const now = getKstNow();
@@ -1481,7 +1485,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;
         const pad = value => String(value).padStart(2, '0');
-        weeklyCountdownEl.textContent = `${days}일 ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+        if (weeklyCountdownEl) {
+            weeklyCountdownEl.textContent = `${days}일 ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+        }
+        if (weeklyCountdownDaysEl) {
+            weeklyCountdownDaysEl.textContent = String(days);
+        }
+        if (weeklyCountdownHoursEl) {
+            weeklyCountdownHoursEl.textContent = pad(hours);
+        }
+        if (weeklyCountdownMinutesEl) {
+            weeklyCountdownMinutesEl.textContent = pad(minutes);
+        }
+        if (weeklyCountdownSecondsEl) {
+            weeklyCountdownSecondsEl.textContent = pad(seconds);
+        }
         if (weeklyCountdownSubEl) {
             weeklyCountdownSubEl.textContent = `다음 추첨: ${formatKstDateTime(nextDraw)} (KST)`;
         }

@@ -395,39 +395,33 @@ body[data-theme="light"] .icon-qr::before {
     font-size: 13px;
 }
 
-.weekly-hero {
+.weekly-feature {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1.2fr 0.8fr;
     gap: 16px;
     margin-bottom: 16px;
 }
 
-.weekly-hero-card {
-    border-radius: 18px;
+.weekly-feature-card {
+    border-radius: 14px;
     border: 1px solid var(--panel-border);
-    background: linear-gradient(135deg, rgba(20, 24, 40, 0.96), rgba(30, 40, 60, 0.92));
-    padding: 16px 18px;
+    background: var(--panel);
     box-shadow: var(--shadow);
+    padding: 16px 18px;
     display: grid;
-    gap: 6px;
+    gap: 10px;
 }
 
-.weekly-hero-card.accent {
-    background: linear-gradient(135deg, rgba(255, 160, 92, 0.18), rgba(255, 200, 120, 0.12));
-    border-color: rgba(255, 190, 120, 0.35);
+.weekly-feature-card.primary {
+    background: linear-gradient(135deg, rgba(27, 41, 70, 0.95), rgba(20, 32, 58, 0.9));
 }
 
-body[data-theme="light"] .weekly-hero-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(247, 248, 250, 0.95));
-    border-color: rgba(15, 23, 42, 0.16);
+body[data-theme="light"] .weekly-feature-card.primary {
+    background: linear-gradient(135deg, rgba(235, 242, 255, 0.95), rgba(223, 235, 255, 0.95));
+    border-color: rgba(37, 99, 235, 0.25);
 }
 
-body[data-theme="light"] .weekly-hero-card.accent {
-    background: linear-gradient(135deg, rgba(255, 214, 170, 0.4), rgba(255, 235, 210, 0.5));
-    border-color: rgba(255, 170, 90, 0.5);
-}
-
-.weekly-hero-title {
+.weekly-feature-title {
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -435,18 +429,44 @@ body[data-theme="light"] .weekly-hero-card.accent {
     font-weight: 700;
 }
 
-.weekly-hero-countdown {
-    font-size: clamp(24px, 3vw, 36px);
+.weekly-countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.weekly-countdown-box {
+    border-radius: 10px;
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 10px;
+    display: grid;
+    gap: 4px;
+    text-align: center;
+}
+
+body[data-theme="light"] .weekly-countdown-box {
+    background: #ffffff;
+    border-color: rgba(37, 99, 235, 0.2);
+}
+
+.weekly-countdown-value {
+    font-size: 20px;
     font-weight: 800;
     letter-spacing: 0.02em;
 }
 
-.weekly-hero-amount {
-    font-size: clamp(22px, 2.6vw, 34px);
+.weekly-countdown-label {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.weekly-feature-amount {
+    font-size: clamp(22px, 2.6vw, 32px);
     font-weight: 800;
 }
 
-.weekly-hero-sub {
+.weekly-feature-sub {
     font-size: 12px;
     color: var(--text-muted);
 }
@@ -2776,7 +2796,7 @@ body[data-theme="light"] .draw-studio-header {
         gap: 8px;
     }
 
-    .weekly-hero {
+    .weekly-feature {
         grid-template-columns: 1fr;
     }
 
