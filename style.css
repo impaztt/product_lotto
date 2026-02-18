@@ -1915,10 +1915,6 @@ body[data-theme="light"] .draw-studio-header {
     justify-content: flex-end;
 }
 
-.draw-fixed-cta {
-    display: none;
-}
-
 .draw-cta-card {
     border-radius: 12px;
     border: 1px solid var(--draw-border, var(--panel-border));
@@ -2569,8 +2565,8 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 .rule-card.is-checked {
-    border-color: var(--draw-border, var(--panel-border));
-    background: rgba(37, 99, 235, 0.08);
+    border-color: var(--draw-blue, var(--accent));
+    background: var(--draw-blue-soft, var(--accent-soft));
 }
 
 .rule-card.is-checked::after {
@@ -2766,23 +2762,7 @@ body[data-theme="light"] .draw-studio-header {
     .draw-selected-card,
     .draw-cta-card {
         border: none;
-        box-shadow: none;
-        border-bottom: 1px solid var(--draw-border, var(--panel-border));
-    }
-
-    #tab-draw .draw-panel,
-    #tab-draw .draw-metric-card,
-    #tab-draw .draw-rules-panel,
-    #tab-draw .draw-selected-card {
-        padding-top: 14px;
-        padding-bottom: 14px;
-    }
-
-    #tab-draw .draw-panel:last-child,
-    #tab-draw .draw-metric-card:last-child,
-    #tab-draw .draw-rules-panel:last-child,
-    #tab-draw .draw-selected-card:last-child {
-        border-bottom: 0;
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
     }
 
     .draw-studio-header {
@@ -2930,29 +2910,6 @@ body[data-theme="light"] .draw-studio-header {
     #tab-draw .draw-selected-chip {
         width: 100%;
         justify-content: space-between;
-    }
-
-    .draw-fixed-cta {
-        display: flex;
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: calc(12px + env(safe-area-inset-bottom));
-        padding: 0 4vw;
-        z-index: 60;
-        pointer-events: none;
-    }
-
-    .draw-fixed-cta button {
-        pointer-events: auto;
-        width: 100%;
-        border: none;
-        border-radius: 10px;
-        padding: 12px 14px;
-        background: var(--draw-blue, #2563eb);
-        color: #fff;
-        font-weight: 700;
-        box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
     }
 
     .hero {
