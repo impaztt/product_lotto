@@ -23,10 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const remainingMeterLabel = document.getElementById('remaining-meter-label');
     const selectedRulesListEl = document.getElementById('selected-rules-list');
     const selectedRulesEmptyEl = document.getElementById('selected-rules-empty');
-    const selectedRulesListSheetEl = document.getElementById('selected-rules-list-sheet');
-    const selectedRulesEmptySheetEl = document.getElementById('selected-rules-empty-sheet');
-    const selectedOpenBtn = document.getElementById('selected-open-btn');
-    const selectedCloseBtn = document.getElementById('selected-close-btn');
     const selectedClearBtn = document.getElementById('selected-clear-btn');
     const oddsBenefitSummaryEl = document.getElementById('odds-benefit-summary');
     const oddsBaseEls = {
@@ -502,44 +498,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetInput) {
                 targetInput.checked = false;
                 targetInput.dispatchEvent(new Event('change', { bubbles: true }));
-            }
-        });
-    }
-
-    if (selectedRulesListSheetEl) {
-        selectedRulesListSheetEl.addEventListener('click', event => {
-            const button = event.target.closest('.draw-selected-chip');
-            if (!button) {
-                return;
-            }
-            const value = button.dataset.value;
-            if (!value) {
-                return;
-            }
-            const targetInput = ruleInputs.find(input => input.value === value);
-            if (targetInput) {
-                targetInput.checked = false;
-                targetInput.dispatchEvent(new Event('change', { bubbles: true }));
-            }
-        });
-    }
-
-    if (selectedOpenBtn) {
-        selectedOpenBtn.addEventListener('click', () => {
-            const sheet = document.getElementById('selected-sheet');
-            if (sheet) {
-                sheet.classList.add('is-open');
-                sheet.setAttribute('aria-hidden', 'false');
-            }
-        });
-    }
-
-    if (selectedCloseBtn) {
-        selectedCloseBtn.addEventListener('click', () => {
-            const sheet = document.getElementById('selected-sheet');
-            if (sheet) {
-                sheet.classList.remove('is-open');
-                sheet.setAttribute('aria-hidden', 'true');
             }
         });
     }
@@ -1709,24 +1667,15 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         selectedRulesListEl.innerHTML = '';
-        if (selectedRulesListSheetEl) {
-            selectedRulesListSheetEl.innerHTML = '';
-        }
         const selectedCards = ruleCards.filter(card => {
             const input = card.querySelector('.rule-input');
             return input && input.checked;
         });
         if (!selectedCards.length) {
             selectedRulesEmptyEl.hidden = false;
-            if (selectedRulesEmptySheetEl) {
-                selectedRulesEmptySheetEl.hidden = false;
-            }
             return;
         }
         selectedRulesEmptyEl.hidden = true;
-        if (selectedRulesEmptySheetEl) {
-            selectedRulesEmptySheetEl.hidden = true;
-        }
         selectedCards.forEach(card => {
             const input = card.querySelector('.rule-input');
             if (!input) {
@@ -1742,9 +1691,6 @@ document.addEventListener('DOMContentLoaded', () => {
             chip.dataset.value = input.value;
             chip.innerHTML = `<strong>${escapeHtml(title)}</strong><span>${escapeHtml(group)}</span>`;
             selectedRulesListEl.appendChild(chip);
-            if (selectedRulesListSheetEl) {
-                selectedRulesListSheetEl.appendChild(chip.cloneNode(true));
-            }
         });
     }
 
