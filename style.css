@@ -136,15 +136,6 @@ body {
     background: #ffffff;
 }
 
-#dashboard-frame {
-    display: block;
-    width: 100%;
-    min-height: 80vh;
-    height: 100%;
-    border: 0;
-    background: #ffffff;
-}
-
 @media (max-width: 960px) {
     #tab-dashboard {
         margin: -18px -4vw 0;

@@ -85,6 +85,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let weeklyCountdownSecondsEl = null;
     let weeklyExpectedAmountEl = null;
     let weeklyExpectedNoteEl = null;
+    let dashThisRoundEl = null;
+    let dashThisDateEl = null;
+    let dashLatestRoundEl = null;
+    let dashLatestDateEl = null;
+    let dashLatestNumbers = [];
+    let dashLatestBonusEl = null;
+    let dashLatestFirstTotalEl = null;
+    let dashLatestFirstEachEl = null;
+    let dashLatestFirstWinnersEl = null;
+    let dashCountdownDaysEl = null;
+    let dashCountdownHoursEl = null;
+    let dashCountdownMinutesEl = null;
+    let dashCountdownSecondsEl = null;
+    let dashExpectedAmountEl = null;
+    let dashBuyBtn = null;
     let recentRoundsEl = null;
     let roundSearchInput = null;
     let roundSearchBtn = null;
@@ -174,6 +189,54 @@ document.addEventListener('DOMContentLoaded', () => {
         compareResult = root.getElementById('compare-result');
         recentCountSelect = root.getElementById('recent-count');
         trendChart = root.getElementById('trend-chart');
+    }
+
+    function bindDashboardElements(root) {
+        dashThisRoundEl = root.getElementById('dash-thsLtEpsd');
+        dashThisDateEl = root.getElementById('dash-thsLtRflYmd');
+        dashLatestRoundEl = root.getElementById('dash-pstLtEpsd');
+        dashLatestDateEl = root.getElementById('dash-pstLtRflYmd');
+        dashLatestNumbers = [
+            root.getElementById('dash-tm1WnNo'),
+            root.getElementById('dash-tm2WnNo'),
+            root.getElementById('dash-tm3WnNo'),
+            root.getElementById('dash-tm4WnNo'),
+            root.getElementById('dash-tm5WnNo'),
+            root.getElementById('dash-tm6WnNo')
+        ];
+        dashLatestBonusEl = root.getElementById('dash-bnsWnNo');
+        dashLatestFirstTotalEl = root.getElementById('dash-pstRnk1SumWnAmt');
+        dashLatestFirstEachEl = root.getElementById('dash-pstRnk1WnAmt');
+        dashLatestFirstWinnersEl = root.getElementById('dash-pstRnk1WnNope');
+        dashCountdownDaysEl = root.getElementById('dash-DD');
+        dashCountdownHoursEl = root.getElementById('dash-HH');
+        dashCountdownMinutesEl = root.getElementById('dash-MM');
+        dashCountdownSecondsEl = root.getElementById('dash-SS');
+        dashExpectedAmountEl = root.getElementById('dash-rnk1ExpcAmt');
+        dashBuyBtn = root.getElementById('dash-btnBuyLt645');
+        const dashWnStrcBtn = root.getElementById('dash-btnWnStrc');
+        const dashPrchsBtn = root.getElementById('dash-btnPrchsMthd');
+        const dashWnStrcDiv = root.getElementById('dash-wnStrcDiv');
+        const dashPrchsDiv = root.getElementById('dash-prchsMthdDiv');
+        if (dashBuyBtn) {
+            dashBuyBtn.type = 'button';
+            dashBuyBtn.addEventListener('click', event => {
+                event.preventDefault();
+                setActiveTab('draw', true);
+            });
+        }
+        if (dashWnStrcBtn && dashWnStrcDiv) {
+            dashWnStrcBtn.addEventListener('click', event => {
+                event.preventDefault();
+                dashWnStrcDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+        if (dashPrchsBtn && dashPrchsDiv) {
+            dashPrchsBtn.addEventListener('click', event => {
+                event.preventDefault();
+                dashPrchsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
     }
 
     function normalizeWeeklyLinks() {
@@ -280,6 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     bindWeeklyElements(document);
+    bindDashboardElements(document);
     normalizeWeeklyLinks();
     initWeeklyIntroUi();
 
@@ -1670,11 +1734,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (weeklyCountdownSecondsEl) {
             weeklyCountdownSecondsEl.textContent = pad(seconds);
         }
+        if (dashCountdownDaysEl) {
+            dashCountdownDaysEl.textContent = String(days);
+        }
+        if (dashCountdownHoursEl) {
+            dashCountdownHoursEl.textContent = pad(hours);
+        }
+        if (dashCountdownMinutesEl) {
+            dashCountdownMinutesEl.textContent = pad(minutes);
+        }
+        if (dashCountdownSecondsEl) {
+            dashCountdownSecondsEl.textContent = pad(seconds);
+        }
         if (weeklyCountdownSubEl) {
             weeklyCountdownSubEl.textContent = `다음 추첨: ${formatKstDateTime(nextDraw)} (KST)`;
         }
         if (weeklyThisDateEl && !weeklyThisDateEl.textContent.trim()) {
             weeklyThisDateEl.textContent = formatShortDate(nextDraw);
+        }
+        if (dashThisDateEl && !dashThisDateEl.textContent.trim()) {
+            dashThisDateEl.textContent = formatShortDate(nextDraw);
         }
     }
 
@@ -1719,11 +1798,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 weeklyExpectedUpdatedAt = Date.now();
                 applyWeeklyExpectedAmount(weeklyExpectedOverride, '공식 예상');
             }
+            if (expected?.rnk1ExpcAmt && dashExpectedAmountEl) {
+                dashExpectedAmountEl.textContent = formatCurrency(expected.rnk1ExpcAmt);
+            }
             if (current?.ltEpsd && weeklyThisRoundEl) {
                 weeklyThisRoundEl.textContent = `${current.ltEpsd}회`;
             }
+            if (current?.ltEpsd && dashThisRoundEl) {
+                dashThisRoundEl.textContent = `${current.ltEpsd}회`;
+            }
             if (current?.ltRflYmd && weeklyThisDateEl) {
                 weeklyThisDateEl.textContent = formatShortDate(current.ltRflYmd);
+            }
+            if (current?.ltRflYmd && dashThisDateEl) {
+                dashThisDateEl.textContent = formatShortDate(current.ltRflYmd);
             }
             if (current?.ltRflYmd && current?.ltRflHh != null && current?.ltRflMm != null) {
                 const date = new Date(`${String(current.ltRflYmd).slice(0, 4)}-${String(current.ltRflYmd).slice(4, 6)}-${String(current.ltRflYmd).slice(6, 8)}T00:00:00+09:00`);
@@ -1776,7 +1864,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (weeklyLatestDateEl) {
             weeklyLatestDateEl.textContent = data.drwNoDate ? `${data.drwNoDate} 추첨` : '';
         }
+        if (dashLatestRoundEl) {
+            dashLatestRoundEl.textContent = `${data.drwNo}회`;
+        }
+        if (dashLatestDateEl) {
+            dashLatestDateEl.textContent = data.drwNoDate ? `${data.drwNoDate} 추첨` : '';
+        }
         weeklyLatestNumbers.forEach((el, index) => {
+            const value = numbers[index];
+            if (!el) {
+                return;
+            }
+            el.textContent = value || '-';
+            applyBallStyle(el, value);
+        });
+        dashLatestNumbers.forEach((el, index) => {
             const value = numbers[index];
             if (!el) {
                 return;
@@ -1788,6 +1890,10 @@ document.addEventListener('DOMContentLoaded', () => {
             weeklyLatestBonusEl.textContent = data.bnusNo || '-';
             applyBallStyle(weeklyLatestBonusEl, data.bnusNo);
         }
+        if (dashLatestBonusEl) {
+            dashLatestBonusEl.textContent = data.bnusNo || '-';
+            applyBallStyle(dashLatestBonusEl, data.bnusNo);
+        }
         if (weeklyLatestFirstTotalEl) {
             const total = data.firstAccumamnt || (data.firstWinamnt && data.firstPrzwnerCo ? data.firstWinamnt * data.firstPrzwnerCo : null);
             weeklyLatestFirstTotalEl.textContent = formatCurrency(total);
@@ -1797,6 +1903,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (weeklyLatestFirstWinnersEl) {
             weeklyLatestFirstWinnersEl.textContent = formatNumber(data.firstPrzwnerCo || 0);
+        }
+        if (dashLatestFirstTotalEl) {
+            const total = data.firstAccumamnt || (data.firstWinamnt && data.firstPrzwnerCo ? data.firstWinamnt * data.firstPrzwnerCo : null);
+            dashLatestFirstTotalEl.textContent = formatCurrency(total);
+        }
+        if (dashLatestFirstEachEl) {
+            dashLatestFirstEachEl.textContent = formatEokAmount(data.firstWinamnt);
+        }
+        if (dashLatestFirstWinnersEl) {
+            dashLatestFirstWinnersEl.textContent = formatNumber(data.firstPrzwnerCo || 0);
         }
         updateWeeklyNextDrawDisplay();
         if (weeklyRoundHint) {
@@ -1818,6 +1934,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (weeklyThisDateEl && !weeklyThisDateEl.textContent.trim()) {
             weeklyThisDateEl.textContent = formatShortDate(getNextSaturdayDrawTime(getKstNow()));
+        }
+        if (dashThisRoundEl && !dashThisRoundEl.textContent.trim()) {
+            dashThisRoundEl.textContent = `${Number(data.drwNo) + 1}회`;
+        }
+        if (dashThisDateEl && !dashThisDateEl.textContent.trim()) {
+            dashThisDateEl.textContent = formatShortDate(getNextSaturdayDrawTime(getKstNow()));
         }
 
     }
