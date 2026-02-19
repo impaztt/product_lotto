@@ -676,6 +676,16 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCombinedEstimates();
         setupRuleDetails();
         syncInitialTab();
+        window.addEventListener('message', event => {
+            if (!event || !event.data || event.data.type !== 'switch-tab') {
+                return;
+            }
+            const target = String(event.data.tab || '').trim();
+            if (!target) {
+                return;
+            }
+            setActiveTab(target, true);
+        });
         fetchLatestDraw();
         fetchWeeklyIntroInfo();
         window.setInterval(() => {
