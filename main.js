@@ -1830,6 +1830,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return payload?.data?.result || null;
     }
 
+    async function fetchIntroMirrorResultWithRetry(path, retries = 2) {
+        let lastError = null;
+        for (let attempt = 0; attempt <= retries; attempt += 1) {
+            try {
+                return await fetchIntroMirrorResult(path);
+            } catch (error) {
+                lastError = error;
+            }
+        }
+        throw lastError || new Error('mirror retry failed');
+    }
+
     async function fetchWeeklyIntroInfo() {
         let expected = null;
         let current = null;
@@ -1850,8 +1862,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!expected || !current) {
             try {
                 const [fallbackExpected, fallbackCurrent] = await Promise.all([
-                    expected ? Promise.resolve(expected) : fetchIntroMirrorResult('/lt645/selectRnk1ExpcAmt.do'),
-                    current ? Promise.resolve(current) : fetchIntroMirrorResult('/lt645/selectThsLt645Info.do')
+                    expected ? Promise.resolve(expected) : fetchIntroMirrorResultWithRetry('/lt645/selectRnk1ExpcAmt.do', 2),
+                    current ? Promise.resolve(current) : fetchIntroMirrorResultWithRetry('/lt645/selectThsLt645Info.do', 2)
                 ]);
                 expected = expected || fallbackExpected;
                 current = current || fallbackCurrent;
@@ -1860,7 +1872,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        if (expected?.rnk1ExpcAmt && weeklyExpectedAmountEl) {
+        if (expected?.rnk1ExpcAmt) {
             weeklyExpectedOverride = Number(expected.rnk1ExpcAmt);
             weeklyExpectedUpdatedAt = Date.now();
             applyWeeklyExpectedAmount(weeklyExpectedOverride, '공식 예상');
