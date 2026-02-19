@@ -48,92 +48,13 @@ body {
     margin: -40px -6vw 0;
     font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
     color: #111111;
+    --lt645-blue: #1e6bff;
+    --lt645-blue-dark: #0f5bd8;
+    --lt645-blue-light: #e9f1ff;
 }
 
 #tab-weekly .container-box {
     padding-bottom: 80px;
-}
-
-#tab-weekly .header-girdWrap {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
-}
-
-#tab-weekly .header-info {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-#tab-weekly .logo-img {
-    flex: 0 0 auto;
-}
-
-#tab-weekly .this-week-round {
-    flex: 1 1 auto;
-}
-
-#tab-weekly .timer-box {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-#tab-weekly .time-circle {
-    width: 56px;
-    height: 56px;
-    border-radius: 999px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: #f3f4f6;
-}
-
-#tab-weekly .time-num {
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 1;
-}
-
-#tab-weekly .time-txt {
-    font-size: 12px;
-    line-height: 1;
-}
-
-#tab-weekly .winnings {
-    font-size: 20px;
-    font-weight: 700;
-}
-
-#tab-weekly .result-ballBox {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-}
-
-#tab-weekly .result-ball {
-    width: 36px;
-    height: 36px;
-    border-radius: 999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-}
-
-@media (max-width: 960px) {
-    #tab-weekly .header-girdWrap {
-        grid-template-columns: 1fr;
-    }
-
-    #tab-weekly .header-info {
-        flex-direction: column;
-        align-items: flex-start;
-    }
 }
 
 @media (max-width: 960px) {
@@ -165,7 +86,7 @@ body {
 #tab-weekly .result-ball.ball-3,
 #tab-weekly .time-circle.ball-3,
 #tab-weekly .ball-3 {
-    background: #ff7272;
+    background: var(--lt645-blue);
     color: #ffffff;
 }
 
@@ -181,6 +102,32 @@ body {
 #tab-weekly .ball-5 {
     background: #b0d840;
     color: #ffffff;
+}
+
+#tab-weekly .color-lt645,
+#tab-weekly .color-p {
+    color: var(--lt645-blue) !important;
+}
+
+#tab-weekly .btn-butNow,
+#tab-weekly .btn-go.btn-up {
+    background: var(--lt645-blue) !important;
+    border-color: var(--lt645-blue) !important;
+    color: #ffffff !important;
+}
+
+#tab-weekly .btn-go,
+#tab-weekly .btn-line,
+#tab-weekly .btn-viewLine,
+#tab-weekly .btn-viewProfit,
+#tab-weekly .btn-goTerms {
+    border-color: var(--lt645-blue) !important;
+    color: var(--lt645-blue) !important;
+}
+
+#tab-weekly .btn-line.btn-arrow::after,
+#tab-weekly .btn-viewLine::after {
+    border-color: var(--lt645-blue) !important;
 }
 
 a {
