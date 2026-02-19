@@ -138,6 +138,7 @@ body {
     color: #111111;
     --lt645-blue: #1e6bff;
     --lt645-blue-dark: #0f5bd8;
+    --lt645-blue-glow: rgba(30, 107, 255, 0.18);
 }
 
 #tab-dashboard .color-lt645,
@@ -164,6 +165,99 @@ body {
 #tab-dashboard .btn-line.btn-arrow::after,
 #tab-dashboard .btn-viewLine::after {
     border-color: var(--lt645-blue) !important;
+}
+
+#tab-dashboard .header-box {
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+#tab-dashboard .header-info {
+    gap: 28px;
+}
+
+#tab-dashboard .this-week-round {
+    position: relative;
+    padding: 20px 22px 18px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(30, 107, 255, 0.08), rgba(30, 107, 255, 0.02));
+    border: 1px solid rgba(30, 107, 255, 0.16);
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.12);
+}
+
+#tab-dashboard .this-week-round::before {
+    content: "";
+    position: absolute;
+    right: -30%;
+    top: -50%;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(30, 107, 255, 0.25), transparent 60%);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+#tab-dashboard .timer-box {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 10px 0 14px;
+}
+
+#tab-dashboard .time-circle {
+    width: 58px;
+    height: 70px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid rgba(30, 107, 255, 0.2);
+    box-shadow: 0 10px 18px rgba(30, 107, 255, 0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+}
+
+#tab-dashboard .time-num {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--lt645-blue);
+    letter-spacing: 0.4px;
+}
+
+#tab-dashboard .time-txt {
+    font-size: 11px;
+    color: rgba(15, 23, 42, 0.6);
+    letter-spacing: 0.2px;
+    margin-top: 4px;
+}
+
+#tab-dashboard .winnings {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+#tab-dashboard .winnings-txt {
+    font-size: 12px;
+    color: rgba(15, 23, 42, 0.6);
+}
+
+#tab-dashboard .btn-butNow {
+    border-radius: 14px;
+    padding: 10px 16px;
+    box-shadow: 0 12px 22px rgba(30, 107, 255, 0.25);
+}
+
+@media (max-width: 960px) {
+    #tab-dashboard .this-week-round {
+        padding: 18px 16px;
+    }
+    #tab-dashboard .time-circle {
+        width: 52px;
+        height: 64px;
+    }
 }
 
 @media (max-width: 960px) {
