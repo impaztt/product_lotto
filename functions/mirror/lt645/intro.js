@@ -37,24 +37,35 @@ function injectOverrides(html) {
     const patch = `\n<script>\n(function(){\n  const ORIGIN='${ORIGIN}';\n  const PROXY='/mirror/proxy?url=';\n  function toProxy(input){\n    try{\n      const u=new URL(input,ORIGIN);\n      if(u.origin!==ORIGIN){return input;}\n      return PROXY+encodeURIComponent(u.href);\n    }catch(e){return input;}\n  }\n  const origFetch=window.fetch;\n  if(origFetch){\n    window.fetch=function(input,init){\n      if(typeof input==='string'){return origFetch(toProxy(input),init);}\n      if(input && input.url){const req=new Request(toProxy(input.url),input);return origFetch(req,init);}\n      return origFetch(input,init);\n    };\n  }\n  const origOpen=XMLHttpRequest.prototype.open;\n  XMLHttpRequest.prototype.open=function(method,url){\n    const args=Array.prototype.slice.call(arguments,2);\n    return origOpen.call(this,method,toProxy(url),...args);\n  };\n  const origAssign=window.location.assign.bind(window.location);\n  const origReplace=window.location.replace.bind(window.location);\n  window.location.assign=function(url){\n    return origAssign(toProxy(url));\n  };\n  window.location.replace=function(url){\n    return origReplace(toProxy(url));\n  };\n  const origOpenWindow=window.open;\n  window.open=function(url,name,features){\n    return origOpenWindow(toProxy(url),name,features);\n  };\n  function goDraw(){
     try{window.parent.postMessage({type:'switch-tab',tab:'draw'},'*');}catch(err){}
   }
-  const btnBuy=document.getElementById('btnBuyLt645');
-  if(btnBuy){
-    btnBuy.setAttribute('type','button');
-    btnBuy.removeAttribute('onclick');
-    btnBuy.addEventListener('click',function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-      goDraw();
-    },true);
+  const origAlert=window.alert;
+  window.alert=function(msg){
+    const text=String(msg||'');
+    if(text.includes('처리 중 오류가 발생했습니다')){return;}
+    return origAlert ? origAlert(msg) : undefined;
+  };
+  const origConfirm=window.confirm;
+  window.confirm=function(msg){
+    const text=String(msg||'');
+    if(text.includes('처리 중 오류가 발생했습니다')){return false;}
+    return origConfirm ? origConfirm(msg) : false;
+  };
+  function isBuyButton(el){
+    if(!el){return false;}
+    if(el.id==='btnBuyLt645'){return true;}
+    if(el.classList && el.classList.contains('btn-butNow')){return true;}
+    const text=(el.textContent||'').trim();
+    return text.includes('구매하기') || text.includes('바로구매');
   }
-  document.addEventListener('click',function(e){
-    const target=e.target && e.target.closest ? e.target.closest('#btnBuyLt645') : null;
-    if(!target){return;}
+  function interceptBuy(e){
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
     goDraw();
+  }
+  document.addEventListener('click',function(e){
+    const target=e.target && e.target.closest ? e.target.closest('button, a') : null;
+    if(!target || !isBuyButton(target)){return;}
+    interceptBuy(e);
   },true);
 })();
 </script>
