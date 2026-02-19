@@ -10,13 +10,6 @@ export async function onRequest(context) {
         });
     }
 
-    const cacheKey = new Request(request.url, request);
-    const cache = caches.default;
-    const cached = await cache.match(cacheKey);
-    if (cached) {
-        return cached;
-    }
-
     try {
         const [expected, current] = await Promise.all([
             fetchJson('https://www.dhlottery.co.kr/lt645/selectRnk1ExpcAmt.do'),
@@ -34,8 +27,7 @@ export async function onRequest(context) {
             status: 200,
             headers: buildHeaders()
         });
-        response.headers.set('Cache-Control', 'public, max-age=60');
-        context.waitUntil(cache.put(cacheKey, response.clone()));
+        response.headers.set('Cache-Control', 'no-store');
         return response;
     } catch (error) {
         return new Response(

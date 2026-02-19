@@ -792,7 +792,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchWeeklyIntroInfo();
         window.setInterval(() => {
             fetchWeeklyIntroInfo();
-        }, 60000);
+        }, 10000);
         if (rulesSection) {
             rulesSection.classList.add('rules-collapsed');
         }
