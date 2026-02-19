@@ -1963,6 +1963,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const expected = data.firstAccumamnt || data.firstWinamnt;
             applyWeeklyExpectedAmount(expected, `${data.drwNo}회차 기준`);
         }
+        if (dashExpectedAmountEl) {
+            if (weeklyExpectedOverride != null) {
+                dashExpectedAmountEl.textContent = formatCurrency(weeklyExpectedOverride);
+            } else {
+                const expected = data.firstAccumamnt || data.firstWinamnt;
+                dashExpectedAmountEl.textContent = formatCurrency(expected);
+            }
+        }
         if (weeklyStatusEl) {
             weeklyStatusEl.textContent = `${data.drwNo}회차 당첨 정보가 반영되었습니다.${cached ? ' (캐시)' : ''}`;
         }
