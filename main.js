@@ -259,6 +259,43 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function normalizeDashboardLinks() {
+        const root = document.getElementById('tab-dashboard');
+        if (!root) {
+            return;
+        }
+        const prefix = 'https://www.dhlottery.co.kr';
+        root.querySelectorAll('[src]').forEach(el => {
+            const src = el.getAttribute('src');
+            if (src && src.startsWith('/')) {
+                el.setAttribute('src', `${prefix}${src}`);
+            }
+        });
+        root.querySelectorAll('a[href]').forEach(el => {
+            const href = el.getAttribute('href');
+            if (href && href.startsWith('/')) {
+                el.setAttribute('href', `${prefix}${href}`);
+            }
+        });
+        root.querySelectorAll('[srcset]').forEach(el => {
+            const srcset = el.getAttribute('srcset');
+            if (!srcset) {
+                return;
+            }
+            const rewritten = srcset
+                .split(',')
+                .map(item => {
+                    const [urlPart, size] = item.trim().split(/\s+/, 2);
+                    if (urlPart && urlPart.startsWith('/')) {
+                        return `${prefix}${urlPart}${size ? ` ${size}` : ''}`;
+                    }
+                    return item.trim();
+                })
+                .join(', ');
+            el.setAttribute('srcset', rewritten);
+        });
+    }
+
     function initWeeklyIntroUi() {
         const root = document.getElementById('tab-weekly');
         if (!root) {
@@ -346,6 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bindDashboardElements(document);
     normalizeWeeklyLinks();
     initWeeklyIntroUi();
+    normalizeDashboardLinks();
 
     // 네트워크/초기화 오류와 무관하게 회차 리스트는 먼저 표시한다.
     latestAvailableRound = estimateLatestRound();

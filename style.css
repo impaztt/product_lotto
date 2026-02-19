@@ -134,6 +134,36 @@ body {
     padding: 0;
     margin: -40px -6vw 0;
     background: #ffffff;
+    font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
+    color: #111111;
+    --lt645-blue: #1e6bff;
+    --lt645-blue-dark: #0f5bd8;
+}
+
+#tab-dashboard .color-lt645,
+#tab-dashboard .color-p {
+    color: var(--lt645-blue) !important;
+}
+
+#tab-dashboard .btn-butNow,
+#tab-dashboard .btn-go.btn-up {
+    background: var(--lt645-blue) !important;
+    border-color: var(--lt645-blue) !important;
+    color: #ffffff !important;
+}
+
+#tab-dashboard .btn-go,
+#tab-dashboard .btn-line,
+#tab-dashboard .btn-viewLine,
+#tab-dashboard .btn-viewProfit,
+#tab-dashboard .btn-goTerms {
+    border-color: var(--lt645-blue) !important;
+    color: var(--lt645-blue) !important;
+}
+
+#tab-dashboard .btn-line.btn-arrow::after,
+#tab-dashboard .btn-viewLine::after {
+    border-color: var(--lt645-blue) !important;
 }
 
 @media (max-width: 960px) {
