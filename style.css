@@ -47,13 +47,43 @@ body {
     background: #ffffff;
 }
 
-#weekly-intro-frame {
-    display: block;
-    width: 100%;
-    min-height: 2200px;
-    height: 100%;
-    border: 0;
-    background: #f5f7fa;
+#tab-weekly .container-box {
+    padding-bottom: 80px;
+}
+
+#tab-weekly .result-ball.ball-1,
+#tab-weekly .time-circle.ball-1,
+#tab-weekly .ball-1 {
+    background: #fbc400;
+    color: #ffffff;
+}
+
+#tab-weekly .result-ball.ball-2,
+#tab-weekly .time-circle.ball-2,
+#tab-weekly .ball-2 {
+    background: #69c8f2;
+    color: #ffffff;
+}
+
+#tab-weekly .result-ball.ball-3,
+#tab-weekly .time-circle.ball-3,
+#tab-weekly .ball-3 {
+    background: #ff7272;
+    color: #ffffff;
+}
+
+#tab-weekly .result-ball.ball-4,
+#tab-weekly .time-circle.ball-4,
+#tab-weekly .ball-4 {
+    background: #aaaaaa;
+    color: #ffffff;
+}
+
+#tab-weekly .result-ball.ball-5,
+#tab-weekly .time-circle.ball-5,
+#tab-weekly .ball-5 {
+    background: #b0d840;
+    color: #ffffff;
 }
 
 a {

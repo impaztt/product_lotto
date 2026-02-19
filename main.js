@@ -63,8 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = Array.from(document.querySelectorAll('.tab-btn[data-tab]'));
     const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
     const tabLinks = Array.from(document.querySelectorAll('[data-tab-link]'));
-    const weeklyFrame = document.getElementById('weekly-intro-frame');
-    let weeklyDoc = document;
+    // Weekly tab uses embedded layout directly in the DOM.
     let weeklyStatusEl = null;
     let weeklyThisRoundEl = null;
     let weeklyThisDateEl = null;
@@ -175,38 +174,112 @@ document.addEventListener('DOMContentLoaded', () => {
         trendChart = root.getElementById('trend-chart');
     }
 
-    function resizeWeeklyFrame() {
-        if (!weeklyFrame || !weeklyFrame.contentDocument) {
+    function normalizeWeeklyLinks() {
+        const root = document.getElementById('tab-weekly');
+        if (!root) {
             return;
         }
-        const doc = weeklyFrame.contentDocument;
-        const height = Math.max(
-            doc.body ? doc.body.scrollHeight : 0,
-            doc.documentElement ? doc.documentElement.scrollHeight : 0
-        );
-        if (height > 0) {
-            weeklyFrame.style.height = `${height}px`;
+        const prefix = 'https://www.dhlottery.co.kr';
+        root.querySelectorAll('[src]').forEach(el => {
+            const src = el.getAttribute('src');
+            if (src && src.startsWith('/')) {
+                el.setAttribute('src', `${prefix}${src}`);
+            }
+        });
+        root.querySelectorAll('a[href]').forEach(el => {
+            const href = el.getAttribute('href');
+            if (href && href.startsWith('/')) {
+                el.setAttribute('href', `${prefix}${href}`);
+            }
+        });
+    }
+
+    function initWeeklyIntroUi() {
+        const root = document.getElementById('tab-weekly');
+        if (!root) {
+            return;
         }
+        root.querySelectorAll('.draw-tab-container').forEach(container => {
+            const tabs = Array.from(container.querySelectorAll('.draw-tab-li'));
+            const panels = Array.from(container.querySelectorAll('.draw-tab-box'));
+            const setTab = tabId => {
+                tabs.forEach(tab => {
+                    const isActive = tab.id === tabId;
+                    tab.classList.toggle('tagTab', isActive);
+                    tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                });
+                panels.forEach(panel => {
+                    const isActive = panel.getAttribute('aria-labelledby') === tabId;
+                    panel.classList.toggle('tagTab', isActive);
+                    panel.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+                });
+            };
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => setTab(tab.id));
+                const btn = tab.querySelector('button');
+                if (btn) {
+                    btn.addEventListener('click', () => setTab(tab.id));
+                }
+            });
+        });
+
+        const popupBtn = root.querySelector('.btn-popup');
+        const popupWrap = root.querySelector('.popup-wrap');
+        const popupBg = popupWrap ? popupWrap.querySelector('.popup-bg') : null;
+        const popupClose = popupWrap ? popupWrap.querySelector('.btn-pop-close') : null;
+        const openPopup = () => {
+            if (!popupWrap) {
+                return;
+            }
+            popupWrap.style.display = 'block';
+        };
+        const closePopup = () => {
+            if (!popupWrap) {
+                return;
+            }
+            popupWrap.style.display = 'none';
+        };
+        if (popupBtn) {
+            popupBtn.addEventListener('click', openPopup);
+        }
+        if (popupBg) {
+            popupBg.addEventListener('click', closePopup);
+        }
+        if (popupClose) {
+            popupClose.addEventListener('click', closePopup);
+        }
+
+        const toggleBtn = root.querySelector('.btn-toggle');
+        const toggleContent = root.querySelector('.toggle-content');
+        if (toggleBtn && toggleContent) {
+            toggleBtn.addEventListener('click', () => {
+                const isOpen = toggleContent.style.display === 'block';
+                toggleContent.style.display = isOpen ? 'none' : 'block';
+            });
+        }
+
+        const jumpMap = {
+            btnWnStrc: 'wnStrcDiv',
+            btnPrchsMthd: 'prchsMthdDiv'
+        };
+        Object.keys(jumpMap).forEach(btnId => {
+            const btn = root.querySelector(`#${btnId}`);
+            const targetId = jumpMap[btnId];
+            if (!btn || !targetId) {
+                return;
+            }
+            btn.addEventListener('click', () => {
+                const target = root.querySelector(`#${targetId}`) || document.getElementById(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
     }
 
     bindWeeklyElements(document);
-    if (weeklyFrame) {
-        weeklyFrame.addEventListener('load', () => {
-            weeklyDoc = weeklyFrame.contentDocument || weeklyFrame.contentWindow?.document || document;
-            bindWeeklyElements(weeklyDoc);
-            resizeWeeklyFrame();
-            fetchLatestDraw();
-            fetchWeeklyIntroInfo();
-            if (latestAvailableRound) {
-                loadRound(latestAvailableRound);
-            }
-            updateWeeklyCountdownDisplay();
-            updateWeeklyNextDrawDisplay();
-        });
-        window.addEventListener('resize', () => {
-            resizeWeeklyFrame();
-        });
-    }
+    normalizeWeeklyLinks();
+    initWeeklyIntroUi();
 
     // 네트워크/초기화 오류와 무관하게 회차 리스트는 먼저 표시한다.
     latestAvailableRound = estimateLatestRound();
@@ -1640,7 +1713,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     weeklyCountdownSubEl.textContent = `제${current.ltEpsd}회 추첨: ${formatKstDateTime(date)} (KST)`;
                 }
             }
-            resizeWeeklyFrame();
         } catch (error) {
             console.warn('intro info fetch failed', error);
         }
@@ -1725,7 +1797,6 @@ document.addEventListener('DOMContentLoaded', () => {
             weeklyThisDateEl.textContent = formatShortDate(getNextSaturdayDrawTime(getKstNow()));
         }
 
-        resizeWeeklyFrame();
     }
 
     function formatCurrency(value) {
