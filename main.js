@@ -133,6 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let qrLastNumbers = [];
     let qrLastMatchedRound = null;
     let weeklyNextDrawOverride = null;
+    let weeklyExpectedOverride = null;
+    let weeklyExpectedUpdatedAt = 0;
 
     function bindWeeklyElements(root) {
         weeklyStatusEl = root.getElementById('weekly-status');
@@ -676,6 +678,9 @@ document.addEventListener('DOMContentLoaded', () => {
         syncInitialTab();
         fetchLatestDraw();
         fetchWeeklyIntroInfo();
+        window.setInterval(() => {
+            fetchWeeklyIntroInfo();
+        }, 60000);
         if (rulesSection) {
             rulesSection.classList.add('rules-collapsed');
         }
@@ -1677,6 +1682,16 @@ document.addEventListener('DOMContentLoaded', () => {
         weeklyNextDrawEl.textContent = `${days}일 ${hours}시간 ${minutes}분`;
     }
 
+    function applyWeeklyExpectedAmount(value, note) {
+        if (!weeklyExpectedAmountEl || value == null) {
+            return;
+        }
+        weeklyExpectedAmountEl.textContent = formatCurrency(value);
+        if (weeklyExpectedNoteEl) {
+            weeklyExpectedNoteEl.textContent = note || '공식 예상';
+        }
+    }
+
     async function fetchWeeklyIntroInfo() {
         try {
             const response = await fetch('/api/lt645-intro', { cache: 'no-store' });
@@ -1690,10 +1705,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const expected = payload.expected;
             const current = payload.current;
             if (expected?.rnk1ExpcAmt && weeklyExpectedAmountEl) {
-                weeklyExpectedAmountEl.textContent = formatCurrency(expected.rnk1ExpcAmt);
-                if (weeklyExpectedNoteEl) {
-                    weeklyExpectedNoteEl.textContent = '공식 예상';
-                }
+                weeklyExpectedOverride = Number(expected.rnk1ExpcAmt);
+                weeklyExpectedUpdatedAt = Date.now();
+                applyWeeklyExpectedAmount(weeklyExpectedOverride, '공식 예상');
             }
             if (current?.ltEpsd && weeklyThisRoundEl) {
                 weeklyThisRoundEl.textContent = `${current.ltEpsd}회`;
@@ -1779,12 +1793,11 @@ document.addEventListener('DOMContentLoaded', () => {
             weeklyRoundHint.textContent = `선택된 회차: ${data.drwNo}회`;
         }
 
-        if (weeklyExpectedAmountEl) {
+        if (weeklyExpectedOverride != null) {
+            applyWeeklyExpectedAmount(weeklyExpectedOverride, '공식 예상');
+        } else if (weeklyExpectedAmountEl) {
             const expected = data.firstAccumamnt || data.firstWinamnt;
-            weeklyExpectedAmountEl.textContent = formatCurrency(expected);
-        }
-        if (weeklyExpectedNoteEl) {
-            weeklyExpectedNoteEl.textContent = `${data.drwNo}회차 기준`;
+            applyWeeklyExpectedAmount(expected, `${data.drwNo}회차 기준`);
         }
         if (weeklyStatusEl) {
             weeklyStatusEl.textContent = `${data.drwNo}회차 당첨 정보가 반영되었습니다.${cached ? ' (캐시)' : ''}`;
