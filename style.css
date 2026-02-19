@@ -264,11 +264,38 @@ body {
     #tab-dashboard {
         margin: -18px -4vw 0;
     }
+    #tab-dashboard .header-girdWrap {
+        grid-template-columns: 1fr;
+    }
+    #tab-dashboard .header-box,
+    #tab-dashboard .header-info,
+    #tab-dashboard .this-week-round {
+        width: 100%;
+    }
+    #tab-dashboard .timer-box {
+        width: 100%;
+        gap: 8px;
+        justify-content: space-between;
+    }
+    #tab-dashboard .time-circle {
+        flex: 1 1 0;
+        min-width: 60px;
+    }
 }
 
 @media (max-width: 640px) {
     #tab-dashboard {
         margin: -16px -4vw 0;
+    }
+    #tab-dashboard .this-week-round {
+        padding: 16px 14px;
+    }
+    #tab-dashboard .timer-box {
+        gap: 6px;
+    }
+    #tab-dashboard .time-circle {
+        min-width: 54px;
+        height: 62px;
     }
 }
 
