@@ -45,10 +45,107 @@ body {
 #tab-weekly {
     padding: 0;
     background: #ffffff;
+    margin: -40px -6vw 0;
+    font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
+    color: #111111;
 }
 
 #tab-weekly .container-box {
     padding-bottom: 80px;
+}
+
+#tab-weekly .header-girdWrap {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+#tab-weekly .header-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#tab-weekly .logo-img {
+    flex: 0 0 auto;
+}
+
+#tab-weekly .this-week-round {
+    flex: 1 1 auto;
+}
+
+#tab-weekly .timer-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#tab-weekly .time-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f3f4f6;
+}
+
+#tab-weekly .time-num {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+#tab-weekly .time-txt {
+    font-size: 12px;
+    line-height: 1;
+}
+
+#tab-weekly .winnings {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#tab-weekly .result-ballBox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+#tab-weekly .result-ball {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+@media (max-width: 960px) {
+    #tab-weekly .header-girdWrap {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-weekly .header-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 960px) {
+    #tab-weekly {
+        margin: -18px -4vw 0;
+    }
+}
+
+@media (max-width: 640px) {
+    #tab-weekly {
+        margin: -16px -4vw 0;
+    }
 }
 
 #tab-weekly .result-ball.ball-1,
