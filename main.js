@@ -63,37 +63,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = Array.from(document.querySelectorAll('.tab-btn[data-tab]'));
     const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
     const tabLinks = Array.from(document.querySelectorAll('[data-tab-link]'));
-    const weeklyStatusEl = document.getElementById('weekly-status');
-    const weeklyRoundBadge = document.getElementById('weekly-round-badge');
-    const weeklyNumbersEl = document.getElementById('weekly-numbers');
-    const weeklyBonusEl = document.getElementById('weekly-bonus');
-    const weeklyDateEl = document.getElementById('weekly-date');
-    const weeklyUpdatedEl = document.getElementById('weekly-updated');
-    const weeklyCard = document.getElementById('weekly-card');
-    const weeklyFirstPrizeEl = document.getElementById('weekly-first-prize');
-    const weeklyFirstWinnersEl = document.getElementById('weekly-first-winners');
-    const weeklyTotalSalesEl = document.getElementById('weekly-total-sales');
-    const weeklyAccumulatedEl = document.getElementById('weekly-accumulated');
-    const weeklyRoundSelect = document.getElementById('weekly-round-select');
-    const weeklyRoundHint = document.getElementById('weekly-round-hint');
-    const weeklyNextDrawEl = document.getElementById('weekly-next-draw');
-    const weeklyCountdownEl = document.getElementById('weekly-countdown');
-    const weeklyCountdownSubEl = document.getElementById('weekly-countdown-sub');
-    const weeklyCountdownDaysEl = document.getElementById('weekly-countdown-days');
-    const weeklyCountdownHoursEl = document.getElementById('weekly-countdown-hours');
-    const weeklyCountdownMinutesEl = document.getElementById('weekly-countdown-minutes');
-    const weeklyCountdownSecondsEl = document.getElementById('weekly-countdown-seconds');
-    const weeklyExpectedAmountEl = document.getElementById('weekly-expected-amount');
-    const weeklyExpectedNoteEl = document.getElementById('weekly-expected-note');
-    const recentRoundsEl = document.getElementById('recent-rounds');
-    const roundSearchInput = document.getElementById('round-search-input');
-    const roundSearchBtn = document.getElementById('round-search-btn');
-    const compareInput = document.getElementById('compare-input');
-    const compareBonusInput = document.getElementById('compare-bonus');
-    const compareBtn = document.getElementById('compare-btn');
-    const compareResult = document.getElementById('compare-result');
-    const recentCountSelect = document.getElementById('recent-count');
-    const trendChart = document.getElementById('trend-chart');
+    const weeklyFrame = document.getElementById('weekly-intro-frame');
+    let weeklyDoc = document;
+    let weeklyStatusEl = null;
+    let weeklyThisRoundEl = null;
+    let weeklyThisDateEl = null;
+    let weeklyLatestRoundEl = null;
+    let weeklyLatestDateEl = null;
+    let weeklyLatestNumbers = [];
+    let weeklyLatestBonusEl = null;
+    let weeklyLatestFirstTotalEl = null;
+    let weeklyLatestFirstEachEl = null;
+    let weeklyLatestFirstWinnersEl = null;
+    let weeklyRoundSelect = null;
+    let weeklyRoundHint = null;
+    let weeklyNextDrawEl = null;
+    let weeklyCountdownEl = null;
+    let weeklyCountdownSubEl = null;
+    let weeklyCountdownDaysEl = null;
+    let weeklyCountdownHoursEl = null;
+    let weeklyCountdownMinutesEl = null;
+    let weeklyCountdownSecondsEl = null;
+    let weeklyExpectedAmountEl = null;
+    let weeklyExpectedNoteEl = null;
+    let recentRoundsEl = null;
+    let roundSearchInput = null;
+    let roundSearchBtn = null;
+    let compareInput = null;
+    let compareBonusInput = null;
+    let compareBtn = null;
+    let compareResult = null;
+    let recentCountSelect = null;
+    let trendChart = null;
     const storeStatusEl = document.getElementById('store-status');
     const storeLocateBtn = document.getElementById('store-locate-btn');
     const storeRetryBtn = document.getElementById('store-retry-btn');
@@ -133,6 +134,79 @@ document.addEventListener('DOMContentLoaded', () => {
     let qrLastNumbers = [];
     let qrLastMatchedRound = null;
     let weeklyNextDrawOverride = null;
+
+    function bindWeeklyElements(root) {
+        weeklyStatusEl = root.getElementById('weekly-status');
+        weeklyThisRoundEl = root.getElementById('thsLtEpsd');
+        weeklyThisDateEl = root.getElementById('thsLtRflYmd');
+        weeklyLatestRoundEl = root.getElementById('pstLtEpsd');
+        weeklyLatestDateEl = root.getElementById('pstLtRflYmd');
+        weeklyLatestNumbers = [
+            root.getElementById('tm1WnNo'),
+            root.getElementById('tm2WnNo'),
+            root.getElementById('tm3WnNo'),
+            root.getElementById('tm4WnNo'),
+            root.getElementById('tm5WnNo'),
+            root.getElementById('tm6WnNo')
+        ];
+        weeklyLatestBonusEl = root.getElementById('bnsWnNo');
+        weeklyLatestFirstTotalEl = root.getElementById('pstRnk1SumWnAmt');
+        weeklyLatestFirstEachEl = root.getElementById('pstRnk1WnAmt');
+        weeklyLatestFirstWinnersEl = root.getElementById('pstRnk1WnNope');
+        weeklyRoundSelect = root.getElementById('weekly-round-select');
+        weeklyRoundHint = root.getElementById('weekly-round-hint');
+        weeklyNextDrawEl = root.getElementById('weekly-next-draw');
+        weeklyCountdownEl = root.getElementById('weekly-countdown');
+        weeklyCountdownSubEl = root.getElementById('weekly-countdown-sub');
+        weeklyCountdownDaysEl = root.getElementById('DD');
+        weeklyCountdownHoursEl = root.getElementById('HH');
+        weeklyCountdownMinutesEl = root.getElementById('MM');
+        weeklyCountdownSecondsEl = root.getElementById('SS');
+        weeklyExpectedAmountEl = root.getElementById('rnk1ExpcAmt');
+        weeklyExpectedNoteEl = root.getElementById('weekly-expected-note');
+        recentRoundsEl = root.getElementById('recent-rounds');
+        roundSearchInput = root.getElementById('round-search-input');
+        roundSearchBtn = root.getElementById('round-search-btn');
+        compareInput = root.getElementById('compare-input');
+        compareBonusInput = root.getElementById('compare-bonus');
+        compareBtn = root.getElementById('compare-btn');
+        compareResult = root.getElementById('compare-result');
+        recentCountSelect = root.getElementById('recent-count');
+        trendChart = root.getElementById('trend-chart');
+    }
+
+    function resizeWeeklyFrame() {
+        if (!weeklyFrame || !weeklyFrame.contentDocument) {
+            return;
+        }
+        const doc = weeklyFrame.contentDocument;
+        const height = Math.max(
+            doc.body ? doc.body.scrollHeight : 0,
+            doc.documentElement ? doc.documentElement.scrollHeight : 0
+        );
+        if (height > 0) {
+            weeklyFrame.style.height = `${height}px`;
+        }
+    }
+
+    bindWeeklyElements(document);
+    if (weeklyFrame) {
+        weeklyFrame.addEventListener('load', () => {
+            weeklyDoc = weeklyFrame.contentDocument || weeklyFrame.contentWindow?.document || document;
+            bindWeeklyElements(weeklyDoc);
+            resizeWeeklyFrame();
+            fetchLatestDraw();
+            fetchWeeklyIntroInfo();
+            if (latestAvailableRound) {
+                loadRound(latestAvailableRound);
+            }
+            updateWeeklyCountdownDisplay();
+            updateWeeklyNextDrawDisplay();
+        });
+        window.addEventListener('resize', () => {
+            resizeWeeklyFrame();
+        });
+    }
 
     // 네트워크/초기화 오류와 무관하게 회차 리스트는 먼저 표시한다.
     latestAvailableRound = estimateLatestRound();
@@ -1372,13 +1446,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function fetchLatestDraw() {
-        if (!weeklyStatusEl || !weeklyRoundBadge || !weeklyNumbersEl || !weeklyBonusEl) {
+        const hasWeeklyUi = Boolean(
+            weeklyLatestRoundEl ||
+            weeklyThisRoundEl ||
+            weeklyExpectedAmountEl ||
+            weeklyLatestNumbers.some(Boolean)
+        );
+        if (!hasWeeklyUi) {
             return;
         }
-        weeklyStatusEl.textContent = '최신 회차 데이터를 확인하고 있습니다. 잠시만 기다려 주세요.';
-        weeklyRoundBadge.textContent = '조회중';
-        if (weeklyCard) {
-            weeklyCard.classList.add('is-loading');
+        if (weeklyStatusEl) {
+            weeklyStatusEl.textContent = '최신 회차 데이터를 확인하고 있습니다. 잠시만 기다려 주세요.';
         }
 
         const cached = getCachedWeekly();
@@ -1390,6 +1468,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const estimatedRound = estimateLatestRound();
         latestAvailableRound = estimatedRound;
+        if (weeklyThisRoundEl && !weeklyThisRoundEl.textContent.trim()) {
+            weeklyThisRoundEl.textContent = `${estimatedRound + 1}회`;
+        }
         syncRoundSearchDefault(estimatedRound);
         initRoundSelect(estimatedRound);
         const maxAttempts = 12;
@@ -1412,14 +1493,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        weeklyStatusEl.textContent = '최신 회차 연결이 지연되고 있습니다. 새로고침하거나 잠시 후 다시 시도해 주세요.';
-        weeklyRoundBadge.textContent = '연동 실패';
-        weeklyRoundBadge.classList.add('muted');
-        if (weeklyCard) {
-            weeklyCard.classList.remove('is-loading');
+        if (weeklyStatusEl) {
+            weeklyStatusEl.textContent = '최신 회차 연결이 지연되고 있습니다. 새로고침하거나 잠시 후 다시 시도해 주세요.';
         }
         if (hasCached) {
-            weeklyStatusEl.textContent = '실시간 연결이 지연되어 마지막 저장 데이터를 표시합니다.';
+            if (weeklyStatusEl) {
+                weeklyStatusEl.textContent = '실시간 연결이 지연되어 마지막 저장 데이터를 표시합니다.';
+            }
             if (cached?.data?.drwNo) {
                 initRoundSelect(cached.data.drwNo);
                 latestAvailableRound = cached.data.drwNo;
@@ -1505,6 +1585,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (weeklyCountdownSubEl) {
             weeklyCountdownSubEl.textContent = `다음 추첨: ${formatKstDateTime(nextDraw)} (KST)`;
         }
+        if (weeklyThisDateEl && !weeklyThisDateEl.textContent.trim()) {
+            weeklyThisDateEl.textContent = formatShortDate(nextDraw);
+        }
     }
 
     function updateWeeklyNextDrawDisplay() {
@@ -1539,6 +1622,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     weeklyExpectedNoteEl.textContent = '공식 예상';
                 }
             }
+            if (current?.ltEpsd && weeklyThisRoundEl) {
+                weeklyThisRoundEl.textContent = `${current.ltEpsd}회`;
+            }
+            if (current?.ltRflYmd && weeklyThisDateEl) {
+                weeklyThisDateEl.textContent = formatShortDate(current.ltRflYmd);
+            }
             if (current?.ltRflYmd && current?.ltRflHh != null && current?.ltRflMm != null) {
                 const date = new Date(`${String(current.ltRflYmd).slice(0, 4)}-${String(current.ltRflYmd).slice(4, 6)}-${String(current.ltRflYmd).slice(6, 8)}T00:00:00+09:00`);
                 date.setHours(Number(current.ltRflHh));
@@ -1551,6 +1640,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     weeklyCountdownSubEl.textContent = `제${current.ltEpsd}회 추첨: ${formatKstDateTime(date)} (KST)`;
                 }
             }
+            resizeWeeklyFrame();
         } catch (error) {
             console.warn('intro info fetch failed', error);
         }
@@ -1584,40 +1674,39 @@ document.addEventListener('DOMContentLoaded', () => {
             data.drwtNo6
         ].filter(Boolean);
 
-        weeklyRoundBadge.textContent = `${data.drwNo}회`;
-        weeklyRoundBadge.classList.remove('muted');
-        if (weeklyRoundSelect) {
-            weeklyRoundSelect.value = String(data.drwNo);
+        if (weeklyLatestRoundEl) {
+            weeklyLatestRoundEl.textContent = `${data.drwNo}회`;
         }
-        weeklyNumbersEl.innerHTML = '';
-        numbers.forEach(value => {
-            const el = document.createElement('div');
-            el.className = 'number';
-            el.textContent = value;
-            weeklyNumbersEl.appendChild(el);
+        if (weeklyLatestDateEl) {
+            weeklyLatestDateEl.textContent = data.drwNoDate ? `${data.drwNoDate} 추첨` : '';
+        }
+        weeklyLatestNumbers.forEach((el, index) => {
+            const value = numbers[index];
+            if (!el) {
+                return;
+            }
+            el.textContent = value || '-';
+            applyBallStyle(el, value);
         });
-        weeklyBonusEl.textContent = data.bnusNo || '-';
-        weeklyDateEl.textContent = `추첨일: ${data.drwNoDate || '-'}`;
-        if (weeklyUpdatedEl) {
-            weeklyUpdatedEl.textContent = `업데이트: ${formatKstDateTime(getKstNow())}${cached ? ' (캐시)' : ''}`;
+        if (weeklyLatestBonusEl) {
+            weeklyLatestBonusEl.textContent = data.bnusNo || '-';
+            applyBallStyle(weeklyLatestBonusEl, data.bnusNo);
+        }
+        if (weeklyLatestFirstTotalEl) {
+            const total = data.firstAccumamnt || (data.firstWinamnt && data.firstPrzwnerCo ? data.firstWinamnt * data.firstPrzwnerCo : null);
+            weeklyLatestFirstTotalEl.textContent = formatCurrency(total);
+        }
+        if (weeklyLatestFirstEachEl) {
+            weeklyLatestFirstEachEl.textContent = formatEokAmount(data.firstWinamnt);
+        }
+        if (weeklyLatestFirstWinnersEl) {
+            weeklyLatestFirstWinnersEl.textContent = formatNumber(data.firstPrzwnerCo || 0);
         }
         updateWeeklyNextDrawDisplay();
         if (weeklyRoundHint) {
             weeklyRoundHint.textContent = `선택된 회차: ${data.drwNo}회`;
         }
 
-        if (weeklyFirstPrizeEl) {
-            weeklyFirstPrizeEl.textContent = formatCurrency(data.firstWinamnt);
-        }
-        if (weeklyFirstWinnersEl) {
-            weeklyFirstWinnersEl.textContent = `${formatNumber(data.firstPrzwnerCo || 0)}명`;
-        }
-        if (weeklyTotalSalesEl) {
-            weeklyTotalSalesEl.textContent = formatCurrency(data.totSellamnt);
-        }
-        if (weeklyAccumulatedEl) {
-            weeklyAccumulatedEl.textContent = formatCurrency(data.firstAccumamnt);
-        }
         if (weeklyExpectedAmountEl) {
             const expected = data.firstAccumamnt || data.firstWinamnt;
             weeklyExpectedAmountEl.textContent = formatCurrency(expected);
@@ -1628,9 +1717,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (weeklyStatusEl) {
             weeklyStatusEl.textContent = `${data.drwNo}회차 당첨 정보가 반영되었습니다.${cached ? ' (캐시)' : ''}`;
         }
-        if (weeklyCard) {
-            weeklyCard.classList.remove('is-loading');
+
+        if (weeklyThisRoundEl && !weeklyThisRoundEl.textContent.trim()) {
+            weeklyThisRoundEl.textContent = `${Number(data.drwNo) + 1}회`;
         }
+        if (weeklyThisDateEl && !weeklyThisDateEl.textContent.trim()) {
+            weeklyThisDateEl.textContent = formatShortDate(getNextSaturdayDrawTime(getKstNow()));
+        }
+
+        resizeWeeklyFrame();
     }
 
     function formatCurrency(value) {
@@ -1638,6 +1733,53 @@ document.addEventListener('DOMContentLoaded', () => {
             return '-';
         }
         return `${formatNumber(value)}원`;
+    }
+
+    function formatShortDate(value) {
+        if (!value) {
+            return '';
+        }
+        if (value instanceof Date) {
+            const year = value.getFullYear();
+            const month = String(value.getMonth() + 1).padStart(2, '0');
+            const day = String(value.getDate()).padStart(2, '0');
+            return `${year}.${month}.${day}`;
+        }
+        const digits = String(value).replace(/[^\d]/g, '');
+        if (digits.length === 8) {
+            return `${digits.slice(0, 4)}.${digits.slice(4, 6)}.${digits.slice(6, 8)}`;
+        }
+        return String(value);
+    }
+
+    function formatEokAmount(value) {
+        if (!value && value !== 0) {
+            return '-';
+        }
+        const eok = Math.round((Number(value) / 100000000) * 10) / 10;
+        return Number.isInteger(eok) ? String(eok) : eok.toFixed(1).replace(/\.0$/, '');
+    }
+
+    function applyBallStyle(el, value) {
+        if (!el) {
+            return;
+        }
+        el.classList.remove('ball-1', 'ball-2', 'ball-3', 'ball-4', 'ball-5');
+        const num = Number(value);
+        if (!Number.isFinite(num)) {
+            return;
+        }
+        if (num <= 10) {
+            el.classList.add('ball-1');
+        } else if (num <= 20) {
+            el.classList.add('ball-2');
+        } else if (num <= 30) {
+            el.classList.add('ball-3');
+        } else if (num <= 40) {
+            el.classList.add('ball-4');
+        } else {
+            el.classList.add('ball-5');
+        }
     }
 
     function updateRulesStatus(message) {
@@ -2074,12 +2216,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadRound(round) {
-        if (!weeklyStatusEl) {
+        const hasWeeklyUi = Boolean(
+            weeklyLatestRoundEl ||
+            weeklyThisRoundEl ||
+            weeklyExpectedAmountEl ||
+            weeklyLatestNumbers.some(Boolean)
+        );
+        if (!hasWeeklyUi) {
             return;
         }
-        weeklyStatusEl.textContent = `${round}회차 데이터를 조회하고 있습니다.`;
-        if (weeklyCard) {
-            weeklyCard.classList.add('is-loading');
+        if (weeklyStatusEl) {
+            weeklyStatusEl.textContent = `${round}회차 데이터를 조회하고 있습니다.`;
         }
         const cached = getCachedRound(round);
         if (cached && cached.data) {
@@ -2097,12 +2244,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderTrendChart([data]);
                 }
                 updateRecentActive(round);
-            } else {
+            } else if (weeklyStatusEl) {
                 weeklyStatusEl.textContent = '해당 회차 데이터가 아직 공개되지 않았습니다.';
             }
         } catch (error) {
             logProxyError('loadRound', error, { round });
-            if (!cached) {
+            if (!cached && weeklyStatusEl) {
                 weeklyStatusEl.textContent = '회차 조회에 실패했습니다. 네트워크를 확인하고 다시 시도해 주세요.';
             }
         }

@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>로또6/45 소개</title>
+  <base href="https://www.dhlottery.co.kr/">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <link rel="stylesheet" type="text/css" crossorigin href="https://cdn.jsdelivr.net/gh/leetaewook/gmarket-sans-dynamic-subset/GmarketSans.css" />
+  <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/swiper/swiper-bundle.css">
+  <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/common.css?v=20260213">
+  <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/layout.css?v=20260212">
+  <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/main-layout.css?v=20260212">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #f5f7fa;
+      color: #1f2937;
+    }
+    body {
+      font-family: Pretendard, "Gmarket Sans", sans-serif;
+    }
+    .container-box {
+      padding-bottom: 80px;
+    }
+    .result-ball.ball-1,
+    .time-circle.ball-1,
+    .ball-1 {
+      background: #fbc400;
+      color: #ffffff;
+    }
+    .result-ball.ball-2,
+    .time-circle.ball-2,
+    .ball-2 {
+      background: #69c8f2;
+      color: #ffffff;
+    }
+    .result-ball.ball-3,
+    .time-circle.ball-3,
+    .ball-3 {
+      background: #ff7272;
+      color: #ffffff;
+    }
+    .result-ball.ball-4,
+    .time-circle.ball-4,
+    .ball-4 {
+      background: #aaaaaa;
+      color: #ffffff;
+    }
+    .result-ball.ball-5,
+    .time-circle.ball-5,
+    .ball-5 {
+      background: #b0d840;
+      color: #ffffff;
+    }
+    .tab-panel-filler {
+      height: 24px;
+    }
+  </style>
+</head>
+<body>
+	<div class="container-box">
+		<!-- bread-crumb start-->
+		<div class="bread-crumb">
+			<ul class="nav-ul">
+				<li class="nav-li"><a class="nav-a"> <img
+						src="/resources/img/icon/icon_nav_home.svg" alt="홈"></a></li>
+				<li class="nav-li"><a class="nav-a"> 추첨식 복권 </a></li>
+				<li class="nav-li"><a class="nav-a"> 로또6/45 </a></li>
+				<li class="nav-li"><a class="nav-a active"> 로또6/45소개 </a></li>
+			</ul>
+		</div>
+		<!-- bread-crumb end -->
+		<!-- 콘텐츠 타이틀 -->
+		<div class="content-tit-wrap">
+			<div class="center-wrap">
+				<h2 class="content-tit">로또6/45 소개</h2>
+			</div>
+		</div>
+		<div class="content-draw-wrap lt645">
+			<div class="draw-header">
+				<!-- 클래스에 따라 배경 변함 -->
+				<div class="center-wrap">
+					<div class="header-girdWrap">
+						<div class="header-box">
+							<div class="header-top">
+								1,000원<span class="color-gray">/ 1게임</span>
+							</div>
+							<div class="header-info">
+								<figure class="logo-img"> <img
+									src="/resources/img/images/img-draw-hLogo01.svg" alt="로또6/45"></figure>
+								<div class="this-week-round">
+									<div class="round" id="thsLtEpsd"></div>
+									<div class="date">
+										<span class="color-lt645" id="thsLtRflYmd"> </span> &nbsp;추첨
+										예정
+									</div>
+									<div class="time">남은시간</div>
+									<div class="timer-box">
+										<div class="time-circle">
+											<div class="time-num" id="DD"></div>
+											<div class="time-txt">일</div>
+										</div>
+										<!-- <div class="time-colon">
+	                                    :
+	                                </div> -->
+										<div class="time-circle">
+											<div class="time-num" id="HH"></div>
+											<div class="time-txt">시</div>
+										</div>
+										<!-- <div class="time-colon">
+	                                    :
+	                                </div> -->
+										<div class="time-circle">
+											<div class="time-num" id="MM"></div>
+											<div class="time-txt">분</div>
+										</div>
+										<!-- <div class="time-colon">
+	                                    :
+	                                </div> -->
+										<div class="time-circle">
+											<div class="time-num" id="SS"></div>
+											<div class="time-txt">초</div>
+										</div>
+									</div>
+									<div class="winnings-txt">1등 예상 총 당첨금</div>
+									<div class="winnings" id="rnk1ExpcAmt"></div>
+									<button class="btn-butNow" type="button" id="btnBuyLt645"
+										title="새창">바로구매</button>
+									<div class="winnings-txt">구매한도 5천 원/1회차</div>
+								</div>
+							</div>
+						</div>
+						<div class="header-box">
+							<div class="result-infoWrap">
+								<div class="result-txt">최근 추첨 결과</div>
+								<div class="result-round" id="pstLtEpsd"></div>
+								<div class="result-date" id="pstLtRflYmd"></div>
+								<div class="result-ballWrapper">
+									<div class="result-ballBox">
+										<div class="result-ball" id="tm1WnNo"></div>
+										<div class="result-ball" id="tm2WnNo"></div>
+										<div class="result-ball" id="tm3WnNo"></div>
+										<div class="result-ball" id="tm4WnNo"></div>
+										<div class="result-ball" id="tm5WnNo"></div>
+										<div class="result-ball" id="tm6WnNo"></div>
+										<figure> <img
+											src="/resources/img/icon/icon-result-plus.svg" alt="+"></figure>
+										<div class="result-ball" id="bnsWnNo"></div>
+									</div>
+									<div class="result-txtBox">
+										<div class="main-txtWrap">
+											<div class="main-txt">당첨번호</div>
+										</div>
+										<div class="bonus-txt">보너스번호</div>
+									</div>
+								</div>
+								<div class="result-winnings-txt">1등 당첨금</div>
+								<div class="result-winnings-num">
+									<span class="fs-g7" id="pstRnk1SumWnAmt"></span>
+								</div>
+								<div class="result-detail">
+									(<span id="pstRnk1WnAmt"></span>억 원 × <span id="pstRnk1WnNope"></span>명)
+								</div>
+							</div>
+							<div class="header-goWrap">
+								<button class="btn-go" type="button" id="btnWnStrc">당첨구조</button>
+								<button class="btn-go" type="button" id="btnPrchsMthd">구매방법</button>
+								<button class="btn-go btn-up" type="button" id="btnRflBrct"
+									title="새창">추첨방송</button>
+								<button class="btn-go btn-lg01" type="button" id="btnRflRslt">회차별
+									추첨결과</button>
+								<button class="btn-go btn-lg02 btnWnrGuide" type="button">당첨자
+									가이드</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="center-wrap">
+				<!-- 로또645 메인 상단 텍스트 -->
+				<div class="draw-wrapper">
+					<div class="main-txt-wrap">
+						<p class="txt-center">
+							게임방법 <br></br>
+						</p>
+						<p class="txt-center">
+							<span class="color-lt645">1~45</span>까지 숫자 중 <span
+								class="color-lt645">내가 선택한 6개 숫자</span>와
+						</p>
+						<p class="txt-center">
+							추첨으로 결정된 숫자가 <span class="color-lt645">일치하는 개수</span>에 따라 당첨!
+						</p>
+					</div>
+					<div class="main-info-grid">
+						<div class="info-box">
+							<div class="info-cate">판매처</div>
+							<div class="info-flex">
+								<div class="info-txtWrap">
+									<ul class="info-ul">
+										<li class="info-li">
+											<div class="info-dot">&#8226;</div>
+											<div class="info-txt">
+												전국 <span class="color-lt645">로또복권 판매점</span>
+											</div>
+										</li>
+										<li class="info-li">
+											<div class="info-dot">&#8226;</div>
+											<div class="info-txt">
+												<span class="color-lt645">인터넷</span><span class="fs-sm"> (동행복권
+													홈페이지)</span>
+											</div>
+										</li>
+									</ul>
+								</div>
+								<div class="info-imgWrap">
+									<figure class="img-bg"> <img
+										src="/resources/img/icon/icon-draw-lt01.svg" alt=""></figure>
+								</div>
+							</div>
+						</div>
+						<div class="info-box">
+							<div class="info-cate">판매시간</div>
+							<div class="info-flex">
+								<div class="info-txtWrap">
+									<ul class="info-ul">
+										<li class="info-li">
+											<div class="txt-head">일 ~ 금</div>
+											<div class="txt-tail">06:00 ~ 24:00</div>
+										</li>
+										<li class="info-li">
+											<div class="txt-head">
+												토&nbsp;<span class="fs-sm">(추첨)</span>
+											</div>
+											<div class="txt-tail">06:00 ~ 20:00</div>
+										</li>
+									</ul>
+									<div class="info-txt fs-15">※ 인터넷 기준, 판매점 사정에 따라 상이</div>
+								</div>
+								<div class="info-imgWrap">
+									<figure class="img-bg"> <img
+										src="/resources/img/icon/icon-draw-lt02.svg" alt=""></figure>
+								</div>
+							</div>
+						</div>
+						<div class="info-box">
+							<div class="info-cate">추첨시간</div>
+							<div class="info-flex">
+								<div class="info-txtWrap">
+									<div class="info-txt">
+										매주 토요일 <span class="color-lt645">20 : 35분 경</span>
+									</div>
+									<div class="info-txt fs-15">※ 방송국(MBC) 사정에 따라 변동 가능</div>
+								</div>
+								<div class="info-imgWrap">
+									<figure class="img-bg"> <img
+										src="/resources/img/icon/icon-draw-lt03.svg" alt=""></figure>
+								</div>
+							</div>
+						</div>
+						<div class="info-box">
+							<div class="info-cate">
+								당첨금 지급률 <span class="fs-sm">(환급률)</span>
+							</div>
+							<div class="info-flex">
+								<div class="info-txtWrap">
+									<div class="info-txt">
+										판매액의 <span class="color-lt645">50%</span>
+									</div>
+								</div>
+								<div class="info-imgWrap">
+									<figure class="img-bg"> <img
+										src="/resources/img/icon/icon-draw-lt04.svg" alt=""></figure>
+								</div>
+							</div>
+						</div>
+						<div class="info-box">
+							<div class="info-cate">당첨확률</div>
+							<div class="info-flex">
+								<div class="info-txtWrap">
+									<ul class="info-ul">
+										<li class="info-li">
+											<div class="txt-head">1 등</div>
+											<div class="txt-tail">1/8,145,060</div>
+										</li>
+										<li class="info-li">
+											<div class="txt-head">
+												전체
+											</div>
+											<div class="txt-tail">1/42</div>
+										</li>
+									</ul>
+								</div>
+								<div class="info-imgWrap">
+									<figure class="img-bg"> <img
+										src="/resources/img/icon/icon-draw-lt05.svg" alt=""></figure>
+								</div>
+							</div>
+						</div>
+						<div class="info-box">
+							<div class="info-cate">확률상 1등 당첨금</div>
+							<div class="info-flex">
+								<div class="info-txtWrap">
+									<div class="info-txt">
+										약 <span class="color-lt645">19.5억 원</span>/1게임
+									</div>
+								</div>
+								<div class="info-imgWrap">
+									<figure class="img-bg"> <img
+										src="/resources/img/icon/icon-draw-lt06.svg" alt=""></figure>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 로또645 메인 중간 이미지 -->
+				<div class="img-wrap draw-img-wrap">
+					<div class="img-box">
+						<figure class="main-imgWrap"> 
+							<img src="/resources/img/images/img-draw-lt645.png" alt="로또6/45" aria-describedby="lt645-detail">
+							<div class="hidden" id="lt645-detail">
+								<ul>
+									<li>당첨금 지급기한 당첨금 지급처 영업시간내 해당기한까지 당첨금 지급을 요청하지 않을 경우 해당
+										당첨금은 복권기금으로 귀속됩니다.</li>
+									<li>구매자용 당첨확인 QR코드 동행복권 앱 또는 기타 QR코드 앱을 이용하여 스캔하면 당첨여부를
+										확인할 수 있습니다. ※당첨확인 편의를 위한 기능일 뿐이며, 당첨금은 실물 티켓 소지자에게만 지급됩니다.</li>
+									<li>판매인용 당첨복권 검증코드 당첨금 지급 처리를 위해 인쇄된 검증용 코드이며, 복권 위변조 여부
+										등을 확인합니다.</li>
+								</ul>
+								<div>이 복권을 구매하시는 분들에게</div>
+								<ol>
+									<li>1. 이 복권을 구입하신 대금은 반환하지 않습니다.</li>
+									<li>2. 당첨금은 지급 장소에 해단복권을 제시하여 당첨확인절차를 거친 후 당첨된 복권 소지자에게
+										지급합니다.</li>
+									<li>3. 당첨금 지급처 :
+										<table summary="당첨금 지급처 설명">
+											<caption>당첨금 지급처 표</caption>
+											<tbody>
+												<tr>
+													<th scope="col">당첨등위(1매 최상위 기준)</th>
+													<th scope="col">1등</th>
+													<th scope="col">2등, 3등</th>
+													<th scope="col">4등(5만원), 5등(5천원)</th>
+												</tr>
+												<tr>
+													<th scope="row">지급처</th>
+													<td>NH농협은행 본점</td>
+													<td>NH농협은행 전국지점</td>
+													<td>로또복권 판매점</td>
+												</tr>
+											</tbody>
+										</table>
+									</li>
+									<li>4. 당첨금 지급기한은 지급개시일로부터 1년까지이며 지급기한 이내에 해당 지급처(영업시간 내)에
+										당첨금 지급청구를 하여야 하며 이 경우 지급기한 종료일이 은행 영업일이 아니면 다음 은행 영업일이 지급기한
+										종료일로 변경됩니다.</li>
+									<li>5. 당첨금은 복권 전면에 표시된 지급기한까지 찾아가지 않으면 「복권 및 복권기금법」에 따라
+										복권기금에 귀속되어 공익사업에 사용되게 됩니다.</li>
+									<li>6. 복권을 도난, 분실, 오염, 훼손하였을 경우에는 복권을 재교부할 수 없으며, 복권이 훼손된
+										경우 복권의 1/2이상 원형이 보존되고 컴퓨터 인식이 가능한 복권에 한하여 당첨금을 지급합니다.</li>
+									<li>7. 당첨금이 200만 원을 초과하는 경우 당첨금에 대한 제세금은 당첨자 본인이 부담하여야 하며,
+										소득세법에 따라 원천징수됩니다.</li>
+									<li>8. 200만원 초과 당첨금은 실명확인증표(주민등록증 등)를 지참하시고, 해당 당첨금 지급처에
+										방문하시어 아래란에 성명과 주민등록번호를 본인이 직접 기재하고 서명 또는 날인하여 청구하셔야 합니다.</li>
+								</ol>
+								<p>※상기 사항은 복권위원회 정책에 따라 변경될 수 있습니다.</p>
+								<p>※인터넷을 통한 복권 구매자에게는 해당 사이트의 별도 약관에 따라 당첨금을 지급합니다.</p>
+							</div>
+						</figure>
+						<button type="button" class="btn-plus-squr btn-popup">
+							<span class="ico-plus">+</span>
+						</button>
+						<!-- pop-up start -->
+						<div class="popup-wrap">
+							<div class="popup-bg"></div>
+							<div class="pop-up">
+								<div class="pop-up-wrapper w-winner">
+									<div class="pop-head">
+										<div class="pop-head-tit">로또6/45</div>
+										<button class="btn-pop-close">
+											<figure> <img
+												src="/resources/img/icon/icon-pop-close.png"></figure>
+										</button>
+									</div>
+									<div class="pop-body">
+										<img src="/resources/img/images/img-draw-lt645.png" alt="로또6/45" aria-describedby="lt645-detail">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+
+
+
+			</div>
+			<div class="draw-bg">
+				<div class="center-wrap">
+					<div class="profit-wrap">
+						<div class="profit-grid">
+							<div class="profit-titWrap">
+								<div class="profit-cate">로또6/45 판매액</div>
+								<div class="profit-txt">이렇게 쓰여요!</div>
+								<div class="profit-info">판매액 배분 구조</div>
+							</div>
+							<div class="profit-imgWrap">
+								<figure> <img
+									src="/resources/img/images/img-graph-lt645.svg"
+									alt="판매액 배분 구조 : 당첨금 50%, 복권기금 43.6%, 판매점 수수료 5.4%, 기타 사업운영비 1.0%">
+									<img src="/resources/img/images/mo_bg_draw_sample_1.png"
+									class="mo-img"
+									alt="판매액 배분 구조 : 당첨금 50%, 복권기금 43.6%, 판매점 수수료 5.4%, 기타 사업운영비 1.0%"></figure>
+							</div>
+							<div class="profit-btnWrap">
+								<button class="btn-viewProfit" id="btnLtFdfd">복권 기금사업활동
+									보기</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="center-wrap">
+				<div class="draw-wrapper">
+					<div class="main-tit" id="wnStrcDiv">당첨구조</div>
+					<div class="main-strctr-tbl-wrapper">
+						<div class="main-strctr-tbl" role="table" aria-label="당첨구조에 대한 설명">
+							<div class="tbl-tr thead" role="row">
+								<div class="td-rank" role="columnheader">등위</div>
+								<div class="td-condition" role="columnheader">당첨조건</div>
+								<div class="td-money" role="columnheader">당첨금</div>
+								<div class="td-probability" role="columnheader">당첨확률</div>
+							</div>
+							<div class="tbl-tr tbody" role="row">
+								<div class="td-rank" role="cell">1등</div>
+								<div class="td-condition" role="cell">
+									<div class="txt">
+										<span class="color-lt645"> 6</span>개 번호 일치
+									</div>
+									<figure> <img
+										src="/resources/img/images/img-lt645-condition01.svg" alt=""></figure>
+								</div>
+								<div class="td-money" role="cell">총 당첨금 중 4등, 5등 금액을 제외한
+									금액의 75%</div>
+								<div class="td-probability" role="cell">1/ 8,145,060</div>
+							</div>
+							<div class="tbl-tr tbody" role="row">
+								<div class="td-rank" role="cell">2등</div>
+								<div class="td-condition" role="cell">
+									<div class="txt">
+										<span class="color-lt645"> 5</span>개 번호 일치 + <span
+											class="color-lt645">보너스</span> 번호 일치
+									</div>
+									<figure> <img
+										src="/resources/img/images/img-lt645-condition02.svg" alt=""></figure>
+								</div>
+								<div class="td-money" role="cell">총 당첨금 중 4등, 5등 금액을 제외한
+									금액의 12.5%</div>
+								<div class="td-probability" role="cell">1/ 1,357,510</div>
+							</div>
+							<div class="tbl-tr tbody" role="row">
+								<div class="td-rank" role="cell">3등</div>
+								<div class="td-condition" role="cell">
+									<div class="txt">
+										<span class="color-lt645"> 5</span>개 번호 일치
+									</div>
+									<figure> <img
+										src="/resources/img/images/img-lt645-condition03.svg" alt=""></figure>
+								</div>
+								<div class="td-money" role="cell">총 당첨금 중 4등, 5등 금액을 제외한
+									금액의 12.5%</div>
+								<div class="td-probability" role="cell">1/ 35,724</div>
+							</div>
+							<div class="tbl-tr tbody" role="row">
+								<div class="td-rank" role="cell">4등</div>
+								<div class="td-condition" role="cell">
+									<div class="txt">
+										<span class="color-lt645"> 4</span>개 번호 일치
+									</div>
+									<figure> <img
+										src="/resources/img/images/img-lt645-condition04.svg" alt=""></figure>
+								</div>
+								<div class="td-money" role="cell">50,000원</div>
+								<div class="td-probability" role="cell">1/ 733</div>
+							</div>
+							<div class="tbl-tr tbody" role="row">
+								<div class="td-rank" role="cell">5등</div>
+								<div class="td-condition" role="cell">
+									<div class="txt">
+										<span class="color-lt645"> 3</span>개 번호 일치
+									</div>
+									<figure> <img
+										src="/resources/img/images/img-lt645-condition05.svg" alt=""></figure>
+								</div>
+								<div class="td-money" role="cell">5,000원</div>
+								<div class="td-probability" role="cell">1/ 45</div>
+							</div>
+						</div>
+					</div>
+					<ul class="dbchck-ul mt-40">
+						<li class="dbchck-li"><figure> <img
+								src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
+							<div class="dbchck-txt">
+								총 당첨금은 로또 <span class="color-p">전체 판매액의 50%</span>이며, <span
+									class="color-p">40% 이상은 복권기금</span>으로 활용됩니다.
+							</div></li>
+						<li class="dbchck-li"><figure> <img
+								src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
+							<div class="dbchck-txt">1등·2등·3등 당첨금은 해당 회차의 총 판매액에 의해
+								결정되며, 등위별 해당금액을 당첨자 수로 나누어 지급합니다.</div></li>
+						<li class="dbchck-li"><figure> <img
+								src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
+							<div class="dbchck-txt">
+								1등 당첨자가 발생하지 않는 경우 1등 당첨금은 이월되어 다음 회차 1등 당첨금에 더해집니다. 또한 1등뿐만 아니라
+								직하위 당첨자도 없는 경우에는 직하위 당첨금도 포함하여 다음 회차 1등 당첨금에 더해집니다. <br>
+									예를 들어 1등·2등이 모두 발생하지 않는 경우에는 1등·2등 당첨금이 모두 합해져 다음 회차 1등 당첨금에
+									더해지며, 1등·2등·3등이 모두 없는 경우에는 1등·2등·3등 당첨금이 모두 합해져 다음 회차 1등 당첨금에
+									더해지게 됩니다. 
+							</div></li>
+						<li class="dbchck-li"><figure> <img
+								src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
+							<div class="dbchck-txt">상위 당첨자가 발생한 상황에서 하위 등위에 당첨자가 없는
+								경우에는 해당 당첨금은 이월되지 않고 직상위 당첨금에 포함되어 지급됩니다. 예를 들어 2등 당첨자가 발생하지 않는
+								상황에서 1등 당첨자가 발생할 경우 1등 당첨자에게 1등·2등 당첨금을 모두 지급합니다.</div></li>
+						<li class="dbchck-li"><figure> <img
+								src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
+							<div class="dbchck-txt">당첨금 이월은 최대 연속 두 번까지 가능하며, 연속 두 번의
+								이월 후에도 1등 당첨자가 없을 경우 1등 당첨금은 직하위 당첨금에 더해집니다. 예를 들어 연속 두 번의 이월 후에도
+								1등·2등이 모두 없는 경우에는 1등·2등 당첨금이 3등 당첨금에 더해지게 되며, 1등·2등·3등이 모두 없는
+								경우에는 해당 당첨금은 국가 기금으로 귀속됩니다. 단, 최대 연속 이월 횟수는 정부정책에 의거 변경될 수 있습니다.
+							</div></li>
+					</ul>
+					<div class="main-tit">이용안내 동영상</div>
+					<div class="draw-tab-container">
+						<ul class="draw-tab-ul video" role="tablist">
+							<li class="draw-tab-li tagTab" id="tab-a-1" role="tab"
+								aria-selected="true" aria-controls="panel-a-1">
+								<button type="button">PC 구매안내</button>
+							</li>
+							<li class="draw-tab-li" id="tab-a-2" role="tab"
+								aria-selected="false" aria-controls="panel-a-2">
+								<button type="button">모바일 구매안내</button>
+							</li>
+						</ul>
+						<div class="draw-tab-boxWrap">
+							<div class="draw-tab-box tagTab" id="panel-a-1" role="tabpanel"
+								aria-labelledby="tab-a-1" aria-expanded="true">
+								<div class="main-videoWrap lotto">
+									<div class="video-wrap">
+										<iframe frameborder="0" src="https://www.youtube.com/embed/npVrSy8St4g"></iframe>
+									</div>
+								</div>
+							</div>
+							<div class="draw-tab-box" id="panel-a-2" role="tabpanel"
+								aria-labelledby="tab-a-2" aria-expanded="false">
+								<div class="main-videoWrap lotto">
+									<div class="video-wrap">
+										<iframe frameborder="0" src="https://www.youtube.com/embed/Sz2OxuAiINw"></iframe>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>					
+					
+					<div class="draw-chk-info">
+						<div class="chk-title-wrap btn-toggle-wrap">
+							<div class="chk-tit">
+								<figure> <img src="/resources/img/icon/icon_check.svg"
+									alt=""></figure>
+								<span class="chk-txt">잠깐 ! 꼭 알아두세요. 현명한 복권 구매자의 행동수칙</span>
+							</div>
+							<!-- 모바일만 출력// -->
+							<button type="button" class="btn-toggle">
+								<span class="ico arrow"></span>
+							</button>
+							<!-- //모바일만 출력 -->
+						</div>
+						<div class="toggle-content">
+							<ul class="chk-ul">
+								<li class="chk-li">
+									<div class="chk-dot">&#8226;</div>
+									<div class="chk-detail">19세 미만은 「복권 및 복권기금법」에 따라 복권을 구매할
+										수 없습니다.</div>
+								</li>
+								<li class="chk-li">
+									<div class="chk-dot">&#8226;</div>
+									<div class="chk-detail">판매점에서는 1인당 최대 1회 10만 원까지 구매할 수
+										있습니다.</div>
+								</li>
+								<li class="chk-li">
+									<div class="chk-dot">&#8226;</div>
+									<div class="chk-detail">인터넷 구매 시 한 회차에 1인당 최대 5천 원까지 구매할
+										수 있습니다.</div>
+								</li>
+								<li class="chk-li">
+									<div class="chk-dot">&#8226;</div>
+									<div class="chk-detail">당 사이트에서는 각 상품별 구매한도 내에서 통합 1일 15만 원까지 구매할 수 있습니다.</div>
+								</li>
+								<li class="chk-li">
+									<div class="chk-dot">&#8226;</div>
+									<div class="chk-detail">
+										추첨 당일은 오후 8시까지만 구매할 수 있으며, 이후 다음날 오전 6시까지는 판매가 중지됩니다.<span
+											class="color-g"> 이때 기준이 되는 시간은 회사의 서버 시간을 기준으로 합니다.</span>
+									</div>
+								</li>
+								<li class="chk-li">
+									<div class="chk-dot">&#8226;</div>
+									<div class="chk-detail">유효하게 발매된 복권은 환불되지 않습니다.</div>
+								</li>
+								<li class="chk-li">
+									<div class="chk-dot">&#8226;</div>
+									<div class="chk-detail">판매점 슬립용지는 복권을 구매하기 위해서 번호 선택 시에
+										사용되는 것으로 복권을 대신할 수 없습니다.</div>
+								</li>
+								<li class="chk-li">
+									<div class="chk-dot">&#8226;</div>
+									<div class="chk-detail">당첨금은 복권 앞면에 표시된 지급기한까지 당첨금
+										지급처(영업시간 내)에 청구해야 합니다.</div>
+								</li>
+								<li class="chk-li">
+									<div class="chk-dot">&#8226;</div>
+									<div class="chk-detail">판매된 복권 중 1등 당첨복권이 있더라도 당첨금은 청구되지
+										않을 수 있고, 당첨금이 기한 내에 청구되지 않으면 「복권 및 복권기금법」에 따라 복권기금에 귀속되어 공익사업에
+										활용됩니다.</div>
+								</li>
+								<li class="chk-li">
+									<div class="chk-dot">&#8226;</div>
+									<div class="chk-detail">구매자가 판매점에서 정상적으로 발행되어 구매한 복권을 도난,
+										분실, 오염, 훼손하였을 경우에는 그 책임은 구매자에게 있으며, 구매자는 구매 취소, 재발행 요구, 당첨금
+										청구를 할 수 없습니다.</div>
+								</li>
+								<li class="chk-li">
+									<div class="chk-dot">&#8226;</div>
+									<div class="chk-detail">다만, 구매한 복권이 훼손된 경우에는 복권의 1/2 이상
+										원형이 보존되어 컴퓨터 인식이 가능한 복권에 한해서만 당첨금을 지급합니다.</div>
+								</li>
+								<li class="chk-li appendix">
+									<div class="chk-detail">※ 더 자세한 사항은 약관을 확인해 주세요.</div>
+									<div class="btn-goTerms-wrap">
+										<a href="/saletrms/home?ltGdsTrmsSeCd=LO40"
+											class="btn-goTerms">로또6/45 판매 약관 바로가기</a> <a href="/trms/home"
+											class="btn-goTerms">사이트 이용약관 바로가기</a>
+									</div>
+								</li>
+							</ul>
+
+						</div>
+					</div>
+					<div class="main-tit" id="prchsMthdDiv">구매방법</div>
+					<!-- 구매방법 tab start -->
+					<!-- 
+	                tab 디자인을 위한 전체 박스
+	                position:relative;
+	            -->
+					<div class="draw-tab-container">
+						<ul class="draw-tab-ul" role="tablist">
+							<li class="draw-tab-li tagTab" id="tab-b-1" role="tab"
+								aria-selected="true" aria-controls="panel-b-1">
+								<button type="button">판매점 구매방법</button>
+							</li>
+							<li class="draw-tab-li" id="tab-b-2" role="tab"
+								aria-selected="false" aria-controls="panel-b-2">
+								<button type="button">PC 구매방법</button>
+							</li>
+							<li class="draw-tab-li" id="tab-b-3" role="tab"
+								aria-selected="false" aria-controls="panel-b-3">
+								<button type="button">모바일 구매방법</button>
+							</li>
+<!-- 							<li class="draw-tab-li" id="tab-b-4" role="tab"
+								aria-selected="false" aria-controls="panel-b-4">
+								<button type="button">홈페이지 이용방법</button>
+							</li> -->
+						</ul>
+						<div class="draw-tab-boxWrap">
+							<div class="draw-tab-box tagTab" id="panel-b-1" role="tabpanel"
+								aria-labelledby="tab-b-1" aria-expanded="true">
+								<ul class="tab-info-ul">
+									<li class="tab-info-li">
+										<div class="info-step">Step 1</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">판매점 찾기</div>
+											<div class="info-step-txt">
+												가까운 로또6/45 판매점<span class="color-gray">(전국 편의점, 가판대,
+													복권방 등)</span>에 방문합니다.
+												<button class="btn-line btn-arrow" type="button"
+													id="btnFindShop">가까운 판매점 찾기</button>
+											</div>
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 2</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">번호 선택하기</div>
+											<div class="info-step-txt">
+												번호 선택 방법은 <span class="color-lt645">수동선택, 자동선택, 반자동
+													선택하기 </span>3가지 방법이 있습니다.
+											</div>
+											<div class="step-detail-ul">
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit">수동 선택</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">슬립지에 45개의 번호 중 6개 번호에 마킹하여
+														구매합니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit">자동 선택</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">판매인에게 요청하여 자동으로 선택된 6개 번호를
+														구매하거나, 슬립지 각 게임별 하단의 "자동선택"을 마킹하여 구매할 수 있습니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit">반자동 선택</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">
+														슬립지에 45개의 번호 중 1개 또는 6개 미만의 원하는 번호를 선택한 후 "자동선택"에 마킹합니다. <br>
+															내가 선택하지 않은 나머지 번호는 임의의 번호로 자동 선택됩니다. 
+													</div>
+												</div>
+											</div>
+											<ul class="dbchck-ul mt-40">
+												<li class="dbchck-li"><figure> <img
+														src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
+													<div class="dbchck-txt">
+														판매점에 비치된 1장의 슬립용지는 총 5게임의 번호 선택이 가능합니다.<span
+															class="color-p"> 슬립지 마킹 시에는 검정색 컴퓨터용 사인펜을 권장합니다.
+															빨간색 수성펜의 경우 단말기가 인식하지 못합니다.</span>
+													</div></li>
+
+											</ul>
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 3</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">복권 구입하기</div>
+											<div class="step-detail-ul">
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-txt">판매인에게 자동선택 요청 또는 번호를 기입한 슬립지를
+														전달하고 현금 지불 또는 실시간 계좌이체를 통해 복권을 구입합니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-txt">수동 또는 반자동 번호 구매 시, 구입한 복권의
+														게임별 번호가 내가 선택한 번호와 일치하는지 반드시 확인합니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-txt">발급된 복권은 도난, 분실, 오염, 훼손되었을 경우
+														재교부되지 않으니 보관에 유의하시기 바랍니다.</div>
+												</div>
+											</div>
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 4</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">당첨 확인하기</div>
+											<div class="step-detail-ul">
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-txt">구매한 복권의 당첨번호는 매주 토요일 생방송으로
+														진행하는 추첨방송을 통해 확인할 수 있으며, 추첨 종료 후 홈페이지, 동행복권 모바일 앱,
+														ARS(1588-6450)를 통해서도 확인할 수 있습니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-txt">복권 전면에 있는 QR코드를 스캔하면 바로 당첨여부
+														확인이 가능합니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-txt">당첨금이 200만 원 초과인 경우 복권 후면에 성명,
+														주민등록번호 기입 후 서명하시고 당첨금을 청구합니다.</div>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+							<div class="draw-tab-box" id="panel-b-2" role="tabpanel"
+								aria-labelledby="tab-b-2" aria-expanded="false">
+								<div class="tab-imgWrap">
+									<figure class="imgBox tab-img01"> <img
+										src="/resources/img/images/img-draw-lt645-tab01.svg" alt=""></figure>
+								</div>
+								<ul class="tab-info-ul">
+									<li class="tab-info-li">
+										<div class="info-step">Step 1</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">로또번호 선택 방법</div>
+											<div class="info-step-txt">6개의 번호를 모두 또는 부분적으로 선택할 수 있는
+												혼합, 시스템 자동발급, 직전회차 번호 재선택, 저장한 로또번호 중에서 선택할 수 있습니다.</div>
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 2</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">번호 선택 영역</div>
+											<div class="info-step-txt">
+												6개의 로또번호를 클릭하면 해당 번호에 색상이 체크됩니다. <br> 번호를 부분적으로 선택한 후
+													자동선택을 하면, 나머지 번호는 자동으로 발급됩니다. 
+											</div>
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 3</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">적용 수량</div>
+											<div class="info-step-txt">
+												선택한 번호에 대해 구매할 수량을 선택<span class="color-gray">(최대 5개)</span>한
+												후 확인 버튼을 클릭합니다.
+											</div>
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 4</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">번호 확인</div>
+											<div class="info-step-txt mb-16">선택한 번호에 대해 확인하는 영역입니다.
+											</div>
+											<div class="step-detail-ul">
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit">자동</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">시스템에서 자동으로 발급하는 방식을 선택한 것으로,
+														구매 후 번호 확인이 가능합니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit">수동</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">번호를 직접 선택한 방식으로, 구매 시 해당 번호로
+														발행됩니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit">반자동</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">번호를 부분적으로 선택한 방식으로, 자동으로 선택한
+														부분은 구매 후 번호 확인이 가능합니다.</div>
+												</div>
+											</div>
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 5</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">선택번호 추가 기능</div>
+											<div class="step-detail-ul">
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit">초기화</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">선택번호 확인 영역 모든 번호를 삭제할 수 있습니다.
+													</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit">수정</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">번호 선택 영역에 해당 번호가 세팅되어 수정이
+														가능합니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit">삭제</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">선택한 로또번호를 삭제할 수 있습니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit">번호복사</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">선택한 로또번호가 하단에 추가적으로 복사됩니다.</div>
+												</div>
+											</div>
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 6</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">당회차 구매</div>
+											<div class="info-step-txt">
+												[당회차 구매] 버튼을 클릭하여 선택한 복권영역에 표시된 복권번호를 구매할 수 있습니다.
+												<div class="color-gray pre-3">단, 구매회원이 많은 경우 접속대기 과정을
+													거칠 수 있으며, 대기 중 남은 판매금액이 초과하는 경우 구매가 실패할 수 있습니다.</div>
+											</div>
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 7</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">당첨여부 확인</div>
+											<div class="info-step-txt">당첨번호는 생방송으로 진행되는 추첨방송을 시청하거나
+												추첨이 끝난 후 홈페이지, ARS(1588-6450) 등을 통해 확인할 수 있으며, 동행복권 사이트의
+												마이페이지를 통해 당첨여부를 확인할 수 있습니다.</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+							<div class="draw-tab-box" id="panel-b-3" role="tabpanel" aria-labelledby="tab-b-3" aria-expanded="false">
+								<div class="tab-imgWrap">
+									<figure class="imgBox tab-img01"> <img
+										src="/resources/img/images/img-draw-lt645-mobile.svg" alt="모바일 구매방법"></figure>
+								</div>
+								<ul class="tab-info-ul">
+									<li class="tab-info-li">
+										<div class="info-step">Step 1</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">로또번호 선택 방법</div>
+											<div class="info-step-txt">
+												직전회차 번호 재선택 및 저장한 나만의 번호, 번호 선택(수동/ 자동/반자동), 자동 1매 추가 방법으로 번호를 선택할 수 있습니다.<br />
+												[번호 선택하기] 버튼을 눌러 화면을 이동합니다.
+											</div>
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 2</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">번호 선택</div>
+											<div class="info-step-txt">
+												번호를 선택하고 선택한 번호를 확인하는 영역입니다.
+											</div>
+											<div class="step-detail-ul">
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit">수동방식</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">6개의 번호를 모두 선택하여 구매 시 해당 번호로 발행됩니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit">자동방식</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">[자동 채우기] 버튼을 선택하면 *로 표시되며, 시스템에서 자동으로 번호를 발급하는 방식으로, 구매 후 번호 확인이 가능합니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit">반자동방식</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">[자동 채우기] 버튼과 번호를 부분적으로 선택하면, 나머지 번호가 자동으로 발급됩니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">[초기화] 버튼을 누르면 번호 선택영역의 모든 번호를 삭제할 수 있습니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">선택한 번호에서 [x]를 누르면 선택한 번호를 삭제할 수 있습니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">구매할 수량(최대 5개)을 확인한 후 [확인] 버튼을 누릅니다.</div>
+												</div>
+											</div>
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 3</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">당회차 구매</div>
+											<div class="info-step-txt">
+												[구매하기] 버튼을 클릭하여 선택한 복권영역에 표시된 복권번호를 구매할 수 있습니다.<br />
+												단, 구매회원이 많은 경우 접속대기 과정을 거칠 수 있으며, 대기 중 주간 판매한도를 초과하는 경우 구매가 실패할 수 있습니다.
+											</div>
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 4</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">당첨여부 확인</div>
+											<div class="info-step-txt">
+												당첨번호는 생방송 추첨방송 및 동행복권 홈페이지, ARS 전화(1588-6450) 등을 통해 공개됩니다.<br />
+												구매한 복권내역 및 당첨결과는 홈페이지의 마이페이지 > [구매/당첨 내역] 화면에서 확인할 수 있습니다.
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+<!-- 							<div class="draw-tab-box" id="panel-b-4" role="tabpanel" aria-labelledby="tab-b-4" aria-expanded="false">
+								<ul class="tab-info-ul">
+									<li class="tab-info-li">
+										<div class="info-step">Step 1</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">회원가입</div>
+											<div class="step-detail-ul">
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">인터넷에서 복권을 구매하기 위해서는 <span class="color-lt645">먼저 회원가입이 필요</span>합니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">회원가입은 로그인 화면에서 [회원가입] 버튼을 눌러 이동합니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">본인 확인 서비스(네이버 본인인증, 휴대폰 인증)를 통해 <span class="color-lt645">본인 인증이 완료된 19세 이상</span>의 성인만 가입할 수 있습니다.</div>
+												</div>
+											</div>
+											<div class="info-imgWrap mt-20">
+									            <figure>
+									                <img src="/resources/img/images/img-draw-lt645-homeguide-01.svg" alt="" class="wh-100">
+									            </figure>
+									        </div>
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 2</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">예치금 충전</div>
+											<div class="info-step-txt">
+												동행복권은 인터넷 복권 구매와 당첨금 지급을 위해 예치금 방식을 사용합니다.
+											</div>
+											<div class="step-detail-ul">
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">예치금 충전은 마이페이지 화면에서 [충전하기] 버튼을 눌러 이동합니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">간편충전과 가상계좌 입금 방식을 통해 각각 1일 최대 15만 원까지 충전 가능합니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit nowrap">간편충전 입금방식</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">본인의 케이뱅크 계좌를 최초 1회 연결해두면, 간편하게 실시간 충전됩니다. (수수료 무료)</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit nowrap">가상계좌 입금방식</div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">회원가입 시 발급된 입금용 가상계좌(케이뱅크)로 금액을 이체하여 충전하는 방식입니다.</div>
+												</div>
+											</div>
+											<div class="info-step-txt mt-16">
+												<button class="btn-line btn-arrow ml-0" type="button" id="btnMndpChrg">충전하기 화면</button>
+											</div>
+											<div class="info-imgWrap mt-20">
+									            <figure>
+									                <img src="/resources/img/images/img-draw-lt645-homeguide-02.svg" alt="" class="wh-100">
+									            </figure>
+									        </div>
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 3</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">로또6/45 구매</div>
+											<div class="step-detail-ul">
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">동행복권 홈페이지 메인 화면에서 '로또 6/45 바로구매'를 클릭하여 구매 화면으로 이동합니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">수동, 자동, 반자동 방식으로 번호를 선택하여 구매할 수 있습니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">인터넷(PC 및 모바일 합산) 구매는 <span class="color-lt645">회차당 1인 5,000원으로 제한</span>됩니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">1인 구매액 제한은 복권 과몰입과 사행성 조장을 방지하고, 소액으로 건전하게 즐기는 문화를 정착시키기 위한 정책입니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">로또6/45의 <span class="color-lt645">인터넷 주간 판매한도는 전년도 판매액의 5%를 주간 단위로 분할한 금액 내에서 운영</span>됩니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">모바일 이용시간: <span class="color-lt645">월요일 06:00 ~ 금요일 24:00</span></div>
+												</div>
+											</div>
+											<ul class="dbchck-ul mt-20">
+												<li class="dbchck-li">
+													<figure> <img src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
+													<div class="dbchck-txt">오프라인 판매점 보호를 위해 주말(토·일요일)에는 모바일 판매가 일시 중단됩니다. <span class="color-lt645">주말에는 오프라인 판매점이나 PC를 통해서만 구매 가능</span>합니다.</div>
+												</li>
+											</ul>
+											<div class="info-imgWrap mt-20">
+									            <figure>
+									                <img src="/resources/img/images/img-draw-lt645-homeguide-03.svg" alt="" class="wh-100">
+									            </figure>
+									        </div>											
+										</div>
+									</li>
+									<li class="tab-info-li">
+										<div class="info-step">Step 4</div>
+										<div class="info-step-txtWrap">
+											<div class="info-step-tit">당첨금 지급 및 예치금 출금</div>
+											<div class="step-detail-ul">
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit nowrap"><b>당첨금 지급처</b></div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">200만 원 이하의 3등, 4등 및 5등 <span class="color-lt645">비과세 당첨금은 추첨일 다음날 예치금으로 자동 지급</span>됩니다.(일요일 06시경)
+													</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">1200만 원 초과 2등 및 3등 과세 당첨금은 NH농협은행 전국 지점에서 지급합니다. (당첨 복권 번호와 신분증 지참 필수)</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">1등 당첨금은 NH농협은행 본점에서만 지급합니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit">예치금 출금신청은 마이페이지 화면에서 [출금신청] 버튼을 눌러 이동합니다.</div>
+												</div>
+												<div class="step-detail-li">
+													<div class="detail-dot">&#8226;</div>
+													<div class="detail-tit-wrap">
+														<div class="detail-tit nowrap"><b>예치금 출금 신청</b></div>
+														<div class="detail-txt">:</div>
+													</div>
+													<div class="detail-txt">마이페이지의 '출금 신청' 메뉴에서 본인 명의의 계좌와 금액을 등록하면, 익영업일에 이체됩니다.
+													</div>
+												</div>
+											</div>
+											<div class="info-step-txt mt-16">
+												<button class="btn-line btn-arrow ml-0" type="button" id="btnMndpPay">당첨금 지급안내 화면</button>
+											</div>
+											<div class="info-imgWrap mt-20">
+									            <figure>
+									                <img src="/resources/img/images/img-draw-lt645-homeguide-04.svg" alt="" class="wh-100">
+									            </figure>
+									        </div>											
+										</div>
+									</li>
+								</ul>
+							</div> -->
+						</div>
+					</div>
+					<!-- 구매방법 tab end -->
+
+					<!-- 링크  -->
+					<div class="main-tit-line">
+						<span class="color-g">더 궁금한 사항</span>은 아래 링크를 통해 확인하세요!
+					</div>
+					<div class="draw-viewGrid">
+						<div class="gird-box bg5">
+							<div class="box-txtWrap">
+								<div class="box-tit">
+									어떻게 <span class="color-yellow">추첨</span>하는지 <br> 궁금해요! 
+								</div>
+								<button class="btn-viewLine" type="button" id="btnRflBrctAtob">
+									추첨방송 참관 신청</button>
+							</div>
+							<div class="box-imgWrap">
+								<figure> <img
+									src="/resources/img/icon/icon-viewVideo.svg" alt=""></figure>
+							</div>
+						</div>
+						<div class="gird-box grid3">
+							<button type="button" class="grid-item01" id="btnRflMthdDown">
+								<span class="item-txt"> 추첨방법 다운로드 </span>
+								<figure class="item-img"> <img
+									src="/resources/img/icon/icon-btn-small-dwn.svg" alt=" "></figure>
+							</button>
+							<button type="button" class="grid-item01" id="btnRflEqpmntDown"
+								alt="">
+								<span class="item-txt"> 추첨장비 다운로드 </span>
+								<figure class="item-img"> <img
+									src="/resources/img/icon/icon-btn-small-dwn.svg" alt=""></figure>
+							</button>
+							<button type="button" class="grid-item01" id="btnNonePmntRflDown"
+								alt="">
+								<span class="item-txt"> 비상시 추첨 다운로드 </span>
+								<figure class="item-img"> <img
+									src="/resources/img/icon/icon-btn-small-dwn.svg" alt=""></figure>
+							</button>
+						</div>
+						<div class="gird-box bg1">
+							<div class="box-txtWrap">
+								<div class="box-tit">
+									내가 산 복권이 <br> <span class="color-yellow">당첨</span>되었어요! 
+								</div>
+								<button class="btn-viewLine btnWnrGuide" type="button">
+									당첨자 가이드</button>
+							</div>
+							<div class="box-imgWrap">
+								<figure> <img src="/resources/img/icon/icon-winner.svg"
+									alt=""></figure>
+							</div>
+						</div>
+						<div class="gird-box grid2">
+							<button class="grid-item02" type="button" id="btnWinAccept">
+								<div class="item-txtWrap">
+									<span class="item-txt"> 당첨금 <br> 수령방법 안내 </span>
+									<figure> <img
+										src="/resources/img/icon/icon-btn-small-circle.svg" alt=""></figure>
+								</div>
+								<div class="item-imgWrap">
+									<figure class="item-img"> <img
+										src="/resources/img/icon/icon-viewWinning.svg" alt=""></figure>
+								</div>
+							</button>
+							<button class="grid-item02" type="button" id="btnWhtxGuide">
+								<div class="item-txtWrap">
+									<span class="item-txt"> 원천징수 <br> 세율안내 </span>
+									<figure> <img
+										src="/resources/img/icon/icon-btn-small-circle.svg" alt=""></figure>
+								</div>
+								<div class="item-imgWrap">
+									<figure class="item-img"> <img
+										src="/resources/img/icon/icon-viewTax.svg" alt=""></figure>
+								</div>
+							</button>
+						</div>
+					</div>
+					<!-- 추첨식 알아보기 -->
+					<div class="main-tit-line moreView">
+						<span class="color-g">추첨식 복권 </span>더 알아보기
+					</div>
+					<div class="draw-viewGrid mo-grid4">
+						<div class="gird-box lineBox">
+							<figure class="logoWrap"> <img
+								src="/resources/img/images/img-drawLogo01.svg" alt="연금복권720+ "></figure>
+							<div class="info-wrap">
+								<div class="info-box">
+									<div class="info-tit">판매가격</div>
+									<div class="info-txt">
+										1,000원 낱장 <br> 5,000원 세트 
+									</div>
+								</div>
+								<div class="info-box">
+									<div class="info-tit">1등 당첨금</div>
+									<div class="info-txt">월 700만 원 x 20년</div>
+								</div>
+								<div class="info-box">
+									<div class="info-tit">판매채널</div>
+									<div class="info-txtWrap">
+										<div class="info-imgTxt">
+											<figure> <img
+												src="/resources/img/icon/icon-draw-store.svg" alt=" "></figure>
+											<span class="info-txt"> 판매점 </span>
+										</div>
+										<div class="info-imgTxt">
+											<figure> <img
+												src="/resources/img/icon/icon-draw-internet.svg" alt=""></figure>
+											<span class="info-txt"> 인터넷 </span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="info-btnWrap">
+								<button class="btn-line" type="button" id="btnIntroLt720">상품소개</button>
+								<button class="btn-line btn-arrow" type="button"
+									id="btnBuyLt720" title="새창">바로구매</button>
+							</div>
+						</div>
+						<div class="gird-box lineBox">
+							<figure class="logoWrap"> <img
+								src="/resources/img/images/img-drawLogo02.svg" alt="Power Ball"></figure>
+							<div class="info-wrap">
+								<div class="info-box">
+									<div class="info-tit">판매가격</div>
+									<div class="info-txt">1,000원</div>
+								</div>
+								<div class="info-box">
+									<div class="info-tit">실시간 1등 당첨금</div>
+									<div class="info-txt" id="pbgmRnk1Atm">조회중</div>
+								</div>
+								<div class="info-box">
+									<div class="info-tit">판매채널</div>
+									<div class="info-txtWrap">
+										<div class="info-imgTxt">
+											<figure> <img
+												src="/resources/img/icon/icon-draw-internet.svg" alt=""></figure>
+											<span class="info-txt"> 인터넷 </span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="info-btnWrap">
+								<button class="btn-line" type="button" id="btnIntroPbgm">상품소개</button>
+								<button class="btn-line btn-arrow" type="button" id="btnBuyPbgm"
+									title="새창">바로구매</button>
+							</div>
+						</div>
+						<div class="gird-box lineBox">
+							<figure class="logoWrap"> <img
+								src="/resources/img/images/img-drawLogo04.svg" alt="스피드키노"></figure>
+							<div class="info-wrap">
+								<div class="info-box">
+									<div class="info-tit">판매가격</div>
+									<div class="info-txt">1,000원</div>
+								</div>
+								<div class="info-box">
+									<div class="info-tit">실시간 1등 당첨금</div>
+									<div class="info-txt" id="skgmRnk1Atm">조회중</div>
+								</div>
+								<div class="info-box">
+									<div class="info-tit">판매채널</div>
+									<div class="info-txtWrap">
+										<div class="info-imgTxt">
+											<figure> <img
+												src="/resources/img/icon/icon-draw-internet.svg" alt=""></figure>
+											<span class="info-txt"> 인터넷 </span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="info-btnWrap">
+								<button class="btn-line" type="button" id="btnIntroSkgm">상품소개</button>
+								<button class="btn-line btn-arrow" type="button" id="btnBuySkgm"
+									title="새창">바로구매</button>
+							</div>
+						</div>
+						<div class="gird-box lineBox">
+							<figure class="logoWrap"> <img
+								src="/resources/img/images/img-drawLogo03.svg" alt="Mega Bingo "></figure>
+							<div class="info-wrap">
+								<div class="info-box">
+									<div class="info-tit">판매가격</div>
+									<div class="info-txt">1,000원</div>
+								</div>
+								<div class="info-box">
+									<div class="info-tit">실시간 1등 당첨금</div>
+									<div class="info-txt" id="mbgmRnk1Atm">조회중</div>
+								</div>
+								<div class="info-box">
+									<div class="info-tit">판매채널</div>
+									<div class="info-txtWrap">
+										<div class="info-imgTxt">
+											<figure> <img
+												src="/resources/img/icon/icon-draw-internet.svg" alt=" "></figure>
+											<span class="info-txt"> 인터넷 </span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="info-btnWrap">
+								<button class="btn-line" type="button" id="btnIntroMbgm">상품소개</button>
+								<button class="btn-line btn-arrow" type="button" id="btnBuyMbgm"
+									title="새창">바로구매</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="endBox-mb"></div>
+<div class="tab-panel-filler"></div>
+<script>
+(function() {
+  function setTab(container, tabId) {
+    if (!container) return;
+    const tabs = Array.from(container.querySelectorAll('.draw-tab-li'));
+    const panels = Array.from(container.querySelectorAll('.draw-tab-box'));
+    tabs.forEach(tab => {
+      const isActive = tab.id === tabId;
+      tab.classList.toggle('tagTab', isActive);
+      tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+    panels.forEach(panel => {
+      const isActive = panel.getAttribute('aria-labelledby') === tabId;
+      panel.classList.toggle('tagTab', isActive);
+      panel.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+    });
+  }
+
+  document.querySelectorAll('.draw-tab-container').forEach(container => {
+    const tabs = Array.from(container.querySelectorAll('.draw-tab-li'));
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => setTab(container, tab.id));
+      const btn = tab.querySelector('button');
+      if (btn) {
+        btn.addEventListener('click', () => setTab(container, tab.id));
+      }
+    });
+  });
+
+  const popupBtn = document.querySelector('.btn-popup');
+  const popupWrap = document.querySelector('.popup-wrap');
+  const popupBg = popupWrap ? popupWrap.querySelector('.popup-bg') : null;
+  const popupClose = popupWrap ? popupWrap.querySelector('.btn-pop-close') : null;
+  function openPopup() {
+    if (!popupWrap) return;
+    popupWrap.style.display = 'block';
+  }
+  function closePopup() {
+    if (!popupWrap) return;
+    popupWrap.style.display = 'none';
+  }
+  if (popupBtn) popupBtn.addEventListener('click', openPopup);
+  if (popupBg) popupBg.addEventListener('click', closePopup);
+  if (popupClose) popupClose.addEventListener('click', closePopup);
+
+  const toggleBtn = document.querySelector('.btn-toggle');
+  const toggleContent = document.querySelector('.toggle-content');
+  if (toggleBtn && toggleContent) {
+    toggleBtn.addEventListener('click', () => {
+      const isOpen = toggleContent.style.display === 'block';
+      toggleContent.style.display = isOpen ? 'none' : 'block';
+    });
+  }
+
+  const jumpMap = {
+    btnWnStrc: 'wnStrcDiv',
+    btnPrchsMthd: 'prchsMthdDiv'
+  };
+  Object.keys(jumpMap).forEach(btnId => {
+    const btn = document.getElementById(btnId);
+    const targetId = jumpMap[btnId];
+    if (!btn || !targetId) return;
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(targetId);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+</script>
+</body>
+</html>
