@@ -132,13 +132,24 @@ body {
 
 #tab-dashboard {
     padding: 0;
-    margin: -40px -6vw 0;
+    margin: 0;
     background: #ffffff;
     font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
     color: #111111;
     --lt645-blue: #1e6bff;
     --lt645-blue-dark: #0f5bd8;
     --lt645-blue-glow: rgba(30, 107, 255, 0.18);
+}
+
+#tab-dashboard .container-box {
+    background: #ffffff;
+}
+
+#tab-dashboard .center-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 4vw;
+    box-sizing: border-box;
 }
 
 #tab-dashboard .color-lt645,
@@ -262,7 +273,7 @@ body {
 
 @media (max-width: 960px) {
     #tab-dashboard {
-        margin: -18px -4vw 0;
+        margin: 0;
     }
     #tab-dashboard .header-girdWrap {
         grid-template-columns: 1fr;
@@ -285,7 +296,7 @@ body {
 
 @media (max-width: 640px) {
     #tab-dashboard {
-        margin: -16px -4vw 0;
+        margin: 0;
     }
     #tab-dashboard .this-week-round {
         padding: 16px 14px;
