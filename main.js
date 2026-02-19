@@ -1810,10 +1810,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function applyWeeklyExpectedAmount(value, note) {
-        if (!weeklyExpectedAmountEl || value == null) {
+        if (!weeklyExpectedAmountEl) {
             return;
         }
-        weeklyExpectedAmountEl.textContent = formatCurrency(value);
+        weeklyExpectedAmountEl.textContent = value == null ? '-' : formatCurrency(value);
         if (weeklyExpectedNoteEl) {
             weeklyExpectedNoteEl.textContent = note || '공식 예상';
         }
@@ -1985,17 +1985,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (weeklyExpectedOverride != null) {
             applyWeeklyExpectedAmount(weeklyExpectedOverride, '공식 예상');
-        } else if (weeklyExpectedAmountEl) {
-            const expected = data.firstAccumamnt || data.firstWinamnt;
-            applyWeeklyExpectedAmount(expected, `${data.drwNo}회차 기준`);
+        } else {
+            applyWeeklyExpectedAmount(null, '공식 예상 조회중');
         }
-        if (dashExpectedAmountEl) {
-            if (weeklyExpectedOverride != null) {
-                dashExpectedAmountEl.textContent = formatCurrency(weeklyExpectedOverride);
-            } else {
-                const expected = data.firstAccumamnt || data.firstWinamnt;
-                dashExpectedAmountEl.textContent = formatCurrency(expected);
-            }
+        if (dashExpectedAmountEl && weeklyExpectedOverride != null) {
+            dashExpectedAmountEl.textContent = formatCurrency(weeklyExpectedOverride);
+        } else if (dashExpectedAmountEl) {
+            dashExpectedAmountEl.textContent = '-';
         }
         if (weeklyStatusEl) {
             weeklyStatusEl.textContent = `${data.drwNo}회차 당첨 정보가 반영되었습니다.${cached ? ' (캐시)' : ''}`;
