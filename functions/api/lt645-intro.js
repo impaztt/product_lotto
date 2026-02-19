@@ -11,10 +11,15 @@ export async function onRequest(context) {
     }
 
     try {
-        const [expected, current] = await Promise.all([
-            fetchJson('https://www.dhlottery.co.kr/lt645/selectRnk1ExpcAmt.do'),
-            fetchJson('https://www.dhlottery.co.kr/lt645/selectThsLt645Info.do')
+        const [expectedResult, currentResult] = await Promise.allSettled([
+            fetchJsonWithRetry('https://www.dhlottery.co.kr/lt645/selectRnk1ExpcAmt.do', { retries: 1, timeoutMs: 10000 }),
+            fetchJsonWithRetry('https://www.dhlottery.co.kr/lt645/selectThsLt645Info.do', { retries: 1, timeoutMs: 10000 })
         ]);
+        const expected = expectedResult.status === 'fulfilled' ? expectedResult.value : null;
+        const current = currentResult.status === 'fulfilled' ? currentResult.value : null;
+        if (!expected && !current) {
+            throw new Error('both upstream requests failed');
+        }
 
         const payload = {
             returnValue: 'success',
@@ -44,9 +49,21 @@ export async function onRequest(context) {
     }
 }
 
-async function fetchJson(url) {
+async function fetchJsonWithRetry(url, { retries = 1, timeoutMs = 10000 } = {}) {
+    let lastError = null;
+    for (let attempt = 0; attempt <= retries; attempt += 1) {
+        try {
+            return await fetchJson(url, timeoutMs);
+        } catch (error) {
+            lastError = error;
+        }
+    }
+    throw lastError || new Error('unknown upstream error');
+}
+
+async function fetchJson(url, timeoutMs = 10000) {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
         const response = await fetch(url, {
             headers: {

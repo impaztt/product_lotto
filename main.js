@@ -1819,52 +1819,78 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function fetchIntroMirrorResult(path) {
+        const targetUrl = `https://www.dhlottery.co.kr${path}`;
+        const proxyUrl = `/mirror/proxy?url=${encodeURIComponent(targetUrl)}`;
+        const response = await fetch(proxyUrl, { cache: 'no-store' });
+        if (!response.ok) {
+            throw new Error(`mirror response ${response.status}`);
+        }
+        const payload = await response.json();
+        return payload?.data?.result || null;
+    }
+
     async function fetchWeeklyIntroInfo() {
+        let expected = null;
+        let current = null;
+
         try {
             const response = await fetch('/api/lt645-intro', { cache: 'no-store' });
-            if (!response.ok) {
-                return;
-            }
-            const payload = await response.json();
-            if (!payload || payload.returnValue !== 'success') {
-                return;
-            }
-            const expected = payload.expected;
-            const current = payload.current;
-            if (expected?.rnk1ExpcAmt && weeklyExpectedAmountEl) {
-                weeklyExpectedOverride = Number(expected.rnk1ExpcAmt);
-                weeklyExpectedUpdatedAt = Date.now();
-                applyWeeklyExpectedAmount(weeklyExpectedOverride, '공식 예상');
-            }
-            if (expected?.rnk1ExpcAmt && dashExpectedAmountEl) {
-                dashExpectedAmountEl.textContent = formatCurrency(expected.rnk1ExpcAmt);
-            }
-            if (current?.ltEpsd && weeklyThisRoundEl) {
-                weeklyThisRoundEl.textContent = `${current.ltEpsd}회`;
-            }
-            if (current?.ltEpsd && dashThisRoundEl) {
-                dashThisRoundEl.textContent = `${current.ltEpsd}회`;
-            }
-            if (current?.ltRflYmd && weeklyThisDateEl) {
-                weeklyThisDateEl.textContent = formatShortDate(current.ltRflYmd);
-            }
-            if (current?.ltRflYmd && dashThisDateEl) {
-                dashThisDateEl.textContent = formatShortDate(current.ltRflYmd);
-            }
-            if (current?.ltRflYmd && current?.ltRflHh != null && current?.ltRflMm != null) {
-                const date = new Date(`${String(current.ltRflYmd).slice(0, 4)}-${String(current.ltRflYmd).slice(4, 6)}-${String(current.ltRflYmd).slice(6, 8)}T00:00:00+09:00`);
-                date.setHours(Number(current.ltRflHh));
-                date.setMinutes(Number(current.ltRflMm));
-                date.setSeconds(0);
-                weeklyNextDrawOverride = date;
-                updateWeeklyCountdownDisplay();
-                updateWeeklyNextDrawDisplay();
-                if (weeklyCountdownSubEl && current?.ltEpsd) {
-                    weeklyCountdownSubEl.textContent = `제${current.ltEpsd}회 추첨: ${formatKstDateTime(date)} (KST)`;
+            if (response.ok) {
+                const payload = await response.json();
+                if (payload && payload.returnValue === 'success') {
+                    expected = payload.expected || null;
+                    current = payload.current || null;
                 }
             }
         } catch (error) {
             console.warn('intro info fetch failed', error);
+        }
+
+        if (!expected || !current) {
+            try {
+                const [fallbackExpected, fallbackCurrent] = await Promise.all([
+                    expected ? Promise.resolve(expected) : fetchIntroMirrorResult('/lt645/selectRnk1ExpcAmt.do'),
+                    current ? Promise.resolve(current) : fetchIntroMirrorResult('/lt645/selectThsLt645Info.do')
+                ]);
+                expected = expected || fallbackExpected;
+                current = current || fallbackCurrent;
+            } catch (error) {
+                console.warn('intro info fallback fetch failed', error);
+            }
+        }
+
+        if (expected?.rnk1ExpcAmt && weeklyExpectedAmountEl) {
+            weeklyExpectedOverride = Number(expected.rnk1ExpcAmt);
+            weeklyExpectedUpdatedAt = Date.now();
+            applyWeeklyExpectedAmount(weeklyExpectedOverride, '공식 예상');
+        }
+        if (expected?.rnk1ExpcAmt && dashExpectedAmountEl) {
+            dashExpectedAmountEl.textContent = formatCurrency(expected.rnk1ExpcAmt);
+        }
+        if (current?.ltEpsd && weeklyThisRoundEl) {
+            weeklyThisRoundEl.textContent = `${current.ltEpsd}회`;
+        }
+        if (current?.ltEpsd && dashThisRoundEl) {
+            dashThisRoundEl.textContent = `${current.ltEpsd}회`;
+        }
+        if (current?.ltRflYmd && weeklyThisDateEl) {
+            weeklyThisDateEl.textContent = formatShortDate(current.ltRflYmd);
+        }
+        if (current?.ltRflYmd && dashThisDateEl) {
+            dashThisDateEl.textContent = formatShortDate(current.ltRflYmd);
+        }
+        if (current?.ltRflYmd && current?.ltRflHh != null && current?.ltRflMm != null) {
+            const date = new Date(`${String(current.ltRflYmd).slice(0, 4)}-${String(current.ltRflYmd).slice(4, 6)}-${String(current.ltRflYmd).slice(6, 8)}T00:00:00+09:00`);
+            date.setHours(Number(current.ltRflHh));
+            date.setMinutes(Number(current.ltRflMm));
+            date.setSeconds(0);
+            weeklyNextDrawOverride = date;
+            updateWeeklyCountdownDisplay();
+            updateWeeklyNextDrawDisplay();
+            if (weeklyCountdownSubEl && current?.ltEpsd) {
+                weeklyCountdownSubEl.textContent = `제${current.ltEpsd}회 추첨: ${formatKstDateTime(date)} (KST)`;
+            }
         }
     }
 
