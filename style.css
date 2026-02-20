@@ -2462,13 +2462,22 @@ body[data-theme="light"] .draw-hero {
 }
 
 #tab-draw {
-    --draw-bg: #f6f8fb;
+    --draw-bg: #eef3fb;
     --draw-card: #ffffff;
-    --draw-border: #e5e7eb;
+    --draw-border: rgba(15, 23, 42, 0.1);
     --draw-text: #0f172a;
     --draw-muted: #64748b;
-    --draw-blue: #2563eb;
-    --draw-blue-soft: rgba(37, 99, 235, 0.12);
+    --draw-blue: #1e6bff;
+    --draw-blue-soft: rgba(30, 107, 255, 0.14);
+    margin: -40px -6vw 0;
+    padding: 22px 6vw 90px;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(30, 107, 255, 0.12), transparent 36%),
+        radial-gradient(circle at 100% 16%, rgba(14, 165, 233, 0.1), transparent 34%),
+        var(--draw-bg);
+    border-radius: 0;
+    color: var(--draw-text);
+    font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
 }
 
 body[data-theme="dark"] #tab-draw {
@@ -2488,6 +2497,9 @@ body[data-theme="dark"] #tab-draw {
 #tab-draw .draw-selected-card,
 #tab-draw .draw-cta-card {
     color: var(--draw-text);
+    border: 0;
+    border-radius: 18px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
 }
 
 body[data-theme="light"] .draw-studio-header {
@@ -2535,7 +2547,7 @@ body[data-theme="light"] .draw-studio-header {
 
 .draw-cta-card button {
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 10px 14px;
     background: var(--draw-blue, #2563eb);
     color: #fff;
@@ -2566,11 +2578,10 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 .draw-panel {
-    border-radius: 12px;
-    border: 1px solid var(--draw-border, var(--panel-border));
+    border-radius: 18px;
     background: var(--draw-card, var(--panel));
-    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
-    padding: 14px 16px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+    padding: 16px 18px;
     display: grid;
     gap: 12px;
 }
@@ -2599,17 +2610,16 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 .draw-metric-card {
-    border-radius: 12px;
-    border: 1px solid var(--draw-border, var(--panel-border));
+    border-radius: 18px;
     background: var(--draw-card, var(--panel));
-    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
-    padding: 14px 16px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+    padding: 16px 18px;
     display: grid;
     gap: 10px;
 }
 
 .draw-metric-card.primary {
-    background: var(--draw-blue-soft, rgba(37, 99, 235, 0.12));
+    background: linear-gradient(160deg, rgba(30, 107, 255, 0.14), rgba(30, 107, 255, 0.06));
 }
 
 .draw-metric-card.wide {
@@ -2635,11 +2645,10 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 .draw-rules-panel {
-    border-radius: 12px;
-    border: 1px solid var(--draw-border, var(--panel-border));
+    border-radius: 18px;
     background: var(--draw-card, var(--panel));
-    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
-    padding: 14px 16px 18px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+    padding: 16px 18px 20px;
 }
 
 .draw-rules-header {
@@ -2668,11 +2677,11 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 .legend-chip {
-    border: 1px solid var(--draw-border, var(--panel-border));
-    border-radius: 10px;
+    border: 0;
+    border-radius: 999px;
     padding: 4px 8px;
     font-size: 11px;
-    background: var(--draw-card, var(--bg-soft));
+    background: rgba(30, 107, 255, 0.1);
 }
 
 .legend-chip.muted {
@@ -2693,11 +2702,10 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 .draw-selected-card {
-    border-radius: 12px;
-    border: 1px solid var(--draw-border, var(--panel-border));
+    border-radius: 18px;
     background: var(--draw-card, var(--panel));
-    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
-    padding: 14px 16px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+    padding: 16px 18px;
     display: grid;
     gap: 10px;
 }
@@ -2724,17 +2732,17 @@ body[data-theme="light"] .draw-studio-header {
     font-size: 12px;
     font-weight: 700;
     padding: 4px 8px;
-    border-radius: 8px;
-    background: var(--draw-card, var(--bg-soft));
-    border: 1px solid var(--draw-border, var(--panel-border));
+    border-radius: 999px;
+    background: rgba(30, 107, 255, 0.1);
+    border: 0;
 }
 
 .draw-selected-clear {
-    border: 1px solid var(--draw-border, var(--panel-border));
-    background: transparent;
+    border: 0;
+    background: #f1f5f9;
     color: var(--text);
     padding: 4px 8px;
-    border-radius: 8px;
+    border-radius: 999px;
     font-size: 11px;
     cursor: pointer;
 }
@@ -2777,7 +2785,7 @@ body[data-theme="light"] .draw-studio-header {
 .draw-selected-empty {
     font-size: 12px;
     color: var(--draw-muted, var(--text-muted));
-    border: 1px dashed var(--draw-border, var(--panel-border));
+    border: 1px dashed rgba(15, 23, 42, 0.18);
     border-radius: 12px;
     padding: 10px;
     text-align: center;
@@ -2787,9 +2795,9 @@ body[data-theme="light"] .draw-studio-header {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    border: 1px solid var(--draw-border, var(--panel-border));
-    border-radius: 8px;
-    background: var(--draw-card, var(--bg-soft));
+    border: 0;
+    border-radius: 999px;
+    background: #f1f5f9;
     padding: 6px 10px;
     cursor: pointer;
     font-size: 12px;
@@ -2841,8 +2849,8 @@ body[data-theme="light"] .draw-studio-header {
     position: relative;
     height: 10px;
     border-radius: 6px;
-    background: var(--draw-card, var(--bg-soft));
-    border: 1px solid var(--draw-border, var(--panel-border));
+    background: #e5edf9;
+    border: 0;
     overflow: hidden;
 }
 
@@ -2973,7 +2981,7 @@ body[data-theme="light"] .draw-studio-header {
 .rules-groups {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    gap: 14px;
 }
 
 .rule-group h3 {
@@ -2994,11 +3002,11 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 .group-select {
-    border: 1px solid var(--panel-border);
-    background: transparent;
+    border: 0;
+    background: #f1f5f9;
     color: var(--text);
     padding: 6px 12px;
-    border-radius: 8px;
+    border-radius: 999px;
     font-size: 12px;
     cursor: pointer;
 }
@@ -3018,9 +3026,9 @@ body[data-theme="light"] .draw-studio-header {
     display: inline-flex;
     gap: 10px;
     padding: 6px 10px;
-    border-radius: 8px;
-    border: 1px solid var(--draw-border, var(--panel-border));
-    background: var(--draw-card, var(--bg-soft));
+    border-radius: 12px;
+    border: 0;
+    background: #f8fafc;
     font-size: 14px;
     cursor: pointer;
     transition: border 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
@@ -3048,7 +3056,7 @@ body[data-theme="light"] .draw-studio-header {
 
 .rule-card:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
 }
 
 .rule-card::before {
@@ -3085,9 +3093,9 @@ body[data-theme="light"] .draw-studio-header {
     gap: 4px;
     font-size: 10px;
     color: var(--draw-text, var(--text));
-    background: rgba(37, 99, 235, 0.08);
-    border: 1px solid var(--draw-border, var(--panel-border));
-    border-radius: 8px;
+    background: rgba(30, 107, 255, 0.12);
+    border: 0;
+    border-radius: 999px;
     padding: 2px 6px;
 }
 
@@ -3103,10 +3111,10 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 .rule-group {
-    border: 1px solid var(--draw-border, var(--panel-border));
-    background: var(--draw-card, var(--bg-soft));
-    border-radius: 10px;
-    padding: 10px;
+    border: 0;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 12px;
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
 }
 
@@ -3168,7 +3176,6 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 .rule-card.is-checked {
-    border-color: var(--draw-blue, var(--accent));
     background: var(--draw-blue-soft, var(--accent-soft));
 }
 
@@ -3205,19 +3212,36 @@ body[data-theme="light"] .draw-studio-header {
 
 #draw-count {
     padding: 10px 14px;
-    border-radius: 10px;
-    border: none;
+    border-radius: 12px;
+    border: 0;
+    background: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.12);
     font-size: 15px;
 }
 
 #generate-btn {
-    background: var(--accent);
+    background: var(--draw-blue, #1e6bff);
     color: #fff;
     border: none;
     padding: 12px 22px;
-    border-radius: 999px;
-    font-weight: 600;
+    border-radius: 12px;
+    font-weight: 700;
     cursor: pointer;
+}
+
+#tab-draw .ghost,
+#tab-draw .preset-btn {
+    border: 0;
+    background: #f1f5f9;
+    color: #0f172a;
+    border-radius: 999px;
+}
+
+#tab-draw .preset-btn.is-active,
+#tab-draw .preset-btn:hover,
+#tab-draw .ghost:hover {
+    background: rgba(30, 107, 255, 0.12);
+    color: #0f172a;
 }
 
 .numbers-container {
@@ -3290,6 +3314,10 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 @media (max-width: 960px) {
+    #tab-draw {
+        margin: -18px -4vw 0;
+        padding: 18px 4vw calc(140px + env(safe-area-inset-bottom));
+    }
     .hero,
     .split {
         grid-template-columns: 1fr;
@@ -3441,6 +3469,10 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 @media (max-width: 640px) {
+    #tab-draw {
+        margin: -16px -4vw 0;
+        padding: 16px 4vw calc(140px + env(safe-area-inset-bottom));
+    }
     .site-header {
         padding: 14px 5vw;
     }
