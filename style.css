@@ -246,8 +246,8 @@ body {
     padding: 20px;
     border-radius: 20px;
     background: #ffffff;
-    border: 1px solid rgba(15, 23, 42, 0.1);
-    box-shadow: none;
+    border: 0;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
 }
 
 #tab-dashboard .result-head {
@@ -279,8 +279,8 @@ body {
 #tab-dashboard .result-ballWrapper {
     padding: 14px 14px 12px;
     border-radius: 16px;
-    background: #ffffff;
-    border: 1px solid rgba(15, 23, 42, 0.1);
+    background: #f8fafc;
+    border: 0;
 }
 
 #tab-dashboard .result-ballBox {
@@ -335,8 +335,8 @@ body {
 #tab-dashboard .result-prizeCard {
     padding: 12px 14px;
     border-radius: 14px;
-    background: #ffffff;
-    border: 1px solid rgba(15, 23, 42, 0.1);
+    background: #f8fafc;
+    border: 0;
 }
 
 #tab-dashboard .upcoming-card {
@@ -353,8 +353,8 @@ body {
     margin: 0;
     padding: 12px;
     border-radius: 14px;
-    background: #ffffff;
-    border: 1px solid rgba(15, 23, 42, 0.1);
+    background: #f8fafc;
+    border: 0;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 8px;
@@ -364,7 +364,7 @@ body {
     width: 100%;
     height: 64px;
     border-radius: 12px;
-    border: 1px solid rgba(15, 23, 42, 0.12);
+    border: 0;
     box-shadow: none;
 }
 
@@ -419,7 +419,7 @@ body {
     padding: 20px 22px 18px;
     border-radius: 20px;
     background: #ffffff;
-    border: 1px solid rgba(15, 23, 42, 0.1);
+    border: 0;
     box-shadow: none;
 }
 
@@ -448,8 +448,8 @@ body {
     height: 70px;
     border-radius: 16px;
     background: #ffffff;
-    border: 1px solid rgba(30, 107, 255, 0.2);
-    box-shadow: 0 10px 18px rgba(30, 107, 255, 0.12);
+    border: 0;
+    box-shadow: none;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -489,7 +489,7 @@ body {
 #tab-dashboard .btn-butNow {
     border-radius: 14px;
     padding: 10px 16px;
-    box-shadow: 0 12px 22px rgba(30, 107, 255, 0.25);
+    box-shadow: none;
 }
 
 @media (max-width: 960px) {
