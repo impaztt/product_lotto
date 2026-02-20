@@ -339,6 +339,47 @@ body {
     border: 1px solid rgba(15, 23, 42, 0.1);
 }
 
+#tab-dashboard .upcoming-card {
+    gap: 12px;
+}
+
+#tab-dashboard .upcoming-count-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(15, 23, 42, 0.65);
+}
+
+#tab-dashboard .upcoming-timer {
+    margin: 0;
+    padding: 12px;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+#tab-dashboard .upcoming-timer .time-circle {
+    width: 100%;
+    height: 64px;
+    border-radius: 12px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    box-shadow: none;
+}
+
+#tab-dashboard .upcoming-prizeCard {
+    display: grid;
+    gap: 4px;
+}
+
+#tab-dashboard .upcoming-buyBtn {
+    width: 100%;
+    min-height: 44px;
+    border-radius: 12px;
+    margin-top: 2px;
+}
+
 #tab-dashboard .result-winnings-txt {
     font-size: 12px;
     color: rgba(15, 23, 42, 0.62);
@@ -490,6 +531,9 @@ body {
         height: 38px;
         font-size: 16px;
     }
+    #tab-dashboard .upcoming-timer .time-circle {
+        height: 60px;
+    }
 }
 
 @media (max-width: 640px) {
@@ -524,6 +568,12 @@ body {
         width: 34px;
         height: 34px;
         font-size: 14px;
+    }
+    #tab-dashboard .upcoming-timer {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    #tab-dashboard .upcoming-timer .time-circle {
+        height: 58px;
     }
     #tab-dashboard .header-goWrap {
         grid-template-columns: 1fr;
