@@ -788,11 +788,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             setActiveTab(target, true);
         });
-        fetchLatestDraw();
-        fetchWeeklyIntroInfo();
-        window.setInterval(() => {
-            fetchWeeklyIntroInfo();
-        }, 10000);
         if (rulesSection) {
             rulesSection.classList.add('rules-collapsed');
         }
@@ -806,6 +801,11 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
         console.error('초기화 오류', error);
     }
+    fetchLatestDraw();
+    fetchWeeklyIntroInfo();
+    window.setInterval(() => {
+        fetchWeeklyIntroInfo();
+    }, 10000);
 
     function generateAndDisplayNumbers() {
         const drawCount = parseInt(drawCountSelect.value, 10);
@@ -1819,6 +1819,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function normalizeAmount(value) {
+        if (value == null) {
+            return null;
+        }
+        const digits = String(value).replace(/[^\d]/g, '');
+        if (!digits) {
+            return null;
+        }
+        const amount = Number(digits);
+        return Number.isFinite(amount) ? amount : null;
+    }
+
     async function fetchIntroMirrorResult(path) {
         const targetUrl = `https://www.dhlottery.co.kr${path}`;
         const proxyUrl = `/mirror/proxy?url=${encodeURIComponent(targetUrl)}`;
@@ -1872,13 +1884,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        if (expected?.rnk1ExpcAmt) {
-            weeklyExpectedOverride = Number(expected.rnk1ExpcAmt);
+        const expectedAmount = normalizeAmount(expected?.rnk1ExpcAmt);
+        if (expectedAmount != null) {
+            weeklyExpectedOverride = expectedAmount;
             weeklyExpectedUpdatedAt = Date.now();
             applyWeeklyExpectedAmount(weeklyExpectedOverride, '공식 예상');
         }
-        if (expected?.rnk1ExpcAmt && dashExpectedAmountEl) {
-            dashExpectedAmountEl.textContent = formatCurrency(expected.rnk1ExpcAmt);
+        if (expectedAmount != null && dashExpectedAmountEl) {
+            dashExpectedAmountEl.textContent = formatCurrency(expectedAmount);
         }
         if (current?.ltEpsd && weeklyThisRoundEl) {
             weeklyThisRoundEl.textContent = `${current.ltEpsd}회`;
