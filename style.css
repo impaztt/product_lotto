@@ -2820,6 +2820,24 @@ body[data-theme="light"] .draw-studio-header {
     cursor: pointer;
 }
 
+.draw-scenario-btn {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    text-align: left;
+    min-height: 68px;
+}
+
+.draw-scenario-btn strong {
+    font-size: 13px;
+}
+
+.draw-scenario-btn span {
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748b;
+}
+
 .draw-strategy-btn.is-active {
     background: rgba(30, 107, 255, 0.14);
     color: #0f172a;
@@ -2958,10 +2976,27 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 .draw-rules-panel {
-    border-radius: 18px;
+    position: fixed;
+    left: 50%;
+    bottom: calc(84px + env(safe-area-inset-bottom));
+    width: min(980px, calc(100% - 20px));
+    max-height: min(76vh, 860px);
+    overflow: auto;
+    transform: translate(-50%, 110%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 65;
+    transition: transform 0.24s ease, opacity 0.24s ease;
+    border-radius: 20px;
     background: var(--draw-card, var(--panel));
     box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
     padding: 16px 18px 20px;
+}
+
+.draw-rules-panel.is-open {
+    transform: translate(-50%, 0);
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .draw-rules-header {
@@ -2999,6 +3034,34 @@ body[data-theme="light"] .draw-studio-header {
 
 .legend-chip.muted {
     color: var(--text-muted);
+}
+
+.rule-picker-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(160px, 240px);
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.rule-picker-toolbar input,
+.rule-picker-toolbar select {
+    border: 0;
+    border-radius: 10px;
+    padding: 9px 10px;
+    background: #f8fafc;
+    color: #0f172a;
+    font-size: 12px;
+}
+
+.rule-picker-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.28);
+    z-index: 60;
+}
+
+body.rule-picker-open {
+    overflow: hidden;
 }
 
 .draw-workspace {
@@ -3067,6 +3130,28 @@ body[data-theme="light"] .draw-studio-header {
 
 .draw-selected-sub {
     font-size: 12px;
+    color: var(--draw-muted, var(--text-muted));
+}
+
+.draw-picker-entry {
+    display: grid;
+    gap: 6px;
+    margin-top: -4px;
+}
+
+.draw-picker-entry button {
+    border: 0;
+    border-radius: 12px;
+    padding: 10px 12px;
+    text-align: left;
+    background: rgba(30, 107, 255, 0.14);
+    color: #0f172a;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.draw-picker-entry span {
+    font-size: 11px;
     color: var(--draw-muted, var(--text-muted));
 }
 
@@ -3503,6 +3588,10 @@ body[data-theme="light"] .draw-studio-header {
     display: none;
 }
 
+.rule-card.is-filter-hidden {
+    display: none;
+}
+
 .rule-group.is-empty {
     display: none;
 }
@@ -3693,6 +3782,13 @@ body[data-theme="light"] .draw-studio-header {
         width: 100%;
     }
 
+    .draw-rules-panel {
+        left: 50%;
+        bottom: calc(80px + env(safe-area-inset-bottom));
+        width: calc(100% - 16px);
+        max-height: 78vh;
+    }
+
     .draw-studio-header {
         padding: 12px 14px;
     }
@@ -3721,6 +3817,10 @@ body[data-theme="light"] .draw-studio-header {
     }
 
     .draw-slot-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rule-picker-toolbar {
         grid-template-columns: 1fr;
     }
 

@@ -1829,13 +1829,25 @@
 	                    <aside class="draw-builder">
 	                        <div class="draw-panel">
 	                            <div class="draw-panel-header">
-	                                <h3>빠른 설계</h3>
+	                                <h3>시나리오 선택</h3>
 	                            </div>
 	                            <div class="draw-strategy-grid">
-	                                <button class="draw-strategy-btn" type="button" data-strategy="light">안전형</button>
-	                                <button class="draw-strategy-btn" type="button" data-strategy="balanced">균형형</button>
-	                                <button class="draw-strategy-btn" type="button" data-strategy="aggressive">공격형</button>
-	                                <button class="draw-strategy-btn ghost" type="button" data-strategy="clear">초기화</button>
+	                                <button class="draw-strategy-btn draw-scenario-btn" type="button" data-strategy="light">
+                                        <strong>안전형</strong>
+                                        <span>핵심 규칙 위주로 가볍게 제외</span>
+                                    </button>
+	                                <button class="draw-strategy-btn draw-scenario-btn" type="button" data-strategy="balanced">
+                                        <strong>균형형</strong>
+                                        <span>분포 규칙까지 균형 있게 적용</span>
+                                    </button>
+	                                <button class="draw-strategy-btn draw-scenario-btn" type="button" data-strategy="aggressive">
+                                        <strong>공격형</strong>
+                                        <span>고급 규칙까지 넓게 포함</span>
+                                    </button>
+	                                <button class="draw-strategy-btn ghost draw-scenario-btn" type="button" data-strategy="clear">
+                                        <strong>초기화</strong>
+                                        <span>모든 규칙 선택 해제</span>
+                                    </button>
 	                            </div>
 	                            <div class="draw-category-levels">
 	                                <div class="draw-category-row" data-group="홀짝 비율">
@@ -1918,6 +1930,10 @@
 	                                    <button class="draw-selected-clear" id="selected-clear-btn" type="button">전체 해제</button>
 	                                </div>
 	                            </div>
+                                <div class="draw-picker-entry">
+                                    <button id="open-rule-picker" type="button">+ 규칙 추가/제거</button>
+                                    <span>칩을 눌러 바로 제거할 수 있습니다.</span>
+                                </div>
 	                            <div class="draw-selected-sub" id="rules-visible-count">표시: 0/0</div>
 	                            <div class="draw-selected-helper">선택된 칩을 누르면 즉시 해제됩니다.</div>
 	                            <div id="selected-rules-list" class="draw-selected-list"></div>
@@ -1975,20 +1991,23 @@
                             </div>
                         </div>
 
-	                        <div class="draw-rules-panel">
+	                        <div class="draw-rules-panel" id="rule-picker-panel" aria-hidden="true">
                             <div class="draw-rules-header">
                                 <div>
-                                    <h3>Rule Library</h3>
-                                    <p>탭으로 규칙을 토글하세요. 각 규칙은 “예상 제외 수”를 함께 보여줍니다.</p>
+                                    <h3>규칙 라이브러리</h3>
+                                    <p>검색하고 카테고리별로 빠르게 넣고 뺄 수 있습니다.</p>
                                 </div>
-                                <div class="draw-rules-legend">
-                                    <span class="legend-chip">탭하여 선택/해제</span>
-                                    <span class="legend-chip muted">예상 제외 수 표시</span>
-                                </div>
+                                <button id="close-rule-picker" class="ghost" type="button">닫기</button>
+                            </div>
+                            <div class="rule-picker-toolbar">
+                                <input id="rule-picker-search" type="search" placeholder="규칙 검색 (예: 홀수, 구간, 소수)">
+                                <select id="rule-picker-group" aria-label="규칙 카테고리">
+                                    <option value="">전체 카테고리</option>
+                                </select>
                             </div>
                             <div class="rules-toggle-row">
                                 <button id="toggle-rules" class="ghost" type="button">모든 규칙 펼치기</button>
-                                <span class="rules-hint">기본은 핵심 규칙만 보여줍니다</span>
+                                <span class="rules-hint">핵심 위주로 보고 싶으면 간단히 보기를 사용하세요</span>
                             </div>
                             <div class="rules-groups">
                 <div class="rule-group is-essential" data-group="홀짝 비율">
@@ -2336,7 +2355,8 @@
         </div>
             </main>
         </div>
-    </section>
+            </section>
+            <div id="rule-picker-backdrop" class="rule-picker-backdrop" hidden></div>
 
             <section id="generator" class="section generator">
                 <div class="section-title">

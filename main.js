@@ -63,6 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
         2: document.getElementById('draw-slot-meta-2'),
         3: document.getElementById('draw-slot-meta-3')
     };
+    const openRulePickerBtn = document.getElementById('open-rule-picker');
+    const closeRulePickerBtn = document.getElementById('close-rule-picker');
+    const rulePickerPanel = document.getElementById('rule-picker-panel');
+    const rulePickerBackdrop = document.getElementById('rule-picker-backdrop');
+    const rulePickerSearch = document.getElementById('rule-picker-search');
+    const rulePickerGroup = document.getElementById('rule-picker-group');
     const rulesSection = document.getElementById('rules');
     const guestLimitEl = document.getElementById('guest-limit');
     const guestBannerEl = document.getElementById('guest-banner');
@@ -778,6 +784,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleRulesBtn.addEventListener('click', () => {
             const collapsed = rulesSection.classList.toggle('rules-collapsed');
             toggleRulesBtn.textContent = collapsed ? '모든 규칙 펼치기' : '간단히 보기';
+            applyRulePickerFilter();
         });
     }
 
@@ -816,6 +823,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    if (openRulePickerBtn) {
+        openRulePickerBtn.addEventListener('click', () => {
+            setRulePickerOpen(true);
+        });
+    }
+
+    if (closeRulePickerBtn) {
+        closeRulePickerBtn.addEventListener('click', () => {
+            setRulePickerOpen(false);
+        });
+    }
+
+    if (rulePickerBackdrop) {
+        rulePickerBackdrop.addEventListener('click', () => {
+            setRulePickerOpen(false);
+        });
+    }
+
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+            setRulePickerOpen(false);
+        }
+    });
+
+    if (rulePickerSearch) {
+        rulePickerSearch.addEventListener('input', () => {
+            applyRulePickerFilter();
+        });
+    }
+
+    if (rulePickerGroup) {
+        rulePickerGroup.addEventListener('change', () => {
+            applyRulePickerFilter();
+        });
+    }
+
     try {
         syncThemeToggle();
         syncMenuState(false);
@@ -826,6 +869,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCombinedEstimates();
         renderSlotPresets();
         syncGroupLevelButtons();
+        populateRulePickerGroups();
+        applyRulePickerFilter();
         setupRuleDetails();
         syncInitialTab();
         window.addEventListener('message', event => {
@@ -844,6 +889,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (toggleRulesBtn) {
             toggleRulesBtn.textContent = '모든 규칙 펼치기';
         }
+        applyRulePickerFilter();
         if (guestLimitEl) {
             guestLimitEl.textContent = '비회원은 하루 5회까지 가능 (1회 1세트).';
             canGuestGenerate();
@@ -1031,6 +1077,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function setActiveTab(tabId, focusPanel, updateHash = true) {
         if (!tabId) {
             return;
+        }
+        if (tabId !== 'draw') {
+            setRulePickerOpen(false);
         }
         const targetPanelId = `tab-${tabId}`;
         const targetPanel = tabPanels.find(panel => panel.id === targetPanelId);
@@ -2368,7 +2417,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const selectedCount = ruleInputs.filter(input => input.checked).length;
         const totalCount = ruleCards.length;
-        const visibleCount = ruleCards.filter(card => !card.classList.contains('is-hidden')).length;
+        const visibleCount = ruleCards.filter(card => isCardVisibleInPicker(card)).length;
         rulesSelectedCount.textContent = `${selectedCount}개`;
         rulesVisibleCount.textContent = `표시: ${visibleCount}/${totalCount}`;
         ruleCards.forEach(card => {
@@ -2426,6 +2475,67 @@ document.addEventListener('DOMContentLoaded', () => {
             const allChecked = groupInputs.every(input => input.checked);
             button.textContent = allChecked ? '선택 해제' : '모두 선택';
         });
+    }
+
+    function setRulePickerOpen(isOpen) {
+        if (!rulePickerPanel || !rulePickerBackdrop) {
+            return;
+        }
+        rulePickerPanel.classList.toggle('is-open', Boolean(isOpen));
+        rulePickerPanel.setAttribute('aria-hidden', String(!isOpen));
+        rulePickerBackdrop.hidden = !isOpen;
+        body.classList.toggle('rule-picker-open', Boolean(isOpen));
+        if (isOpen && rulePickerSearch) {
+            window.setTimeout(() => {
+                rulePickerSearch.focus();
+            }, 40);
+        }
+    }
+
+    function populateRulePickerGroups() {
+        if (!rulePickerGroup) {
+            return;
+        }
+        const seen = new Set(['']);
+        const options = ['<option value="">전체 카테고리</option>'];
+        ruleGroups.forEach(groupEl => {
+            const group = groupEl.dataset.group;
+            if (!group || seen.has(group)) {
+                return;
+            }
+            seen.add(group);
+            options.push(`<option value="${escapeHtml(group)}">${escapeHtml(group)}</option>`);
+        });
+        rulePickerGroup.innerHTML = options.join('');
+    }
+
+    function isCardVisibleInPicker(card) {
+        if (!card || card.classList.contains('is-filter-hidden')) {
+            return false;
+        }
+        if (rulesSection && rulesSection.classList.contains('rules-collapsed') && card.classList.contains('is-advanced')) {
+            return false;
+        }
+        return true;
+    }
+
+    function applyRulePickerFilter() {
+        const keyword = (rulePickerSearch?.value || '').trim().toLowerCase();
+        const group = (rulePickerGroup?.value || '').trim();
+        ruleCards.forEach(card => {
+            const title = (card.dataset.title || card.querySelector('.rule-title')?.textContent || '').toLowerCase();
+            const desc = (card.querySelector('.rule-desc')?.textContent || '').toLowerCase();
+            const cardGroup = card.dataset.group || '';
+            const matchesKeyword = !keyword || title.includes(keyword) || desc.includes(keyword);
+            const matchesGroup = !group || group === cardGroup;
+            card.classList.toggle('is-filter-hidden', !(matchesKeyword && matchesGroup));
+        });
+        ruleGroups.forEach(groupEl => {
+            const cards = Array.from(groupEl.querySelectorAll('.rule-card'));
+            const hasVisibleCard = cards.some(card => isCardVisibleInPicker(card));
+            groupEl.classList.toggle('is-empty', !hasVisibleCard);
+        });
+        updateSelectionCount();
     }
 
     const detailSheet = document.getElementById('detail-sheet');
