@@ -1826,41 +1826,105 @@
             </div>
 
             <section id="rules" class="section rules draw-studio">
-                <div class="draw-studio-body">
-                    <aside class="draw-builder">
-                        <div class="draw-panel">
-                            <div class="draw-panel-header">
-                                <h3>선택한 필터</h3>
-                                <div class="draw-selected-actions">
-                                    <span class="draw-selected-count" id="rules-selected-count">0개</span>
-                                    <button class="draw-selected-clear" id="selected-clear-btn" type="button">전체 해제</button>
-                                </div>
-                            </div>
-                            <div class="draw-selected-presets">
-                                <button class="preset-btn" data-preset="light" type="button">보수형</button>
-                                <button class="preset-btn" data-preset="balanced" type="button">균형형</button>
-                                <button class="preset-btn" data-preset="aggressive" type="button">공격형</button>
-                                <button class="preset-btn" data-preset="clear" type="button">선택 해제</button>
-                                <button class="preset-btn" id="custom-save" type="button">내 프리셋 저장</button>
-                                <button class="preset-btn" id="custom-apply" type="button">내 프리셋 적용</button>
-                            </div>
-                            <div class="draw-selected-sub" id="rules-visible-count">표시: 0/0</div>
-                            <div class="draw-selected-helper">선택된 칩을 누르면 즉시 해제됩니다.</div>
-                            <div id="selected-rules-list" class="draw-selected-list"></div>
-                            <div id="selected-rules-empty" class="draw-selected-empty">아직 선택된 규칙이 없습니다.</div>
-                        </div>
+	                <div class="draw-studio-body">
+	                    <aside class="draw-builder">
+	                        <div class="draw-panel">
+	                            <div class="draw-panel-header">
+	                                <h3>빠른 설계</h3>
+	                            </div>
+	                            <div class="draw-strategy-grid">
+	                                <button class="draw-strategy-btn" type="button" data-strategy="light">안전형</button>
+	                                <button class="draw-strategy-btn" type="button" data-strategy="balanced">균형형</button>
+	                                <button class="draw-strategy-btn" type="button" data-strategy="aggressive">공격형</button>
+	                                <button class="draw-strategy-btn ghost" type="button" data-strategy="clear">초기화</button>
+	                            </div>
+	                            <div class="draw-category-levels">
+	                                <div class="draw-category-row" data-group="홀짝 비율">
+	                                    <span class="draw-category-name">홀짝</span>
+	                                    <div class="draw-level-buttons">
+	                                        <button type="button" data-group-level="홀짝 비율:0">끔</button>
+	                                        <button type="button" data-group-level="홀짝 비율:1">약</button>
+	                                        <button type="button" data-group-level="홀짝 비율:2">중</button>
+	                                        <button type="button" data-group-level="홀짝 비율:3">강</button>
+	                                    </div>
+	                                </div>
+	                                <div class="draw-category-row" data-group="연속/반복">
+	                                    <span class="draw-category-name">연속수</span>
+	                                    <div class="draw-level-buttons">
+	                                        <button type="button" data-group-level="연속/반복:0">끔</button>
+	                                        <button type="button" data-group-level="연속/반복:1">약</button>
+	                                        <button type="button" data-group-level="연속/반복:2">중</button>
+	                                        <button type="button" data-group-level="연속/반복:3">강</button>
+	                                    </div>
+	                                </div>
+	                                <div class="draw-category-row" data-group="구간 분포">
+	                                    <span class="draw-category-name">구간</span>
+	                                    <div class="draw-level-buttons">
+	                                        <button type="button" data-group-level="구간 분포:0">끔</button>
+	                                        <button type="button" data-group-level="구간 분포:1">약</button>
+	                                        <button type="button" data-group-level="구간 분포:2">중</button>
+	                                        <button type="button" data-group-level="구간 분포:3">강</button>
+	                                    </div>
+	                                </div>
+	                                <div class="draw-category-row" data-group="끝자리 분포">
+	                                    <span class="draw-category-name">끝자리</span>
+	                                    <div class="draw-level-buttons">
+	                                        <button type="button" data-group-level="끝자리 분포:0">끔</button>
+	                                        <button type="button" data-group-level="끝자리 분포:1">약</button>
+	                                        <button type="button" data-group-level="끝자리 분포:2">중</button>
+	                                        <button type="button" data-group-level="끝자리 분포:3">강</button>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <div class="draw-slot-grid">
+	                                <div class="draw-slot-card">
+	                                    <div class="draw-slot-title">프리셋 슬롯 1</div>
+	                                    <div class="draw-slot-meta" id="draw-slot-meta-1">비어있음</div>
+	                                    <div class="draw-slot-actions">
+	                                        <button type="button" data-slot-save="1">저장</button>
+	                                        <button type="button" data-slot-apply="1">적용</button>
+	                                    </div>
+	                                </div>
+	                                <div class="draw-slot-card">
+	                                    <div class="draw-slot-title">프리셋 슬롯 2</div>
+	                                    <div class="draw-slot-meta" id="draw-slot-meta-2">비어있음</div>
+	                                    <div class="draw-slot-actions">
+	                                        <button type="button" data-slot-save="2">저장</button>
+	                                        <button type="button" data-slot-apply="2">적용</button>
+	                                    </div>
+	                                </div>
+	                                <div class="draw-slot-card">
+	                                    <div class="draw-slot-title">프리셋 슬롯 3</div>
+	                                    <div class="draw-slot-meta" id="draw-slot-meta-3">비어있음</div>
+	                                    <div class="draw-slot-actions">
+	                                        <button type="button" data-slot-save="3">저장</button>
+	                                        <button type="button" data-slot-apply="3">적용</button>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <div class="rules-actions">
+	                                <button id="save-rules" class="ghost" type="button">현재 저장</button>
+	                                <button id="load-rules" class="ghost" type="button">저장 불러오기</button>
+	                                <button class="ghost" id="custom-save" type="button">내 프리셋 저장</button>
+	                                <button class="ghost" id="custom-apply" type="button">내 프리셋 적용</button>
+	                            </div>
+	                            <span id="rules-status" class="rules-status" aria-live="polite"></span>
+	                        </div>
 
-                        <div class="draw-panel">
-                            <div class="draw-panel-header">
-                                <h3>저장/불러오기</h3>
-                            </div>
-                            <div class="rules-actions">
-                                <button id="save-rules" class="ghost" type="button">규칙 저장</button>
-                                <button id="load-rules" class="ghost" type="button">저장 불러오기</button>
-                                <span id="rules-status" class="rules-status" aria-live="polite"></span>
-                            </div>
-                        </div>
-                    </aside>
+	                        <div class="draw-panel">
+	                            <div class="draw-panel-header">
+	                                <h3>선택한 필터</h3>
+	                                <div class="draw-selected-actions">
+	                                    <span class="draw-selected-count" id="rules-selected-count">0개</span>
+	                                    <button class="draw-selected-clear" id="selected-clear-btn" type="button">전체 해제</button>
+	                                </div>
+	                            </div>
+	                            <div class="draw-selected-sub" id="rules-visible-count">표시: 0/0</div>
+	                            <div class="draw-selected-helper">선택된 칩을 누르면 즉시 해제됩니다.</div>
+	                            <div id="selected-rules-list" class="draw-selected-list"></div>
+	                            <div id="selected-rules-empty" class="draw-selected-empty">아직 선택된 규칙이 없습니다.</div>
+	                        </div>
+	                    </aside>
 
                     <main class="draw-dashboard">
                         <div class="draw-dashboard-grid">

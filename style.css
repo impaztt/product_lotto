@@ -2803,6 +2803,113 @@ body[data-theme="light"] .draw-studio-header {
     font-size: 16px;
 }
 
+.draw-strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.draw-strategy-btn {
+    border: 0;
+    background: #f1f5f9;
+    color: #0f172a;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.draw-strategy-btn.is-active {
+    background: rgba(30, 107, 255, 0.14);
+    color: #0f172a;
+}
+
+.draw-category-levels {
+    display: grid;
+    gap: 10px;
+}
+
+.draw-category-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.draw-category-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--draw-muted, #64748b);
+    min-width: 46px;
+}
+
+.draw-level-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    width: 100%;
+}
+
+.draw-level-buttons button {
+    border: 0;
+    background: #f1f5f9;
+    color: #475569;
+    border-radius: 999px;
+    padding: 6px 0;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.draw-level-buttons button.is-active {
+    background: rgba(30, 107, 255, 0.14);
+    color: #0f172a;
+}
+
+.draw-slot-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.draw-slot-card {
+    background: #f8fafc;
+    border: 0;
+    border-radius: 12px;
+    padding: 10px;
+    display: grid;
+    gap: 8px;
+}
+
+.draw-slot-title {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.draw-slot-meta {
+    font-size: 11px;
+    color: #64748b;
+    min-height: 16px;
+}
+
+.draw-slot-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.draw-slot-actions button {
+    border: 0;
+    border-radius: 10px;
+    padding: 6px 0;
+    font-size: 11px;
+    font-weight: 700;
+    background: #e2e8f0;
+    color: #334155;
+    cursor: pointer;
+}
+
 .draw-dashboard {
     display: grid;
     gap: 18px;
@@ -3608,6 +3715,14 @@ body[data-theme="light"] .draw-studio-header {
         justify-content: space-between;
     }
 
+    .draw-strategy-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .draw-slot-grid {
+        grid-template-columns: 1fr;
+    }
+
     .rules-grid {
         gap: 8px;
     }
@@ -3793,6 +3908,15 @@ body[data-theme="light"] .draw-studio-header {
     .rule-card {
         padding: 12px;
         min-height: 0;
+    }
+
+    .draw-strategy-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .draw-category-row {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
     .rule-title {

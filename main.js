@@ -54,6 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const ruleStatEls = Array.from(document.querySelectorAll('.rule-stat'));
     const groupSelectButtons = Array.from(document.querySelectorAll('.group-select'));
     const toggleRulesBtn = document.getElementById('toggle-rules');
+    const strategyButtons = Array.from(document.querySelectorAll('[data-strategy]'));
+    const groupLevelButtons = Array.from(document.querySelectorAll('[data-group-level]'));
+    const slotSaveButtons = Array.from(document.querySelectorAll('[data-slot-save]'));
+    const slotApplyButtons = Array.from(document.querySelectorAll('[data-slot-apply]'));
+    const slotMetaEls = {
+        1: document.getElementById('draw-slot-meta-1'),
+        2: document.getElementById('draw-slot-meta-2'),
+        3: document.getElementById('draw-slot-meta-3')
+    };
     const rulesSection = document.getElementById('rules');
     const guestLimitEl = document.getElementById('guest-limit');
     const guestBannerEl = document.getElementById('guest-banner');
@@ -646,6 +655,45 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    strategyButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const strategy = button.dataset.strategy;
+            applyStrategy(strategy);
+        });
+    });
+
+    groupLevelButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const token = button.dataset.groupLevel || '';
+            const [group, rawLevel] = token.split(':');
+            const level = Number(rawLevel);
+            if (!group || !Number.isFinite(level)) {
+                return;
+            }
+            applyGroupLevel(group, level);
+        });
+    });
+
+    slotSaveButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const slot = Number(button.dataset.slotSave);
+            if (!Number.isFinite(slot)) {
+                return;
+            }
+            saveSlotPreset(slot);
+        });
+    });
+
+    slotApplyButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const slot = Number(button.dataset.slotApply);
+            if (!Number.isFinite(slot)) {
+                return;
+            }
+            applySlotPreset(slot);
+        });
+    });
+
     if (saveRulesBtn) {
         saveRulesBtn.addEventListener('click', () => {
             const selected = ruleInputs.filter(input => input.checked).map(input => input.value);
@@ -676,12 +724,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             const ids = JSON.parse(saved);
-            ruleInputs.forEach(input => {
-                input.checked = ids.includes(input.value);
-            });
+            setRulesByIds(ids);
+            syncStrategyButtons('');
+            syncGroupLevelButtons();
             updateRulesStatus('내 프리셋을 적용했습니다.');
-            updateSelectionCount();
-            updateCombinedEstimates();
         });
     }
 
@@ -723,6 +769,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             updateSelectionCount();
             updateCombinedEstimates();
+            syncStrategyButtons('');
+            syncGroupLevelButtons();
         });
     });
 
@@ -737,6 +785,8 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('change', () => {
             updateSelectionCount();
             updateCombinedEstimates();
+            syncStrategyButtons('');
+            syncGroupLevelButtons();
         });
     });
 
@@ -760,11 +810,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (selectedClearBtn) {
         selectedClearBtn.addEventListener('click', () => {
-            ruleInputs.forEach(input => {
-                input.checked = false;
-            });
-            updateSelectionCount();
-            updateCombinedEstimates();
+            setRulesByIds([]);
+            syncStrategyButtons('clear');
+            syncGroupLevelButtons();
         });
     }
 
@@ -776,6 +824,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSelectionCount();
         computeBaseOdds();
         updateCombinedEstimates();
+        renderSlotPresets();
+        syncGroupLevelButtons();
         setupRuleDetails();
         syncInitialTab();
         window.addEventListener('message', event => {
@@ -2104,23 +2154,186 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function setRulesByIds(ids) {
+        const selected = new Set(Array.isArray(ids) ? ids : []);
+        ruleInputs.forEach(input => {
+            input.checked = selected.has(input.value);
+        });
+        updateSelectionCount();
+        updateCombinedEstimates();
+    }
+
+    function applyStrategy(strategy) {
+        const presetIds = PRESETS[strategy] || [];
+        if (strategy === 'clear') {
+            setRulesByIds([]);
+            updateRulesStatus('전략을 초기화했습니다.');
+            syncStrategyButtons('clear');
+            syncGroupLevelButtons();
+            return;
+        }
+        setRulesByIds(presetIds);
+        updateRulesStatus(`${PRESETS_LABEL[strategy] || '전략'}을 적용했습니다.`);
+        syncStrategyButtons(strategy);
+        syncGroupLevelButtons();
+    }
+
+    function applyGroupLevel(group, level) {
+        const cards = ruleCards.filter(card => card.dataset.group === group);
+        if (!cards.length) {
+            return;
+        }
+        const essential = cards.filter(card => !card.classList.contains('is-advanced'));
+        const advanced = cards.filter(card => card.classList.contains('is-advanced'));
+        const essentialInputs = essential.map(card => card.querySelector('.rule-input')).filter(Boolean);
+        const advancedInputs = advanced.map(card => card.querySelector('.rule-input')).filter(Boolean);
+        const ordered = [...essentialInputs, ...advancedInputs];
+
+        let targetCount = 0;
+        if (level === 1) {
+            targetCount = Math.max(1, Math.ceil(essentialInputs.length * 0.35));
+        } else if (level === 2) {
+            targetCount = Math.max(1, Math.ceil(essentialInputs.length * 0.7));
+        } else if (level >= 3) {
+            targetCount = ordered.length;
+        }
+
+        ordered.forEach((input, index) => {
+            input.checked = index < targetCount;
+        });
+        updateSelectionCount();
+        updateCombinedEstimates();
+        syncStrategyButtons('');
+        syncGroupLevelButtons();
+    }
+
+    function syncStrategyButtons(activeStrategy) {
+        strategyButtons.forEach(button => {
+            const isActive = activeStrategy && button.dataset.strategy === activeStrategy;
+            button.classList.toggle('is-active', Boolean(isActive));
+        });
+    }
+
+    function syncGroupLevelButtons() {
+        const groupCardsMap = new Map();
+        ruleCards.forEach(card => {
+            const group = card.dataset.group;
+            if (!group) {
+                return;
+            }
+            if (!groupCardsMap.has(group)) {
+                groupCardsMap.set(group, []);
+            }
+            groupCardsMap.get(group).push(card);
+        });
+
+        groupLevelButtons.forEach(button => {
+            const token = button.dataset.groupLevel || '';
+            const [group, rawLevel] = token.split(':');
+            const level = Number(rawLevel);
+            const cards = groupCardsMap.get(group) || [];
+            const inputs = cards.map(card => card.querySelector('.rule-input')).filter(Boolean);
+            const checkedCount = inputs.filter(input => input.checked).length;
+            const total = inputs.length;
+            let currentLevel = 0;
+            if (checkedCount > 0 && total > 0) {
+                const ratio = checkedCount / total;
+                if (ratio <= 0.4) {
+                    currentLevel = 1;
+                } else if (ratio <= 0.8) {
+                    currentLevel = 2;
+                } else {
+                    currentLevel = 3;
+                }
+            }
+            button.classList.toggle('is-active', currentLevel === level);
+        });
+    }
+
+    function getSlotPresets() {
+        try {
+            const raw = localStorage.getItem('lotto_strategy_slots');
+            if (!raw) {
+                return {};
+            }
+            const parsed = JSON.parse(raw);
+            return parsed && typeof parsed === 'object' ? parsed : {};
+        } catch {
+            return {};
+        }
+    }
+
+    function saveSlotPresets(slots) {
+        localStorage.setItem('lotto_strategy_slots', JSON.stringify(slots));
+    }
+
+    function renderSlotPresets() {
+        const slots = getSlotPresets();
+        [1, 2, 3].forEach(slot => {
+            const el = slotMetaEls[slot];
+            if (!el) {
+                return;
+            }
+            const data = slots[String(slot)];
+            if (!data || !Array.isArray(data.ids) || !data.ids.length) {
+                el.textContent = '비어있음';
+                return;
+            }
+            const label = data.savedAt ? formatSlotDate(data.savedAt) : '저장됨';
+            el.textContent = `${data.ids.length}개 규칙 · ${label}`;
+        });
+    }
+
+    function formatSlotDate(value) {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) {
+            return '저장됨';
+        }
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        const hh = String(date.getHours()).padStart(2, '0');
+        const min = String(date.getMinutes()).padStart(2, '0');
+        return `${mm}.${dd} ${hh}:${min}`;
+    }
+
+    function saveSlotPreset(slot) {
+        const slots = getSlotPresets();
+        const ids = ruleInputs.filter(input => input.checked).map(input => input.value);
+        slots[String(slot)] = {
+            ids,
+            savedAt: new Date().toISOString()
+        };
+        saveSlotPresets(slots);
+        renderSlotPresets();
+        updateRulesStatus(`${slot}번 슬롯에 저장했습니다.`);
+    }
+
+    function applySlotPreset(slot) {
+        const slots = getSlotPresets();
+        const data = slots[String(slot)];
+        if (!data || !Array.isArray(data.ids)) {
+            updateRulesStatus(`${slot}번 슬롯이 비어 있습니다.`);
+            return;
+        }
+        setRulesByIds(data.ids);
+        syncStrategyButtons('');
+        syncGroupLevelButtons();
+        updateRulesStatus(`${slot}번 슬롯을 적용했습니다.`);
+    }
+
     function applyPreset(preset) {
         const presetIds = PRESETS[preset] || [];
         if (preset === 'clear') {
-            ruleInputs.forEach(input => {
-                input.checked = false;
-            });
+            setRulesByIds([]);
             updateRulesStatus('모든 선택을 해제했습니다.');
-            updateSelectionCount();
-            updateCombinedEstimates();
+            syncStrategyButtons('clear');
+            syncGroupLevelButtons();
             return;
         }
-        ruleInputs.forEach(input => {
-            input.checked = presetIds.includes(input.value);
-        });
+        setRulesByIds(presetIds);
         updateRulesStatus(`${PRESETS_LABEL[preset]} 규칙을 적용했습니다.`);
-        updateSelectionCount();
-        updateCombinedEstimates();
+        syncStrategyButtons(preset);
+        syncGroupLevelButtons();
     }
 
     function applySavedRules(fromButton = false) {
@@ -2134,14 +2347,12 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const savedIdsRaw = JSON.parse(saved);
             const savedIds = Array.isArray(savedIdsRaw) ? savedIdsRaw : [];
-            ruleInputs.forEach(input => {
-                input.checked = savedIds.includes(input.value);
-            });
+            setRulesByIds(savedIds);
+            syncStrategyButtons('');
+            syncGroupLevelButtons();
             if (fromButton) {
                 updateRulesStatus('저장된 규칙을 불러왔습니다.');
             }
-            updateSelectionCount();
-            updateCombinedEstimates();
         } catch (error) {
             console.warn('저장된 규칙 파싱 실패', error);
             localStorage.removeItem('lotto_rules');
