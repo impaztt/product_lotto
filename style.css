@@ -104,6 +104,41 @@ body {
     color: #ffffff;
 }
 
+#tab-dashboard .result-ball.ball-1,
+#tab-dashboard .time-circle.ball-1,
+#tab-dashboard .ball-1 {
+    background: #fbc400;
+    color: #ffffff;
+}
+
+#tab-dashboard .result-ball.ball-2,
+#tab-dashboard .time-circle.ball-2,
+#tab-dashboard .ball-2 {
+    background: #69c8f2;
+    color: #ffffff;
+}
+
+#tab-dashboard .result-ball.ball-3,
+#tab-dashboard .time-circle.ball-3,
+#tab-dashboard .ball-3 {
+    background: var(--lt645-blue);
+    color: #ffffff;
+}
+
+#tab-dashboard .result-ball.ball-4,
+#tab-dashboard .time-circle.ball-4,
+#tab-dashboard .ball-4 {
+    background: #aaaaaa;
+    color: #ffffff;
+}
+
+#tab-dashboard .result-ball.ball-5,
+#tab-dashboard .time-circle.ball-5,
+#tab-dashboard .ball-5 {
+    background: #b0d840;
+    color: #ffffff;
+}
+
 #tab-weekly .color-lt645,
 #tab-weekly .color-p {
     color: var(--lt645-blue) !important;
@@ -185,6 +220,141 @@ body {
 
 #tab-dashboard .header-info {
     gap: 28px;
+}
+
+#tab-dashboard .result-infoWrap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px;
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(30, 107, 255, 0.08), rgba(30, 107, 255, 0.02));
+    border: 1px solid rgba(30, 107, 255, 0.16);
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.12);
+}
+
+#tab-dashboard .result-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+#tab-dashboard .result-txt {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(15, 23, 42, 0.65);
+    letter-spacing: 0.08em;
+}
+
+#tab-dashboard .result-round {
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1;
+    color: #0f172a;
+}
+
+#tab-dashboard .result-date {
+    font-size: 13px;
+    color: rgba(15, 23, 42, 0.65);
+}
+
+#tab-dashboard .result-ballWrapper {
+    padding: 14px 14px 12px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(30, 107, 255, 0.18);
+}
+
+#tab-dashboard .result-ballBox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+#tab-dashboard .result-ball {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+    background: #1e6bff;
+    box-shadow: 0 6px 12px rgba(30, 107, 255, 0.2);
+}
+
+#tab-dashboard .result-plus {
+    margin: 0;
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#tab-dashboard .result-plus img {
+    width: 16px;
+    height: 16px;
+}
+
+#tab-dashboard .result-txtBox {
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#tab-dashboard .main-txt,
+#tab-dashboard .bonus-txt {
+    font-size: 12px;
+    color: rgba(15, 23, 42, 0.68);
+    font-weight: 600;
+}
+
+#tab-dashboard .result-prizeCard {
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid rgba(30, 107, 255, 0.18);
+}
+
+#tab-dashboard .result-winnings-txt {
+    font-size: 12px;
+    color: rgba(15, 23, 42, 0.62);
+    margin-bottom: 6px;
+}
+
+#tab-dashboard .result-winnings-num {
+    font-size: 25px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+#tab-dashboard .result-detail {
+    margin-top: 4px;
+    font-size: 13px;
+    color: rgba(15, 23, 42, 0.68);
+}
+
+#tab-dashboard .header-goWrap {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+#tab-dashboard .header-goWrap .btn-go {
+    width: 100%;
+    min-height: 42px;
+    border-radius: 12px;
+    font-weight: 700;
+    background: #ffffff;
 }
 
 #tab-dashboard .this-week-round {
@@ -292,6 +462,14 @@ body {
         flex: 1 1 0;
         min-width: 60px;
     }
+    #tab-dashboard .result-round {
+        font-size: 30px;
+    }
+    #tab-dashboard .result-ball {
+        width: 38px;
+        height: 38px;
+        font-size: 16px;
+    }
 }
 
 @media (max-width: 640px) {
@@ -307,6 +485,28 @@ body {
     #tab-dashboard .time-circle {
         min-width: 54px;
         height: 62px;
+    }
+    #tab-dashboard .result-infoWrap {
+        padding: 16px;
+    }
+    #tab-dashboard .result-head {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+    }
+    #tab-dashboard .result-round {
+        font-size: 28px;
+    }
+    #tab-dashboard .result-ballBox {
+        gap: 6px;
+    }
+    #tab-dashboard .result-ball {
+        width: 34px;
+        height: 34px;
+        font-size: 14px;
+    }
+    #tab-dashboard .header-goWrap {
+        grid-template-columns: 1fr;
     }
 }
 

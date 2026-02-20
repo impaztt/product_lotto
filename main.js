@@ -1951,13 +1951,13 @@ document.addEventListener('DOMContentLoaded', () => {
             weeklyLatestRoundEl.textContent = `${data.drwNo}회`;
         }
         if (weeklyLatestDateEl) {
-            weeklyLatestDateEl.textContent = data.drwNoDate ? `${data.drwNoDate} 추첨` : '';
+            weeklyLatestDateEl.textContent = data.drwNoDate ? `${formatShortDate(data.drwNoDate)} 추첨` : '';
         }
         if (dashLatestRoundEl) {
             dashLatestRoundEl.textContent = `${data.drwNo}회`;
         }
         if (dashLatestDateEl) {
-            dashLatestDateEl.textContent = data.drwNoDate ? `${data.drwNoDate} 추첨` : '';
+            dashLatestDateEl.textContent = data.drwNoDate ? `${formatShortDate(data.drwNoDate)} 추첨` : '';
         }
         weeklyLatestNumbers.forEach((el, index) => {
             const value = numbers[index];
