@@ -121,7 +121,7 @@ body {
 #tab-dashboard .result-ball.ball-3,
 #tab-dashboard .time-circle.ball-3,
 #tab-dashboard .ball-3 {
-    background: var(--lt645-blue);
+    background: #ff7272;
     color: #ffffff;
 }
 
