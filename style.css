@@ -582,6 +582,111 @@ body {
     color: #0f172a;
 }
 
+#tab-store,
+#tab-qr {
+    margin: -40px -6vw 0;
+    padding: 22px 6vw 90px;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(30, 107, 255, 0.1), transparent 34%),
+        radial-gradient(circle at 100% 14%, rgba(14, 165, 233, 0.08), transparent 32%),
+        #eef3fb;
+    color: #0f172a;
+    font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
+}
+
+#tab-store .section-title h2,
+#tab-qr .section-title h2 {
+    color: #0f172a;
+}
+
+#tab-store .section-title p,
+#tab-qr .section-title p,
+#tab-store #store-status {
+    color: #64748b;
+}
+
+#tab-store .store-controls,
+#tab-store .store-map,
+#tab-store .store-table-wrap,
+#tab-store .store-grid-wrap,
+#tab-qr .qr-camera-card,
+#tab-qr .qr-result-card {
+    background: #ffffff;
+    border: 0;
+    border-radius: 18px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+}
+
+#tab-store .store-controls button,
+#tab-store .store-controls select,
+#tab-store .store-table .store-route-btn,
+#tab-store .store-card .store-route-btn,
+#tab-store .store-next-actions button,
+#tab-qr .qr-actions button,
+#tab-qr .qr-next-actions button {
+    border: 0;
+    background: #f1f5f9;
+    color: #0f172a;
+    border-radius: 12px;
+}
+
+#tab-store .store-controls button:not(.ghost),
+#tab-store #store-nearest-route-btn,
+#tab-qr #qr-start-btn,
+#tab-qr #qr-open-round-btn {
+    background: #1e6bff;
+    color: #ffffff;
+}
+
+#tab-store .store-controls button.ghost,
+#tab-store .store-next-actions button.ghost,
+#tab-qr .qr-actions button.ghost,
+#tab-qr .qr-next-actions button.ghost {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+#tab-store .store-map,
+#tab-store .store-table-wrap,
+#tab-store .store-grid-wrap {
+    overflow: hidden;
+}
+
+#tab-store .store-table thead {
+    background: #f8fafc;
+}
+
+#tab-store .store-table th,
+#tab-store .store-table td {
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    color: #334155;
+}
+
+#tab-store .store-table tbody tr:hover,
+#tab-store .store-table tbody tr:focus {
+    background: #f8fafc;
+}
+
+#tab-store .store-card,
+#tab-store .store-empty,
+#tab-qr .qr-block {
+    border: 0;
+    border-radius: 14px;
+    background: #f8fafc;
+}
+
+#tab-qr .qr-preview {
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f8fafc;
+}
+
+#tab-qr .qr-match,
+#tab-qr .qr-payload,
+#tab-qr .qr-label {
+    color: #475569;
+}
+
 @media (max-width: 960px) {
     #tab-dashboard .this-week-round {
         padding: 18px 16px;
@@ -597,6 +702,11 @@ body {
         margin: -18px -4vw 0;
     }
     #tab-mypage {
+        margin: -18px -4vw 0;
+        padding: 18px 4vw calc(140px + env(safe-area-inset-bottom));
+    }
+    #tab-store,
+    #tab-qr {
         margin: -18px -4vw 0;
         padding: 18px 4vw calc(140px + env(safe-area-inset-bottom));
     }
@@ -635,6 +745,11 @@ body {
         margin: -16px -4vw 0;
     }
     #tab-mypage {
+        margin: -16px -4vw 0;
+        padding: 16px 4vw calc(140px + env(safe-area-inset-bottom));
+    }
+    #tab-store,
+    #tab-qr {
         margin: -16px -4vw 0;
         padding: 16px 4vw calc(140px + env(safe-area-inset-bottom));
     }
