@@ -492,6 +492,96 @@ body {
     box-shadow: none;
 }
 
+#tab-mypage {
+    margin: -40px -6vw 0;
+    padding: 22px 6vw 90px;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(30, 107, 255, 0.1), transparent 34%),
+        radial-gradient(circle at 100% 14%, rgba(14, 165, 233, 0.08), transparent 32%),
+        #eef3fb;
+    color: #0f172a;
+    font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
+}
+
+#tab-mypage .section-title h2 {
+    color: #0f172a;
+}
+
+#tab-mypage .section-title p {
+    color: #64748b;
+}
+
+#tab-mypage .mypage-grid {
+    gap: 16px;
+}
+
+#tab-mypage .info-card {
+    background: #ffffff;
+    border: 0;
+    border-radius: 18px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+}
+
+#tab-mypage .info-header h3 {
+    margin: 0;
+    color: #0f172a;
+}
+
+#tab-mypage .badge {
+    background: rgba(30, 107, 255, 0.12);
+    color: #0f172a;
+    border: 0;
+}
+
+#tab-mypage .badge.muted {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+#tab-mypage .info-label,
+#tab-mypage .info-list {
+    color: #64748b;
+}
+
+#tab-mypage .info-list strong {
+    color: #0f172a;
+}
+
+#tab-mypage .info-list li {
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+#tab-mypage #auth.section {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+#tab-mypage .auth-grid {
+    gap: 16px;
+}
+
+#tab-mypage .auth-card {
+    background: #ffffff;
+    border: 0;
+    border-radius: 18px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+}
+
+#tab-mypage .auth-card h3,
+#tab-mypage .auth-card p,
+#tab-mypage .bullets li {
+    color: #0f172a;
+}
+
+#tab-mypage .auth-btn {
+    border: 0;
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
 @media (max-width: 960px) {
     #tab-dashboard .this-week-round {
         padding: 18px 16px;
@@ -505,6 +595,10 @@ body {
 @media (max-width: 960px) {
     #tab-dashboard {
         margin: -18px -4vw 0;
+    }
+    #tab-mypage {
+        margin: -18px -4vw 0;
+        padding: 18px 4vw calc(140px + env(safe-area-inset-bottom));
     }
     #tab-dashboard .header-girdWrap {
         grid-template-columns: 1fr;
@@ -539,6 +633,10 @@ body {
 @media (max-width: 640px) {
     #tab-dashboard {
         margin: -16px -4vw 0;
+    }
+    #tab-mypage {
+        margin: -16px -4vw 0;
+        padding: 16px 4vw calc(140px + env(safe-area-inset-bottom));
     }
     #tab-dashboard .this-week-round {
         padding: 16px 14px;
