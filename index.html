@@ -1824,27 +1824,21 @@
                     </div>
                 </div>
             </div>
-            <div class="draw-flow-nav" role="tablist" aria-label="추첨 탭 빠른 이동">
-                <button type="button" class="draw-flow-btn is-active" data-draw-jump="quick">빠른설계</button>
-                <button type="button" class="draw-flow-btn" data-draw-jump="metrics">변화지표</button>
-                <button type="button" class="draw-flow-btn" data-draw-jump="detail">상세규칙</button>
-            </div>
-
             <section id="rules" class="section rules draw-studio">
 	                <div class="draw-studio-body">
 	                    <aside class="draw-builder">
-	                        <div class="draw-panel" id="draw-quick-panel">
+	                        <div class="draw-panel">
 	                            <div class="draw-panel-header">
 	                                <h3>빠른 설계</h3>
 	                            </div>
-	                            <div class="draw-swipe-lane draw-strategy-lane">
-	                                <button class="draw-strategy-btn draw-swipe-card" type="button" data-strategy="light">안전형</button>
-	                                <button class="draw-strategy-btn draw-swipe-card" type="button" data-strategy="balanced">균형형</button>
-	                                <button class="draw-strategy-btn draw-swipe-card" type="button" data-strategy="aggressive">공격형</button>
-	                                <button class="draw-strategy-btn draw-swipe-card ghost" type="button" data-strategy="clear">초기화</button>
+	                            <div class="draw-strategy-grid">
+	                                <button class="draw-strategy-btn" type="button" data-strategy="light">안전형</button>
+	                                <button class="draw-strategy-btn" type="button" data-strategy="balanced">균형형</button>
+	                                <button class="draw-strategy-btn" type="button" data-strategy="aggressive">공격형</button>
+	                                <button class="draw-strategy-btn ghost" type="button" data-strategy="clear">초기화</button>
 	                            </div>
-	                            <div class="draw-swipe-lane draw-category-lane">
-	                                <div class="draw-category-row draw-swipe-card" data-group="홀짝 비율">
+	                            <div class="draw-category-levels">
+	                                <div class="draw-category-row" data-group="홀짝 비율">
 	                                    <span class="draw-category-name">홀짝</span>
 	                                    <div class="draw-level-buttons">
 	                                        <button type="button" data-group-level="홀짝 비율:0">끔</button>
@@ -1853,7 +1847,7 @@
 	                                        <button type="button" data-group-level="홀짝 비율:3">강</button>
 	                                    </div>
 	                                </div>
-	                                <div class="draw-category-row draw-swipe-card" data-group="연속/반복">
+	                                <div class="draw-category-row" data-group="연속/반복">
 	                                    <span class="draw-category-name">연속수</span>
 	                                    <div class="draw-level-buttons">
 	                                        <button type="button" data-group-level="연속/반복:0">끔</button>
@@ -1862,7 +1856,7 @@
 	                                        <button type="button" data-group-level="연속/반복:3">강</button>
 	                                    </div>
 	                                </div>
-	                                <div class="draw-category-row draw-swipe-card" data-group="구간 분포">
+	                                <div class="draw-category-row" data-group="구간 분포">
 	                                    <span class="draw-category-name">구간</span>
 	                                    <div class="draw-level-buttons">
 	                                        <button type="button" data-group-level="구간 분포:0">끔</button>
@@ -1871,7 +1865,7 @@
 	                                        <button type="button" data-group-level="구간 분포:3">강</button>
 	                                    </div>
 	                                </div>
-	                                <div class="draw-category-row draw-swipe-card" data-group="끝자리 분포">
+	                                <div class="draw-category-row" data-group="끝자리 분포">
 	                                    <span class="draw-category-name">끝자리</span>
 	                                    <div class="draw-level-buttons">
 	                                        <button type="button" data-group-level="끝자리 분포:0">끔</button>
@@ -1881,8 +1875,8 @@
 	                                    </div>
 	                                </div>
 	                            </div>
-	                            <div class="draw-swipe-lane draw-slot-lane">
-	                                <div class="draw-slot-card draw-swipe-card">
+	                            <div class="draw-slot-grid">
+	                                <div class="draw-slot-card">
 	                                    <div class="draw-slot-title">프리셋 슬롯 1</div>
 	                                    <div class="draw-slot-meta" id="draw-slot-meta-1">비어있음</div>
 	                                    <div class="draw-slot-actions">
@@ -1890,7 +1884,7 @@
 	                                        <button type="button" data-slot-apply="1">적용</button>
 	                                    </div>
 	                                </div>
-	                                <div class="draw-slot-card draw-swipe-card">
+	                                <div class="draw-slot-card">
 	                                    <div class="draw-slot-title">프리셋 슬롯 2</div>
 	                                    <div class="draw-slot-meta" id="draw-slot-meta-2">비어있음</div>
 	                                    <div class="draw-slot-actions">
@@ -1898,7 +1892,7 @@
 	                                        <button type="button" data-slot-apply="2">적용</button>
 	                                    </div>
 	                                </div>
-	                                <div class="draw-slot-card draw-swipe-card">
+	                                <div class="draw-slot-card">
 	                                    <div class="draw-slot-title">프리셋 슬롯 3</div>
 	                                    <div class="draw-slot-meta" id="draw-slot-meta-3">비어있음</div>
 	                                    <div class="draw-slot-actions">
@@ -1932,7 +1926,7 @@
 	                    </aside>
 
 	                    <main class="draw-dashboard">
-	                        <div class="draw-dashboard-grid" id="draw-metrics-panel">
+	                        <div class="draw-dashboard-grid">
                             <div class="draw-metric-card primary">
                                 <div class="draw-metric-title">남은 조합 비중</div>
                                 <div class="draw-live-meter">
@@ -1981,7 +1975,7 @@
                             </div>
                         </div>
 
-	                        <div class="draw-rules-panel" id="draw-detail-panel">
+	                        <div class="draw-rules-panel">
                             <div class="draw-rules-header">
                                 <div>
                                     <h3>Rule Library</h3>

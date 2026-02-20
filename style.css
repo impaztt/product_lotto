@@ -2768,29 +2768,6 @@ body[data-theme="light"] .draw-studio-header {
     margin-top: 12px;
 }
 
-.draw-flow-nav {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-    margin-bottom: 14px;
-}
-
-.draw-flow-btn {
-    border: 0;
-    border-radius: 999px;
-    padding: 9px 10px;
-    background: #f1f5f9;
-    color: #475569;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.draw-flow-btn.is-active {
-    background: rgba(30, 107, 255, 0.14);
-    color: #0f172a;
-}
-
 .draw-studio-body {
     display: grid;
     grid-template-columns: minmax(0, 0.32fr) minmax(0, 0.68fr);
@@ -2830,29 +2807,6 @@ body[data-theme="light"] .draw-studio-header {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-}
-
-.draw-swipe-lane {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(200px, 1fr);
-    gap: 10px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    scroll-snap-type: x mandatory;
-}
-
-.draw-swipe-lane::-webkit-scrollbar {
-    height: 6px;
-}
-
-.draw-swipe-lane::-webkit-scrollbar-thumb {
-    background: rgba(148, 163, 184, 0.35);
-    border-radius: 999px;
-}
-
-.draw-swipe-card {
-    scroll-snap-align: start;
 }
 
 .draw-strategy-btn {
@@ -3339,12 +3293,8 @@ body[data-theme="light"] .draw-studio-header {
 
 .rules-groups {
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(320px, 1fr);
-    gap: 12px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding-bottom: 6px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
 }
 
 .rule-group h3 {
@@ -3479,7 +3429,6 @@ body[data-theme="light"] .draw-studio-header {
     border-radius: 16px;
     padding: 12px;
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
-    scroll-snap-align: start;
 }
 
 .detail-toggle {
@@ -3717,10 +3666,6 @@ body[data-theme="light"] .draw-studio-header {
         grid-template-columns: 1fr;
     }
 
-    .draw-flow-nav {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-
     .draw-studio-body {
         grid-template-columns: 1fr;
     }
@@ -3777,10 +3722,6 @@ body[data-theme="light"] .draw-studio-header {
 
     .draw-slot-grid {
         grid-template-columns: 1fr;
-    }
-
-    .draw-swipe-lane {
-        grid-auto-columns: minmax(240px, 1fr);
     }
 
     .rules-grid {
@@ -3972,19 +3913,6 @@ body[data-theme="light"] .draw-studio-header {
 
     .draw-strategy-grid {
         grid-template-columns: 1fr;
-    }
-
-    .draw-category-row {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .draw-flow-nav {
-        grid-template-columns: 1fr;
-    }
-
-    .rules-groups {
-        grid-auto-columns: minmax(260px, 1fr);
     }
 
     .rule-title {

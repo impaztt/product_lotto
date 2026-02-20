@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const groupLevelButtons = Array.from(document.querySelectorAll('[data-group-level]'));
     const slotSaveButtons = Array.from(document.querySelectorAll('[data-slot-save]'));
     const slotApplyButtons = Array.from(document.querySelectorAll('[data-slot-apply]'));
-    const drawFlowButtons = Array.from(document.querySelectorAll('[data-draw-jump]'));
     const slotMetaEls = {
         1: document.getElementById('draw-slot-meta-1'),
         2: document.getElementById('draw-slot-meta-2'),
@@ -692,24 +691,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             applySlotPreset(slot);
-        });
-    });
-
-    drawFlowButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const target = button.dataset.drawJump;
-            const targetId = target === 'quick'
-                ? 'draw-quick-panel'
-                : target === 'metrics'
-                    ? 'draw-metrics-panel'
-                    : 'draw-detail-panel';
-            const panel = document.getElementById(targetId);
-            if (panel) {
-                panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-            drawFlowButtons.forEach(el => {
-                el.classList.toggle('is-active', el === button);
-            });
         });
     });
 
