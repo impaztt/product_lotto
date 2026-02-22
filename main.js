@@ -185,6 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const wrapper = document.createElement('div');
             wrapper.className = 'rule-sample';
+            const label = document.createElement('span');
+            label.className = 'rule-sample-label';
+            label.textContent = '예시';
+            wrapper.appendChild(label);
             sample.forEach(number => {
                 const ball = document.createElement('span');
                 ball.className = `sample-ball ${getSampleBallClass(number)}`;
