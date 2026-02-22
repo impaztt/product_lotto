@@ -2865,9 +2865,27 @@ body[data-theme="light"] .draw-studio-header {
 
 .draw-level-buttons {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 6px;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    gap: 8px;
     width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.draw-level-buttons::-webkit-scrollbar {
+    height: 4px;
+}
+
+.draw-level-buttons::-webkit-scrollbar-thumb {
+    background: rgba(15, 23, 42, 0.18);
+    border-radius: 999px;
+}
+
+.draw-level-buttons {
+    scrollbar-color: rgba(15, 23, 42, 0.2) transparent;
 }
 
 .draw-level-buttons button {
@@ -2875,10 +2893,12 @@ body[data-theme="light"] .draw-studio-header {
     background: #f1f5f9;
     color: #475569;
     border-radius: 999px;
-    padding: 6px 0;
-    font-size: 11px;
+    padding: 8px 14px;
+    font-size: 12px;
     font-weight: 700;
     cursor: pointer;
+    scroll-snap-align: start;
+    white-space: nowrap;
 }
 
 .draw-level-buttons button.is-active {
