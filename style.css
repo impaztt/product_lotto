@@ -2813,12 +2813,13 @@ body[data-theme="light"] .draw-studio-header {
     border: 1px solid var(--draw-border, rgba(15, 23, 42, 0.12));
     background: var(--draw-card, #ffffff);
     color: #0f172a;
-    border-radius: 16px;
-    padding: 14px 14px;
+    border-radius: 18px;
+    padding: 16px;
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
-    min-height: 84px;
+    min-height: 140px;
+    width: 220px;
     box-shadow: var(--draw-shadow-soft, 0 10px 22px rgba(15, 23, 42, 0.08));
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
@@ -2826,9 +2827,9 @@ body[data-theme="light"] .draw-studio-header {
 .draw-scenario-btn {
     display: grid;
     align-content: start;
-    gap: 4px;
+    gap: 8px;
     text-align: left;
-    min-height: 68px;
+    min-height: 0;
 }
 
 .draw-scenario-btn strong {
