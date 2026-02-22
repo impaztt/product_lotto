@@ -3441,8 +3441,12 @@ body.rule-picker-open {
 
 .rules-grid {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
 }
 
 .rule-card {
@@ -3459,6 +3463,8 @@ body.rule-picker-open {
     overflow: hidden;
     min-height: auto;
     align-items: center;
+    white-space: nowrap;
+    scroll-snap-align: start;
 }
 
 .rule-body {
