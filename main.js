@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const groupSelectButtons = Array.from(document.querySelectorAll('.group-select'));
     const toggleRulesBtn = document.getElementById('toggle-rules');
     const strategyButtons = Array.from(document.querySelectorAll('[data-strategy]'));
+    const scenarioCards = Array.from(document.querySelectorAll('.draw-scenario-card'));
     const groupLevelButtons = Array.from(document.querySelectorAll('[data-group-level]'));
     const slotSaveButtons = Array.from(document.querySelectorAll('[data-slot-save]'));
     const slotApplyButtons = Array.from(document.querySelectorAll('[data-slot-apply]'));
@@ -948,6 +949,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSelectionCount();
         computeBaseOdds();
         updateCombinedEstimates();
+        updateScenarioMetrics();
         renderSlotPresets();
         syncGroupLevelButtons();
         populateRulePickerGroups();
@@ -2779,6 +2781,52 @@ document.addEventListener('DOMContentLoaded', () => {
         return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
 
+    function formatImproveFactor(ratio) {
+        if (!Number.isFinite(ratio) || ratio <= 0) {
+            return '-';
+        }
+        const factor = 1 / ratio;
+        if (!Number.isFinite(factor)) {
+            return '-';
+        }
+        return `${Number(factor.toFixed(1)).toString()}배`;
+    }
+
+    function getEstimatedRatioByIds(ids) {
+        if (!ids || !ids.length) {
+            return 1;
+        }
+        let ratio = 1;
+        ids.forEach(id => {
+            const stat = RULE_STATS[id];
+            if (stat) {
+                ratio *= (1 - stat.ratio);
+            }
+        });
+        return Math.max(0.000001, ratio);
+    }
+
+    function updateScenarioMetrics() {
+        if (!scenarioCards.length) {
+            return;
+        }
+        scenarioCards.forEach(card => {
+            const strategy = card.dataset.strategy;
+            const ids = PRESETS[strategy] || [];
+            const ratio = getEstimatedRatioByIds(ids);
+            const remainingCombos = Math.max(1, Math.round(TOTAL_COMBOS * ratio));
+            const excludedCombos = Math.max(0, TOTAL_COMBOS - remainingCombos);
+            const excludedEl = card.querySelector('[data-metric="excluded"]');
+            const improveEl = card.querySelector('[data-metric="improve"]');
+            if (excludedEl) {
+                excludedEl.textContent = `예상 제외: ${formatNumber(excludedCombos)}개`;
+            }
+            if (improveEl) {
+                improveEl.textContent = `확률 개선: ${formatImproveFactor(ratio)}`;
+            }
+        });
+    }
+
     function formatKstDateTime(date) {
         const yyyy = date.getFullYear();
         const mm = String(date.getMonth() + 1).padStart(2, '0');
@@ -3403,6 +3451,11 @@ document.addEventListener('DOMContentLoaded', () => {
             'same_last_digit_4_plus',
             'extreme_sum'
         ],
+        conservative: [
+            'all_odd',
+            'all_even',
+            'same_last_digit_4_plus'
+        ],
         balanced: [
             'five_odd_one_even',
             'five_even_one_odd',
@@ -3410,6 +3463,13 @@ document.addEventListener('DOMContentLoaded', () => {
             'multiples_of_3_3_plus',
             'same_decade_4_plus',
             'tight_range'
+        ],
+        expanded: [
+            'same_decade_4_plus',
+            'tight_range',
+            'last_digit_2_plus',
+            'same_last_digit_3_plus',
+            'consecutive_3_plus'
         ],
         aggressive: [
             'four_odd_two_even',
@@ -3427,7 +3487,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const PRESETS_LABEL = {
         light: '보수형',
+        conservative: '편중 최소형',
         balanced: '균형형',
+        expanded: '분포 강화형',
         aggressive: '공격형'
     };
 
