@@ -2884,6 +2884,30 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
     line-height: 1.4;
 }
 
+#tab-draw .scenario-metrics {
+    display: grid;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--draw-ink, #0f172a);
+    opacity: 0.8;
+}
+
+#tab-draw .scenario-metrics span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#tab-draw .scenario-metrics span::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--draw-accent, #ff6b4a);
+    box-shadow: 0 0 0 3px rgba(255, 107, 74, 0.15);
+}
+
 #tab-draw .scenario-tags {
     display: flex;
     gap: 6px;
