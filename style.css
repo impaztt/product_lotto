@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
 
 :root {
     --bg: #0b0f14;
@@ -3286,6 +3286,468 @@ body.rule-picker-open {
     gap: 6px;
     align-items: center;
     flex-wrap: wrap;
+}
+
+#tab-draw {
+    position: relative;
+    padding: 28px 0 90px;
+    background: radial-gradient(circle at 12% 18%, rgba(255, 168, 88, 0.22), transparent 40%),
+        radial-gradient(circle at 85% 5%, rgba(64, 201, 185, 0.2), transparent 45%),
+        linear-gradient(180deg, #f7f3ee 0%, #f3f6f9 65%, #eef2f6 100%);
+    color: #0f172a;
+    font-family: 'Space Grotesk', 'Manrope', 'Noto Sans KR', sans-serif;
+    --draw-ink: #0b1220;
+    --draw-muted: rgba(15, 23, 42, 0.7);
+    --draw-card: rgba(255, 255, 255, 0.9);
+    --draw-border: rgba(15, 23, 42, 0.12);
+    --draw-accent: #ff6b4a;
+    --draw-accent-strong: #ff4d2e;
+    --draw-accent-soft: rgba(255, 107, 74, 0.18);
+    --draw-cool: #16b8a6;
+    --draw-shadow: 0 30px 60px rgba(15, 23, 42, 0.12);
+    --draw-shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.1);
+}
+
+body[data-theme="dark"] #tab-draw {
+    background: radial-gradient(circle at 12% 18%, rgba(255, 120, 73, 0.2), transparent 40%),
+        radial-gradient(circle at 85% 5%, rgba(45, 212, 191, 0.2), transparent 45%),
+        linear-gradient(180deg, #0b0f14 0%, #0e141b 70%, #101a24 100%);
+    color: #f8fafc;
+    --draw-ink: #f8fafc;
+    --draw-muted: rgba(248, 250, 252, 0.7);
+    --draw-card: rgba(16, 24, 35, 0.88);
+    --draw-border: rgba(148, 163, 184, 0.2);
+    --draw-accent: #ff9466;
+    --draw-accent-strong: #ff7849;
+    --draw-accent-soft: rgba(255, 120, 73, 0.2);
+    --draw-cool: #2dd4bf;
+    --draw-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+    --draw-shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+#tab-draw .draw-neo-shell {
+    position: relative;
+    z-index: 1;
+    max-width: 1220px;
+    margin: 0 auto;
+    padding: 16px 6vw 40px;
+}
+
+#tab-draw .draw-neo-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.05));
+    border-radius: 30px;
+    opacity: 0.6;
+    filter: blur(0.5px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+#tab-draw .draw-neo-hero {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 24px;
+    align-items: center;
+    padding: 26px 28px;
+    border-radius: 26px;
+    background: var(--draw-card);
+    border: 1px solid var(--draw-border);
+    box-shadow: var(--draw-shadow);
+    overflow: hidden;
+}
+
+#tab-draw .draw-neo-hero::after {
+    content: "";
+    position: absolute;
+    inset: auto -20% -80% auto;
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, rgba(255, 107, 74, 0.2), transparent 65%);
+    filter: blur(2px);
+    animation: drawFloat 9s ease-in-out infinite;
+}
+
+#tab-draw .draw-neo-title h2 {
+    margin: 10px 0 12px;
+    font-size: clamp(26px, 2.8vw, 36px);
+    line-height: 1.15;
+    color: var(--draw-ink);
+}
+
+#tab-draw .draw-neo-title p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--draw-muted);
+}
+
+#tab-draw .draw-neo-kicker {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--draw-muted);
+}
+
+#tab-draw .draw-neo-actions {
+    display: grid;
+    gap: 12px;
+    justify-items: end;
+}
+
+#tab-draw .draw-neo-cta {
+    width: 100%;
+    max-width: 260px;
+    display: grid;
+    gap: 10px;
+    padding: 16px 18px;
+    border-radius: 18px;
+    border: 1px solid var(--draw-border);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 236, 226, 0.7));
+    box-shadow: var(--draw-shadow-soft);
+}
+
+body[data-theme="dark"] #tab-draw .draw-neo-cta {
+    background: linear-gradient(135deg, rgba(19, 28, 40, 0.9), rgba(30, 41, 59, 0.6));
+}
+
+#tab-draw .draw-neo-cta button {
+    border: 0;
+    border-radius: 14px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, var(--draw-accent-strong), var(--draw-accent));
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 12px 24px rgba(255, 107, 74, 0.28);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#tab-draw .draw-neo-cta button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 30px rgba(255, 107, 74, 0.35);
+}
+
+#tab-draw .draw-neo-cta-hint {
+    font-size: 11px;
+    color: var(--draw-muted);
+}
+
+#tab-draw .draw-neo-main {
+    margin-top: 22px;
+    display: grid;
+    grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
+    gap: 22px;
+}
+
+#tab-draw .draw-neo-left,
+#tab-draw .draw-neo-right {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+}
+
+#tab-draw .draw-neo-card,
+#tab-draw .draw-metric-card,
+#tab-draw .draw-rules-panel {
+    border-radius: 22px;
+    border: 1px solid var(--draw-border);
+    background: var(--draw-card);
+    box-shadow: var(--draw-shadow-soft);
+}
+
+#tab-draw .draw-panel {
+    padding: 18px 20px;
+    background: var(--draw-card);
+}
+
+#tab-draw .draw-panel-header h3 {
+    font-size: 15px;
+    letter-spacing: 0.02em;
+}
+
+#tab-draw .draw-strategy-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+#tab-draw .draw-strategy-btn {
+    border-radius: 16px;
+    padding: 12px;
+    background: rgba(15, 23, 42, 0.04);
+    color: var(--draw-ink);
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+#tab-draw .draw-strategy-btn:hover {
+    border-color: var(--draw-accent-soft);
+    transform: translateY(-1px);
+}
+
+#tab-draw .draw-strategy-btn.is-active {
+    background: var(--draw-accent-soft);
+    color: var(--draw-ink);
+}
+
+#tab-draw .draw-category-row {
+    background: rgba(15, 23, 42, 0.04);
+    border: 1px dashed rgba(15, 23, 42, 0.12);
+    padding: 12px;
+}
+
+body[data-theme="dark"] #tab-draw .draw-category-row {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+#tab-draw .draw-level-buttons button {
+    background: transparent;
+    border: 1px solid var(--draw-border);
+    color: var(--draw-muted);
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+#tab-draw .draw-level-buttons button.is-active {
+    background: var(--draw-cool);
+    color: #081a18;
+    border-color: transparent;
+}
+
+#tab-draw .draw-slot-card {
+    background: rgba(15, 23, 42, 0.04);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    border-radius: 16px;
+}
+
+#tab-draw .rules-actions button {
+    border-radius: 12px;
+    border: 1px solid var(--draw-border);
+}
+
+#tab-draw .draw-selected-card {
+    position: relative;
+    overflow: hidden;
+}
+
+#tab-draw .draw-selected-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(130deg, rgba(255, 107, 74, 0.08), transparent 60%);
+    pointer-events: none;
+}
+
+#tab-draw .draw-selected-actions {
+    gap: 6px;
+}
+
+#tab-draw .draw-selected-count {
+    background: rgba(255, 107, 74, 0.16);
+    color: var(--draw-ink);
+}
+
+#tab-draw .draw-selected-clear {
+    background: rgba(15, 23, 42, 0.06);
+    color: var(--draw-ink);
+}
+
+#tab-draw .draw-picker-entry button {
+    background: linear-gradient(135deg, rgba(22, 184, 166, 0.18), rgba(255, 107, 74, 0.16));
+    color: var(--draw-ink);
+}
+
+#tab-draw .draw-selected-chip {
+    background: rgba(15, 23, 42, 0.06);
+    border: 1px solid transparent;
+}
+
+#tab-draw .draw-selected-chip:hover {
+    border-color: var(--draw-accent);
+    background: rgba(255, 107, 74, 0.12);
+}
+
+#tab-draw .draw-metric-card.primary {
+    background: linear-gradient(135deg, rgba(255, 107, 74, 0.18), rgba(22, 184, 166, 0.12));
+}
+
+#tab-draw .draw-live-meter {
+    background: rgba(15, 23, 42, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+#tab-draw .draw-live-fill {
+    background: linear-gradient(90deg, var(--draw-accent), var(--draw-cool));
+    box-shadow: 0 0 14px rgba(255, 107, 74, 0.4);
+}
+
+#tab-draw .odds-bar {
+    background: rgba(15, 23, 42, 0.08);
+}
+
+#tab-draw .odds-bar-adj {
+    background: linear-gradient(90deg, var(--draw-accent-strong), var(--draw-cool));
+}
+
+#tab-draw .draw-rules-panel {
+    border-radius: 24px;
+    backdrop-filter: blur(14px);
+}
+
+#tab-draw .rule-picker-toolbar input,
+#tab-draw .rule-picker-toolbar select {
+    background: rgba(15, 23, 42, 0.06);
+    border: 1px solid var(--draw-border);
+    color: var(--draw-ink);
+}
+
+#tab-draw .rule-picker-toolbar input::placeholder {
+    color: var(--draw-muted);
+}
+
+#tab-draw .draw-neo-left .draw-neo-card {
+    animation: drawCardIn 0.6s ease both;
+}
+
+#tab-draw .draw-neo-left .draw-neo-card:nth-child(2) {
+    animation-delay: 0.08s;
+}
+
+#tab-draw .draw-neo-left .draw-neo-card:nth-child(3) {
+    animation-delay: 0.16s;
+}
+
+#tab-draw .draw-neo-left .draw-neo-card:nth-child(4) {
+    animation-delay: 0.24s;
+}
+
+@keyframes drawFloat {
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.75;
+    }
+    50% {
+        transform: translateY(-10px);
+        opacity: 1;
+    }
+}
+
+@keyframes drawCardIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#tab-draw .rule-group {
+    background: var(--draw-card);
+    border: 1px solid var(--draw-border);
+    box-shadow: var(--draw-shadow-soft);
+}
+
+#tab-draw .rule-card {
+    background: rgba(15, 23, 42, 0.04);
+    border: 1px solid transparent;
+}
+
+body[data-theme="dark"] #tab-draw .rule-card {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+#tab-draw .rule-card.is-checked {
+    background: rgba(255, 107, 74, 0.12);
+}
+
+#tab-draw .group-select {
+    background: rgba(15, 23, 42, 0.06);
+    color: var(--draw-ink);
+    border: 1px solid var(--draw-border);
+}
+
+#tab-draw .group-select:hover {
+    background: var(--draw-accent-soft);
+}
+
+#tab-draw #draw-count {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--draw-border);
+    box-shadow: none;
+    font-family: inherit;
+}
+
+body[data-theme="dark"] #tab-draw #draw-count {
+    background: rgba(15, 23, 42, 0.5);
+    color: var(--draw-ink);
+}
+
+#tab-draw #generate-btn {
+    background: linear-gradient(135deg, var(--draw-accent-strong), var(--draw-accent));
+    box-shadow: 0 12px 24px rgba(255, 107, 74, 0.25);
+}
+
+#tab-draw .number {
+    background: rgba(22, 184, 166, 0.2);
+}
+
+#tab-draw .ghost,
+#tab-draw .preset-btn {
+    background: rgba(15, 23, 42, 0.06);
+    color: var(--draw-ink);
+}
+
+#tab-draw .preset-btn.is-active,
+#tab-draw .preset-btn:hover,
+#tab-draw .ghost:hover {
+    background: var(--draw-accent-soft);
+    color: var(--draw-ink);
+}
+
+@media (max-width: 1100px) {
+    #tab-draw .draw-neo-hero {
+        grid-template-columns: minmax(0, 1fr);
+        text-align: left;
+    }
+
+    #tab-draw .draw-neo-actions {
+        justify-items: start;
+    }
+
+    #tab-draw .draw-neo-main {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 720px) {
+    #tab-draw .draw-neo-shell {
+        padding: 12px 5vw 30px;
+    }
+
+    #tab-draw .draw-neo-hero {
+        padding: 20px;
+    }
+
+    #tab-draw .draw-strategy-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #tab-draw .draw-slot-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #tab-draw .draw-dashboard-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
 }
 
 .draw-live-fill,
