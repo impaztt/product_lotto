@@ -118,6 +118,82 @@ document.addEventListener('DOMContentLoaded', () => {
     let recentRoundsEl = null;
     let roundSearchInput = null;
     let roundSearchBtn = null;
+
+    const RULE_SAMPLE_MAP = {
+        all_odd: [1, 3, 5, 7, 9, 11],
+        all_even: [2, 4, 6, 8, 10, 12],
+        five_odd_one_even: [1, 3, 5, 7, 9, 12],
+        five_even_one_odd: [2, 4, 6, 8, 10, 13],
+        four_odd_two_even: [1, 3, 5, 7, 10, 12],
+        four_even_two_odd: [2, 4, 6, 8, 11, 13],
+        multiples_of_2_4_plus: [2, 4, 6, 8, 11, 13],
+        multiples_of_2_5_plus: [2, 4, 6, 8, 10, 13],
+        multiples_of_3_3_plus: [3, 6, 9, 12, 22, 31],
+        multiples_of_4_3_plus: [4, 8, 12, 19, 27, 33],
+        multiples_of_5_3_plus: [5, 10, 15, 22, 31, 37],
+        multiples_of_6_3_plus: [6, 12, 18, 25, 33, 41],
+        multiples_of_7_3_plus: [7, 14, 21, 26, 34, 42],
+        consecutive_3_plus: [4, 5, 6, 18, 29, 41],
+        consecutive_4_plus: [9, 10, 11, 12, 25, 38],
+        same_last_digit_3_plus: [1, 11, 21, 4, 18, 33],
+        same_last_digit_4_plus: [2, 12, 22, 32, 7, 19],
+        last_digit_2_plus: [3, 13, 24, 35, 7, 18],
+        last_digit_zero_2_plus: [10, 20, 28, 33, 41, 5],
+        last_digit_five_2_plus: [5, 15, 23, 34, 42, 45],
+        same_decade_4_plus: [1, 4, 7, 9, 12, 33],
+        same_decade_5_plus: [2, 4, 6, 8, 9, 21],
+        all_low_or_high: [1, 4, 7, 12, 18, 22],
+        low_or_high_5_plus: [1, 3, 8, 12, 18, 24],
+        low_1_15_4_plus: [1, 4, 7, 11, 22, 33],
+        mid_16_30_4_plus: [16, 19, 22, 28, 7, 41],
+        high_31_45_4_plus: [31, 34, 38, 41, 9, 20],
+        tight_range: [5, 7, 9, 12, 18, 22],
+        extreme_sum: [1, 3, 5, 7, 9, 11],
+        sum_low_100: [1, 5, 7, 12, 20, 24],
+        sum_high_180: [30, 31, 32, 33, 34, 35],
+        prime_4_plus: [2, 3, 5, 7, 11, 20],
+        prime_1_or_less: [4, 8, 12, 16, 18, 23],
+        prime_0: [4, 8, 12, 16, 18, 22]
+    };
+
+    function getSampleBallClass(number) {
+        if (number <= 10) {
+            return 'range-1';
+        }
+        if (number <= 20) {
+            return 'range-2';
+        }
+        if (number <= 30) {
+            return 'range-3';
+        }
+        if (number <= 40) {
+            return 'range-4';
+        }
+        return 'range-5';
+    }
+
+    function injectRuleSamples() {
+        ruleCards.forEach(card => {
+            const input = card.querySelector('input.rule-input');
+            const body = card.querySelector('.rule-body');
+            if (!input || !body || body.querySelector('.rule-sample')) {
+                return;
+            }
+            const sample = RULE_SAMPLE_MAP[input.value];
+            if (!sample || !sample.length) {
+                return;
+            }
+            const wrapper = document.createElement('div');
+            wrapper.className = 'rule-sample';
+            sample.forEach(number => {
+                const ball = document.createElement('span');
+                ball.className = `sample-ball ${getSampleBallClass(number)}`;
+                ball.textContent = String(number);
+                wrapper.appendChild(ball);
+            });
+            body.appendChild(wrapper);
+        });
+    }
     let compareInput = null;
     let compareBonusInput = null;
     let compareBtn = null;
@@ -863,6 +939,7 @@ document.addEventListener('DOMContentLoaded', () => {
         syncThemeToggle();
         syncMenuState(false);
         applySavedRules();
+        injectRuleSamples();
         updateRulesStatus('');
         updateSelectionCount();
         computeBaseOdds();

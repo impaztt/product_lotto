@@ -3559,6 +3559,47 @@ body.rule-picker-open {
     color: var(--draw-muted, var(--text-muted));
 }
 
+#tab-draw .rule-sample {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+    justify-content: center;
+}
+
+#tab-draw .sample-ball {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18);
+}
+
+#tab-draw .sample-ball.range-1 {
+    background: #fbc400;
+}
+
+#tab-draw .sample-ball.range-2 {
+    background: #69c8f2;
+}
+
+#tab-draw .sample-ball.range-3 {
+    background: #ff6b6b;
+}
+
+#tab-draw .sample-ball.range-4 {
+    background: #aaaaaa;
+}
+
+#tab-draw .sample-ball.range-5 {
+    background: #b0d840;
+}
+
 .rule-group {
     border: 0;
     background: #ffffff;
