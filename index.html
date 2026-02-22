@@ -1811,204 +1811,187 @@
 </section>
 
         <section id="tab-draw" class="tab-panel" role="tabpanel" aria-labelledby="tab-draw-btn" tabindex="0">
-            <div class="draw-neo-shell">
-                <header class="draw-neo-hero">
-                    <div class="draw-neo-title">
-                        <span class="draw-neo-kicker">Draw OS</span>
-                        <h2>제외 규칙을 카드처럼 선택하고, 변화는 즉시 확인하세요.</h2>
-                        <p>필터는 “당첨 조합까지 함께 제거될 수 있다”는 가정으로 계산합니다. 실제 당첨 확률은 변하지 않으며 참고용으로만 사용하세요.</p>
+            <div class="draw-studio-header">
+                <div class="draw-studio-title">
+                    <span class="draw-studio-kicker">Filter Studio</span>
+                    <h2>제외 규칙을 설계하면, 확률 변화가 바로 나타납니다.</h2>
+                    <p>필터는 “당첨 조합까지 함께 제거될 수 있다”는 가정으로 계산합니다. 실제 당첨 확률은 변하지 않으며 참고용으로만 사용하세요.</p>
+                </div>
+                <div class="draw-studio-cta">
+                    <div class="draw-cta-card">
+                        <div class="draw-cta-label">이번 규칙으로 바로 추첨</div>
+                        <button type="button" data-generate-cta>번호 생성</button>
                     </div>
-                    <div class="draw-neo-actions">
-                        <div class="draw-neo-cta">
-                            <div class="draw-cta-label">현재 규칙으로 바로 추첨</div>
-                            <button type="button" data-generate-cta>번호 생성</button>
-                            <span class="draw-neo-cta-hint">규칙을 조정하면 결과가 자동 갱신됩니다.</span>
-                        </div>
-                    </div>
-                </header>
-
-                <section id="rules" class="section rules draw-studio draw-neo">
-                    <div class="draw-neo-main">
-                        <aside class="draw-neo-left">
-                            <div class="draw-panel draw-neo-card">
-                                <div class="draw-panel-header">
-                                    <h3>시나리오 선택</h3>
-                                </div>
-                                <div class="draw-strategy-grid">
-                                    <button class="draw-strategy-btn draw-scenario-btn" type="button" data-strategy="light">
+                </div>
+            </div>
+            <section id="rules" class="section rules draw-studio">
+	                <div class="draw-studio-body">
+	                    <aside class="draw-builder">
+	                        <div class="draw-panel">
+	                            <div class="draw-panel-header">
+	                                <h3>시나리오 선택</h3>
+	                            </div>
+	                            <div class="draw-strategy-grid">
+	                                <button class="draw-strategy-btn draw-scenario-btn" type="button" data-strategy="light">
                                         <strong>안전형</strong>
                                         <span>핵심 규칙 위주로 가볍게 제외</span>
                                     </button>
-                                    <button class="draw-strategy-btn draw-scenario-btn" type="button" data-strategy="balanced">
+	                                <button class="draw-strategy-btn draw-scenario-btn" type="button" data-strategy="balanced">
                                         <strong>균형형</strong>
                                         <span>분포 규칙까지 균형 있게 적용</span>
                                     </button>
-                                    <button class="draw-strategy-btn draw-scenario-btn" type="button" data-strategy="aggressive">
+	                                <button class="draw-strategy-btn draw-scenario-btn" type="button" data-strategy="aggressive">
                                         <strong>공격형</strong>
                                         <span>고급 규칙까지 넓게 포함</span>
                                     </button>
-                                    <button class="draw-strategy-btn ghost draw-scenario-btn" type="button" data-strategy="clear">
+	                                <button class="draw-strategy-btn ghost draw-scenario-btn" type="button" data-strategy="clear">
                                         <strong>초기화</strong>
                                         <span>모든 규칙 선택 해제</span>
                                     </button>
-                                </div>
-                            </div>
+	                            </div>
+	                            <div class="draw-category-levels">
+	                                <div class="draw-category-row" data-group="홀짝 비율">
+	                                    <span class="draw-category-name">홀짝</span>
+	                                    <div class="draw-level-buttons">
+	                                        <button type="button" data-group-level="홀짝 비율:0">끔</button>
+	                                        <button type="button" data-group-level="홀짝 비율:1">약</button>
+	                                        <button type="button" data-group-level="홀짝 비율:2">중</button>
+	                                        <button type="button" data-group-level="홀짝 비율:3">강</button>
+	                                    </div>
+	                                </div>
+	                                <div class="draw-category-row" data-group="연속/반복">
+	                                    <span class="draw-category-name">연속수</span>
+	                                    <div class="draw-level-buttons">
+	                                        <button type="button" data-group-level="연속/반복:0">끔</button>
+	                                        <button type="button" data-group-level="연속/반복:1">약</button>
+	                                        <button type="button" data-group-level="연속/반복:2">중</button>
+	                                        <button type="button" data-group-level="연속/반복:3">강</button>
+	                                    </div>
+	                                </div>
+	                                <div class="draw-category-row" data-group="구간 분포">
+	                                    <span class="draw-category-name">구간</span>
+	                                    <div class="draw-level-buttons">
+	                                        <button type="button" data-group-level="구간 분포:0">끔</button>
+	                                        <button type="button" data-group-level="구간 분포:1">약</button>
+	                                        <button type="button" data-group-level="구간 분포:2">중</button>
+	                                        <button type="button" data-group-level="구간 분포:3">강</button>
+	                                    </div>
+	                                </div>
+	                                <div class="draw-category-row" data-group="끝자리 분포">
+	                                    <span class="draw-category-name">끝자리</span>
+	                                    <div class="draw-level-buttons">
+	                                        <button type="button" data-group-level="끝자리 분포:0">끔</button>
+	                                        <button type="button" data-group-level="끝자리 분포:1">약</button>
+	                                        <button type="button" data-group-level="끝자리 분포:2">중</button>
+	                                        <button type="button" data-group-level="끝자리 분포:3">강</button>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <div class="draw-slot-grid">
+	                                <div class="draw-slot-card">
+	                                    <div class="draw-slot-title">프리셋 슬롯 1</div>
+	                                    <div class="draw-slot-meta" id="draw-slot-meta-1">비어있음</div>
+	                                    <div class="draw-slot-actions">
+	                                        <button type="button" data-slot-save="1">저장</button>
+	                                        <button type="button" data-slot-apply="1">적용</button>
+	                                    </div>
+	                                </div>
+	                                <div class="draw-slot-card">
+	                                    <div class="draw-slot-title">프리셋 슬롯 2</div>
+	                                    <div class="draw-slot-meta" id="draw-slot-meta-2">비어있음</div>
+	                                    <div class="draw-slot-actions">
+	                                        <button type="button" data-slot-save="2">저장</button>
+	                                        <button type="button" data-slot-apply="2">적용</button>
+	                                    </div>
+	                                </div>
+	                                <div class="draw-slot-card">
+	                                    <div class="draw-slot-title">프리셋 슬롯 3</div>
+	                                    <div class="draw-slot-meta" id="draw-slot-meta-3">비어있음</div>
+	                                    <div class="draw-slot-actions">
+	                                        <button type="button" data-slot-save="3">저장</button>
+	                                        <button type="button" data-slot-apply="3">적용</button>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <div class="rules-actions">
+	                                <button id="save-rules" class="ghost" type="button">현재 저장</button>
+	                                <button id="load-rules" class="ghost" type="button">저장 불러오기</button>
+	                                <button class="ghost" id="custom-save" type="button">내 프리셋 저장</button>
+	                                <button class="ghost" id="custom-apply" type="button">내 프리셋 적용</button>
+	                            </div>
+	                            <span id="rules-status" class="rules-status" aria-live="polite"></span>
+	                        </div>
 
-                            <div class="draw-panel draw-neo-card">
-                                <div class="draw-panel-header">
-                                    <h3>카테고리 강도</h3>
-                                </div>
-                                <div class="draw-category-levels">
-                                    <div class="draw-category-row" data-group="홀짝 비율">
-                                        <span class="draw-category-name">홀짝</span>
-                                        <div class="draw-level-buttons">
-                                            <button type="button" data-group-level="홀짝 비율:0">끔</button>
-                                            <button type="button" data-group-level="홀짝 비율:1">약</button>
-                                            <button type="button" data-group-level="홀짝 비율:2">중</button>
-                                            <button type="button" data-group-level="홀짝 비율:3">강</button>
-                                        </div>
-                                    </div>
-                                    <div class="draw-category-row" data-group="연속/반복">
-                                        <span class="draw-category-name">연속수</span>
-                                        <div class="draw-level-buttons">
-                                            <button type="button" data-group-level="연속/반복:0">끔</button>
-                                            <button type="button" data-group-level="연속/반복:1">약</button>
-                                            <button type="button" data-group-level="연속/반복:2">중</button>
-                                            <button type="button" data-group-level="연속/반복:3">강</button>
-                                        </div>
-                                    </div>
-                                    <div class="draw-category-row" data-group="구간 분포">
-                                        <span class="draw-category-name">구간</span>
-                                        <div class="draw-level-buttons">
-                                            <button type="button" data-group-level="구간 분포:0">끔</button>
-                                            <button type="button" data-group-level="구간 분포:1">약</button>
-                                            <button type="button" data-group-level="구간 분포:2">중</button>
-                                            <button type="button" data-group-level="구간 분포:3">강</button>
-                                        </div>
-                                    </div>
-                                    <div class="draw-category-row" data-group="끝자리 분포">
-                                        <span class="draw-category-name">끝자리</span>
-                                        <div class="draw-level-buttons">
-                                            <button type="button" data-group-level="끝자리 분포:0">끔</button>
-                                            <button type="button" data-group-level="끝자리 분포:1">약</button>
-                                            <button type="button" data-group-level="끝자리 분포:2">중</button>
-                                            <button type="button" data-group-level="끝자리 분포:3">강</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="draw-panel draw-neo-card">
-                                <div class="draw-panel-header">
-                                    <h3>내 프리셋</h3>
-                                </div>
-                                <div class="draw-slot-grid">
-                                    <div class="draw-slot-card">
-                                        <div class="draw-slot-title">프리셋 슬롯 1</div>
-                                        <div class="draw-slot-meta" id="draw-slot-meta-1">비어있음</div>
-                                        <div class="draw-slot-actions">
-                                            <button type="button" data-slot-save="1">저장</button>
-                                            <button type="button" data-slot-apply="1">적용</button>
-                                        </div>
-                                    </div>
-                                    <div class="draw-slot-card">
-                                        <div class="draw-slot-title">프리셋 슬롯 2</div>
-                                        <div class="draw-slot-meta" id="draw-slot-meta-2">비어있음</div>
-                                        <div class="draw-slot-actions">
-                                            <button type="button" data-slot-save="2">저장</button>
-                                            <button type="button" data-slot-apply="2">적용</button>
-                                        </div>
-                                    </div>
-                                    <div class="draw-slot-card">
-                                        <div class="draw-slot-title">프리셋 슬롯 3</div>
-                                        <div class="draw-slot-meta" id="draw-slot-meta-3">비어있음</div>
-                                        <div class="draw-slot-actions">
-                                            <button type="button" data-slot-save="3">저장</button>
-                                            <button type="button" data-slot-apply="3">적용</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="rules-actions">
-                                    <button id="save-rules" class="ghost" type="button">현재 저장</button>
-                                    <button id="load-rules" class="ghost" type="button">저장 불러오기</button>
-                                    <button class="ghost" id="custom-save" type="button">내 프리셋 저장</button>
-                                    <button class="ghost" id="custom-apply" type="button">내 프리셋 적용</button>
-                                </div>
-                                <span id="rules-status" class="rules-status" aria-live="polite"></span>
-                            </div>
-
-                            <div class="draw-panel draw-neo-card draw-selected-card">
-                                <div class="draw-panel-header">
-                                    <h3>선택한 필터</h3>
-                                    <div class="draw-selected-actions">
-                                        <span class="draw-selected-count" id="rules-selected-count">0개</span>
-                                        <button class="draw-selected-clear" id="selected-clear-btn" type="button">전체 해제</button>
-                                    </div>
-                                </div>
+	                        <div class="draw-panel">
+	                            <div class="draw-panel-header">
+	                                <h3>선택한 필터</h3>
+	                                <div class="draw-selected-actions">
+	                                    <span class="draw-selected-count" id="rules-selected-count">0개</span>
+	                                    <button class="draw-selected-clear" id="selected-clear-btn" type="button">전체 해제</button>
+	                                </div>
+	                            </div>
                                 <div class="draw-picker-entry">
-                                    <button id="open-rule-picker" type="button">+ 규칙 카탈로그 열기</button>
-                                    <span>카드처럼 선택하고, 탭하면 즉시 해제됩니다.</span>
+                                    <button id="open-rule-picker" type="button">+ 규칙 추가/제거</button>
+                                    <span>칩을 눌러 바로 제거할 수 있습니다.</span>
                                 </div>
-                                <div class="draw-selected-sub" id="rules-visible-count">표시: 0/0</div>
-                                <div class="draw-selected-helper">선택된 칩을 누르면 즉시 해제됩니다.</div>
-                                <div id="selected-rules-list" class="draw-selected-list"></div>
-                                <div id="selected-rules-empty" class="draw-selected-empty">아직 선택된 규칙이 없습니다.</div>
-                            </div>
-                        </aside>
+	                            <div class="draw-selected-sub" id="rules-visible-count">표시: 0/0</div>
+	                            <div class="draw-selected-helper">선택된 칩을 누르면 즉시 해제됩니다.</div>
+	                            <div id="selected-rules-list" class="draw-selected-list"></div>
+	                            <div id="selected-rules-empty" class="draw-selected-empty">아직 선택된 규칙이 없습니다.</div>
+	                        </div>
+	                    </aside>
 
-                        <main class="draw-neo-right">
-                            <div class="draw-dashboard-grid">
-                                <div class="draw-metric-card primary">
-                                    <div class="draw-metric-title">남은 조합 비중</div>
-                                    <div class="draw-live-meter">
-                                        <div class="draw-live-fill" id="remaining-meter-fill"></div>
+	                    <main class="draw-dashboard">
+	                        <div class="draw-dashboard-grid">
+                            <div class="draw-metric-card primary">
+                                <div class="draw-metric-title">남은 조합 비중</div>
+                                <div class="draw-live-meter">
+                                    <div class="draw-live-fill" id="remaining-meter-fill"></div>
+                                </div>
+                                <div class="draw-metric-value" id="remaining-meter-label">남은 조합 비중: -</div>
+                            </div>
+                            <div class="draw-metric-card">
+                                <div class="draw-metric-title">남은 조합</div>
+                                <div class="draw-metric-value" id="remaining-combos">계산중</div>
+                                <div class="draw-metric-sub" id="excluded-combos">제외: -</div>
+                            </div>
+                            <div class="draw-metric-card">
+                                <div class="draw-metric-title">필터 영향</div>
+                                <div class="draw-metric-value" id="odds-benefit-summary">-</div>
+                                <div class="draw-metric-sub">조합 감소율</div>
+                            </div>
+                            <div class="draw-metric-card wide">
+                                <div class="draw-odds-title">확률 변화 그래프 (1등 기준)</div>
+                                <div class="odds-graph">
+                                    <div class="odds-graph-row">
+                                        <span class="odds-rank">1등</span>
+                                        <div class="odds-bar">
+                                            <span class="odds-bar-base"></span>
+                                            <span class="odds-bar-adj" id="odds-bar-1"></span>
+                                        </div>
+                                        <span class="odds-delta" id="odds-delta-1">-</span>
+                                        <span class="odds-graph-sub"><span id="odds-base-1">1 / 8,145,060</span> → <span id="odds-adj-1">-</span></span>
                                     </div>
-                                    <div class="draw-metric-value" id="remaining-meter-label">남은 조합 비중: -</div>
                                 </div>
-                                <div class="draw-metric-card">
-                                    <div class="draw-metric-title">남은 조합</div>
-                                    <div class="draw-metric-value" id="remaining-combos">계산중</div>
-                                    <div class="draw-metric-sub" id="excluded-combos">제외: -</div>
-                                </div>
-                                <div class="draw-metric-card">
-                                    <div class="draw-metric-title">필터 영향</div>
-                                    <div class="draw-metric-value" id="odds-benefit-summary">-</div>
-                                    <div class="draw-metric-sub">조합 감소율</div>
-                                </div>
-                                <div class="draw-metric-card wide">
-                                    <div class="draw-odds-title">확률 변화 그래프 (1등 기준)</div>
-                                    <div class="odds-graph">
-                                        <div class="odds-graph-row">
-                                            <span class="odds-rank">1등</span>
-                                            <div class="odds-bar">
-                                                <span class="odds-bar-base"></span>
-                                                <span class="odds-bar-adj" id="odds-bar-1"></span>
-                                            </div>
-                                            <span class="odds-delta" id="odds-delta-1">-</span>
-                                            <span class="odds-graph-sub"><span id="odds-base-1">1 / 8,145,060</span> → <span id="odds-adj-1">-</span></span>
-                                        </div>
+                                <div class="odds-graph-note">
+                                    2~5등도 동일 비율로 변화합니다.
+                                    <div class="odds-graph-inline">
+                                        2등 <span id="odds-base-2">1 / 1,357,510</span> → <span id="odds-adj-2">-</span>
                                     </div>
-                                    <div class="odds-graph-note">
-                                        2~5등도 동일 비율로 변화합니다.
-                                        <div class="odds-graph-inline">
-                                            2등 <span id="odds-base-2">1 / 1,357,510</span> → <span id="odds-adj-2">-</span>
-                                        </div>
-                                        <div class="odds-graph-inline">
-                                            3등 <span id="odds-base-3">1 / 35,724</span> → <span id="odds-adj-3">-</span>
-                                        </div>
-                                        <div class="odds-graph-inline">
-                                            4등 <span id="odds-base-4">1 / 733</span> → <span id="odds-adj-4">-</span>
-                                        </div>
-                                        <div class="odds-graph-inline">
-                                            5등 <span id="odds-base-5">1 / 45</span> → <span id="odds-adj-5">-</span>
-                                        </div>
+                                    <div class="odds-graph-inline">
+                                        3등 <span id="odds-base-3">1 / 35,724</span> → <span id="odds-adj-3">-</span>
+                                    </div>
+                                    <div class="odds-graph-inline">
+                                        4등 <span id="odds-base-4">1 / 733</span> → <span id="odds-adj-4">-</span>
+                                    </div>
+                                    <div class="odds-graph-inline">
+                                        5등 <span id="odds-base-5">1 / 45</span> → <span id="odds-adj-5">-</span>
                                     </div>
                                 </div>
                             </div>
-                        </main>
-                    </div>
+                        </div>
 
-                    <div class="draw-rules-panel" id="rule-picker-panel" aria-hidden="true">
+	                        <div class="draw-rules-panel" id="rule-picker-panel" aria-hidden="true">
                             <div class="draw-rules-header">
                                 <div>
                                     <h3>규칙 라이브러리</h3>
@@ -2367,11 +2350,12 @@
                             </span>
                         </label>
                     </div>
-                                </div>
-                            </div>
-                        </div>
-                </section>
+                </div>
             </div>
+        </div>
+            </main>
+        </div>
+            </section>
             <div id="rule-picker-backdrop" class="rule-picker-backdrop" hidden></div>
 
             <section id="generator" class="section generator">
