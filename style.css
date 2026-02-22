@@ -3471,8 +3471,14 @@ body.rule-picker-open {
 }
 
 #tab-draw .rules-grid .rule-card {
-    min-height: 180px;
+    min-height: 140px;
     width: 220px;
+}
+
+#tab-draw .rules-grid .rule-body {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
 }
 
 .rule-body {
