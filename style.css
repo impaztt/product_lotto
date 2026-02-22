@@ -3470,6 +3470,11 @@ body.rule-picker-open {
     flex: 0 0 auto;
 }
 
+#tab-draw .rules-grid .rule-card {
+    min-height: 180px;
+    width: 220px;
+}
+
 .rule-body {
     display: inline-flex;
     align-items: center;
