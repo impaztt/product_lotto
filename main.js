@@ -2481,6 +2481,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!rulePickerPanel || !rulePickerBackdrop) {
             return;
         }
+        if (rulePickerPanel.classList.contains('inline')) {
+            rulePickerPanel.classList.add('is-open');
+            rulePickerPanel.setAttribute('aria-hidden', 'false');
+            rulePickerBackdrop.hidden = true;
+            body.classList.remove('rule-picker-open');
+            return;
+        }
         rulePickerPanel.classList.toggle('is-open', Boolean(isOpen));
         rulePickerPanel.setAttribute('aria-hidden', String(!isOpen));
         rulePickerBackdrop.hidden = !isOpen;

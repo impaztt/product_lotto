@@ -2999,6 +2999,31 @@ body[data-theme="light"] .draw-studio-header {
     pointer-events: auto;
 }
 
+#tab-draw .draw-rules-panel.inline {
+    position: static;
+    left: auto;
+    bottom: auto;
+    width: 100%;
+    max-height: none;
+    overflow: visible;
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+    margin-top: 18px;
+}
+
+#tab-draw .draw-rules-panel.inline .draw-rules-header {
+    position: relative;
+}
+
+#tab-draw .draw-rules-panel.inline #close-rule-picker {
+    display: none;
+}
+
+#tab-draw .rule-picker-backdrop {
+    display: none;
+}
+
 .draw-rules-header {
     display: flex;
     align-items: flex-start;
