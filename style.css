@@ -3453,7 +3453,7 @@ body.rule-picker-open {
 .rule-card {
     display: inline-flex;
     gap: 10px;
-    padding: 10px 12px;
+    padding: 14px 14px;
     border-radius: 12px;
     border: 0;
     background: #f8fafc;
@@ -3462,11 +3462,11 @@ body.rule-picker-open {
     transition: border 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     overflow: hidden;
-    min-height: 44px;
+    min-height: 64px;
     align-items: center;
     white-space: normal;
     scroll-snap-align: start;
-    width: 160px;
+    width: 190px;
     flex: 0 0 auto;
 }
 
@@ -3482,14 +3482,14 @@ body.rule-picker-open {
 }
 
 .rule-title {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 1.2;
+    line-height: 1.3;
 }
 
 .rule-card:hover {
