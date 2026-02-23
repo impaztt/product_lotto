@@ -26,7 +26,7 @@
     </header>
 
     <main class="tab-layout">
-        <section id="tab-weekly" class="tab-panel is-active" role="tabpanel" aria-labelledby="tab-weekly-btn" tabindex="0">
+        <section id="tab-weekly" class="tab-panel" role="tabpanel" aria-labelledby="tab-weekly-btn" tabindex="0">
 <div class="container-box">
 		<!-- bread-crumb start-->
 		<div class="bread-crumb">
@@ -1353,7 +1353,7 @@
 </div>
 </section>
 
-        <section id="tab-dashboard" class="tab-panel" role="tabpanel" aria-labelledby="tab-dashboard-btn" tabindex="0">
+        <section id="tab-dashboard" class="tab-panel is-active" role="tabpanel" aria-labelledby="tab-dashboard-btn" tabindex="0">
 <div class="container-box">
 		<!-- bread-crumb start-->
 		<div class="bread-crumb">
@@ -2666,11 +2666,7 @@
     </main>
 
     <nav class="bottom-tab-bar" role="tablist" aria-label="하단 탭">
-        <button class="tab-btn is-active" id="tab-weekly-btn" type="button" role="tab" aria-selected="true" aria-controls="tab-weekly" data-tab="weekly">
-            <span class="tab-icon icon-weekly" aria-hidden="true"></span>
-            <span class="tab-label">이번주</span>
-        </button>
-        <button class="tab-btn" id="tab-dashboard-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-dashboard" data-tab="dashboard">
+        <button class="tab-btn is-active" id="tab-dashboard-btn" type="button" role="tab" aria-selected="true" aria-controls="tab-dashboard" data-tab="dashboard">
             <span class="tab-icon icon-dashboard" aria-hidden="true"></span>
             <span class="tab-label">대시보드</span>
         </button>

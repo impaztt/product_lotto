@@ -691,7 +691,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 return;
             }
-            setActiveTab('weekly', true);
+            setActiveTab('dashboard', true);
             loadRound(Number(round));
         });
     }
@@ -1191,7 +1191,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const target = hash.replace('#tab-', '');
             setActiveTab(target, false, false);
         } else {
-            setActiveTab('weekly', false, false);
+            setActiveTab('dashboard', false, false);
         }
     }
 
