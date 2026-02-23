@@ -2778,6 +2778,7 @@ body[data-theme="light"] .draw-studio-header {
     display: grid;
     grid-template-columns: minmax(0, 0.32fr) minmax(0, 0.68fr);
     gap: 20px;
+    position: relative;
 }
 
 .draw-builder {
@@ -2786,6 +2787,8 @@ body[data-theme="light"] .draw-studio-header {
     align-self: start;
     display: grid;
     gap: 16px;
+    z-index: 2;
+    pointer-events: auto;
 }
 
 .draw-panel {
@@ -2795,6 +2798,9 @@ body[data-theme="light"] .draw-studio-header {
     padding: 16px 18px;
     display: grid;
     gap: 12px;
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
 }
 
 .draw-panel-header {
