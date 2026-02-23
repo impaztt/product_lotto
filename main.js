@@ -770,6 +770,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    window.applyStrategyFromUI = applyStrategy;
+
     groupLevelButtons.forEach(button => {
         button.addEventListener('click', () => {
             const token = button.dataset.groupLevel || '';
