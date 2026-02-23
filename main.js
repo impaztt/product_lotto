@@ -754,16 +754,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const scenarioCardsWrap = document.querySelector('.scenario-cards');
-    if (scenarioCardsWrap) {
-        scenarioCardsWrap.addEventListener('click', event => {
-            const button = event.target.closest('[data-strategy]');
-            if (!button) {
-                return;
-            }
-            applyStrategy(button.dataset.strategy);
-        });
-    }
+    document.addEventListener('click', event => {
+        const button = event.target.closest('.draw-scenario-card');
+        if (!button || !button.dataset.strategy) {
+            return;
+        }
+        applyStrategy(button.dataset.strategy);
+    });
 
     groupLevelButtons.forEach(button => {
         button.addEventListener('click', () => {
