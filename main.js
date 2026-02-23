@@ -60,6 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleRulesBtn = document.getElementById('toggle-rules');
     const strategyButtons = Array.from(document.querySelectorAll('[data-strategy]'));
     const scenarioCards = Array.from(document.querySelectorAll('.draw-scenario-card'));
+    // Filled later with Object.assign to avoid temporal-dead-zone access during early init.
+    const PRESETS = {};
+    const PRESETS_LABEL = {};
     const groupLevelButtons = Array.from(document.querySelectorAll('[data-group-level]'));
     const slotSaveButtons = Array.from(document.querySelectorAll('[data-slot-save]'));
     const slotApplyButtons = Array.from(document.querySelectorAll('[data-slot-apply]'));
@@ -3608,7 +3611,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    const PRESETS = {
+    Object.assign(PRESETS, {
         light: [
             'all_odd',
             'all_even',
@@ -3648,15 +3651,15 @@ document.addEventListener('DOMContentLoaded', () => {
             'low_or_high_5_plus',
             'prime_4_plus'
         ]
-    };
+    });
 
-    const PRESETS_LABEL = {
+    Object.assign(PRESETS_LABEL, {
         light: '보수형',
         conservative: '편중 최소형',
         balanced: '균형형',
         expanded: '분포 강화형',
         aggressive: '공격형'
-    };
+    });
 
     const RULE_DETAILS = {
         all_odd: '6개 숫자가 전부 홀수인 조합을 제외합니다.',
