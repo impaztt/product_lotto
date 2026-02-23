@@ -6,9 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
     const ruleInputs = Array.from(document.querySelectorAll('.rules-grid input[type="checkbox"]'));
-    const excludeNumberSelect = document.getElementById('exclude-number-select');
+    const excludeNumberGrid = document.getElementById('exclude-number-grid');
     const excludeNumberCard = document.getElementById('exclude-number-card');
     const excludeNumberTitle = document.getElementById('exclude-number-title');
+    const excludeNumberRule = document.getElementById('exclude-number-rule');
     const menuToggle = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileLinks = mobileMenu ? Array.from(mobileMenu.querySelectorAll('a')) : [];
@@ -82,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = Array.from(document.querySelectorAll('.tab-btn[data-tab]'));
     const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
     const tabLinks = Array.from(document.querySelectorAll('[data-tab-link]'));
-    let excludeNumberValue = null;
+    const excludeNumberValues = new Set();
     // Weekly tab uses embedded layout directly in the DOM.
     let weeklyStatusEl = null;
     let weeklyThisRoundEl = null;
@@ -875,6 +876,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ruleInputs.forEach(input => {
         input.addEventListener('change', () => {
+            if (input.value === 'exclude_number' && !input.checked && excludeNumberValues.size) {
+                excludeNumberValues.clear();
+                if (excludeNumberGrid) {
+                    excludeNumberGrid.querySelectorAll('button.is-active').forEach(button => {
+                        button.classList.remove('is-active');
+                    });
+                }
+                localStorage.removeItem('lotto_exclude_numbers');
+                updateExcludeNumberLabel();
+            }
             updateSelectionCount();
             updateCombinedEstimates();
             syncStrategyButtons('');
@@ -2292,49 +2303,92 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateExcludeNumberLabel() {
-        if (!excludeNumberSelect) {
-            excludeNumberValue = null;
-            return;
-        }
-        const value = parseInt(excludeNumberSelect.value, 10);
-        excludeNumberValue = Number.isFinite(value) ? value : null;
-        const label = excludeNumberValue ? `숫자 제외 (${excludeNumberValue})` : '숫자 제외';
+        const count = excludeNumberValues.size;
+        const label = count ? `숫자 제외 (${count}개)` : '숫자 제외';
         if (excludeNumberTitle) {
             excludeNumberTitle.textContent = label;
         }
         if (excludeNumberCard) {
             excludeNumberCard.dataset.title = label;
         }
+        if (excludeNumberRule) {
+            excludeNumberRule.checked = count > 0;
+        }
+    }
+
+    function getExcludeRangeClass(num) {
+        if (num <= 10) {
+            return 'range-1';
+        }
+        if (num <= 20) {
+            return 'range-2';
+        }
+        if (num <= 30) {
+            return 'range-3';
+        }
+        if (num <= 40) {
+            return 'range-4';
+        }
+        return 'range-5';
     }
 
     function setupExcludeNumberControl() {
-        if (!excludeNumberSelect) {
+        if (!excludeNumberGrid) {
             return;
         }
-        const options = ['<option value="">번호 선택</option>'];
+        excludeNumberGrid.innerHTML = '';
         for (let i = 1; i <= 45; i += 1) {
-            options.push(`<option value="${i}">${i}</option>`);
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = `exclude-number-ball ${getExcludeRangeClass(i)}`;
+            button.textContent = String(i);
+            button.dataset.number = String(i);
+            excludeNumberGrid.appendChild(button);
         }
-        excludeNumberSelect.innerHTML = options.join('');
 
-        const saved = localStorage.getItem('lotto_exclude_number');
-        const savedValue = saved ? parseInt(saved, 10) : NaN;
-        if (Number.isFinite(savedValue) && savedValue >= 1 && savedValue <= 45) {
-            excludeNumberSelect.value = String(savedValue);
-        }
-        updateExcludeNumberLabel();
-
-        excludeNumberSelect.addEventListener('change', () => {
-            updateExcludeNumberLabel();
-            if (excludeNumberValue) {
-                localStorage.setItem('lotto_exclude_number', String(excludeNumberValue));
-            } else {
-                localStorage.removeItem('lotto_exclude_number');
+        const saved = localStorage.getItem('lotto_exclude_numbers');
+        if (saved) {
+            try {
+                const values = JSON.parse(saved);
+                if (Array.isArray(values)) {
+                    values.forEach(value => {
+                        const num = Number(value);
+                        if (Number.isFinite(num) && num >= 1 && num <= 45) {
+                            excludeNumberValues.add(num);
+                        }
+                    });
+                }
+            } catch (error) {
+                localStorage.removeItem('lotto_exclude_numbers');
             }
-            updateSelectionCount();
-            updateCombinedEstimates();
-            updateScenarioMetrics();
+        }
+
+        excludeNumberGrid.querySelectorAll('button').forEach(button => {
+            const num = Number(button.dataset.number);
+            if (excludeNumberValues.has(num)) {
+                button.classList.add('is-active');
+            }
+            button.addEventListener('click', () => {
+                if (excludeNumberValues.has(num)) {
+                    excludeNumberValues.delete(num);
+                    button.classList.remove('is-active');
+                } else {
+                    excludeNumberValues.add(num);
+                    button.classList.add('is-active');
+                }
+                updateExcludeNumberLabel();
+                if (excludeNumberValues.size) {
+                    localStorage.setItem('lotto_exclude_numbers', JSON.stringify(Array.from(excludeNumberValues)));
+                } else {
+                    localStorage.removeItem('lotto_exclude_numbers');
+                }
+                updateSelectionCount();
+                updateCombinedEstimates();
+                updateScenarioMetrics();
+            });
         });
+
+        updateExcludeNumberLabel();
     }
 
     function setRulesByIds(ids) {
@@ -3495,10 +3549,10 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             id: 'exclude_number',
             exclude: numbers => {
-                if (!excludeNumberValue) {
+                if (!excludeNumberValues.size) {
                     return false;
                 }
-                return numbers.includes(excludeNumberValue);
+                return numbers.some(number => excludeNumberValues.has(number));
             }
         }
     ];

@@ -3667,6 +3667,55 @@ body.rule-picker-open {
     font-size: 12px;
 }
 
+#exclude-number-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.exclude-number-ball {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    border: 0;
+    cursor: pointer;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18);
+    opacity: 0.45;
+    transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+}
+
+.exclude-number-ball.is-active {
+    opacity: 1;
+    box-shadow: 0 6px 12px rgba(15, 23, 42, 0.18);
+    transform: translateY(-1px);
+}
+
+.exclude-number-ball.range-1 {
+    background: #fbc400;
+}
+
+.exclude-number-ball.range-2 {
+    background: #69c8f2;
+}
+
+.exclude-number-ball.range-3 {
+    background: #ff6b6b;
+}
+
+.exclude-number-ball.range-4 {
+    background: #aaaaaa;
+}
+
+.exclude-number-ball.range-5 {
+    background: #b0d840;
+}
+
 .rule-desc,
 .rule-stat {
     display: none;
