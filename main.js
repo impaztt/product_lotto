@@ -2874,12 +2874,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         let ratio = 1;
         activeRules.forEach(rule => {
+            if (rule.id === 'exclude_number') {
+                ratio *= getExcludeNumberRemainingRatio();
+                return;
+            }
             const stat = RULE_STATS[rule.id];
             if (stat) {
                 ratio *= (1 - stat.ratio);
             }
         });
         return Math.max(0.000001, ratio);
+    }
+
+    function getExcludeNumberRemainingRatio() {
+        const excludeCount = excludeNumberValues.size;
+        if (!excludeCount) {
+            return 1;
+        }
+        const remainingPool = 45 - excludeCount;
+        if (remainingPool < 6) {
+            return 0.000001;
+        }
+        const remainingCombos = combination(remainingPool, 6);
+        return Math.max(0.000001, remainingCombos / TOTAL_COMBOS);
     }
 
     function formatNumber(value) {
