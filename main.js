@@ -2944,7 +2944,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 excludedEl.textContent = `예상 제외: ${formatNumber(excludedCombos)}개`;
             }
             if (improveEl) {
-                improveEl.textContent = `확률 개선: ${formatImproveFactor(ratio)}`;
+                const excludedPct = Math.max(0, Math.min(100, Math.round((1 - ratio) * 1000) / 10));
+                const remainPct = Math.max(0, Math.min(100, Math.round(ratio * 1000) / 10));
+                improveEl.textContent = `제외 비중: ${excludedPct}% · 남는 비중: ${remainPct}%`;
             }
         });
     }
