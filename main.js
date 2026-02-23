@@ -2387,7 +2387,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (excludeNumberValues.has(num)) {
                 button.classList.add('is-active');
             }
-            button.addEventListener('click', () => {
+            button.addEventListener('click', event => {
+                // Buttons are rendered inside a <label>; prevent label toggle side-effects.
+                event.preventDefault();
+                event.stopPropagation();
                 if (excludeNumberValues.has(num)) {
                     excludeNumberValues.delete(num);
                     button.classList.remove('is-active');
