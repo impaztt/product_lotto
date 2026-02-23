@@ -2926,7 +2926,7 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
 }
 
 #tab-draw .scenario-tags {
-    display: flex;
+    display: none;
     gap: 6px;
     flex-wrap: wrap;
 }
@@ -2967,6 +2967,10 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
 .draw-category-levels {
     display: grid;
     gap: 10px;
+}
+
+#tab-draw .draw-category-levels {
+    display: none;
 }
 
 .draw-category-row {
@@ -3014,17 +3018,19 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
 .draw-slot-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
+    gap: 12px;
 }
 
 .draw-slot-card {
     background: var(--draw-card, #ffffff);
     border: 1px solid var(--draw-border, rgba(15, 23, 42, 0.12));
-    border-radius: 16px;
-    padding: 12px;
+    border-radius: 18px;
+    padding: 16px;
     display: grid;
     gap: 8px;
     box-shadow: var(--draw-shadow-soft, 0 10px 22px rgba(15, 23, 42, 0.08));
+    width: 220px;
+    min-height: 140px;
 }
 
 .draw-slot-title {
