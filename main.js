@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
     const ruleInputs = Array.from(document.querySelectorAll('.rules-grid input[type="checkbox"]'));
+    const excludeNumberSelect = document.getElementById('exclude-number-select');
+    const excludeNumberCard = document.getElementById('exclude-number-card');
+    const excludeNumberTitle = document.getElementById('exclude-number-title');
     const menuToggle = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileLinks = mobileMenu ? Array.from(mobileMenu.querySelectorAll('a')) : [];
@@ -79,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = Array.from(document.querySelectorAll('.tab-btn[data-tab]'));
     const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
     const tabLinks = Array.from(document.querySelectorAll('[data-tab-link]'));
+    let excludeNumberValue = null;
     // Weekly tab uses embedded layout directly in the DOM.
     let weeklyStatusEl = null;
     let weeklyThisRoundEl = null;
@@ -943,6 +947,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         syncThemeToggle();
         syncMenuState(false);
+        setupExcludeNumberControl();
         applySavedRules();
         injectRuleSamples();
         updateRulesStatus('');
@@ -2286,6 +2291,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function updateExcludeNumberLabel() {
+        if (!excludeNumberSelect) {
+            excludeNumberValue = null;
+            return;
+        }
+        const value = parseInt(excludeNumberSelect.value, 10);
+        excludeNumberValue = Number.isFinite(value) ? value : null;
+        const label = excludeNumberValue ? `숫자 제외 (${excludeNumberValue})` : '숫자 제외';
+        if (excludeNumberTitle) {
+            excludeNumberTitle.textContent = label;
+        }
+        if (excludeNumberCard) {
+            excludeNumberCard.dataset.title = label;
+        }
+    }
+
+    function setupExcludeNumberControl() {
+        if (!excludeNumberSelect) {
+            return;
+        }
+        const options = ['<option value="">번호 선택</option>'];
+        for (let i = 1; i <= 45; i += 1) {
+            options.push(`<option value="${i}">${i}</option>`);
+        }
+        excludeNumberSelect.innerHTML = options.join('');
+
+        const saved = localStorage.getItem('lotto_exclude_number');
+        const savedValue = saved ? parseInt(saved, 10) : NaN;
+        if (Number.isFinite(savedValue) && savedValue >= 1 && savedValue <= 45) {
+            excludeNumberSelect.value = String(savedValue);
+        }
+        updateExcludeNumberLabel();
+
+        excludeNumberSelect.addEventListener('change', () => {
+            updateExcludeNumberLabel();
+            if (excludeNumberValue) {
+                localStorage.setItem('lotto_exclude_number', String(excludeNumberValue));
+            } else {
+                localStorage.removeItem('lotto_exclude_number');
+            }
+            updateSelectionCount();
+            updateCombinedEstimates();
+            updateScenarioMetrics();
+        });
+    }
+
     function setRulesByIds(ids) {
         const selected = new Set(Array.isArray(ids) ? ids : []);
         ruleInputs.forEach(input => {
@@ -3440,6 +3491,15 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             id: 'prime_0',
             exclude: numbers => countPrimes(numbers) === 0
+        },
+        {
+            id: 'exclude_number',
+            exclude: numbers => {
+                if (!excludeNumberValue) {
+                    return false;
+                }
+                return numbers.includes(excludeNumberValue);
+            }
         }
     ];
 
@@ -3527,7 +3587,8 @@ document.addEventListener('DOMContentLoaded', () => {
         sum_high_180: '6개 합계가 180 이상인 조합을 제외합니다.',
         prime_4_plus: '소수가 4개 이상 포함된 조합을 제외합니다.',
         prime_1_or_less: '소수가 1개 이하인 조합을 제외합니다.',
-        prime_0: '소수가 하나도 없는 조합을 제외합니다.'
+        prime_0: '소수가 하나도 없는 조합을 제외합니다.',
+        exclude_number: '선택한 번호가 포함된 조합을 모두 제외합니다.'
     };
 
 
