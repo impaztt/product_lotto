@@ -3291,56 +3291,85 @@ body.rule-picker-open {
 .draw-selected-actions {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
 .draw-selected-count {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
-    padding: 4px 8px;
+    padding: 5px 10px;
     border-radius: 999px;
-    background: rgba(30, 107, 255, 0.12);
-    color: #0f172a;
+    background: linear-gradient(135deg, rgba(255, 107, 74, 0.2), rgba(22, 184, 166, 0.14));
+    color: #1f2937;
+    border: 1px solid rgba(255, 107, 74, 0.26);
 }
 
 .draw-selected-clear {
-    border: 1px solid rgba(15, 23, 42, 0.1);
-    background: #ffffff;
-    color: var(--text);
-    padding: 4px 8px;
+    border: 1px solid rgba(30, 107, 255, 0.2);
+    background: rgba(255, 255, 255, 0.88);
+    color: #1e3a8a;
+    padding: 5px 10px;
     border-radius: 999px;
     font-size: 11px;
+    font-weight: 700;
     cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
 }
 
 .draw-selected-clear:hover {
-    border-color: rgba(30, 107, 255, 0.4);
-    background: rgba(30, 107, 255, 0.1);
+    border-color: rgba(30, 107, 255, 0.44);
+    background: rgba(30, 107, 255, 0.14);
+    transform: translateY(-1px);
+}
+
+.draw-selected-board {
+    background: linear-gradient(160deg, rgba(30, 107, 255, 0.08), rgba(22, 184, 166, 0.05));
+    border: 1px solid rgba(30, 107, 255, 0.12);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+}
+
+.draw-selected-board .draw-panel-header h3 {
+    color: #0f172a;
 }
 
 .draw-selected-sub {
-    font-size: 12px;
-    color: var(--draw-muted, var(--text-muted));
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    font-size: 11px;
+    font-weight: 700;
+    color: #334155;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(148, 163, 184, 0.3);
 }
 
 .draw-picker-entry {
     display: grid;
     gap: 6px;
-    padding: 10px;
-    border-radius: 12px;
-    background: #f8fafc;
-    border: 1px solid rgba(15, 23, 42, 0.06);
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(148, 163, 184, 0.24);
 }
 
 .draw-picker-entry button {
-    border: 0;
+    border: 1px solid rgba(30, 107, 255, 0.22);
     border-radius: 12px;
     padding: 10px 12px;
     text-align: left;
-    background: rgba(30, 107, 255, 0.12);
-    color: #0f172a;
+    background: linear-gradient(135deg, rgba(30, 107, 255, 0.16), rgba(22, 184, 166, 0.12));
+    color: #0b3b7a;
     font-weight: 700;
     cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.draw-picker-entry button:hover {
+    transform: translateY(-1px);
+    border-color: rgba(30, 107, 255, 0.36);
+    box-shadow: 0 8px 18px rgba(30, 107, 255, 0.14);
 }
 
 .draw-picker-entry span {
@@ -3362,59 +3391,86 @@ body.rule-picker-open {
 
 .draw-selected-helper {
     font-size: 11px;
-    color: var(--draw-muted, var(--text-muted));
+    color: #5b6473;
 }
 
 .draw-selected-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
     max-height: 320px;
     overflow: auto;
+    padding-right: 2px;
 }
 
 .draw-selected-empty {
     font-size: 12px;
-    color: var(--draw-muted, var(--text-muted));
-    border: 1px dashed rgba(15, 23, 42, 0.2);
-    border-radius: 12px;
-    padding: 12px;
+    color: #64748b;
+    border: 1px dashed rgba(30, 107, 255, 0.3);
+    border-radius: 14px;
+    padding: 14px 12px;
     text-align: center;
-    background: #f8fafc;
+    background: rgba(255, 255, 255, 0.65);
 }
 
 .draw-selected-chip {
-    display: inline-flex;
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    gap: 6px;
-    border: 1px solid rgba(15, 23, 42, 0.12);
-    border-radius: 12px;
-    background: #ffffff;
-    padding: 6px 10px;
+    gap: 8px;
+    border: 1px solid rgba(148, 163, 184, 0.38);
+    border-radius: 14px;
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.92));
+    padding: 10px 10px 10px 12px;
     cursor: pointer;
-    font-size: 12px;
-    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+    text-align: left;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .draw-selected-chip strong {
-    font-weight: 600;
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
 }
 
 .draw-selected-chip span {
-    color: var(--draw-muted, var(--text-muted));
-    font-size: 11px;
+    display: block;
+    margin-top: 2px;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
 }
 
 .draw-selected-chip::after {
     content: "×";
-    margin-left: 6px;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgba(255, 107, 74, 0.16);
+    border: 1px solid rgba(255, 107, 74, 0.32);
     font-weight: 700;
-    color: rgba(15, 23, 42, 0.5);
+    color: #a83a1f;
+    line-height: 1;
 }
 
 .draw-selected-chip:hover {
     border-color: rgba(30, 107, 255, 0.4);
-    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(30, 107, 255, 0.16);
+    transform: translateY(-2px);
+}
+
+.draw-selected-chip:focus-visible {
+    outline: 2px solid rgba(30, 107, 255, 0.4);
+    outline-offset: 1px;
 }
 
 .draw-rules {
