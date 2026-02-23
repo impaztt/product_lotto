@@ -2834,12 +2834,19 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 #tab-draw .scenario-cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scroll-snap-type: x mandatory;
 }
 
 #tab-draw .draw-scenario-card {
     align-content: start;
     gap: 10px;
+    flex: 0 0 220px;
+    scroll-snap-align: start;
 }
 
 #tab-draw .scenario-meta {
