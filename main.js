@@ -762,6 +762,14 @@ document.addEventListener('DOMContentLoaded', () => {
         applyStrategy(button.dataset.strategy);
     });
 
+    scenarioCards.forEach(card => {
+        card.addEventListener('click', event => {
+            event.preventDefault();
+            event.stopPropagation();
+            applyStrategy(card.dataset.strategy);
+        });
+    });
+
     groupLevelButtons.forEach(button => {
         button.addEventListener('click', () => {
             const token = button.dataset.groupLevel || '';
