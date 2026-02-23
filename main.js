@@ -996,6 +996,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
         console.error('초기화 오류', error);
     }
+    updateScenarioMetrics();
     fetchLatestDraw();
     fetchWeeklyIntroInfo();
     window.setInterval(() => {
