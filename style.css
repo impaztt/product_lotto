@@ -2863,6 +2863,13 @@ body[data-theme="light"] .draw-studio-header {
     overflow-x: hidden;
 }
 
+#tab-draw .draw-builder .draw-panel:first-child {
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+}
+
 #tab-draw .scenario-meta {
     display: flex;
     align-items: center;
