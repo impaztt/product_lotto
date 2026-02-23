@@ -3352,51 +3352,99 @@ body.rule-picker-open {
 }
 
 .draw-selected-actions {
-    display: inline-flex;
+    display: grid;
     align-items: center;
     gap: 8px;
+    justify-items: end;
 }
 
 .draw-selected-count {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
-    padding: 4px 9px;
+    padding: 5px 10px;
     border-radius: 999px;
-    background: rgba(30, 107, 255, 0.1);
-    color: #1e3a8a;
-    border: 1px solid rgba(30, 107, 255, 0.18);
-}
-
-.draw-selected-clear {
+    background: rgba(15, 23, 42, 0.06);
+    color: #0f172a;
     border: 1px solid rgba(15, 23, 42, 0.12);
-    background: #ffffff;
-    color: #334155;
-    padding: 4px 9px;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.draw-selected-clear:hover {
-    border-color: rgba(30, 107, 255, 0.3);
-    background: rgba(30, 107, 255, 0.08);
 }
 
 .draw-selected-board {
-    background: #ffffff;
-    border: 1px solid rgba(15, 23, 42, 0.1);
-    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    box-shadow: 0 14px 26px rgba(15, 23, 42, 0.08);
+}
+
+.draw-selected-focus {
+    gap: 12px;
 }
 
 .draw-selected-board .draw-panel-header h3 {
+    margin: 0;
     color: #0f172a;
+    font-size: 17px;
+}
+
+.draw-selected-header {
+    align-items: start;
+}
+
+.draw-selected-title-wrap {
+    display: grid;
+    gap: 4px;
+}
+
+.draw-selected-lead {
+    margin: 0;
+    font-size: 12px;
+    color: #64748b;
 }
 
 .draw-selected-sub {
     font-size: 11px;
     color: #64748b;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    background: rgba(255, 255, 255, 0.8);
+    padding: 4px 9px;
+}
+
+.draw-selected-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+}
+
+.draw-selected-toolbar button {
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.draw-selected-toolbar #open-rule-picker {
+    border: 1px solid rgba(15, 23, 42, 0.14);
+    background: #ffffff;
+    text-align: left;
+    color: #0f172a;
+}
+
+.draw-selected-clear {
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    background: rgba(254, 242, 242, 0.9);
+    color: #b91c1c;
+    white-space: nowrap;
+}
+
+.draw-selected-toolbar button:hover {
+    border-color: rgba(30, 107, 255, 0.34);
+    background: rgba(30, 107, 255, 0.08);
+}
+
+.draw-selected-clear:hover {
+    border-color: rgba(220, 38, 38, 0.35);
+    background: rgba(254, 226, 226, 1);
 }
 
 .draw-picker-entry {
@@ -3443,24 +3491,62 @@ body.rule-picker-open {
 }
 
 .draw-selected-helper {
-    font-size: 11px;
+    font-size: 12px;
     color: #64748b;
 }
 
 .draw-selected-list {
+    display: grid;
+    gap: 10px;
+    max-height: 320px;
+    overflow: auto;
+    padding-right: 2px;
+}
+
+.draw-selected-group {
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 12px;
+    background: #ffffff;
+    padding: 10px;
+    display: grid;
+    gap: 8px;
+}
+
+.draw-selected-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.draw-selected-group-header strong {
+    font-size: 12px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.draw-selected-group-header span {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: 999px;
+    padding: 3px 8px;
+    background: #f8fafc;
+}
+
+.draw-selected-group-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    max-height: 320px;
-    overflow: auto;
 }
 
 .draw-selected-empty {
     font-size: 12px;
     color: #64748b;
     border: 1px dashed rgba(15, 23, 42, 0.2);
-    border-radius: 10px;
-    padding: 10px;
+    border-radius: 12px;
+    padding: 14px 12px;
     text-align: center;
     background: #f8fafc;
 }
@@ -3468,36 +3554,47 @@ body.rule-picker-open {
 .draw-selected-chip {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     border: 1px solid rgba(15, 23, 42, 0.14);
-    border-radius: 999px;
+    border-radius: 10px;
     background: #ffffff;
-    padding: 5px 10px;
+    padding: 7px 10px;
     cursor: pointer;
-    font-size: 11px;
+    font-size: 12px;
     box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
     transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .draw-selected-chip strong {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     color: #0f172a;
     line-height: 1;
 }
 
 .draw-selected-chip span {
-    color: #64748b;
+    color: #1e3a8a;
     font-size: 10px;
-    font-weight: 500;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    padding: 2px 6px;
+    background: rgba(30, 107, 255, 0.12);
 }
 
 .draw-selected-chip::after {
-    content: "×";
-    margin-left: 2px;
+    content: "";
+    width: 0;
+    height: 0;
+    margin: 0;
+}
+
+.draw-selected-chip strong::before {
+    content: "•";
+    margin-right: 6px;
     font-weight: 700;
-    color: rgba(15, 23, 42, 0.48);
-    line-height: 1;
+    color: #94a3b8;
 }
 
 .draw-selected-chip:hover {
@@ -4340,6 +4437,14 @@ body.rule-picker-open {
     .draw-selected-chip {
         width: auto;
         justify-content: flex-start;
+    }
+
+    .draw-selected-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .draw-selected-clear {
+        width: 100%;
     }
 
     .draw-strategy-grid {

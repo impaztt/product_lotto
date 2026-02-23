@@ -2655,6 +2655,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         selectedRulesEmptyEl.hidden = true;
+        const grouped = new Map();
         selectedCards.forEach(card => {
             const input = card.querySelector('.rule-input');
             if (!input) {
@@ -2663,13 +2664,38 @@ document.addEventListener('DOMContentLoaded', () => {
             const title = card.dataset.title
                 || card.querySelector('.rule-title')?.textContent
                 || '규칙';
-            const group = card.dataset.group || '';
-            const chip = document.createElement('button');
-            chip.type = 'button';
-            chip.className = 'draw-selected-chip';
-            chip.dataset.value = input.value;
-            chip.innerHTML = `<strong>${escapeHtml(title)}</strong><span>${escapeHtml(group)}</span>`;
-            selectedRulesListEl.appendChild(chip);
+            const group = (card.dataset.group || '기타').trim() || '기타';
+            if (!grouped.has(group)) {
+                grouped.set(group, []);
+            }
+            grouped.get(group).push({
+                value: input.value,
+                title
+            });
+        });
+
+        grouped.forEach((items, group) => {
+            const section = document.createElement('section');
+            section.className = 'draw-selected-group';
+
+            const header = document.createElement('div');
+            header.className = 'draw-selected-group-header';
+            header.innerHTML = `<strong>${escapeHtml(group)}</strong><span>${items.length}개</span>`;
+            section.appendChild(header);
+
+            const chips = document.createElement('div');
+            chips.className = 'draw-selected-group-chips';
+            items.forEach(item => {
+                const chip = document.createElement('button');
+                chip.type = 'button';
+                chip.className = 'draw-selected-chip';
+                chip.dataset.value = item.value;
+                chip.innerHTML = `<strong>${escapeHtml(item.title)}</strong><span>제거</span>`;
+                chips.appendChild(chip);
+            });
+
+            section.appendChild(chips);
+            selectedRulesListEl.appendChild(section);
         });
     }
 

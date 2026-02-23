@@ -1960,22 +1960,24 @@
 	                            <span id="rules-status" class="rules-status" aria-live="polite"></span>
 	                        </div>
 
-	                        <div class="draw-panel draw-selected-board">
-	                            <div class="draw-panel-header">
-	                                <h3>선택한 필터</h3>
+	                        <div class="draw-panel draw-selected-board draw-selected-focus">
+	                            <div class="draw-panel-header draw-selected-header">
+                                    <div class="draw-selected-title-wrap">
+	                                    <h3>선택한 필터</h3>
+                                        <p class="draw-selected-lead">카테고리별로 확인하고 빠르게 제거할 수 있습니다.</p>
+                                    </div>
 	                                <div class="draw-selected-actions">
 	                                    <span class="draw-selected-count" id="rules-selected-count">0개</span>
-	                                    <button class="draw-selected-clear" id="selected-clear-btn" type="button">전체 해제</button>
+	                                    <span class="draw-selected-sub" id="rules-visible-count">표시: 0/0</span>
 	                                </div>
 	                            </div>
-                                <div class="draw-picker-entry">
+                                <div class="draw-selected-toolbar">
                                     <button id="open-rule-picker" type="button">+ 규칙 추가/제거</button>
-                                    <span>칩을 눌러 바로 제거할 수 있습니다.</span>
+	                                <button class="draw-selected-clear" id="selected-clear-btn" type="button">전체 해제</button>
                                 </div>
-	                            <div class="draw-selected-sub" id="rules-visible-count">표시: 0/0</div>
-	                            <div class="draw-selected-helper">선택된 칩을 누르면 즉시 해제됩니다.</div>
+	                            <div class="draw-selected-helper">칩을 누르면 즉시 제거됩니다.</div>
 	                            <div id="selected-rules-list" class="draw-selected-list"></div>
-	                            <div id="selected-rules-empty" class="draw-selected-empty">아직 선택된 규칙이 없습니다.</div>
+	                            <div id="selected-rules-empty" class="draw-selected-empty">선택된 규칙이 없습니다. ‘규칙 추가/제거’로 시작하세요.</div>
 	                        </div>
 	                    </aside>
 
