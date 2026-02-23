@@ -2838,8 +2838,13 @@ body[data-theme="light"] .draw-studio-header {
     flex-wrap: nowrap;
     gap: 12px;
     overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+    max-width: 100%;
     padding-bottom: 6px;
     scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 #tab-draw .draw-scenario-card {
@@ -2847,6 +2852,10 @@ body[data-theme="light"] .draw-studio-header {
     gap: 10px;
     flex: 0 0 220px;
     scroll-snap-align: start;
+}
+
+#tab-draw .draw-panel {
+    overflow-x: hidden;
 }
 
 #tab-draw .scenario-meta {
