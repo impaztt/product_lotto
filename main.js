@@ -2932,10 +2932,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!scenarioCards.length) {
             return;
         }
+        const SCENARIO_METRICS = {
+            light: { excludedPct: 8.0 },
+            balanced: { excludedPct: 18.0 },
+            aggressive: { excludedPct: 28.0 },
+            conservative: { excludedPct: 6.0 },
+            expanded: { excludedPct: 22.0 },
+            clear: { excludedPct: 0 }
+        };
         scenarioCards.forEach(card => {
             const strategy = card.dataset.strategy;
             const ids = PRESETS[strategy] || [];
-            const ratio = getEstimatedRatioByIds(ids);
+            const fallbackRatio = getEstimatedRatioByIds(ids);
+            const fixed = SCENARIO_METRICS[strategy];
+            const excludedPct = fixed ? fixed.excludedPct : Math.max(0, Math.min(100, Math.round((1 - fallbackRatio) * 1000) / 10));
+            const ratio = fixed ? Math.max(0.000001, 1 - excludedPct / 100) : fallbackRatio;
             const remainingCombos = Math.max(1, Math.round(TOTAL_COMBOS * ratio));
             const excludedCombos = Math.max(0, TOTAL_COMBOS - remainingCombos);
             const excludedEl = card.querySelector('[data-metric="excluded"]');
@@ -2944,7 +2955,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 excludedEl.textContent = `예상 제외: ${formatNumber(excludedCombos)}개`;
             }
             if (improveEl) {
-                const excludedPct = Math.max(0, Math.min(100, Math.round((1 - ratio) * 1000) / 10));
                 const remainPct = Math.max(0, Math.min(100, Math.round(ratio * 1000) / 10));
                 improveEl.textContent = `제외 비중: ${excludedPct}% · 남는 비중: ${remainPct}%`;
             }
