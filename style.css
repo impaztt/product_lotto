@@ -2704,8 +2704,13 @@ body[data-theme="dark"] #tab-draw {
 #tab-draw .draw-cta-card {
     color: var(--draw-text);
     border: 0;
-    border-radius: 18px;
-    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+}
+
+#tab-draw .draw-metric-card.primary {
+    background: transparent;
 }
 
 body[data-theme="light"] .draw-studio-header {
