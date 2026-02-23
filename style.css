@@ -3857,6 +3857,17 @@ body.rule-picker-open {
     align-items: center;
 }
 
+.draw-generator-card .generator-panel {
+    gap: 16px;
+}
+
+.draw-generator-card .controls {
+    padding: 12px;
+    border-radius: 16px;
+    background: var(--draw-soft, rgba(15, 23, 42, 0.04));
+    border: 1px solid var(--draw-border, rgba(15, 23, 42, 0.12));
+}
+
 #draw-count {
     padding: 10px 14px;
     border-radius: 12px;

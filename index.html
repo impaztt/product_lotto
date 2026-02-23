@@ -2033,6 +2033,36 @@
                                     </div>
                                 </div>
                             </div>
+                            <section id="generator" class="draw-metric-card wide draw-generator-card">
+                                <div class="section-title compact">
+                                    <h3>필터 적용 추첨</h3>
+                                    <p>세트 수를 고른 뒤 규칙을 적용해 번호를 생성하세요.</p>
+                                </div>
+                                <div class="generator-panel">
+                                    <div class="controls">
+                                        <label for="draw-count">한 번에 생성할 세트</label>
+                                        <select id="draw-count">
+                                            <option value="1" selected>1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                        </select>
+                                        <button id="generate-btn">번호 생성</button>
+                                    </div>
+                                    <div class="numbers-container"></div>
+                                    <div class="notice-bar" id="guest-banner">
+                                        비회원은 하루 5회, 1회 1세트만 가능합니다. 로그인하면 제한이 해제됩니다.
+                                    </div>
+                                    <p class="helper-text" id="guest-limit">비회원은 하루 5회까지 가능 (1회 1세트).</p>
+                                    <p class="helper-text">팁: 결과가 없다면 규칙을 줄여 보세요.</p>
+                                </div>
+                            </section>
                         </div>
 
                         <div class="draw-rules-panel is-open inline" id="rule-picker-panel" aria-hidden="false">
@@ -2402,36 +2432,6 @@
             </section>
             <div id="rule-picker-backdrop" class="rule-picker-backdrop" hidden></div>
 
-            <section id="generator" class="section generator">
-                <div class="section-title">
-                    <h2>필터 적용 추첨</h2>
-                    <p>세트 수를 고른 뒤 규칙을 적용해 번호를 생성하세요.</p>
-                </div>
-                <div class="generator-panel">
-                    <div class="controls">
-                        <label for="draw-count">한 번에 생성할 세트</label>
-                        <select id="draw-count">
-                            <option value="1" selected>1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                        </select>
-                        <button id="generate-btn">번호 생성</button>
-                    </div>
-                    <div class="numbers-container"></div>
-                    <div class="notice-bar" id="guest-banner">
-                        비회원은 하루 5회, 1회 1세트만 가능합니다. 로그인하면 제한이 해제됩니다.
-                    </div>
-                    <p class="helper-text" id="guest-limit">비회원은 하루 5회까지 가능 (1회 1세트).</p>
-                    <p class="helper-text">팁: 결과가 없다면 규칙을 줄여 보세요.</p>
-                </div>
-            </section>
         </section>
 
         <section id="tab-mypage" class="tab-panel" role="tabpanel" aria-labelledby="tab-mypage-btn" tabindex="0">
