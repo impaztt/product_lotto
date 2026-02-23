@@ -3263,24 +3263,17 @@ body.rule-picker-open {
 }
 
 .draw-selected-card {
-    border-radius: 18px;
-    background: var(--draw-card, var(--panel));
-    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
-    padding: 16px 18px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    padding: 16px;
     display: grid;
     gap: 10px;
 }
 
-.draw-selected-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.draw-selected-header h3 {
-    margin: 0;
-    font-size: 16px;
+.draw-selected-card .draw-panel-header h3 {
+    font-size: 15px;
 }
 
 .draw-selected-actions {
@@ -3294,13 +3287,13 @@ body.rule-picker-open {
     font-weight: 700;
     padding: 4px 8px;
     border-radius: 999px;
-    background: rgba(30, 107, 255, 0.1);
-    border: 0;
+    background: rgba(30, 107, 255, 0.12);
+    color: #0f172a;
 }
 
 .draw-selected-clear {
-    border: 0;
-    background: #f1f5f9;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    background: #ffffff;
     color: var(--text);
     padding: 4px 8px;
     border-radius: 999px;
@@ -3309,8 +3302,8 @@ body.rule-picker-open {
 }
 
 .draw-selected-clear:hover {
-    border-color: var(--accent);
-    background: var(--accent-soft);
+    border-color: rgba(30, 107, 255, 0.4);
+    background: rgba(30, 107, 255, 0.1);
 }
 
 .draw-selected-sub {
@@ -3321,7 +3314,10 @@ body.rule-picker-open {
 .draw-picker-entry {
     display: grid;
     gap: 6px;
-    margin-top: -4px;
+    padding: 10px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.06);
 }
 
 .draw-picker-entry button {
@@ -3329,7 +3325,7 @@ body.rule-picker-open {
     border-radius: 12px;
     padding: 10px 12px;
     text-align: left;
-    background: rgba(30, 107, 255, 0.14);
+    background: rgba(30, 107, 255, 0.12);
     color: #0f172a;
     font-weight: 700;
     cursor: pointer;
@@ -3368,22 +3364,24 @@ body.rule-picker-open {
 .draw-selected-empty {
     font-size: 12px;
     color: var(--draw-muted, var(--text-muted));
-    border: 1px dashed rgba(15, 23, 42, 0.18);
+    border: 1px dashed rgba(15, 23, 42, 0.2);
     border-radius: 12px;
-    padding: 10px;
+    padding: 12px;
     text-align: center;
+    background: #f8fafc;
 }
 
 .draw-selected-chip {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    border: 0;
-    border-radius: 999px;
-    background: #f1f5f9;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: 12px;
+    background: #ffffff;
     padding: 6px 10px;
     cursor: pointer;
     font-size: 12px;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
 }
 
 .draw-selected-chip strong {
@@ -3399,12 +3397,12 @@ body.rule-picker-open {
     content: "×";
     margin-left: 6px;
     font-weight: 700;
-    color: var(--draw-muted, var(--text-muted));
+    color: rgba(15, 23, 42, 0.5);
 }
 
 .draw-selected-chip:hover {
-    border-color: var(--accent);
-    background: var(--accent-soft);
+    border-color: rgba(30, 107, 255, 0.4);
+    transform: translateY(-1px);
 }
 
 .draw-rules {
