@@ -2877,7 +2877,7 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 #tab-draw .draw-panel {
-    overflow-x: hidden;
+    overflow: visible;
 }
 
 #tab-draw .draw-builder .draw-panel:first-child {
