@@ -1336,7 +1336,7 @@ body[data-theme="light"] .weekly-countdown-box {
     grid-auto-flow: column;
     grid-auto-columns: minmax(220px, 1fr);
     gap: 16px;
-    overflow-x: auto;
+    overflow-x: scroll;
     padding-bottom: 6px;
     scroll-snap-type: x mandatory;
     min-height: 120px;
@@ -2860,7 +2860,7 @@ body[data-theme="light"] .draw-studio-header {
     scroll-snap-type: x mandatory;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-y;
+    touch-action: auto;
     pointer-events: auto;
     position: relative;
     z-index: 1;
