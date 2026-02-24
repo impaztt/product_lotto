@@ -2789,7 +2789,6 @@ body[data-theme="light"] .draw-studio-header {
     gap: 16px;
     z-index: 2;
     pointer-events: auto;
-    min-width: 0;
 }
 
 .draw-panel {
@@ -2802,7 +2801,6 @@ body[data-theme="light"] .draw-studio-header {
     position: relative;
     z-index: 2;
     pointer-events: auto;
-    min-width: 0;
 }
 
 .draw-panel-header {
@@ -2854,7 +2852,6 @@ body[data-theme="light"] .draw-studio-header {
     overflow-y: hidden;
     width: 100%;
     max-width: 100%;
-    min-width: 0;
     padding-bottom: 6px;
     scroll-snap-type: x mandatory;
     overscroll-behavior-x: contain;
