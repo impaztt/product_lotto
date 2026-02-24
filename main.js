@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleRulesBtn = document.getElementById('toggle-rules');
     const strategyButtons = Array.from(document.querySelectorAll('[data-strategy]'));
     const scenarioCards = Array.from(document.querySelectorAll('.draw-scenario-card'));
+    const scenarioScroll = document.querySelector('#tab-draw .scenario-cards');
     // Filled later with Object.assign to avoid temporal-dead-zone access during early init.
     const PRESETS = {};
     const PRESETS_LABEL = {};
@@ -87,6 +88,68 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
     const tabLinks = Array.from(document.querySelectorAll('[data-tab-link]'));
     const excludeNumberValues = new Set();
+
+    if (scenarioScroll) {
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let dragScrollLeft = 0;
+        let dragActive = false;
+        let dragLock = null;
+
+        scenarioScroll.addEventListener(
+            'touchstart',
+            (event) => {
+                if (event.touches.length !== 1) {
+                    return;
+                }
+                dragActive = true;
+                dragLock = null;
+                dragStartX = event.touches[0].pageX;
+                dragStartY = event.touches[0].pageY;
+                dragScrollLeft = scenarioScroll.scrollLeft;
+            },
+            { passive: true }
+        );
+
+        scenarioScroll.addEventListener(
+            'touchmove',
+            (event) => {
+                if (!dragActive || event.touches.length !== 1) {
+                    return;
+                }
+                const deltaX = event.touches[0].pageX - dragStartX;
+                const deltaY = event.touches[0].pageY - dragStartY;
+
+                if (dragLock === null) {
+                    dragLock = Math.abs(deltaX) > Math.abs(deltaY);
+                }
+
+                if (dragLock) {
+                    event.preventDefault();
+                    scenarioScroll.scrollLeft = dragScrollLeft - deltaX;
+                }
+            },
+            { passive: false }
+        );
+
+        scenarioScroll.addEventListener(
+            'touchend',
+            () => {
+                dragActive = false;
+                dragLock = null;
+            },
+            { passive: true }
+        );
+
+        scenarioScroll.addEventListener(
+            'touchcancel',
+            () => {
+                dragActive = false;
+                dragLock = null;
+            },
+            { passive: true }
+        );
+    }
     // Weekly tab uses embedded layout directly in the DOM.
     let weeklyStatusEl = null;
     let weeklyThisRoundEl = null;
