@@ -40,6 +40,7 @@ body {
         var(--bg);
     color: var(--text);
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 #tab-weekly {
@@ -2856,6 +2857,7 @@ body[data-theme="light"] .draw-studio-header {
     scroll-snap-type: x mandatory;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
     pointer-events: auto;
     position: relative;
     z-index: 1;
