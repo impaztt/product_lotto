@@ -2848,9 +2848,8 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 #tab-draw .scenario-cards {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 220px;
+    display: flex;
+    flex-wrap: nowrap;
     gap: 12px;
     overflow-x: auto;
     overflow-y: hidden;
@@ -2870,6 +2869,7 @@ body[data-theme="light"] .draw-studio-header {
 #tab-draw .draw-scenario-card {
     align-content: start;
     gap: 10px;
+    flex: 0 0 220px;
     scroll-snap-align: start;
     pointer-events: auto;
     position: relative;
@@ -2885,6 +2885,7 @@ body[data-theme="light"] .draw-studio-header {
     box-shadow: none;
     border-radius: 0;
     padding: 0;
+    overflow: visible;
 }
 
 #tab-draw .scenario-meta {
