@@ -2860,7 +2860,7 @@ body[data-theme="light"] .draw-studio-header {
     scroll-snap-type: x mandatory;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x;
+    touch-action: pan-y;
     pointer-events: auto;
     position: relative;
     z-index: 1;

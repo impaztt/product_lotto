@@ -96,59 +96,47 @@ document.addEventListener('DOMContentLoaded', () => {
         let dragActive = false;
         let dragLock = null;
 
-        scenarioScroll.addEventListener(
-            'touchstart',
-            (event) => {
-                if (event.touches.length !== 1) {
-                    return;
-                }
-                dragActive = true;
-                dragLock = null;
-                dragStartX = event.touches[0].pageX;
-                dragStartY = event.touches[0].pageY;
-                dragScrollLeft = scenarioScroll.scrollLeft;
-            },
-            { passive: true }
-        );
+        scenarioScroll.addEventListener('pointerdown', (event) => {
+            if (event.pointerType === 'mouse' && event.button !== 0) {
+                return;
+            }
+            dragActive = true;
+            dragLock = null;
+            dragStartX = event.pageX;
+            dragStartY = event.pageY;
+            dragScrollLeft = scenarioScroll.scrollLeft;
+            scenarioScroll.setPointerCapture(event.pointerId);
+        });
 
-        scenarioScroll.addEventListener(
-            'touchmove',
-            (event) => {
-                if (!dragActive || event.touches.length !== 1) {
-                    return;
-                }
-                const deltaX = event.touches[0].pageX - dragStartX;
-                const deltaY = event.touches[0].pageY - dragStartY;
+        scenarioScroll.addEventListener('pointermove', (event) => {
+            if (!dragActive) {
+                return;
+            }
+            const deltaX = event.pageX - dragStartX;
+            const deltaY = event.pageY - dragStartY;
 
-                if (dragLock === null) {
-                    dragLock = Math.abs(deltaX) > Math.abs(deltaY);
-                }
+            if (dragLock === null) {
+                dragLock = Math.abs(deltaX) > Math.abs(deltaY);
+            }
 
-                if (dragLock) {
-                    event.preventDefault();
-                    scenarioScroll.scrollLeft = dragScrollLeft - deltaX;
-                }
-            },
-            { passive: false }
-        );
+            if (dragLock) {
+                event.preventDefault();
+                scenarioScroll.scrollLeft = dragScrollLeft - deltaX;
+            }
+        });
 
-        scenarioScroll.addEventListener(
-            'touchend',
-            () => {
-                dragActive = false;
-                dragLock = null;
-            },
-            { passive: true }
-        );
+        const endDrag = (event) => {
+            if (!dragActive) {
+                return;
+            }
+            dragActive = false;
+            dragLock = null;
+            scenarioScroll.releasePointerCapture(event.pointerId);
+        };
 
-        scenarioScroll.addEventListener(
-            'touchcancel',
-            () => {
-                dragActive = false;
-                dragLock = null;
-            },
-            { passive: true }
-        );
+        scenarioScroll.addEventListener('pointerup', endDrag);
+        scenarioScroll.addEventListener('pointercancel', endDrag);
+        scenarioScroll.addEventListener('pointerleave', endDrag);
     }
     // Weekly tab uses embedded layout directly in the DOM.
     let weeklyStatusEl = null;
