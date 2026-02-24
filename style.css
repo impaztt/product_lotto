@@ -2848,10 +2848,9 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 #tab-draw .scenario-cards {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 12px;
-    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+    overflow-x: scroll;
     overflow-y: hidden;
     width: 100%;
     max-width: 100%;
@@ -2860,7 +2859,7 @@ body[data-theme="light"] .draw-studio-header {
     scroll-snap-type: x mandatory;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
-    touch-action: auto;
+    touch-action: pan-y;
     pointer-events: auto;
     position: relative;
     z-index: 1;
@@ -2869,11 +2868,18 @@ body[data-theme="light"] .draw-studio-header {
 #tab-draw .draw-scenario-card {
     align-content: start;
     gap: 10px;
-    flex: 0 0 220px;
+    display: inline-block;
+    vertical-align: top;
+    width: 220px;
+    margin-right: 12px;
     scroll-snap-align: start;
     pointer-events: auto;
     position: relative;
     z-index: 2;
+}
+
+#tab-draw .draw-scenario-card:last-child {
+    margin-right: 0;
 }
 
 #tab-draw .draw-panel {
