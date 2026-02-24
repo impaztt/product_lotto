@@ -2684,6 +2684,7 @@ body[data-theme="light"] .draw-hero {
     border-radius: 0;
     color: var(--draw-text);
     font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
+    overflow-x: hidden;
 }
 
 body[data-theme="dark"] #tab-draw {
@@ -2859,6 +2860,7 @@ body[data-theme="light"] .draw-studio-header {
     scroll-snap-type: x mandatory;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
     pointer-events: auto;
     position: relative;
     z-index: 1;
