@@ -2848,8 +2848,9 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 #tab-draw .scenario-cards {
-    display: flex;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 220px;
     gap: 12px;
     overflow-x: auto;
     overflow-y: hidden;
@@ -2869,7 +2870,6 @@ body[data-theme="light"] .draw-studio-header {
 #tab-draw .draw-scenario-card {
     align-content: start;
     gap: 10px;
-    flex: 0 0 220px;
     scroll-snap-align: start;
     pointer-events: auto;
     position: relative;
