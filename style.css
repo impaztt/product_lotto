@@ -2850,16 +2850,16 @@ body[data-theme="light"] .draw-studio-header {
 #tab-draw .scenario-cards {
     display: block;
     white-space: nowrap;
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
     width: 100%;
     max-width: 100%;
     min-width: 0;
     padding-bottom: 6px;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: none;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-y;
+    touch-action: pan-x;
     pointer-events: auto;
     position: relative;
     z-index: 1;
