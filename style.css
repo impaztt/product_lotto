@@ -4666,6 +4666,11 @@ body.rule-picker-open {
         -webkit-overflow-scrolling: touch;
     }
 
+    #tab-draw .scenario-cards {
+        padding-right: 20vw;
+        scroll-padding-right: 20vw;
+    }
+
     .rule-title {
         font-size: 15px;
     }
