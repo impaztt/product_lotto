@@ -2787,7 +2787,7 @@ body[data-theme="light"] .draw-studio-header {
     top: 110px;
     align-self: start;
     display: grid;
-    gap: 16px;
+    gap: 20px;
     z-index: 2;
     pointer-events: auto;
     min-width: 0;
@@ -2882,14 +2882,6 @@ body[data-theme="light"] .draw-studio-header {
 
 
 #tab-draw .draw-panel {
-    overflow: visible;
-}
-
-#tab-draw .draw-builder .draw-panel:first-child {
-    background: transparent;
-    box-shadow: none;
-    border-radius: 0;
-    padding: 0;
     overflow: visible;
 }
 
@@ -3064,25 +3056,7 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
     -webkit-overflow-scrolling: touch;
 }
 
-.draw-slot-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.draw-slot-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.draw-slot-header-title {
-    font-size: 14px;
-    font-weight: 700;
-}
-
-.draw-slot-panel.is-collapsed #draw-slot-grid {
+#draw-slot-panel.is-collapsed #draw-slot-grid {
     display: none;
 }
 
