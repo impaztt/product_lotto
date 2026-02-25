@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleRulesBtn = document.getElementById('toggle-rules');
     const strategyButtons = Array.from(document.querySelectorAll('[data-strategy]'));
     const scenarioCards = Array.from(document.querySelectorAll('.draw-scenario-card'));
+    let activeStrategy = '';
     // Filled later with Object.assign to avoid temporal-dead-zone access during early init.
     const PRESETS = {};
     const PRESETS_LABEL = {};
@@ -2433,12 +2434,22 @@ document.addEventListener('DOMContentLoaded', () => {
             updateRulesStatus('전략을 초기화했습니다.');
             syncStrategyButtons('clear');
             syncGroupLevelButtons();
+            activeStrategy = '';
+            return;
+        }
+        if (strategy && strategy === activeStrategy) {
+            setRulesByIds([]);
+            updateRulesStatus('전략을 해제했습니다.');
+            syncStrategyButtons('');
+            syncGroupLevelButtons();
+            activeStrategy = '';
             return;
         }
         setRulesByIds(presetIds);
         updateRulesStatus(`${PRESETS_LABEL[strategy] || '전략'}을 적용했습니다.`);
         syncStrategyButtons(strategy);
         syncGroupLevelButtons();
+        activeStrategy = strategy || '';
     }
 
     function applyGroupLevel(group, level) {
@@ -2468,6 +2479,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCombinedEstimates();
         syncStrategyButtons('');
         syncGroupLevelButtons();
+        activeStrategy = '';
     }
 
     function syncStrategyButtons(activeStrategy) {
