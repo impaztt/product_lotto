@@ -791,81 +791,65 @@ document.addEventListener('DOMContentLoaded', () => {
     window.applyStrategyFromUI = applyStrategy;
 
     scenarioTracks.forEach(track => {
-        // 모바일은 기본 "가로 스크롤"이 가장 자연스럽고(관성 포함) 안정적입니다.
-        // touchmove에서 preventDefault + scrollLeft를 직접 제어하면
-        // 일부 모바일 WebView/Safari에서 스와이프가 먹통처럼 보이는 경우가 있어
-        // 여기서는 **네이티브 스크롤**을 그대로 사용하고, 스와이프 중 발생하는 "클릭"만 차단합니다.
+        // ✅ 외부 CSS가 뭐라고 하든, 여기서 "가로 스크롤 스트립" 형태를 강제한다.
+        track.style.display = 'flex';
+        track.style.flexWrap = 'nowrap';
+        track.style.overflowX = 'auto';
+        track.style.overflowY = 'hidden';
+        track.style.webkitOverflowScrolling = 'touch';
+        track.style.touchAction = 'pan-x';
+        track.style.gap = '10px';
+        track.style.position = 'relative';
+        track.style.zIndex = '10';
+        track.style.pointerEvents = 'auto';
     
+        // ✅ 버튼(카드)들이 줄어들거나 래핑되지 않게 보장
+        Array.from(track.children).forEach(child => {
+            child.style.flex = '0 0 auto';
+        });
+    
+        // ✅ “드래그 중 클릭” 방지 + (네이티브 스크롤이 막히는 환경 대비) 포인터 드래그 백업
+        let isDown = false;
         let startX = 0;
-        let startY = 0;
-        let moved = false;
-        let clearTimer = null;
+        let startScrollLeft = 0;
     
-        const markDragging = () => {
-            scenarioDragIgnoreClick = true;
-            if (clearTimer) clearTimeout(clearTimer);
-            clearTimer = setTimeout(() => {
-                scenarioDragIgnoreClick = false;
-            }, 220);
-        };
-    
-        // 스크롤이 발생하면(=좌우로 밀었다면) 클릭을 잠깐 막습니다.
-        track.addEventListener('scroll', () => {
-            markDragging();
+        track.addEventListener('pointerdown', (e) => {
+            isDown = true;
+            startX = e.clientX;
+            startScrollLeft = track.scrollLeft;
+            scenarioDragIgnoreClick = false;
+            track.setPointerCapture?.(e.pointerId);
         }, { passive: true });
     
-        // 스크롤이 실제로 발생하지 않는 "가장자리" 상황(양 끝)에서도
-        // 손가락 움직임이 충분히 크면 클릭을 막아줍니다.
-        if (window.PointerEvent) {
-            track.addEventListener('pointerdown', e => {
-                startX = e.clientX;
-                startY = e.clientY;
-                moved = false;
-            }, { passive: true });
+        track.addEventListener('pointermove', (e) => {
+            if (!isDown) return;
+            const dx = e.clientX - startX;
     
-            track.addEventListener('pointermove', e => {
-                const dx = e.clientX - startX;
-                const dy = e.clientY - startY;
-                if (!moved && Math.abs(dx) >= 8 && Math.abs(dx) > Math.abs(dy)) {
-                    moved = true;
-                    markDragging();
-                }
-            }, { passive: true });
+            // 8px 이상 움직이면 “스와이프”로 간주 → 클릭 차단
+            if (Math.abs(dx) > 8) scenarioDragIgnoreClick = true;
     
-            track.addEventListener('pointerup', () => { moved = false; });
-            track.addEventListener('pointercancel', () => { moved = false; });
-        } else {
-            track.addEventListener('touchstart', event => {
-                if (event.touches.length !== 1) return;
-                const touch = event.touches[0];
-                startX = touch.clientX;
-                startY = touch.clientY;
-                moved = false;
-            }, { passive: true });
+            track.scrollLeft = startScrollLeft - dx;
+        }, { passive: true });
     
-            track.addEventListener('touchmove', event => {
-                if (event.touches.length !== 1) return;
-                const touch = event.touches[0];
-                const dx = touch.clientX - startX;
-                const dy = touch.clientY - startY;
-                if (!moved && Math.abs(dx) >= 8 && Math.abs(dx) > Math.abs(dy)) {
-                    moved = true;
-                    markDragging();
-                }
-            }, { passive: true });
+        const end = () => {
+            isDown = false;
+            // 스와이프 직후 click이 튀는 걸 잠깐 막는다
+            if (scenarioDragIgnoreClick) {
+                setTimeout(() => { scenarioDragIgnoreClick = false; }, 120);
+            }
+        };
     
-            track.addEventListener('touchend', () => { moved = false; });
-        }
+        track.addEventListener('pointerup', end, { passive: true });
+        track.addEventListener('pointercancel', end, { passive: true });
     
-        // (중요) 스와이프 직후의 click이 카드 버튼에 도달하지 않게 캡처 단계에서 차단
-        track.addEventListener('click', e => {
+        // 캡처 단계에서 click 차단 (카드가 버튼이라 특히 중요)
+        track.addEventListener('click', (e) => {
             if (scenarioDragIgnoreClick) {
                 e.preventDefault();
                 e.stopPropagation();
             }
         }, true);
     });
-
 
     groupLevelButtons.forEach(button => {
         button.addEventListener('click', () => {

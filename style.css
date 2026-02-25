@@ -4731,3 +4731,19 @@ body.rule-picker-open {
         font-size: 12px;
     }
 }
+
+
+#tab-draw .draw-strategy-grid.scenario-cards {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    max-width: 100%;
+    min-width: 0;
+  }
+  
+  #tab-draw .draw-strategy-grid.scenario-cards > .draw-scenario-card {
+    flex: 0 0 auto !important;
+  }
