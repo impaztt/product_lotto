@@ -2818,6 +2818,23 @@ body[data-theme="light"] .draw-studio-header {
     font-size: 16px;
 }
 
+#tab-draw .draw-panel-header h3 {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+#tab-draw #toggle-scenarios,
+#tab-draw #toggle-slots {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 8px 12px;
+    font-size: 12px;
+    line-height: 1;
+}
+
 .draw-strategy-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4471,6 +4488,13 @@ body.rule-picker-open {
 
     .draw-slot-grid {
         display: flex;
+    }
+
+    #tab-draw #toggle-scenarios,
+    #tab-draw #toggle-slots {
+        display: inline-flex !important;
+        visibility: visible;
+        opacity: 1;
     }
 
     .rule-picker-toolbar {
