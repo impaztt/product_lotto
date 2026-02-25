@@ -2844,43 +2844,42 @@ body[data-theme="light"] .draw-studio-header {
     align-content: start;
     gap: 8px;
     text-align: left;
-    min-height: 0;
+    min-height: 140px;
 }
 
 #tab-draw .scenario-cards {
-    display: block;
-    white-space: nowrap;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
     overflow-x: auto;
     overflow-y: hidden;
     width: 100%;
     max-width: 100%;
     min-width: 0;
     padding-bottom: 6px;
-    scroll-snap-type: none;
+    scroll-snap-type: x proximity;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-x;
     pointer-events: auto;
     position: relative;
     z-index: 1;
+    align-items: stretch;
 }
 
 #tab-draw .draw-scenario-card {
     align-content: start;
     gap: 10px;
-    display: inline-block;
-    vertical-align: top;
+    display: inline-grid;
     width: 220px;
-    margin-right: 12px;
+    min-height: 140px;
     scroll-snap-align: start;
     pointer-events: auto;
     position: relative;
     z-index: 2;
+    flex: 0 0 auto;
 }
 
-#tab-draw .draw-scenario-card:last-child {
-    margin-right: 0;
-}
 
 #tab-draw .draw-panel {
     overflow: visible;
