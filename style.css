@@ -2860,11 +2860,20 @@ body[data-theme="light"] .draw-studio-header {
     scroll-snap-type: x proximity;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x;
+    touch-action: pan-y;
     pointer-events: auto;
     position: relative;
     z-index: 1;
     align-items: stretch;
+    cursor: grab;
+}
+
+#tab-draw .scenario-cards.is-dragging-ready {
+    user-select: none;
+}
+
+#tab-draw .scenario-cards.is-dragging {
+    cursor: grabbing;
 }
 
 #tab-draw .draw-scenario-card {
