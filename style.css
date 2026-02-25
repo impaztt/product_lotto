@@ -2882,6 +2882,11 @@ body[data-theme="light"] .draw-studio-header {
     flex: 0 0 auto;
 }
 
+#tab-draw .scenario-spacer {
+    opacity: 0;
+    pointer-events: none;
+}
+
 
 #tab-draw .draw-panel {
     overflow: visible;
