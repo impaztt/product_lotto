@@ -791,48 +791,79 @@ document.addEventListener('DOMContentLoaded', () => {
     window.applyStrategyFromUI = applyStrategy;
 
     scenarioTracks.forEach(track => {
+        // 모바일은 기본 "가로 스크롤"이 가장 자연스럽고(관성 포함) 안정적입니다.
+        // touchmove에서 preventDefault + scrollLeft를 직접 제어하면
+        // 일부 모바일 WebView/Safari에서 스와이프가 먹통처럼 보이는 경우가 있어
+        // 여기서는 **네이티브 스크롤**을 그대로 사용하고, 스와이프 중 발생하는 "클릭"만 차단합니다.
+    
         let startX = 0;
         let startY = 0;
-        let startScrollLeft = 0;
-        let dragging = false;
-
-        track.addEventListener('touchstart', event => {
-            if (event.touches.length !== 1) {
-                return;
-            }
-            const touch = event.touches[0];
-            startX = touch.clientX;
-            startY = touch.clientY;
-            startScrollLeft = track.scrollLeft;
-            dragging = false;
+        let moved = false;
+        let clearTimer = null;
+    
+        const markDragging = () => {
+            scenarioDragIgnoreClick = true;
+            if (clearTimer) clearTimeout(clearTimer);
+            clearTimer = setTimeout(() => {
+                scenarioDragIgnoreClick = false;
+            }, 220);
+        };
+    
+        // 스크롤이 발생하면(=좌우로 밀었다면) 클릭을 잠깐 막습니다.
+        track.addEventListener('scroll', () => {
+            markDragging();
         }, { passive: true });
-
-        track.addEventListener('touchmove', event => {
-            if (event.touches.length !== 1) {
-                return;
-            }
-            const touch = event.touches[0];
-            const dx = touch.clientX - startX;
-            const dy = touch.clientY - startY;
-            if (!dragging) {
-                if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(dy)) {
-                    return;
+    
+        // 스크롤이 실제로 발생하지 않는 "가장자리" 상황(양 끝)에서도
+        // 손가락 움직임이 충분히 크면 클릭을 막아줍니다.
+        if (window.PointerEvent) {
+            track.addEventListener('pointerdown', e => {
+                startX = e.clientX;
+                startY = e.clientY;
+                moved = false;
+            }, { passive: true });
+    
+            track.addEventListener('pointermove', e => {
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                if (!moved && Math.abs(dx) >= 8 && Math.abs(dx) > Math.abs(dy)) {
+                    moved = true;
+                    markDragging();
                 }
-                dragging = true;
-                scenarioDragIgnoreClick = true;
+            }, { passive: true });
+    
+            track.addEventListener('pointerup', () => { moved = false; });
+            track.addEventListener('pointercancel', () => { moved = false; });
+        } else {
+            track.addEventListener('touchstart', event => {
+                if (event.touches.length !== 1) return;
+                const touch = event.touches[0];
+                startX = touch.clientX;
+                startY = touch.clientY;
+                moved = false;
+            }, { passive: true });
+    
+            track.addEventListener('touchmove', event => {
+                if (event.touches.length !== 1) return;
+                const touch = event.touches[0];
+                const dx = touch.clientX - startX;
+                const dy = touch.clientY - startY;
+                if (!moved && Math.abs(dx) >= 8 && Math.abs(dx) > Math.abs(dy)) {
+                    moved = true;
+                    markDragging();
+                }
+            }, { passive: true });
+    
+            track.addEventListener('touchend', () => { moved = false; });
+        }
+    
+        // (중요) 스와이프 직후의 click이 카드 버튼에 도달하지 않게 캡처 단계에서 차단
+        track.addEventListener('click', e => {
+            if (scenarioDragIgnoreClick) {
+                e.preventDefault();
+                e.stopPropagation();
             }
-            track.scrollLeft = startScrollLeft - dx;
-            event.preventDefault();
-        }, { passive: false });
-
-        track.addEventListener('touchend', () => {
-            if (dragging) {
-                setTimeout(() => {
-                    scenarioDragIgnoreClick = false;
-                }, 0);
-            }
-            dragging = false;
-        });
+        }, true);
     });
 
 

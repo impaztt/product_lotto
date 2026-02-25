@@ -2851,21 +2851,22 @@ body[data-theme="light"] .draw-studio-header {
     display: flex;
     flex-wrap: nowrap;
     gap: 10px;
-    overflow-x: auto;
-    overflow-y: hidden;
+  
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  
     width: 100%;
     max-width: 100%;
     min-width: 0;
+  
     padding-bottom: 6px;
     scroll-snap-type: x proximity;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x;
-    pointer-events: auto;
-    position: relative;
-    z-index: 1;
-    align-items: stretch;
-}
+  
+    /* 가로 스와이프 + 세로 스크롤 둘 다 자연스럽게 */
+    touch-action: pan-x pan-y;
+  }
 
 #tab-draw .draw-scenario-card {
     align-content: start;
