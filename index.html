@@ -1823,11 +1823,12 @@
             <section id="rules" class="section rules draw-studio">
 	                <div class="draw-studio-body">
 	                    <aside class="draw-builder">
-	                        <div class="draw-panel">
+	                        <div class="draw-panel" id="draw-scenario-panel">
 	                            <div class="draw-panel-header">
 	                                <h3>시나리오 선택</h3>
+                                    <button id="toggle-scenarios" class="ghost" type="button" aria-expanded="true" aria-controls="draw-scenario-grid">접기</button>
 	                            </div>
-                                <div class="draw-strategy-grid scenario-cards">
+                                <div class="draw-strategy-grid scenario-cards" id="draw-scenario-grid">
                                     <button class="draw-strategy-btn draw-scenario-btn draw-scenario-card" type="button" data-strategy="light" onclick="window.applyStrategyFromUI && window.applyStrategyFromUI('light')">
                                         <div class="scenario-meta">
                                             <span class="scenario-pill">라이트</span>

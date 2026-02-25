@@ -3067,6 +3067,10 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
     display: none;
 }
 
+#draw-scenario-panel.is-collapsed #draw-scenario-grid {
+    display: none;
+}
+
 .draw-slot-card {
     background: var(--draw-card, #ffffff);
     border: 1px solid var(--draw-border, rgba(15, 23, 42, 0.12));

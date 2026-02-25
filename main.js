@@ -77,6 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const slotPanel = document.getElementById('draw-slot-panel');
     const slotGrid = document.getElementById('draw-slot-grid');
     const toggleSlotsBtn = document.getElementById('toggle-slots');
+    const scenarioPanel = document.getElementById('draw-scenario-panel');
+    const scenarioGrid = document.getElementById('draw-scenario-grid');
+    const toggleScenariosBtn = document.getElementById('toggle-scenarios');
     const openRulePickerBtn = document.getElementById('open-rule-picker');
     const closeRulePickerBtn = document.getElementById('close-rule-picker');
     const rulePickerPanel = document.getElementById('rule-picker-panel');
@@ -818,7 +821,6 @@ document.addEventListener('DOMContentLoaded', () => {
             startX = e.clientX;
             startScrollLeft = track.scrollLeft;
             scenarioDragIgnoreClick = false;
-            track.setPointerCapture?.(e.pointerId);
         }, { passive: true });
     
         track.addEventListener('pointermove', (e) => {
@@ -908,8 +910,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (toggleSlotsBtn && slotPanel && slotGrid) {
         toggleSlotsBtn.addEventListener('click', () => {
             const collapsed = slotPanel.classList.toggle('is-collapsed');
-            toggleSlotsBtn.textContent = collapsed ? '펼치기' : '접기';
+            toggleSlotsBtn.textContent = collapsed ? '더보기' : '접기';
             toggleSlotsBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        });
+    }
+
+    if (toggleScenariosBtn && scenarioPanel && scenarioGrid) {
+        toggleScenariosBtn.addEventListener('click', () => {
+            const collapsed = scenarioPanel.classList.toggle('is-collapsed');
+            toggleScenariosBtn.textContent = collapsed ? '더보기' : '접기';
+            toggleScenariosBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
         });
     }
 
