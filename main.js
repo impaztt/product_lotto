@@ -72,6 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
         2: document.getElementById('draw-slot-meta-2'),
         3: document.getElementById('draw-slot-meta-3')
     };
+    const slotPanel = document.getElementById('draw-slot-panel');
+    const slotGrid = document.getElementById('draw-slot-grid');
+    const toggleSlotsBtn = document.getElementById('toggle-slots');
     const openRulePickerBtn = document.getElementById('open-rule-picker');
     const closeRulePickerBtn = document.getElementById('close-rule-picker');
     const rulePickerPanel = document.getElementById('rule-picker-panel');
@@ -828,6 +831,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const selected = ruleInputs.filter(input => input.checked).map(input => input.value);
             localStorage.setItem('lotto_custom_preset', JSON.stringify(selected));
             updateRulesStatus('내 프리셋을 저장했습니다.');
+        });
+    }
+
+    if (toggleSlotsBtn && slotPanel && slotGrid) {
+        toggleSlotsBtn.addEventListener('click', () => {
+            const collapsed = slotPanel.classList.toggle('is-collapsed');
+            toggleSlotsBtn.textContent = collapsed ? '펼치기' : '접기';
+            toggleSlotsBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
         });
     }
 
