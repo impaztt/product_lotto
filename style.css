@@ -2823,16 +2823,28 @@ body[data-theme="light"] .draw-studio-header {
     min-width: 0;
 }
 
-#tab-draw #toggle-scenarios,
-#tab-draw #toggle-slots {
+#tab-draw .draw-toggle-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
     white-space: nowrap;
+    border: 0;
+    background: #f1f5f9;
+    color: #0f172a;
+    border-radius: 999px;
+    -webkit-appearance: none;
+    appearance: none;
     padding: 8px 12px;
     font-size: 12px;
+    font-weight: 700;
     line-height: 1;
+    cursor: pointer;
+}
+
+#tab-draw .draw-toggle-btn:hover {
+    background: rgba(30, 107, 255, 0.12);
+    color: #0f172a;
 }
 
 .draw-strategy-grid {
@@ -4490,8 +4502,7 @@ body.rule-picker-open {
         display: flex;
     }
 
-    #tab-draw #toggle-scenarios,
-    #tab-draw #toggle-slots {
+    #tab-draw .draw-toggle-btn {
         display: inline-flex !important;
         visibility: visible;
         opacity: 1;
