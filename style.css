@@ -2870,7 +2870,7 @@ body[data-theme="light"] .draw-studio-header {
     gap: 10px;
     display: inline-block;
     vertical-align: top;
-    width: 260px;
+    width: 220px;
     margin-right: 12px;
     scroll-snap-align: start;
     pointer-events: auto;
