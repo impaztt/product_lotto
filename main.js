@@ -60,6 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleRulesBtn = document.getElementById('toggle-rules');
     const strategyButtons = Array.from(document.querySelectorAll('[data-strategy]'));
     const scenarioCards = Array.from(document.querySelectorAll('.draw-scenario-card'));
+    const scenarioTracks = Array.from(document.querySelectorAll('.scenario-cards'));
+    let scenarioDragIgnoreClick = false;
     let activeStrategy = '';
     // Filled later with Object.assign to avoid temporal-dead-zone access during early init.
     const PRESETS = {};
@@ -767,6 +769,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!button || !button.dataset.strategy) {
             return;
         }
+        if (scenarioDragIgnoreClick) {
+            scenarioDragIgnoreClick = false;
+            return;
+        }
         applyStrategy(button.dataset.strategy);
     });
 
@@ -774,11 +780,60 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('click', event => {
             event.preventDefault();
             event.stopPropagation();
+            if (scenarioDragIgnoreClick) {
+                scenarioDragIgnoreClick = false;
+                return;
+            }
             applyStrategy(card.dataset.strategy);
         });
     });
 
     window.applyStrategyFromUI = applyStrategy;
+
+    scenarioTracks.forEach(track => {
+        let startX = 0;
+        let startY = 0;
+        let startScrollLeft = 0;
+        let dragging = false;
+
+        track.addEventListener('touchstart', event => {
+            if (event.touches.length !== 1) {
+                return;
+            }
+            const touch = event.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+            startScrollLeft = track.scrollLeft;
+            dragging = false;
+        }, { passive: true });
+
+        track.addEventListener('touchmove', event => {
+            if (event.touches.length !== 1) {
+                return;
+            }
+            const touch = event.touches[0];
+            const dx = touch.clientX - startX;
+            const dy = touch.clientY - startY;
+            if (!dragging) {
+                if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(dy)) {
+                    return;
+                }
+                dragging = true;
+                scenarioDragIgnoreClick = true;
+            }
+            track.scrollLeft = startScrollLeft - dx;
+            event.preventDefault();
+        }, { passive: false });
+
+        track.addEventListener('touchend', () => {
+            if (dragging) {
+                setTimeout(() => {
+                    scenarioDragIgnoreClick = false;
+                }, 0);
+            }
+            dragging = false;
+        });
+    });
 
 
     groupLevelButtons.forEach(button => {
