@@ -4747,3 +4747,15 @@ body.rule-picker-open {
   #tab-draw .draw-strategy-grid.scenario-cards > .draw-scenario-card {
     flex: 0 0 auto !important;
   }
+
+  #tab-draw .scenario-cards {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    display: flex;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #tab-draw .draw-scenario-card {
+    flex: 0 0 auto;
+  }
