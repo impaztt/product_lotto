@@ -3084,6 +3084,10 @@ document.addEventListener('DOMContentLoaded', () => {
             aggressive: { excludedPct: 28.0 },
             conservative: { excludedPct: 6.0 },
             expanded: { excludedPct: 22.0 },
+            range_focus: { excludedPct: 20.0 },
+            sum_balance: { excludedPct: 12.0 },
+            digit_focus: { excludedPct: 24.0 },
+            prime_focus: { excludedPct: 26.0 },
             clear: { excludedPct: 0 }
         };
         scenarioCards.forEach(card => {
@@ -3771,6 +3775,27 @@ document.addEventListener('DOMContentLoaded', () => {
             'all_low_or_high',
             'low_or_high_5_plus',
             'prime_4_plus'
+        ],
+        range_focus: [
+            'same_decade_5_plus',
+            'tight_range',
+            'all_low_or_high',
+            'low_or_high_5_plus'
+        ],
+        sum_balance: [
+            'sum_low_100',
+            'sum_high_180',
+            'extreme_sum'
+        ],
+        digit_focus: [
+            'last_digit_zero_2_plus',
+            'last_digit_five_2_plus',
+            'same_last_digit_3_plus'
+        ],
+        prime_focus: [
+            'prime_0',
+            'prime_1_or_less',
+            'prime_4_plus'
         ]
     });
 
@@ -3779,7 +3804,11 @@ document.addEventListener('DOMContentLoaded', () => {
         conservative: '편중 최소형',
         balanced: '균형형',
         expanded: '분포 강화형',
-        aggressive: '공격형'
+        aggressive: '공격형',
+        range_focus: '구간 집중형',
+        sum_balance: '합계 안정형',
+        digit_focus: '끝자리 집중형',
+        prime_focus: '소수 집중형'
     });
 
     const RULE_DETAILS = {

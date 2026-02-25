@@ -1916,6 +1916,78 @@
                                         </div>
                                         <div class="scenario-impact">추천: 경험자</div>
                                     </button>
+                                    <button class="draw-strategy-btn draw-scenario-btn draw-scenario-card" type="button" data-strategy="range_focus" onclick="window.applyStrategyFromUI && window.applyStrategyFromUI('range_focus')">
+                                        <div class="scenario-meta">
+                                            <span class="scenario-pill">구간</span>
+                                            <span class="scenario-tone">집중</span>
+                                        </div>
+                                        <div class="scenario-title">구간 집중형</div>
+                                        <div class="scenario-desc">저·고 구간 편중과 좁은 구간을 줄입니다.</div>
+                                        <div class="scenario-metrics">
+                                            <span data-metric="excluded">예상 제외: 1,629,000개</span>
+                                            <span data-metric="improve">제외 비중: 20% · 남는 비중: 80%</span>
+                                        </div>
+                                        <div class="scenario-tags">
+                                            <span>저/고</span>
+                                            <span>구간</span>
+                                            <span>분산</span>
+                                        </div>
+                                        <div class="scenario-impact">추천: 구간 중심</div>
+                                    </button>
+                                    <button class="draw-strategy-btn draw-scenario-btn draw-scenario-card" type="button" data-strategy="sum_balance" onclick="window.applyStrategyFromUI && window.applyStrategyFromUI('sum_balance')">
+                                        <div class="scenario-meta">
+                                            <span class="scenario-pill">합계</span>
+                                            <span class="scenario-tone">안정</span>
+                                        </div>
+                                        <div class="scenario-title">합계 안정형</div>
+                                        <div class="scenario-desc">합계 극단값을 줄여 균형을 맞춥니다.</div>
+                                        <div class="scenario-metrics">
+                                            <span data-metric="excluded">예상 제외: 977,000개</span>
+                                            <span data-metric="improve">제외 비중: 12% · 남는 비중: 88%</span>
+                                        </div>
+                                        <div class="scenario-tags">
+                                            <span>합계</span>
+                                            <span>완만</span>
+                                            <span>기본</span>
+                                        </div>
+                                        <div class="scenario-impact">추천: 합계 밸런스</div>
+                                    </button>
+                                    <button class="draw-strategy-btn draw-scenario-btn draw-scenario-card" type="button" data-strategy="digit_focus" onclick="window.applyStrategyFromUI && window.applyStrategyFromUI('digit_focus')">
+                                        <div class="scenario-meta">
+                                            <span class="scenario-pill">끝자리</span>
+                                            <span class="scenario-tone">집중</span>
+                                        </div>
+                                        <div class="scenario-title">끝자리 집중형</div>
+                                        <div class="scenario-desc">특정 끝자리 쏠림을 적극 제거합니다.</div>
+                                        <div class="scenario-metrics">
+                                            <span data-metric="excluded">예상 제외: 1,954,000개</span>
+                                            <span data-metric="improve">제외 비중: 24% · 남는 비중: 76%</span>
+                                        </div>
+                                        <div class="scenario-tags">
+                                            <span>끝자리</span>
+                                            <span>반복</span>
+                                            <span>편중</span>
+                                        </div>
+                                        <div class="scenario-impact">추천: 패턴 제거</div>
+                                    </button>
+                                    <button class="draw-strategy-btn draw-scenario-btn draw-scenario-card" type="button" data-strategy="prime_focus" onclick="window.applyStrategyFromUI && window.applyStrategyFromUI('prime_focus')">
+                                        <div class="scenario-meta">
+                                            <span class="scenario-pill">소수</span>
+                                            <span class="scenario-tone">집중</span>
+                                        </div>
+                                        <div class="scenario-title">소수 집중형</div>
+                                        <div class="scenario-desc">소수 개수 편중을 줄여 분산합니다.</div>
+                                        <div class="scenario-metrics">
+                                            <span data-metric="excluded">예상 제외: 2,118,000개</span>
+                                            <span data-metric="improve">제외 비중: 26% · 남는 비중: 74%</span>
+                                        </div>
+                                        <div class="scenario-tags">
+                                            <span>소수</span>
+                                            <span>분산</span>
+                                            <span>편중</span>
+                                        </div>
+                                        <div class="scenario-impact">추천: 소수 밸런스</div>
+                                    </button>
                                     <button class="draw-strategy-btn ghost draw-scenario-btn draw-scenario-card" type="button" data-strategy="clear" onclick="window.applyStrategyFromUI && window.applyStrategyFromUI('clear')">
                                         <div class="scenario-meta">
                                             <span class="scenario-pill ghost">리셋</span>
