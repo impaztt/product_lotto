@@ -3091,8 +3091,7 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 #tab-draw .scenario-spacer {
-    opacity: 0;
-    pointer-events: none;
+    display: none;
 }
 
 
@@ -4560,10 +4559,12 @@ body.rule-picker-open {
 
     .draw-studio-body {
         grid-template-columns: 1fr;
+        gap: 14px;
     }
 
     .draw-builder {
         position: static;
+        gap: 12px;
     }
 
     .draw-dashboard-grid {
@@ -4642,6 +4643,23 @@ body.rule-picker-open {
         padding: 12px 14px;
     }
 
+    #tab-draw .draw-panel {
+        padding: 14px;
+    }
+
+    #tab-draw .draw-panel-header {
+        align-items: flex-start;
+    }
+
+    #tab-draw .draw-panel-header h3 {
+        font-size: 15px;
+        line-height: 1.35;
+    }
+
+    #tab-draw .draw-toggle-btn {
+        padding: 7px 10px;
+    }
+
     .draw-cta-card {
         min-width: 0;
         width: 100%;
@@ -4679,6 +4697,12 @@ body.rule-picker-open {
 
     .draw-slot-grid {
         display: flex;
+    }
+
+    #tab-draw .draw-scenario-card,
+    #tab-draw .draw-slot-card {
+        width: min(280px, calc(100vw - 42px));
+        flex-basis: min(280px, calc(100vw - 42px));
     }
 
     #tab-draw .draw-toggle-btn {
@@ -4890,8 +4914,18 @@ body.rule-picker-open {
     }
 
     #tab-draw .scenario-cards {
-        padding-right: 20vw;
-        scroll-padding-right: 20vw;
+        padding-right: 12vw;
+        scroll-padding-right: 12vw;
+    }
+
+    #tab-draw .draw-panel {
+        padding: 12px;
+    }
+
+    #tab-draw .draw-scenario-card,
+    #tab-draw .draw-slot-card {
+        width: min(250px, calc(100vw - 34px));
+        flex-basis: min(250px, calc(100vw - 34px));
     }
 
     .rule-title {
@@ -4960,31 +4994,3 @@ body.rule-picker-open {
         font-size: 12px;
     }
 }
-
-
-#tab-draw .draw-strategy-grid.scenario-cards {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-x;
-    max-width: 100%;
-    min-width: 0;
-  }
-  
-  #tab-draw .draw-strategy-grid.scenario-cards > .draw-scenario-card {
-    flex: 0 0 auto !important;
-  }
-
-  #tab-draw .scenario-cards {
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    display: flex;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  #tab-draw .draw-scenario-card {
-    flex: 0 0 auto;
-  }

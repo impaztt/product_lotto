@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const groupSelectButtons = Array.from(document.querySelectorAll('.group-select'));
     const toggleRulesBtn = document.getElementById('toggle-rules');
     const strategyButtons = Array.from(document.querySelectorAll('[data-strategy]'));
-    const scenarioCards = Array.from(document.querySelectorAll('.draw-scenario-card'));
+    const scenarioCards = Array.from(document.querySelectorAll('.draw-scenario-card[data-strategy]'));
     const scenarioTracks = Array.from(document.querySelectorAll('.scenario-cards'));
     let scenarioDragIgnoreClick = false;
     let activeStrategy = '';
@@ -800,14 +800,14 @@ document.addEventListener('DOMContentLoaded', () => {
         track.style.overflowX = 'auto';
         track.style.overflowY = 'hidden';
         track.style.webkitOverflowScrolling = 'touch';
-        track.style.touchAction = 'pan-x';
+        track.style.touchAction = 'pan-x pan-y';
         track.style.gap = '10px';
         track.style.position = 'relative';
         track.style.zIndex = '10';
         track.style.pointerEvents = 'auto';
     
         // ✅ 버튼(카드)들이 줄어들거나 래핑되지 않게 보장
-        Array.from(track.children).forEach(child => {
+        Array.from(track.querySelectorAll('.draw-scenario-card[data-strategy]')).forEach(child => {
             child.style.flex = '0 0 auto';
         });
     
