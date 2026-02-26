@@ -3077,6 +3077,11 @@ body[data-theme="light"] .draw-studio-header {
     touch-action: pan-x pan-y;
   }
 
+#tab-draw .scenario-cards::after {
+    content: "";
+    flex: 0 0 clamp(16px, 10vw, 56px);
+}
+
 #tab-draw .draw-scenario-card {
     align-content: start;
     gap: 10px;

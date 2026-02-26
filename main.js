@@ -171,6 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sum_low_100: [1, 5, 7, 12, 20, 24],
         sum_high_180: [30, 31, 32, 33, 34, 35],
         prime_4_plus: [2, 3, 5, 7, 11, 20],
+        prime_5_plus: [2, 3, 5, 7, 11, 26],
         prime_1_or_less: [4, 8, 12, 16, 18, 23],
         prime_0: [4, 8, 12, 16, 18, 22]
     };
@@ -553,6 +554,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sum_low_100: { ratio: 0.10913, excluded: 888870 },
         sum_high_180: { ratio: 0.085025, excluded: 692534 },
         prime_4_plus: { ratio: 0.065145, excluded: 530610 },
+        prime_5_plus: { ratio: 0.00799, excluded: 65065 },
         prime_1_or_less: { ratio: 0.38143, excluded: 3106770 },
         prime_0: { ratio: 0.089945, excluded: 732607 },
         multiples_of_2_5_plus: { ratio: 0.082585, excluded: 672660 }
@@ -810,37 +812,37 @@ document.addEventListener('DOMContentLoaded', () => {
         Array.from(track.querySelectorAll('.draw-scenario-card[data-strategy]')).forEach(child => {
             child.style.flex = '0 0 auto';
         });
-    
-        // ✅ “드래그 중 클릭” 방지 + (네이티브 스크롤이 막히는 환경 대비) 포인터 드래그 백업
-        let isDown = false;
+
+        // ✅ 네이티브 스와이프를 유지하면서, 가로 드래그 중 클릭 오작동만 방지
         let startX = 0;
-        let startScrollLeft = 0;
-    
-        track.addEventListener('pointerdown', (e) => {
-            isDown = true;
+        let startY = 0;
+        let hasHorizontalDrag = false;
+
+        track.addEventListener('pointerdown', e => {
             startX = e.clientX;
-            startScrollLeft = track.scrollLeft;
+            startY = e.clientY;
+            hasHorizontalDrag = false;
             scenarioDragIgnoreClick = false;
         }, { passive: true });
-    
-        track.addEventListener('pointermove', (e) => {
-            if (!isDown) return;
-            const dx = e.clientX - startX;
-    
-            // 8px 이상 움직이면 “스와이프”로 간주 → 클릭 차단
-            if (Math.abs(dx) > 8) scenarioDragIgnoreClick = true;
-    
-            track.scrollLeft = startScrollLeft - dx;
-        }, { passive: true });
-    
-        const end = () => {
-            isDown = false;
-            // 스와이프 직후 click이 튀는 걸 잠깐 막는다
-            if (scenarioDragIgnoreClick) {
-                setTimeout(() => { scenarioDragIgnoreClick = false; }, 120);
+
+        track.addEventListener('pointermove', e => {
+            const dx = Math.abs(e.clientX - startX);
+            const dy = Math.abs(e.clientY - startY);
+            if (dx > 8 && dx > dy) {
+                hasHorizontalDrag = true;
+                scenarioDragIgnoreClick = true;
             }
+        }, { passive: true });
+
+        const end = () => {
+            if (hasHorizontalDrag || scenarioDragIgnoreClick) {
+                setTimeout(() => {
+                    scenarioDragIgnoreClick = false;
+                }, 120);
+            }
+            hasHorizontalDrag = false;
         };
-    
+
         track.addEventListener('pointerup', end, { passive: true });
         track.addEventListener('pointercancel', end, { passive: true });
     
@@ -3728,6 +3730,10 @@ document.addEventListener('DOMContentLoaded', () => {
             exclude: numbers => countPrimes(numbers) >= 4
         },
         {
+            id: 'prime_5_plus',
+            exclude: numbers => countPrimes(numbers) >= 5
+        },
+        {
             id: 'prime_1_or_less',
             exclude: numbers => countPrimes(numbers) <= 1
         },
@@ -3854,6 +3860,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sum_low_100: '6개 합계가 100 이하인 조합을 제외합니다.',
         sum_high_180: '6개 합계가 180 이상인 조합을 제외합니다.',
         prime_4_plus: '소수가 4개 이상 포함된 조합을 제외합니다.',
+        prime_5_plus: '소수가 5개 이상 포함된 조합을 제외합니다.',
         prime_1_or_less: '소수가 1개 이하인 조합을 제외합니다.',
         prime_0: '소수가 하나도 없는 조합을 제외합니다.',
         exclude_number: '선택한 번호가 포함된 조합을 모두 제외합니다.'
