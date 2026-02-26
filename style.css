@@ -493,6 +493,135 @@ body {
     box-shadow: none;
 }
 
+/* Dashboard lower sections: align with draw tab card-view concept */
+#tab-dashboard {
+    --draw-card: #ffffff;
+    --draw-border: rgba(15, 23, 42, 0.1);
+    --draw-shadow-soft: 0 10px 22px rgba(15, 23, 42, 0.08);
+    --draw-soft: #f8fafc;
+    --draw-muted: #64748b;
+}
+
+#tab-dashboard .content-draw-wrap > .center-wrap,
+#tab-dashboard .draw-bg > .center-wrap {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 24px 6vw 0;
+}
+
+#tab-dashboard .draw-wrapper {
+    border-radius: 24px;
+    border: 1px solid var(--draw-border);
+    background: var(--draw-card);
+    box-shadow: var(--draw-shadow-soft);
+    padding: 28px;
+}
+
+#tab-dashboard .main-txt-wrap {
+    margin-bottom: 18px;
+}
+
+#tab-dashboard .main-txt-wrap .txt-center:first-child {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 10px;
+}
+
+#tab-dashboard .main-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+}
+
+#tab-dashboard .info-box {
+    border-radius: 18px;
+    border: 1px solid var(--draw-border);
+    background: linear-gradient(160deg, #ffffff 0%, #f8fbff 100%);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+    padding: 18px 16px;
+}
+
+#tab-dashboard .info-cate {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+#tab-dashboard .draw-img-wrap {
+    margin-top: 18px;
+}
+
+#tab-dashboard .draw-img-wrap .img-box {
+    border-radius: 24px;
+    border: 1px solid var(--draw-border);
+    background: var(--draw-card);
+    box-shadow: var(--draw-shadow-soft);
+    padding: 20px;
+}
+
+#tab-dashboard .draw-bg {
+    background: transparent;
+    margin-top: 4px;
+}
+
+#tab-dashboard .profit-grid {
+    border-radius: 24px;
+    border: 1px solid var(--draw-border);
+    background: var(--draw-card);
+    box-shadow: var(--draw-shadow-soft);
+    padding: 26px;
+}
+
+#tab-dashboard .main-tit {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 14px;
+}
+
+#tab-dashboard .main-strctr-tbl-wrapper {
+    border-radius: 20px;
+    border: 1px solid var(--draw-border);
+    background: var(--draw-card);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+    overflow-x: auto;
+}
+
+#tab-dashboard .main-strctr-tbl .tbl-tr.thead {
+    background: var(--draw-soft);
+}
+
+#tab-dashboard .main-strctr-tbl .tbl-tr {
+    border-bottom: 1px solid var(--draw-border);
+}
+
+#tab-dashboard .main-strctr-tbl .tbl-tr:last-child {
+    border-bottom: 0;
+}
+
+#tab-dashboard .dbchck-ul {
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 22px;
+    border-radius: 20px;
+    border: 1px solid var(--draw-border);
+    background: var(--draw-card);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+    display: grid;
+    gap: 12px;
+}
+
+#tab-dashboard .dbchck-li {
+    margin: 0;
+    padding: 14px 14px 14px 12px;
+    border-radius: 14px;
+    background: var(--draw-soft);
+}
+
+#tab-dashboard .dbchck-txt {
+    color: #334155;
+}
+
 #tab-mypage {
     margin: -40px -6vw 0;
     padding: 22px 6vw 90px;
@@ -733,6 +862,18 @@ body {
     #tab-dashboard .upcoming-timer .time-circle {
         height: 60px;
     }
+    #tab-dashboard .draw-wrapper {
+        padding: 22px 18px;
+    }
+    #tab-dashboard .main-info-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    #tab-dashboard .profit-grid {
+        padding: 22px 18px;
+    }
+    #tab-dashboard .main-tit {
+        font-size: 26px;
+    }
 }
 
 @media (max-width: 640px) {
@@ -785,6 +926,44 @@ body {
     }
     #tab-dashboard .header-goWrap {
         grid-template-columns: 1fr;
+    }
+    #tab-dashboard .content-draw-wrap > .center-wrap,
+    #tab-dashboard .draw-bg > .center-wrap {
+        padding: 16px 4vw 0;
+    }
+    #tab-dashboard .draw-wrapper,
+    #tab-dashboard .draw-img-wrap .img-box,
+    #tab-dashboard .profit-grid,
+    #tab-dashboard .dbchck-ul {
+        border-radius: 18px;
+    }
+    #tab-dashboard .draw-wrapper {
+        padding: 18px 14px;
+    }
+    #tab-dashboard .main-txt-wrap .txt-center:first-child {
+        font-size: 24px;
+    }
+    #tab-dashboard .main-info-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    #tab-dashboard .info-box {
+        border-radius: 14px;
+        padding: 14px 12px;
+    }
+    #tab-dashboard .profit-grid {
+        padding: 18px 14px;
+    }
+    #tab-dashboard .main-tit {
+        font-size: 22px;
+    }
+    #tab-dashboard .dbchck-ul {
+        padding: 14px;
+        gap: 8px;
+    }
+    #tab-dashboard .dbchck-li {
+        padding: 12px 10px;
+        border-radius: 12px;
     }
 }
 
