@@ -796,7 +796,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.applyStrategyFromUI = applyStrategy;
 
     scenarioTracks.forEach(track => {
-        // ✅ 외부 CSS가 뭐라고 하든, 여기서 "가로 스크롤 스트립" 형태를 강제한다.
+        // Keep the strip native-scrollable and only guard accidental taps after horizontal drags.
         track.style.display = 'flex';
         track.style.flexWrap = 'nowrap';
         track.style.overflowX = 'auto';
@@ -813,38 +813,37 @@ document.addEventListener('DOMContentLoaded', () => {
             child.style.flex = '0 0 auto';
         });
 
-        // ✅ 네이티브 스와이프를 유지하면서, 가로 드래그 중 클릭 오작동만 방지
         let startX = 0;
         let startY = 0;
-        let hasHorizontalDrag = false;
+        let pointerActive = false;
 
         track.addEventListener('pointerdown', e => {
+            pointerActive = true;
             startX = e.clientX;
             startY = e.clientY;
-            hasHorizontalDrag = false;
             scenarioDragIgnoreClick = false;
         }, { passive: true });
 
-        track.addEventListener('pointermove', e => {
+        const end = e => {
+            if (!pointerActive) {
+                return;
+            }
+            pointerActive = false;
             const dx = Math.abs(e.clientX - startX);
             const dy = Math.abs(e.clientY - startY);
-            if (dx > 8 && dx > dy) {
-                hasHorizontalDrag = true;
+            if (dx > 12 && dx > dy) {
                 scenarioDragIgnoreClick = true;
-            }
-        }, { passive: true });
-
-        const end = () => {
-            if (hasHorizontalDrag || scenarioDragIgnoreClick) {
                 setTimeout(() => {
                     scenarioDragIgnoreClick = false;
-                }, 120);
+                }, 90);
             }
-            hasHorizontalDrag = false;
         };
 
         track.addEventListener('pointerup', end, { passive: true });
-        track.addEventListener('pointercancel', end, { passive: true });
+        track.addEventListener('pointercancel', () => {
+            pointerActive = false;
+            scenarioDragIgnoreClick = false;
+        }, { passive: true });
     
         // 캡처 단계에서 click 차단 (카드가 버튼이라 특히 중요)
         track.addEventListener('click', (e) => {
