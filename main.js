@@ -255,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let storeLastPosition = null;
     let storeLastResults = [];
     let storeAutoLoaded = false;
+    let storeLocateInFlight = false;
     let qrStream = null;
     let qrScanRafId = null;
     let qrCanvasCtx = null;
@@ -1322,7 +1323,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     storeMap.invalidateSize();
                 }
             }, 80);
-            if (!storeAutoLoaded) {
+            if (!storeAutoLoaded && !storeLocateInFlight && !storeLastPosition) {
                 storeAutoLoaded = true;
                 locateAndLoadStores();
             }
@@ -1343,13 +1344,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!storeStatusEl) {
             return;
         }
+        if (storeLocateInFlight) {
+            return;
+        }
         if (!navigator.geolocation) {
             storeStatusEl.textContent = '현재 브라우저에서는 위치 조회를 지원하지 않습니다.';
             return;
         }
+        storeLocateInFlight = true;
         storeStatusEl.textContent = '현재 위치 확인 중입니다. 위치 권한을 허용해 주세요.';
         navigator.geolocation.getCurrentPosition(
             position => {
+                storeLocateInFlight = false;
                 storeLastPosition = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
@@ -1357,6 +1363,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadNearbyStores(storeLastPosition);
             },
             error => {
+                storeLocateInFlight = false;
+                storeAutoLoaded = false;
                 const message = mapGeoError(error);
                 storeStatusEl.textContent = message;
             },
@@ -1377,22 +1385,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         storeStatusEl.textContent = '주변 판매점을 조회하고 있습니다. 잠시만 기다려 주세요.';
         const map = ensureStoreMap(position);
-        if (!map) {
-            return;
-        }
-        map.setView([position.lat, position.lng], 15);
-
-        if (storeUserMarker) {
-            storeUserMarker.setLatLng([position.lat, position.lng]);
-        } else {
-            storeUserMarker = window.L.marker([position.lat, position.lng], {
-                icon: window.L.divIcon({
-                    className: 'user-pin leaflet-div-icon',
-                    iconSize: [14, 14],
-                    iconAnchor: [7, 7]
-                }),
-                title: '현재 위치'
-            }).addTo(map).bindPopup('현재 위치');
+        if (map) {
+            map.setView([position.lat, position.lng], 15);
+            if (storeUserMarker) {
+                storeUserMarker.setLatLng([position.lat, position.lng]);
+            } else {
+                storeUserMarker = window.L.marker([position.lat, position.lng], {
+                    icon: window.L.divIcon({
+                        className: 'user-pin leaflet-div-icon',
+                        iconSize: [14, 14],
+                        iconAnchor: [7, 7]
+                    }),
+                    title: '현재 위치'
+                }).addTo(map).bindPopup('현재 위치');
+            }
         }
 
         const radius = getStoreRadius();
@@ -1409,9 +1415,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function ensureStoreMap(center) {
-        if (!storeMapEl || !window.L) {
+        if (!storeMapEl) {
             if (storeStatusEl) {
                 storeStatusEl.textContent = '지도를 초기화하지 못했습니다. 페이지를 새로고침해 주세요.';
+            }
+            return null;
+        }
+        if (!window.L) {
+            if (storeMapEl) {
+                storeMapEl.innerHTML = '<div class="store-empty">지도를 불러오지 못했습니다. 목록/그리드는 정상 조회됩니다.</div>';
             }
             return null;
         }
