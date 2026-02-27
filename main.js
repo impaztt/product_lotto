@@ -1410,7 +1410,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 : '주변 판매점이 적게 검색되었습니다. 반경을 3km 이상으로 넓혀 다시 조회해 주세요.';
         } catch (error) {
             logProxyError('storeFinder', error, { position, radius });
-            storeStatusEl.textContent = '판매점 데이터를 불러오지 못했습니다. 네트워크를 확인한 뒤 다시 조회해 주세요.';
+            renderStoreResults([], position);
+            const detail = error && error.message ? ` (${error.message})` : '';
+            storeStatusEl.textContent = `판매점 데이터를 불러오지 못했습니다. API 경로 또는 네트워크를 확인해 주세요.${detail}`;
         }
     }
 
@@ -1441,7 +1443,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function fetchNearbyStores(position, radius) {
-        const proxyBase = window.STORE_PROXY_URL || '/api/stores';
+        const proxyCandidates = getStoreProxyCandidates();
         const region = await resolveStoreRegion(position);
         const params = new URLSearchParams({
             lat: String(position.lat),
@@ -1454,35 +1456,66 @@ document.addEventListener('DOMContentLoaded', () => {
         if (region?.sgg) {
             params.set('sgg', region.sgg);
         }
-        const url = `${proxyBase}?${params.toString()}`;
+        const errors = [];
+
+        for (const proxyBase of proxyCandidates) {
+            const url = `${proxyBase}?${params.toString()}`;
+            try {
+                const payload = await fetchStoreProxyPayload(url);
+                const list = Array.isArray(payload.stores) ? payload.stores : [];
+                return list
+                    .map(item => ({
+                        name: item.name || '복권 판매점',
+                        address: item.address || '',
+                        lat: Number(item.lat),
+                        lng: Number(item.lng),
+                        distance: Number.isFinite(Number(item.distance))
+                            ? Number(item.distance)
+                            : distanceInMeters(position.lat, position.lng, Number(item.lat), Number(item.lng))
+                    }))
+                    .filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lng))
+                    .sort((a, b) => a.distance - b.distance)
+                    .slice(0, 30);
+            } catch (error) {
+                errors.push(`${proxyBase}: ${error && error.message ? error.message : String(error)}`);
+            }
+        }
+
+        throw new Error(errors.join(' | ') || 'store proxy unavailable');
+    }
+
+    async function fetchStoreProxyPayload(url) {
         const controller = new AbortController();
         const timeoutId = window.setTimeout(() => controller.abort(), 8000);
-        const response = await fetch(url, {
-            cache: 'no-store',
-            signal: controller.signal
-        });
-        window.clearTimeout(timeoutId);
-        if (!response.ok) {
-            throw new Error(`store proxy error: ${response.status}`);
+        try {
+            const response = await fetch(url, {
+                cache: 'no-store',
+                signal: controller.signal
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            const payload = await response.json();
+            if (!payload || payload.returnValue !== 'success') {
+                throw new Error(payload?.message || 'invalid payload');
+            }
+            return payload;
+        } finally {
+            window.clearTimeout(timeoutId);
         }
-        const payload = await response.json();
-        if (!payload || payload.returnValue !== 'success') {
-            throw new Error(payload?.message || 'store data fail');
-        }
-        const list = Array.isArray(payload.stores) ? payload.stores : [];
-        return list
-            .map(item => ({
-                name: item.name || '복권 판매점',
-                address: item.address || '',
-                lat: Number(item.lat),
-                lng: Number(item.lng),
-                distance: Number.isFinite(Number(item.distance))
-                    ? Number(item.distance)
-                    : distanceInMeters(position.lat, position.lng, Number(item.lat), Number(item.lng))
-            }))
-            .filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lng))
-            .sort((a, b) => a.distance - b.distance)
-            .slice(0, 30);
+    }
+
+    function getStoreProxyCandidates() {
+        const raw = [
+            window.STORE_PROXY_URL,
+            '/api/stores',
+            '/functions/api/stores',
+            '/.netlify/functions/stores'
+        ];
+        return raw
+            .map(value => String(value || '').trim())
+            .filter(Boolean)
+            .filter((value, index, arr) => arr.indexOf(value) === index);
     }
 
     async function resolveStoreRegion(position) {
