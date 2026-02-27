@@ -736,16 +736,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const OFFICIAL_STORE_URL = 'https://www.dhlottery.co.kr/prchsplcsrch/home';
+
+    function openOfficialStorePage() {
+        const opened = window.open(OFFICIAL_STORE_URL, '_blank', 'noopener,noreferrer');
+        if (!opened) {
+            window.location.assign(OFFICIAL_STORE_URL);
+        }
+    }
+
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
-            setActiveTab(button.dataset.tab, true);
+            const tabId = button.dataset.tab;
+            setActiveTab(tabId, true);
+            if (tabId === 'store') {
+                openOfficialStorePage();
+            }
         });
     });
 
     tabLinks.forEach(link => {
         link.addEventListener('click', event => {
             event.preventDefault();
-            setActiveTab(link.dataset.tabLink, false);
+            const tabId = link.dataset.tabLink;
+            setActiveTab(tabId, false);
+            if (tabId === 'store') {
+                openOfficialStorePage();
+            }
             syncMenuState(false);
         });
     });
