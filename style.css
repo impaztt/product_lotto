@@ -718,6 +718,20 @@ body {
     font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
 }
 
+#tab-store.store-webview-tab {
+    padding: 0;
+    margin: 0;
+    background: #ffffff;
+}
+
+.store-webview-frame {
+    display: block;
+    width: 100%;
+    min-height: calc(100vh - 92px);
+    border: 0;
+    background: #ffffff;
+}
+
 #tab-store .section-title h2,
 #tab-qr .section-title h2 {
     color: #0f172a;

@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/common.css?v=20260213">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/layout.css?v=20260212">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/main-layout.css?v=20260212">
-	<link rel="stylesheet" href="style.css?v=20260227_1">
+	<link rel="stylesheet" href="style.css?v=20260227_2">
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
@@ -2660,25 +2660,14 @@
             </section>
         </section>
 
-        <section id="tab-store" class="tab-panel" role="tabpanel" aria-labelledby="tab-store-btn" tabindex="0">
-            <div class="section-title">
-                <h2>공식 판매점 찾기</h2>
-                <p>동행복권 공식 판매점 찾기 페이지를 바로 확인하세요.</p>
-            </div>
-            <div class="store-embed-card">
-                <div class="store-embed-head">
-                    <h3>동행복권 판매점 찾기</h3>
-                    <a href="https://www.dhlottery.co.kr/prchsplcsrch/home" target="_blank" rel="noopener noreferrer">새 창 열기</a>
-                </div>
-                <iframe
-                    class="store-embed-frame"
-                    src="/mirror/proxy?url=https%3A%2F%2Fwww.dhlottery.co.kr%2Fprchsplcsrch%2Fhome"
-                    title="동행복권 판매점 찾기"
-                    loading="lazy"
-                    referrerpolicy="strict-origin-when-cross-origin">
-                </iframe>
-                <p class="store-embed-note">브라우저 정책으로 임베드가 제한되면 위의 "새 창 열기"를 이용해 주세요.</p>
-            </div>
+        <section id="tab-store" class="tab-panel store-webview-tab" role="tabpanel" aria-labelledby="tab-store-btn" tabindex="0">
+            <iframe
+                class="store-webview-frame"
+                src="/mirror/proxy?url=https%3A%2F%2Fwww.dhlottery.co.kr%2Fprchsplcsrch%2Fhome"
+                title="동행복권 판매점 찾기"
+                loading="eager"
+                referrerpolicy="strict-origin-when-cross-origin">
+            </iframe>
         </section>
 
         <section id="tab-qr" class="tab-panel" role="tabpanel" aria-labelledby="tab-qr-btn" tabindex="0">
