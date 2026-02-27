@@ -22,7 +22,7 @@ export async function onRequest(context) {
 
     const upstream = await fetch(targetUrl.toString(), {
         method: request.method,
-        headers: buildHeaders(request),
+        headers: buildHeaders(request, targetUrl),
         redirect: 'follow'
     });
 
@@ -51,11 +51,14 @@ export async function onRequest(context) {
     });
 }
 
-function buildHeaders(request) {
+function buildHeaders(request, targetUrl) {
     const headers = new Headers(request.headers);
     headers.set('User-Agent', 'Mozilla/5.0 (compatible; product-lotto/1.0)');
-    headers.set('Referer', `${ORIGIN}/lt645/intro`);
+    headers.set('Referer', targetUrl ? targetUrl.toString() : `${ORIGIN}/`);
     headers.set('Origin', ORIGIN);
+    if (!headers.has('Accept-Language')) {
+        headers.set('Accept-Language', 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7');
+    }
     return headers;
 }
 
