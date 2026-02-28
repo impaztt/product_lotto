@@ -1107,7 +1107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         applyRulePickerFilter();
         if (guestLimitEl) {
-            guestLimitEl.textContent = '비회원은 하루 5회까지 가능 (1회 1세트).';
+            guestLimitEl.textContent = '비회원은 하루 50회까지 가능 (1회 1세트).';
             canGuestGenerate();
         }
     } catch (error) {
@@ -1203,7 +1203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isMember) {
             return true;
         }
-        const limit = 5;
+        const limit = 50;
         const todayKey = getTodayKey();
         const countKey = `guest_count_${todayKey}`;
         const current = Number(localStorage.getItem(countKey) || 0);
@@ -1215,9 +1215,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
         if (current >= limit) {
-            guestLimitEl.textContent = '비회원 하루 5회 제한을 초과했습니다. 로그인 후 이용해 주세요.';
+            guestLimitEl.textContent = '비회원 하루 50회 제한을 초과했습니다. 로그인 후 이용해 주세요.';
             if (guestBannerEl) {
-                guestBannerEl.textContent = '비회원 하루 5회 제한을 초과했습니다. 로그인 후 이용해 주세요.';
+                guestBannerEl.textContent = '비회원 하루 50회 제한을 초과했습니다. 로그인 후 이용해 주세요.';
             }
             return false;
         }
@@ -1241,9 +1241,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const current = Number(localStorage.getItem(countKey) || 0);
         const next = current + 1;
         localStorage.setItem(countKey, String(next));
-        guestLimitEl.textContent = `비회원 남은 횟수: ${Math.max(0, 5 - next)}회 (1회 1세트)`;
+        guestLimitEl.textContent = `비회원 남은 횟수: ${Math.max(0, 50 - next)}회 (1회 1세트)`;
         if (guestBannerEl) {
-            guestBannerEl.textContent = `비회원 남은 횟수: ${Math.max(0, 5 - next)}회 (1회 1세트)`;
+            guestBannerEl.textContent = `비회원 남은 횟수: ${Math.max(0, 50 - next)}회 (1회 1세트)`;
         }
     }
 
