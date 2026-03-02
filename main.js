@@ -97,6 +97,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const authLogoutButtons = Array.from(document.querySelectorAll('[data-logout]'));
     const authClose = authModal ? authModal.querySelector('.modal-close') : null;
     const firebaseAuthStatusEl = document.getElementById('firebase-auth-status');
+    const mypageAuthBadgeEl = document.getElementById('mypage-auth-badge');
+    const mypageNicknameDisplayEl = document.getElementById('mypage-nickname-display');
+    const nicknameInputEl = document.getElementById('nickname-input');
+    const nicknameSaveBtn = document.getElementById('nickname-save-btn');
+    const nicknameStatusEl = document.getElementById('nickname-status');
+    const nicknameChangeRemainingEl = document.getElementById('nickname-change-remaining');
     const tabButtons = Array.from(document.querySelectorAll('.tab-btn[data-tab]'));
     const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
     const tabLinks = Array.from(document.querySelectorAll('[data-tab-link]'));
@@ -263,7 +269,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let storeLocateInFlight = false;
     let firebaseReady = false;
     let firebaseAuth = null;
+    let firebaseDb = null;
     let currentUser = null;
+    let currentUserProfile = null;
+    let nicknameSaveInFlight = false;
     let qrStream = null;
     let qrScanRafId = null;
     let qrCanvasCtx = null;
@@ -965,6 +974,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    if (nicknameSaveBtn) {
+        nicknameSaveBtn.addEventListener('click', async () => {
+            await changeNickname();
+        });
+    }
+    if (nicknameInputEl) {
+        nicknameInputEl.addEventListener('keydown', async event => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                await changeNickname();
+            }
+        });
+    }
+
     if (authClose) {
         authClose.addEventListener('click', () => {
             closeAuthModal();
@@ -1233,14 +1256,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.firebase.initializeApp(config);
             }
             firebaseAuth = window.firebase.auth();
+            firebaseDb = window.firebase.firestore();
             firebaseReady = true;
-            firebaseAuth.onAuthStateChanged(user => {
+            firebaseAuth.onAuthStateChanged(async user => {
                 currentUser = user || null;
+                try {
+                    if (currentUser) {
+                        await ensureUserProfile();
+                    } else {
+                        currentUserProfile = null;
+                    }
+                } catch (error) {
+                    console.error('프로필 로드 실패', error);
+                    if (nicknameStatusEl) {
+                        nicknameStatusEl.textContent = '프로필을 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.';
+                    }
+                }
                 updateAuthUi();
                 refreshGuestLimitMessage();
             });
             if (firebaseAuthStatusEl) {
-                firebaseAuthStatusEl.textContent = 'Firebase 연결 완료. 구글 로그인 테스트를 진행하세요.';
+                firebaseAuthStatusEl.textContent = 'Firebase 연결 완료. 구글 로그인으로 가입을 시작하세요.';
             }
         } catch (error) {
             firebaseReady = false;
@@ -1257,22 +1293,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateAuthUi() {
+        const member = isMember();
         authLogoutButtons.forEach(button => {
-            button.disabled = !isMember();
-            button.hidden = !isMember();
+            button.disabled = !member;
+            button.hidden = !member;
         });
         authEntryLinks.forEach(link => {
-            link.hidden = isMember();
+            link.hidden = member;
         });
+        if (nicknameInputEl) {
+            nicknameInputEl.disabled = !member || nicknameSaveInFlight;
+        }
+        if (nicknameSaveBtn) {
+            nicknameSaveBtn.disabled = !member || nicknameSaveInFlight;
+        }
+        renderNicknameUi();
         if (!firebaseAuthStatusEl) {
             return;
         }
         if (!firebaseReady) {
             return;
         }
-        if (isMember()) {
-            const displayName = currentUser.displayName || currentUser.email || currentUser.uid;
-            firebaseAuthStatusEl.textContent = `가입 완료(로그인): ${displayName}`;
+        if (member) {
+            const nickname = currentUserProfile && currentUserProfile.nickname ? currentUserProfile.nickname : '';
+            if (nickname) {
+                firebaseAuthStatusEl.textContent = `가입 완료(로그인): ${nickname}`;
+            } else {
+                const displayName = currentUser.displayName || currentUser.email || currentUser.uid;
+                firebaseAuthStatusEl.textContent = `가입 완료(로그인): ${displayName}`;
+            }
             return;
         }
         firebaseAuthStatusEl.textContent = '로그아웃 상태입니다. 구글 로그인을 진행하세요.';
@@ -1307,6 +1356,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         try {
             await firebaseAuth.signOut();
+            currentUserProfile = null;
             updateRulesStatus('로그아웃되었습니다.');
             showActionPopup('로그아웃되었습니다.');
         } catch (error) {
@@ -1318,6 +1368,171 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showActionPopup(message) {
         window.alert(message);
+    }
+
+    async function ensureUserProfile() {
+        if (!firebaseDb || !currentUser) {
+            return;
+        }
+        const profileRef = firebaseDb.collection('users').doc(currentUser.uid);
+        const nowMonthKey = getMonthKey(new Date());
+        const serverNow = window.firebase.firestore.FieldValue.serverTimestamp();
+        const snap = await profileRef.get();
+
+        if (!snap.exists) {
+            const nickname = createRandomNickname8();
+            const initialProfile = {
+                uid: currentUser.uid,
+                email: currentUser.email || '',
+                nickname,
+                createdAt: serverNow,
+                updatedAt: serverNow,
+                nicknameUpdatedAt: serverNow,
+                nicknameChangeMonth: nowMonthKey,
+                nicknameChangeCount: 0
+            };
+            await profileRef.set(initialProfile);
+            currentUserProfile = initialProfile;
+            if (nicknameStatusEl) {
+                nicknameStatusEl.textContent = `가입 완료: 자동 닉네임 '${nickname}'이(가) 생성되었습니다.`;
+            }
+            return;
+        }
+
+        const profile = snap.data() || {};
+        const updates = {};
+        if (!profile.nickname) {
+            updates.nickname = createRandomNickname8();
+            updates.nicknameUpdatedAt = serverNow;
+        }
+        if (!profile.nicknameChangeMonth || profile.nicknameChangeMonth !== nowMonthKey) {
+            updates.nicknameChangeMonth = nowMonthKey;
+            updates.nicknameChangeCount = 0;
+        }
+        if (Object.keys(updates).length) {
+            updates.updatedAt = serverNow;
+            await profileRef.update(updates);
+        }
+        currentUserProfile = { ...profile, ...updates };
+    }
+
+    function renderNicknameUi() {
+        const member = isMember();
+        if (mypageAuthBadgeEl) {
+            mypageAuthBadgeEl.textContent = member ? '가입완료' : '미로그인';
+        }
+        if (mypageNicknameDisplayEl) {
+            if (!member) {
+                mypageNicknameDisplayEl.textContent = '첫 로그인 시 8자리 랜덤 닉네임 자동 부여';
+            } else if (currentUserProfile && currentUserProfile.nickname) {
+                mypageNicknameDisplayEl.textContent = currentUserProfile.nickname;
+            } else {
+                mypageNicknameDisplayEl.textContent = '닉네임 불러오는 중...';
+            }
+        }
+        const remaining = getNicknameRemainingChanges();
+        if (nicknameChangeRemainingEl) {
+            if (!member) {
+                nicknameChangeRemainingEl.textContent = '로그인 후 월 2회 변경 가능';
+            } else {
+                nicknameChangeRemainingEl.textContent = `이번 달 남은 변경 횟수: ${remaining}회`;
+            }
+        }
+        if (nicknameStatusEl && !member) {
+            nicknameStatusEl.textContent = '닉네임은 회원가입(첫 로그인) 시 자동 생성되며 월 최대 2회 변경할 수 있습니다.';
+        } else if (nicknameStatusEl && member) {
+            nicknameStatusEl.textContent = `닉네임은 이번 달에 최대 2회까지 변경할 수 있습니다. (남은 횟수 ${remaining}회)`;
+        }
+    }
+
+    async function changeNickname() {
+        if (!isMember() || !firebaseDb || !currentUser || !nicknameInputEl) {
+            return;
+        }
+        const nextNickname = String(nicknameInputEl.value || '').trim();
+        if (!nextNickname) {
+            showActionPopup('변경할 닉네임을 입력해 주세요.');
+            return;
+        }
+        if (nextNickname.length < 2 || nextNickname.length > 20) {
+            showActionPopup('닉네임은 2자 이상 20자 이하로 입력해 주세요.');
+            return;
+        }
+        if (currentUserProfile && currentUserProfile.nickname === nextNickname) {
+            showActionPopup('현재 닉네임과 동일합니다.');
+            return;
+        }
+        nicknameSaveInFlight = true;
+        updateAuthUi();
+        const profileRef = firebaseDb.collection('users').doc(currentUser.uid);
+        const currentMonth = getMonthKey(new Date());
+        const serverNow = window.firebase.firestore.FieldValue.serverTimestamp();
+        try {
+            await firebaseDb.runTransaction(async transaction => {
+                const doc = await transaction.get(profileRef);
+                if (!doc.exists) {
+                    throw new Error('profile_not_found');
+                }
+                const data = doc.data() || {};
+                let month = data.nicknameChangeMonth || currentMonth;
+                let count = Number(data.nicknameChangeCount || 0);
+                if (month !== currentMonth) {
+                    month = currentMonth;
+                    count = 0;
+                }
+                if (count >= 2) {
+                    throw new Error('nickname_limit_exceeded');
+                }
+                transaction.update(profileRef, {
+                    nickname: nextNickname,
+                    nicknameUpdatedAt: serverNow,
+                    updatedAt: serverNow,
+                    nicknameChangeMonth: month,
+                    nicknameChangeCount: count + 1
+                });
+            });
+            await ensureUserProfile();
+            nicknameInputEl.value = '';
+            renderNicknameUi();
+            showActionPopup('닉네임이 변경되었습니다.');
+        } catch (error) {
+            console.error('닉네임 변경 실패', error);
+            if (String(error && error.message) === 'nickname_limit_exceeded') {
+                showActionPopup('닉네임은 월 최대 2회만 변경할 수 있습니다.');
+            } else {
+                showActionPopup('닉네임 변경에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+            }
+        } finally {
+            nicknameSaveInFlight = false;
+            updateAuthUi();
+        }
+    }
+
+    function getMonthKey(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        return `${year}-${month}`;
+    }
+
+    function getNicknameRemainingChanges() {
+        if (!currentUserProfile) {
+            return 2;
+        }
+        const currentMonth = getMonthKey(new Date());
+        if (currentUserProfile.nicknameChangeMonth !== currentMonth) {
+            return 2;
+        }
+        const used = Number(currentUserProfile.nicknameChangeCount || 0);
+        return Math.max(0, 2 - used);
+    }
+
+    function createRandomNickname8() {
+        const parts = ['행운', '반짝', '폭죽', '달빛', '행성', '구름', '번개', '호랑', '토끼', '고양', '사자', '펭귄', '비밀', '요정', '탐험', '모험', '별빛', '초코', '포도', '사탕'];
+        let nickname = '';
+        for (let i = 0; i < 4; i += 1) {
+            nickname += parts[Math.floor(Math.random() * parts.length)];
+        }
+        return nickname.slice(0, 8);
     }
 
     function refreshGuestLimitMessage() {

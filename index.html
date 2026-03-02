@@ -2550,22 +2550,27 @@
                 <div class="info-card">
                     <div class="info-header">
                         <h3>내 정보</h3>
-                        <span class="badge muted">미로그인</span>
+                        <span class="badge muted" id="mypage-auth-badge">미로그인</span>
                     </div>
                     <ul class="info-list">
                         <li>
                             <span class="info-label">닉네임</span>
-                            <strong>첫 로그인 시 가입 완료 후 자동 설정</strong>
+                            <strong id="mypage-nickname-display">첫 로그인 시 8자리 랜덤 닉네임 자동 부여</strong>
                         </li>
                         <li>
                             <span class="info-label">멤버십</span>
                             <strong>무료</strong>
                         </li>
                         <li>
-                            <span class="info-label">잔여 추첨 횟수</span>
-                            <strong>50회</strong>
+                            <span class="info-label">닉네임 변경</span>
+                            <strong id="nickname-change-remaining">로그인 후 월 2회 변경 가능</strong>
                         </li>
                     </ul>
+                    <div class="auth-buttons" style="margin-top: 12px;">
+                        <input id="nickname-input" type="text" placeholder="새 닉네임 입력" maxlength="20" aria-label="새 닉네임">
+                        <button id="nickname-save-btn" class="ghost" type="button">닉네임 변경</button>
+                    </div>
+                    <p class="helper-text" id="nickname-status">닉네임은 회원가입(첫 로그인) 시 자동 생성되며 월 최대 2회 변경할 수 있습니다.</p>
                 </div>
                 <div class="info-card">
                     <div class="info-header">
@@ -2784,6 +2789,6 @@
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore-compat.js"></script>
-    <script src="main.js?v=20260302_5"></script>
+    <script src="main.js?v=20260302_6"></script>
 </body>
 </html>
