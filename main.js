@@ -1135,7 +1135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         applyRulePickerFilter();
         if (guestLimitEl) {
-            guestLimitEl.textContent = '비회원은 하루 50회까지 가능 (1회 1세트).';
+            guestLimitEl.textContent = '미로그인 사용자는 하루 50회까지 가능 (1회 1세트).';
             refreshGuestLimitMessage();
         }
     } catch (error) {
@@ -1288,7 +1288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (isMember()) {
             const displayName = currentUser.displayName || currentUser.email || currentUser.uid;
-            firebaseAuthStatusEl.textContent = `로그인됨: ${displayName}`;
+            firebaseAuthStatusEl.textContent = `가입 완료(로그인): ${displayName}`;
             return;
         }
         firebaseAuthStatusEl.textContent = '로그아웃 상태입니다. 구글 로그인을 진행하세요.';
@@ -1305,7 +1305,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const provider = new window.firebase.auth.GoogleAuthProvider();
         try {
             await firebaseAuth.signInWithPopup(provider);
-            updateRulesStatus('구글 로그인 성공');
+            updateRulesStatus('구글 가입/로그인 성공');
             return true;
         } catch (error) {
             console.error('구글 로그인 실패', error);
@@ -1385,9 +1385,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const drawCount = parseInt(drawCountSelect.value, 10);
         if (isMember()) {
-            guestLimitEl.textContent = '회원 로그인 상태: 제한 없이 이용 가능합니다.';
+            guestLimitEl.textContent = '가입 완료(로그인) 상태: 제한 없이 이용 가능합니다.';
             if (guestBannerEl) {
-                guestBannerEl.textContent = '회원 로그인 상태입니다. 모든 기능을 제한 없이 이용할 수 있습니다.';
+                guestBannerEl.textContent = '가입 완료(로그인) 상태입니다. 모든 기능을 제한 없이 이용할 수 있습니다.';
             }
             return true;
         }
@@ -1396,22 +1396,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const countKey = `guest_count_${todayKey}`;
         const current = Number(localStorage.getItem(countKey) || 0);
         if (drawCount > 1) {
-            guestLimitEl.textContent = '비회원은 1회 1세트만 가능합니다. 로그인 후 이용해 주세요.';
+            guestLimitEl.textContent = '미로그인 사용자는 1회 1세트만 가능합니다. 로그인 후 이용해 주세요.';
             if (guestBannerEl) {
-                guestBannerEl.textContent = '비회원 제한으로 1회 1세트만 가능합니다. 로그인하면 제한이 해제됩니다.';
+                guestBannerEl.textContent = '미로그인 제한으로 1회 1세트만 가능합니다. 로그인하면 가입 완료로 처리되어 제한이 해제됩니다.';
             }
             return false;
         }
         if (current >= limit) {
-            guestLimitEl.textContent = '비회원 하루 50회 제한을 초과했습니다. 로그인 후 이용해 주세요.';
+            guestLimitEl.textContent = '미로그인 사용자 하루 50회 제한을 초과했습니다. 로그인 후 이용해 주세요.';
             if (guestBannerEl) {
-                guestBannerEl.textContent = '비회원 하루 50회 제한을 초과했습니다. 로그인 후 이용해 주세요.';
+                guestBannerEl.textContent = '미로그인 사용자 하루 50회 제한을 초과했습니다. 로그인 후 이용해 주세요.';
             }
             return false;
         }
-        guestLimitEl.textContent = `비회원 남은 횟수: ${limit - current}회 (1회 1세트)`;
+        guestLimitEl.textContent = `미로그인 사용자 남은 횟수: ${limit - current}회 (1회 1세트)`;
         if (guestBannerEl) {
-            guestBannerEl.textContent = `비회원 남은 횟수: ${limit - current}회 (1회 1세트)`;
+            guestBannerEl.textContent = `미로그인 사용자 남은 횟수: ${limit - current}회 (1회 1세트)`;
         }
         return true;
     }
@@ -1428,9 +1428,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const current = Number(localStorage.getItem(countKey) || 0);
         const next = current + 1;
         localStorage.setItem(countKey, String(next));
-        guestLimitEl.textContent = `비회원 남은 횟수: ${Math.max(0, 50 - next)}회 (1회 1세트)`;
+        guestLimitEl.textContent = `미로그인 사용자 남은 횟수: ${Math.max(0, 50 - next)}회 (1회 1세트)`;
         if (guestBannerEl) {
-            guestBannerEl.textContent = `비회원 남은 횟수: ${Math.max(0, 50 - next)}회 (1회 1세트)`;
+            guestBannerEl.textContent = `미로그인 사용자 남은 횟수: ${Math.max(0, 50 - next)}회 (1회 1세트)`;
         }
     }
 
