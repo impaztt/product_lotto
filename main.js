@@ -95,11 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const authButtons = Array.from(document.querySelectorAll('[data-auth]'));
     const authEntryLinks = Array.from(document.querySelectorAll('[data-open-auth]'));
     const authLogoutButtons = Array.from(document.querySelectorAll('[data-logout]'));
-    const headerLogoutBtn = document.getElementById('header-logout-btn');
     const authClose = authModal ? authModal.querySelector('.modal-close') : null;
     const firebaseAuthStatusEl = document.getElementById('firebase-auth-status');
-    const firebaseDbTestBtn = document.getElementById('firebase-db-test-btn');
-    const firebaseDbTestResultEl = document.getElementById('firebase-db-test-result');
     const tabButtons = Array.from(document.querySelectorAll('.tab-btn[data-tab]'));
     const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
     const tabLinks = Array.from(document.querySelectorAll('[data-tab-link]'));
@@ -266,7 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let storeLocateInFlight = false;
     let firebaseReady = false;
     let firebaseAuth = null;
-    let firebaseDb = null;
     let currentUser = null;
     let qrStream = null;
     let qrScanRafId = null;
@@ -969,12 +965,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    if (firebaseDbTestBtn) {
-        firebaseDbTestBtn.addEventListener('click', async () => {
-            await runFirestoreSmokeTest();
-        });
-    }
-
     if (authClose) {
         authClose.addEventListener('click', () => {
             closeAuthModal();
@@ -1243,7 +1233,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.firebase.initializeApp(config);
             }
             firebaseAuth = window.firebase.auth();
-            firebaseDb = window.firebase.firestore();
             firebaseReady = true;
             firebaseAuth.onAuthStateChanged(user => {
                 currentUser = user || null;
@@ -1270,16 +1259,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateAuthUi() {
         authLogoutButtons.forEach(button => {
             button.disabled = !isMember();
+            button.hidden = !isMember();
         });
-        if (firebaseDbTestBtn) {
-            firebaseDbTestBtn.disabled = !firebaseReady || !isMember();
-        }
         authEntryLinks.forEach(link => {
             link.hidden = isMember();
         });
-        if (headerLogoutBtn) {
-            headerLogoutBtn.hidden = !isMember();
-        }
         if (!firebaseAuthStatusEl) {
             return;
         }
@@ -1329,43 +1313,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('로그아웃 실패', error);
             updateRulesStatus('로그아웃 실패');
             showActionPopup('로그아웃에 실패했습니다. 잠시 후 다시 시도해 주세요.');
-        }
-    }
-
-    async function runFirestoreSmokeTest() {
-        if (!firebaseReady || !firebaseDb || !isMember()) {
-            if (firebaseDbTestResultEl) {
-                firebaseDbTestResultEl.textContent = '먼저 구글 로그인을 완료해 주세요.';
-            }
-            return;
-        }
-        if (firebaseDbTestResultEl) {
-            firebaseDbTestResultEl.textContent = 'DB 테스트 실행 중...';
-        }
-        const docId = `smoke_${Date.now()}`;
-        const payload = {
-            uid: currentUser.uid,
-            email: currentUser.email || '',
-            host: window.location.hostname,
-            createdAt: window.firebase.firestore.FieldValue.serverTimestamp(),
-            createdAtMs: Date.now()
-        };
-        try {
-            const ref = firebaseDb.collection('smokeTests').doc(docId);
-            await ref.set(payload);
-            const snap = await ref.get();
-            if (firebaseDbTestResultEl) {
-                firebaseDbTestResultEl.textContent = `DB 테스트 성공: smokeTests/${docId} 저장/조회 완료`;
-            }
-            updateRulesStatus(`Firestore 테스트 성공 (${snap.exists ? 'read ok' : 'read fail'})`);
-            showActionPopup('DB 테스트 성공: Firestore 저장/조회가 완료되었습니다.');
-        } catch (error) {
-            console.error('Firestore 테스트 실패', error);
-            if (firebaseDbTestResultEl) {
-                firebaseDbTestResultEl.textContent = `DB 테스트 실패: ${error.code || 'unknown_error'}`;
-            }
-            updateRulesStatus('Firestore 권한 또는 설정 오류를 확인하세요.');
-            showActionPopup(`DB 테스트 실패: ${error.code || 'unknown_error'}`);
         }
     }
 
