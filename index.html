@@ -2637,6 +2637,7 @@
                     <div class="auth-card">
                         <h3>간편 가입</h3>
                         <p>구글/카카오 연동으로 빠르게 시작합니다.</p>
+                        <p id="firebase-auth-status" class="helper-text">Firebase 연결 대기 중</p>
                         <div class="auth-buttons">
                             <button class="auth-btn google" data-auth="google">
                                 <span class="auth-icon google" aria-hidden="true"></span>
@@ -2647,6 +2648,11 @@
                                 카카오로 시작
                             </button>
                         </div>
+                        <div class="auth-buttons" style="margin-top: 12px;">
+                            <button id="firebase-logout-btn" class="ghost" type="button">로그아웃</button>
+                            <button id="firebase-db-test-btn" class="ghost" type="button">DB 테스트</button>
+                        </div>
+                        <p id="firebase-db-test-result" class="helper-text">로그인 후 DB 테스트를 실행하세요.</p>
                     </div>
                     <div class="auth-card">
                         <h3>비회원 이용 안내</h3>
@@ -2772,6 +2778,10 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
-    <script src="main.js?v=20260227_6"></script>
+    <script src="firebase-config.js?v=20260302_1"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore-compat.js"></script>
+    <script src="main.js?v=20260302_1"></script>
 </body>
 </html>

@@ -94,6 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const authModal = document.getElementById('auth-modal');
     const authButtons = Array.from(document.querySelectorAll('[data-auth]'));
     const authClose = authModal ? authModal.querySelector('.modal-close') : null;
+    const firebaseAuthStatusEl = document.getElementById('firebase-auth-status');
+    const firebaseLogoutBtn = document.getElementById('firebase-logout-btn');
+    const firebaseDbTestBtn = document.getElementById('firebase-db-test-btn');
+    const firebaseDbTestResultEl = document.getElementById('firebase-db-test-result');
     const tabButtons = Array.from(document.querySelectorAll('.tab-btn[data-tab]'));
     const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
     const tabLinks = Array.from(document.querySelectorAll('[data-tab-link]'));
@@ -258,6 +262,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let storeLastResults = [];
     let storeAutoLoaded = false;
     let storeLocateInFlight = false;
+    let firebaseReady = false;
+    let firebaseAuth = null;
+    let firebaseDb = null;
+    let currentUser = null;
     let qrStream = null;
     let qrScanRafId = null;
     let qrCanvasCtx = null;
@@ -625,10 +633,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (generateCtaBtn) {
         generateCtaBtn.addEventListener('click', () => {
-            if (typeof generateAndDisplayNumbers === 'function') {
-                generateAndDisplayNumbers();
-            } else if (generateBtn) {
+            if (generateBtn) {
                 generateBtn.click();
+            } else if (typeof generateAndDisplayNumbers === 'function') {
+                generateAndDisplayNumbers();
             }
         });
     }
@@ -930,12 +938,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     authButtons.forEach(button => {
-        button.addEventListener('click', () => {
+        button.addEventListener('click', async () => {
             const provider = button.dataset.auth;
-            updateRulesStatus(`${provider === 'google' ? '구글' : '카카오'} 로그인은 준비 중입니다.`);
-            openAuthModal();
+            if (provider === 'google') {
+                const ok = await signInWithGoogle();
+                if (ok) {
+                    closeAuthModal();
+                }
+                return;
+            }
+            updateRulesStatus('카카오 로그인은 아직 연결 전입니다. 현재는 구글 로그인만 테스트 가능합니다.');
+            if (firebaseAuthStatusEl) {
+                firebaseAuthStatusEl.textContent = '카카오는 Firebase 기본 Provider가 아니어서 별도 OAuth 연동이 필요합니다.';
+            }
         });
     });
+
+    if (firebaseLogoutBtn) {
+        firebaseLogoutBtn.addEventListener('click', async () => {
+            await signOutFirebaseUser();
+        });
+    }
+
+    if (firebaseDbTestBtn) {
+        firebaseDbTestBtn.addEventListener('click', async () => {
+            await runFirestoreSmokeTest();
+        });
+    }
 
     if (authClose) {
         authClose.addEventListener('click', () => {
@@ -1062,6 +1091,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
+        initFirebase();
         syncThemeToggle();
         syncMenuState(false);
         setupExcludeNumberControl();
@@ -1097,7 +1127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         applyRulePickerFilter();
         if (guestLimitEl) {
             guestLimitEl.textContent = '비회원은 하루 50회까지 가능 (1회 1세트).';
-            canGuestGenerate();
+            refreshGuestLimitMessage();
         }
     } catch (error) {
         console.error('초기화 오류', error);
@@ -1183,13 +1213,159 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function initFirebase() {
+        if (typeof window.firebase === 'undefined') {
+            if (firebaseAuthStatusEl) {
+                firebaseAuthStatusEl.textContent = 'Firebase SDK 로딩 실패: 네트워크 또는 스크립트 로딩 상태를 확인하세요.';
+            }
+            return;
+        }
+
+        const config = window.LOTTO_FIREBASE_CONFIG || {};
+        if (!config.apiKey || !config.authDomain || !config.projectId || !config.appId) {
+            if (firebaseAuthStatusEl) {
+                firebaseAuthStatusEl.textContent = 'firebase-config.js에 Firebase 웹 앱 설정값을 입력해 주세요.';
+            }
+            return;
+        }
+
+        try {
+            if (!window.firebase.apps.length) {
+                window.firebase.initializeApp(config);
+            }
+            firebaseAuth = window.firebase.auth();
+            firebaseDb = window.firebase.firestore();
+            firebaseReady = true;
+            firebaseAuth.onAuthStateChanged(user => {
+                currentUser = user || null;
+                updateAuthUi();
+                refreshGuestLimitMessage();
+            });
+            if (firebaseAuthStatusEl) {
+                firebaseAuthStatusEl.textContent = 'Firebase 연결 완료. 구글 로그인 테스트를 진행하세요.';
+            }
+        } catch (error) {
+            firebaseReady = false;
+            console.error('Firebase 초기화 실패', error);
+            if (firebaseAuthStatusEl) {
+                firebaseAuthStatusEl.textContent = 'Firebase 초기화 실패: 설정값/도메인/콘솔 오류를 확인하세요.';
+            }
+        }
+        updateAuthUi();
+    }
+
+    function isMember() {
+        return Boolean(currentUser);
+    }
+
+    function updateAuthUi() {
+        if (firebaseLogoutBtn) {
+            firebaseLogoutBtn.disabled = !isMember();
+        }
+        if (firebaseDbTestBtn) {
+            firebaseDbTestBtn.disabled = !firebaseReady || !isMember();
+        }
+        if (!firebaseAuthStatusEl) {
+            return;
+        }
+        if (!firebaseReady) {
+            return;
+        }
+        if (isMember()) {
+            const displayName = currentUser.displayName || currentUser.email || currentUser.uid;
+            firebaseAuthStatusEl.textContent = `로그인됨: ${displayName}`;
+            return;
+        }
+        firebaseAuthStatusEl.textContent = '로그아웃 상태입니다. 구글 로그인을 진행하세요.';
+    }
+
+    async function signInWithGoogle() {
+        if (!firebaseReady || !firebaseAuth) {
+            updateRulesStatus('Firebase 설정이 필요합니다. firebase-config.js 값을 먼저 입력하세요.');
+            if (firebaseAuthStatusEl) {
+                firebaseAuthStatusEl.textContent = 'Firebase 설정 미완료';
+            }
+            return false;
+        }
+        const provider = new window.firebase.auth.GoogleAuthProvider();
+        try {
+            await firebaseAuth.signInWithPopup(provider);
+            updateRulesStatus('구글 로그인 성공');
+            return true;
+        } catch (error) {
+            console.error('구글 로그인 실패', error);
+            updateRulesStatus('구글 로그인 실패: Authorized domains와 Provider 활성화 상태를 확인하세요.');
+            if (firebaseAuthStatusEl) {
+                firebaseAuthStatusEl.textContent = `로그인 실패: ${error.code || 'unknown_error'}`;
+            }
+            return false;
+        }
+    }
+
+    async function signOutFirebaseUser() {
+        if (!firebaseReady || !firebaseAuth) {
+            return;
+        }
+        try {
+            await firebaseAuth.signOut();
+            updateRulesStatus('로그아웃되었습니다.');
+        } catch (error) {
+            console.error('로그아웃 실패', error);
+            updateRulesStatus('로그아웃 실패');
+        }
+    }
+
+    async function runFirestoreSmokeTest() {
+        if (!firebaseReady || !firebaseDb || !isMember()) {
+            if (firebaseDbTestResultEl) {
+                firebaseDbTestResultEl.textContent = '먼저 구글 로그인을 완료해 주세요.';
+            }
+            return;
+        }
+        if (firebaseDbTestResultEl) {
+            firebaseDbTestResultEl.textContent = 'DB 테스트 실행 중...';
+        }
+        const docId = `smoke_${Date.now()}`;
+        const payload = {
+            uid: currentUser.uid,
+            email: currentUser.email || '',
+            host: window.location.hostname,
+            createdAt: window.firebase.firestore.FieldValue.serverTimestamp(),
+            createdAtMs: Date.now()
+        };
+        try {
+            const ref = firebaseDb.collection('smokeTests').doc(docId);
+            await ref.set(payload);
+            const snap = await ref.get();
+            if (firebaseDbTestResultEl) {
+                firebaseDbTestResultEl.textContent = `DB 테스트 성공: smokeTests/${docId} 저장/조회 완료`;
+            }
+            updateRulesStatus(`Firestore 테스트 성공 (${snap.exists ? 'read ok' : 'read fail'})`);
+        } catch (error) {
+            console.error('Firestore 테스트 실패', error);
+            if (firebaseDbTestResultEl) {
+                firebaseDbTestResultEl.textContent = `DB 테스트 실패: ${error.code || 'unknown_error'}`;
+            }
+            updateRulesStatus('Firestore 권한 또는 설정 오류를 확인하세요.');
+        }
+    }
+
+    function refreshGuestLimitMessage() {
+        if (guestLimitEl) {
+            canGuestGenerate();
+        }
+    }
+
     function canGuestGenerate() {
         if (!guestLimitEl) {
             return true;
         }
         const drawCount = parseInt(drawCountSelect.value, 10);
-        const isMember = false;
-        if (isMember) {
+        if (isMember()) {
+            guestLimitEl.textContent = '회원 로그인 상태: 제한 없이 이용 가능합니다.';
+            if (guestBannerEl) {
+                guestBannerEl.textContent = '회원 로그인 상태입니다. 모든 기능을 제한 없이 이용할 수 있습니다.';
+            }
             return true;
         }
         const limit = 50;
@@ -1221,8 +1397,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!guestLimitEl) {
             return;
         }
-        const isMember = false;
-        if (isMember) {
+        if (isMember()) {
             return;
         }
         const todayKey = getTodayKey();
