@@ -1324,9 +1324,11 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await firebaseAuth.signOut();
             updateRulesStatus('로그아웃되었습니다.');
+            showActionPopup('로그아웃되었습니다.');
         } catch (error) {
             console.error('로그아웃 실패', error);
             updateRulesStatus('로그아웃 실패');
+            showActionPopup('로그아웃에 실패했습니다. 잠시 후 다시 시도해 주세요.');
         }
     }
 
@@ -1356,13 +1358,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 firebaseDbTestResultEl.textContent = `DB 테스트 성공: smokeTests/${docId} 저장/조회 완료`;
             }
             updateRulesStatus(`Firestore 테스트 성공 (${snap.exists ? 'read ok' : 'read fail'})`);
+            showActionPopup('DB 테스트 성공: Firestore 저장/조회가 완료되었습니다.');
         } catch (error) {
             console.error('Firestore 테스트 실패', error);
             if (firebaseDbTestResultEl) {
                 firebaseDbTestResultEl.textContent = `DB 테스트 실패: ${error.code || 'unknown_error'}`;
             }
             updateRulesStatus('Firestore 권한 또는 설정 오류를 확인하세요.');
+            showActionPopup(`DB 테스트 실패: ${error.code || 'unknown_error'}`);
         }
+    }
+
+    function showActionPopup(message) {
+        window.alert(message);
     }
 
     function refreshGuestLimitMessage() {
