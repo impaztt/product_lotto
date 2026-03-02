@@ -93,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const guestBannerEl = document.getElementById('guest-banner');
     const authModal = document.getElementById('auth-modal');
     const authButtons = Array.from(document.querySelectorAll('[data-auth]'));
+    const authEntryLinks = Array.from(document.querySelectorAll('[data-open-auth]'));
     const authClose = authModal ? authModal.querySelector('.modal-close') : null;
     const firebaseAuthStatusEl = document.getElementById('firebase-auth-status');
     const firebaseLogoutBtn = document.getElementById('firebase-logout-btn');
@@ -951,6 +952,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (firebaseAuthStatusEl) {
                 firebaseAuthStatusEl.textContent = '카카오는 Firebase 기본 Provider가 아니어서 별도 OAuth 연동이 필요합니다.';
             }
+        });
+    });
+
+    authEntryLinks.forEach(link => {
+        link.addEventListener('click', event => {
+            event.preventDefault();
+            openAuthModal();
         });
     });
 
