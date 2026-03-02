@@ -61,7 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const strategyButtons = Array.from(document.querySelectorAll('[data-strategy]'));
     const scenarioCards = Array.from(document.querySelectorAll('.draw-scenario-card[data-strategy]'));
     const scenarioTracks = Array.from(document.querySelectorAll('.scenario-cards'));
-    let scenarioDragIgnoreClick = false;
+    const SCENARIO_DRAG_THRESHOLD_PX = 12;
+    const SCENARIO_CLICK_SUPPRESS_MS = 220;
+    let suppressScenarioClickUntil = 0;
     let activeStrategy = '';
     // Filled later with Object.assign to avoid temporal-dead-zone access during early init.
     const PRESETS = {};
@@ -764,30 +766,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     strategyButtons.forEach(button => {
+        if (button.classList.contains('draw-scenario-card')) {
+            return;
+        }
         button.addEventListener('click', () => {
             const strategy = button.dataset.strategy;
             applyStrategy(strategy);
         });
     });
 
-    document.addEventListener('click', event => {
-        const button = event.target.closest('.draw-scenario-card');
-        if (!button || !button.dataset.strategy) {
-            return;
-        }
-        if (scenarioDragIgnoreClick) {
-            scenarioDragIgnoreClick = false;
-            return;
-        }
-        applyStrategy(button.dataset.strategy);
-    });
-
+    // Scenario cards are handled here only; avoid duplicate bindings (inline/global) across input types.
     scenarioCards.forEach(card => {
+        card.removeAttribute('onclick');
         card.addEventListener('click', event => {
             event.preventDefault();
             event.stopPropagation();
-            if (scenarioDragIgnoreClick) {
-                scenarioDragIgnoreClick = false;
+            if (Date.now() < suppressScenarioClickUntil) {
                 return;
             }
             applyStrategy(card.dataset.strategy);
@@ -797,60 +791,55 @@ document.addEventListener('DOMContentLoaded', () => {
     window.applyStrategyFromUI = applyStrategy;
 
     scenarioTracks.forEach(track => {
-        // Keep the strip native-scrollable and only guard accidental taps after horizontal drags.
-        track.style.display = 'flex';
-        track.style.flexWrap = 'nowrap';
-        track.style.overflowX = 'auto';
-        track.style.overflowY = 'hidden';
-        track.style.webkitOverflowScrolling = 'touch';
-        track.style.touchAction = 'pan-x pan-y';
-        track.style.gap = '10px';
-        track.style.position = 'relative';
-        track.style.zIndex = '10';
-        track.style.pointerEvents = 'auto';
-    
-        // ✅ 버튼(카드)들이 줄어들거나 래핑되지 않게 보장
-        Array.from(track.querySelectorAll('.draw-scenario-card[data-strategy]')).forEach(child => {
-            child.style.flex = '0 0 auto';
-        });
+        const pointerStarts = new Map();
 
-        let startX = 0;
-        let startY = 0;
-        let pointerActive = false;
-
-        track.addEventListener('pointerdown', e => {
-            pointerActive = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            scenarioDragIgnoreClick = false;
-        }, { passive: true });
-
-        const end = e => {
-            if (!pointerActive) {
-                return;
-            }
-            pointerActive = false;
-            const dx = Math.abs(e.clientX - startX);
-            const dy = Math.abs(e.clientY - startY);
-            if (dx > 12 && dx > dy) {
-                scenarioDragIgnoreClick = true;
-                setTimeout(() => {
-                    scenarioDragIgnoreClick = false;
-                }, 90);
-            }
+        const suppressClick = () => {
+            suppressScenarioClickUntil = Math.max(
+                suppressScenarioClickUntil,
+                Date.now() + SCENARIO_CLICK_SUPPRESS_MS
+            );
         };
 
-        track.addEventListener('pointerup', end, { passive: true });
-        track.addEventListener('pointercancel', () => {
-            pointerActive = false;
-            scenarioDragIgnoreClick = false;
+        track.addEventListener('pointerdown', event => {
+            if (event.pointerType === 'mouse' && event.button !== 0) {
+                return;
+            }
+            pointerStarts.set(event.pointerId, {
+                x: event.clientX,
+                y: event.clientY,
+                dragged: false
+            });
         }, { passive: true });
-    
-        // 캡처 단계에서 click 차단 (카드가 버튼이라 특히 중요)
-        track.addEventListener('click', (e) => {
-            if (scenarioDragIgnoreClick) {
-                e.preventDefault();
-                e.stopPropagation();
+
+        track.addEventListener('pointermove', event => {
+            const start = pointerStarts.get(event.pointerId);
+            if (!start || start.dragged) {
+                return;
+            }
+            const dx = Math.abs(event.clientX - start.x);
+            const dy = Math.abs(event.clientY - start.y);
+            if (dx > SCENARIO_DRAG_THRESHOLD_PX && dx > dy) {
+                start.dragged = true;
+                suppressClick();
+            }
+        }, { passive: true });
+
+        const clearPointer = event => {
+            const start = pointerStarts.get(event.pointerId);
+            if (start?.dragged) {
+                suppressClick();
+            }
+            pointerStarts.delete(event.pointerId);
+        };
+
+        track.addEventListener('pointerup', clearPointer, { passive: true });
+        track.addEventListener('pointercancel', clearPointer, { passive: true });
+        track.addEventListener('lostpointercapture', clearPointer, { passive: true });
+
+        track.addEventListener('click', event => {
+            if (Date.now() < suppressScenarioClickUntil) {
+                event.preventDefault();
+                event.stopPropagation();
             }
         }, true);
     });
