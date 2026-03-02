@@ -24,6 +24,7 @@
             </button>
             <a class="ghost" href="#auth" data-open-auth="true">로그인</a>
             <a class="cta" href="#auth" data-open-auth="true">시작하기</a>
+            <button id="header-logout-btn" class="ghost" type="button" data-logout="true" hidden>로그아웃</button>
         </div>
     </header>
 
@@ -2649,7 +2650,7 @@
                             </button>
                         </div>
                         <div class="auth-buttons" style="margin-top: 12px;">
-                            <button id="firebase-logout-btn" class="ghost" type="button">로그아웃</button>
+                            <button id="firebase-logout-btn" class="ghost" type="button" data-logout="true">로그아웃</button>
                             <button id="firebase-db-test-btn" class="ghost" type="button">DB 테스트</button>
                         </div>
                         <p id="firebase-db-test-result" class="helper-text">로그인 후 DB 테스트를 실행하세요.</p>
@@ -2782,6 +2783,6 @@
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore-compat.js"></script>
-    <script src="main.js?v=20260302_1"></script>
+    <script src="main.js?v=20260302_2"></script>
 </body>
 </html>

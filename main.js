@@ -94,9 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const authModal = document.getElementById('auth-modal');
     const authButtons = Array.from(document.querySelectorAll('[data-auth]'));
     const authEntryLinks = Array.from(document.querySelectorAll('[data-open-auth]'));
+    const authLogoutButtons = Array.from(document.querySelectorAll('[data-logout]'));
+    const headerLogoutBtn = document.getElementById('header-logout-btn');
     const authClose = authModal ? authModal.querySelector('.modal-close') : null;
     const firebaseAuthStatusEl = document.getElementById('firebase-auth-status');
-    const firebaseLogoutBtn = document.getElementById('firebase-logout-btn');
     const firebaseDbTestBtn = document.getElementById('firebase-db-test-btn');
     const firebaseDbTestResultEl = document.getElementById('firebase-db-test-result');
     const tabButtons = Array.from(document.querySelectorAll('.tab-btn[data-tab]'));
@@ -962,11 +963,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    if (firebaseLogoutBtn) {
-        firebaseLogoutBtn.addEventListener('click', async () => {
+    authLogoutButtons.forEach(button => {
+        button.addEventListener('click', async () => {
             await signOutFirebaseUser();
         });
-    }
+    });
 
     if (firebaseDbTestBtn) {
         firebaseDbTestBtn.addEventListener('click', async () => {
@@ -1267,11 +1268,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateAuthUi() {
-        if (firebaseLogoutBtn) {
-            firebaseLogoutBtn.disabled = !isMember();
-        }
+        authLogoutButtons.forEach(button => {
+            button.disabled = !isMember();
+        });
         if (firebaseDbTestBtn) {
             firebaseDbTestBtn.disabled = !firebaseReady || !isMember();
+        }
+        authEntryLinks.forEach(link => {
+            link.hidden = isMember();
+        });
+        if (headerLogoutBtn) {
+            headerLogoutBtn.hidden = !isMember();
         }
         if (!firebaseAuthStatusEl) {
             return;
