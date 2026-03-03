@@ -3462,6 +3462,7 @@ body[data-theme="light"] .draw-studio-header {
 }
 
 #tab-draw .scenario-cards {
+    --draw-card-width: 220px;
     display: flex;
     flex-wrap: nowrap;
     gap: 10px;
@@ -3493,13 +3494,13 @@ body[data-theme="light"] .draw-studio-header {
     align-content: start;
     gap: 10px;
     display: inline-grid;
-    width: 220px;
+    width: var(--draw-card-width, 220px);
     min-height: 140px;
     scroll-snap-align: start;
     pointer-events: auto;
     position: relative;
     z-index: 2;
-    flex: 0 0 220px;
+    flex: 0 0 var(--draw-card-width, 220px);
 }
 
 #tab-draw .scenario-spacer {
@@ -3669,6 +3670,7 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
 }
 
 .draw-slot-grid {
+    --draw-card-width: 220px;
     display: flex;
     flex-wrap: nowrap;
     gap: 12px;
@@ -3698,9 +3700,9 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
     display: grid;
     gap: 8px;
     box-shadow: var(--draw-shadow-soft, 0 10px 22px rgba(15, 23, 42, 0.08));
-    width: 220px;
+    width: var(--draw-card-width, 220px);
     min-height: 140px;
-    flex: 0 0 220px;
+    flex: 0 0 var(--draw-card-width, 220px);
     scroll-snap-align: start;
 }
 
@@ -5113,8 +5115,8 @@ body.rule-picker-open {
 
     #tab-draw .draw-scenario-card,
     #tab-draw .draw-slot-card {
-        width: min(280px, calc(100% - 12px));
-        flex-basis: min(280px, calc(100% - 12px));
+        width: var(--draw-card-width, min(280px, calc(100% - 12px)));
+        flex-basis: var(--draw-card-width, min(280px, calc(100% - 12px)));
     }
 
     #tab-draw .draw-toggle-btn {
@@ -5336,8 +5338,8 @@ body.rule-picker-open {
 
     #tab-draw .draw-scenario-card,
     #tab-draw .draw-slot-card {
-        width: min(250px, calc(100% - 10px));
-        flex-basis: min(250px, calc(100% - 10px));
+        width: var(--draw-card-width, min(250px, calc(100% - 10px)));
+        flex-basis: var(--draw-card-width, min(250px, calc(100% - 10px)));
     }
 
     .rule-title {

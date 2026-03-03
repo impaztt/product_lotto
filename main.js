@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const SCENARIO_DRAG_THRESHOLD_PX = 12;
     const SCENARIO_CLICK_SUPPRESS_MS = 220;
     let suppressScenarioClickUntil = 0;
+    let drawWidthSyncRafId = 0;
     let activeStrategy = '';
     // Filled later with Object.assign to avoid temporal-dead-zone access during early init.
     const PRESETS = {};
@@ -81,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleSlotsBtn = document.getElementById('toggle-slots');
     const scenarioPanel = document.getElementById('draw-scenario-panel');
     const scenarioGrid = document.getElementById('draw-scenario-grid');
+    const drawTabPanel = document.getElementById('tab-draw');
     const toggleScenariosBtn = document.getElementById('toggle-scenarios');
     const openRulePickerBtn = document.getElementById('open-rule-picker');
     const closeRulePickerBtn = document.getElementById('close-rule-picker');
@@ -109,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = Array.from(document.querySelectorAll('.tab-btn[data-tab]'));
     const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
     const tabLinks = Array.from(document.querySelectorAll('[data-tab-link]'));
+    const drawHorizontalTracks = [scenarioGrid, slotGrid].filter(Boolean);
     const excludeNumberValues = new Set();
 
     // Weekly tab uses embedded layout directly in the DOM.
@@ -963,6 +966,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const collapsed = slotPanel.classList.toggle('is-collapsed');
             toggleSlotsBtn.textContent = collapsed ? '더보기' : '접기';
             toggleSlotsBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+            scheduleDrawHorizontalWidthSync();
         });
     }
 
@@ -971,6 +975,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const collapsed = scenarioPanel.classList.toggle('is-collapsed');
             toggleScenariosBtn.textContent = collapsed ? '더보기' : '접기';
             toggleScenariosBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+            scheduleDrawHorizontalWidthSync();
         });
     }
 
@@ -1058,6 +1063,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    if (window.visualViewport && typeof window.visualViewport.addEventListener === 'function') {
+        window.visualViewport.addEventListener('resize', scheduleDrawHorizontalWidthSync, { passive: true });
+    }
+    window.addEventListener('resize', scheduleDrawHorizontalWidthSync, { passive: true });
+    window.addEventListener('orientationchange', () => {
+        window.setTimeout(scheduleDrawHorizontalWidthSync, 120);
+    }, { passive: true });
 
     if (authClose) {
         authClose.addEventListener('click', () => {
@@ -1732,6 +1745,60 @@ document.addEventListener('DOMContentLoaded', () => {
         themeToggle.setAttribute('title', currentTheme === 'dark' ? '라이트 모드' : '다크 모드');
     }
 
+    function getViewportWidth() {
+        const visualWidth = Number(window.visualViewport && window.visualViewport.width);
+        if (Number.isFinite(visualWidth) && visualWidth > 0) {
+            return visualWidth;
+        }
+        const innerWidth = Number(window.innerWidth);
+        if (Number.isFinite(innerWidth) && innerWidth > 0) {
+            return innerWidth;
+        }
+        return Number(document.documentElement && document.documentElement.clientWidth) || 0;
+    }
+
+    function scheduleDrawHorizontalWidthSync() {
+        if (drawWidthSyncRafId) {
+            window.cancelAnimationFrame(drawWidthSyncRafId);
+        }
+        drawWidthSyncRafId = window.requestAnimationFrame(() => {
+            drawWidthSyncRafId = 0;
+            syncDrawHorizontalCardWidths();
+        });
+    }
+
+    function syncDrawHorizontalCardWidths() {
+        if (!drawTabPanel || !drawHorizontalTracks.length) {
+            return;
+        }
+        const viewportWidth = Math.floor(getViewportWidth());
+        if (!viewportWidth) {
+            return;
+        }
+        drawTabPanel.style.setProperty('--draw-viewport-width', `${viewportWidth}px`);
+        const mobile = viewportWidth <= 960;
+        if (!mobile) {
+            drawHorizontalTracks.forEach(track => {
+                track.style.removeProperty('--draw-card-width');
+                track.style.removeProperty('--draw-track-width');
+            });
+            return;
+        }
+        const narrowMobile = viewportWidth <= 640;
+        const maxCardWidth = narrowMobile ? 250 : 280;
+        const sideGap = narrowMobile ? 10 : 12;
+        const minCardWidth = 180;
+        drawHorizontalTracks.forEach(track => {
+            const trackWidth = Math.floor(track.clientWidth || track.getBoundingClientRect().width || viewportWidth);
+            if (!trackWidth) {
+                return;
+            }
+            const cardWidth = Math.max(minCardWidth, Math.min(maxCardWidth, trackWidth - sideGap));
+            track.style.setProperty('--draw-track-width', `${trackWidth}px`);
+            track.style.setProperty('--draw-card-width', `${cardWidth}px`);
+        });
+    }
+
     function syncInitialTab() {
         if (!tabButtons.length || !tabPanels.length) {
             return;
@@ -1781,6 +1848,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 storeAutoLoaded = true;
                 locateAndLoadStores();
             }
+        }
+        if (tabId === 'draw') {
+            scheduleDrawHorizontalWidthSync();
         }
         if (tabId === 'qr') {
             startQrScanner();
