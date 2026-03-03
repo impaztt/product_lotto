@@ -810,6 +810,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     scenarioTracks.forEach(track => {
         const pointerStarts = new Map();
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchDragging = false;
+        let touchTracking = false;
 
         const suppressClick = () => {
             suppressScenarioClickUntil = Math.max(
@@ -853,6 +857,44 @@ document.addEventListener('DOMContentLoaded', () => {
         track.addEventListener('pointerup', clearPointer, { passive: true });
         track.addEventListener('pointercancel', clearPointer, { passive: true });
         track.addEventListener('lostpointercapture', clearPointer, { passive: true });
+
+        track.addEventListener('touchstart', event => {
+            const touch = event.touches && event.touches[0];
+            if (!touch) {
+                return;
+            }
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            touchDragging = false;
+            touchTracking = true;
+        }, { passive: true });
+
+        track.addEventListener('touchmove', event => {
+            if (!touchTracking) {
+                return;
+            }
+            const touch = event.touches && event.touches[0];
+            if (!touch) {
+                return;
+            }
+            const dx = Math.abs(touch.clientX - touchStartX);
+            const dy = Math.abs(touch.clientY - touchStartY);
+            if (!touchDragging && dx > SCENARIO_DRAG_THRESHOLD_PX && dx > dy) {
+                touchDragging = true;
+                suppressClick();
+            }
+        }, { passive: true });
+
+        const clearTouch = () => {
+            if (touchDragging) {
+                suppressClick();
+            }
+            touchTracking = false;
+            touchDragging = false;
+        };
+
+        track.addEventListener('touchend', clearTouch, { passive: true });
+        track.addEventListener('touchcancel', clearTouch, { passive: true });
 
         track.addEventListener('click', event => {
             if (Date.now() < suppressScenarioClickUntil) {

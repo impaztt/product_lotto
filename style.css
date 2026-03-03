@@ -3476,7 +3476,7 @@ body[data-theme="light"] .draw-studio-header {
     padding-bottom: 6px;
     padding-right: 10px;
     scroll-padding-right: 10px;
-    scroll-snap-type: none;
+    scroll-snap-type: x mandatory;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
   
@@ -3495,11 +3495,11 @@ body[data-theme="light"] .draw-studio-header {
     display: inline-grid;
     width: 220px;
     min-height: 140px;
-    scroll-snap-align: none;
+    scroll-snap-align: start;
     pointer-events: auto;
     position: relative;
     z-index: 2;
-    flex: 0 0 auto;
+    flex: 0 0 220px;
 }
 
 #tab-draw .scenario-spacer {
@@ -5113,8 +5113,8 @@ body.rule-picker-open {
 
     #tab-draw .draw-scenario-card,
     #tab-draw .draw-slot-card {
-        width: min(280px, calc(100vw - 42px));
-        flex-basis: min(280px, calc(100vw - 42px));
+        width: min(280px, calc(100% - 12px));
+        flex-basis: min(280px, calc(100% - 12px));
     }
 
     #tab-draw .draw-toggle-btn {
@@ -5336,8 +5336,8 @@ body.rule-picker-open {
 
     #tab-draw .draw-scenario-card,
     #tab-draw .draw-slot-card {
-        width: min(250px, calc(100vw - 34px));
-        flex-basis: min(250px, calc(100vw - 34px));
+        width: min(250px, calc(100% - 10px));
+        flex-basis: min(250px, calc(100% - 10px));
     }
 
     .rule-title {
