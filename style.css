@@ -883,6 +883,257 @@ body {
     color: #475569;
 }
 
+body[data-theme="dark"] #tab-weekly,
+body[data-theme="dark"] #tab-dashboard,
+body[data-theme="dark"] #tab-mypage,
+body[data-theme="dark"] #tab-store,
+body[data-theme="dark"] #tab-qr {
+    background: #0f131a;
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-weekly {
+    --lt645-blue: #5da0ff;
+    --lt645-blue-dark: #3f8fff;
+    --lt645-blue-light: rgba(93, 160, 255, 0.2);
+}
+
+body[data-theme="dark"] #tab-weekly .container-box {
+    background: #0f131a;
+}
+
+body[data-theme="dark"] #tab-weekly .weekly-feature-card,
+body[data-theme="dark"] .weekly-countdown-box,
+body[data-theme="dark"] #tab-weekly .info-card,
+body[data-theme="dark"] #tab-weekly .weekly-controls {
+    background: #141a22;
+    border-color: #253044;
+    box-shadow: none;
+}
+
+body[data-theme="dark"] .weekly-countdown-label,
+body[data-theme="dark"] .weekly-feature-sub,
+body[data-theme="dark"] #tab-weekly .badge.muted {
+    color: #9aa7bd;
+}
+
+body[data-theme="dark"] .weekly-feature-amount {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-weekly .badge {
+    background: rgba(93, 160, 255, 0.16);
+    color: #dbeafe;
+    border-color: rgba(93, 160, 255, 0.35);
+}
+
+body[data-theme="dark"] #tab-dashboard {
+    --lt645-blue: #5da0ff;
+    --lt645-blue-dark: #3f8fff;
+    --lt645-blue-glow: rgba(93, 160, 255, 0.2);
+    --draw-card: #141a22;
+    --draw-border: #253044;
+    --draw-shadow-soft: none;
+    --draw-soft: #111a26;
+    --draw-muted: #9aa7bd;
+}
+
+body[data-theme="dark"] #tab-dashboard .container-box {
+    background: #0f131a;
+}
+
+body[data-theme="dark"] #tab-dashboard .result-infoWrap,
+body[data-theme="dark"] #tab-dashboard .header-goWrap .btn-go,
+body[data-theme="dark"] #tab-dashboard .this-week-round,
+body[data-theme="dark"] #tab-dashboard .time-circle,
+body[data-theme="dark"] #tab-dashboard .info-box {
+    background: #141a22;
+    border-color: #253044;
+    box-shadow: none;
+}
+
+body[data-theme="dark"] #tab-dashboard .result-round,
+body[data-theme="dark"] #tab-dashboard .result-winnings-num,
+body[data-theme="dark"] #tab-dashboard .winnings,
+body[data-theme="dark"] #tab-dashboard .main-tit {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-dashboard .result-date,
+body[data-theme="dark"] #tab-dashboard .time-txt,
+body[data-theme="dark"] #tab-dashboard .result-winnings-txt,
+body[data-theme="dark"] #tab-dashboard .result-detail,
+body[data-theme="dark"] #tab-dashboard .main-txt,
+body[data-theme="dark"] #tab-dashboard .bonus-txt,
+body[data-theme="dark"] #tab-dashboard .dbchck-txt {
+    color: #9aa7bd;
+}
+
+body[data-theme="dark"] #tab-mypage {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-mypage .section-title h2,
+body[data-theme="dark"] #tab-mypage .info-header h3,
+body[data-theme="dark"] #tab-mypage .info-list strong,
+body[data-theme="dark"] #tab-mypage .auth-card h3,
+body[data-theme="dark"] #tab-mypage .auth-card p,
+body[data-theme="dark"] #tab-mypage .bullets li {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-mypage .section-title p,
+body[data-theme="dark"] #tab-mypage .info-label,
+body[data-theme="dark"] #tab-mypage .info-list,
+body[data-theme="dark"] #tab-mypage .helper-text {
+    color: #9aa7bd;
+}
+
+body[data-theme="dark"] #tab-mypage .info-card,
+body[data-theme="dark"] #tab-mypage .auth-card {
+    background: #141a22;
+    border: 1px solid #253044;
+    box-shadow: none;
+}
+
+body[data-theme="dark"] #tab-mypage .info-list li {
+    border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+body[data-theme="dark"] #tab-mypage .badge {
+    background: rgba(93, 160, 255, 0.16);
+    color: #dbeafe;
+}
+
+body[data-theme="dark"] #tab-mypage .badge.muted {
+    background: rgba(148, 163, 184, 0.22);
+    color: #cbd5e1;
+}
+
+body[data-theme="dark"] #tab-mypage .auth-btn {
+    background: #1a2230;
+    color: #e2e8f0;
+}
+
+body[data-theme="dark"] #tab-store,
+body[data-theme="dark"] #tab-qr,
+body[data-theme="dark"] #tab-store.store-webview-tab,
+body[data-theme="dark"] .store-webview-frame {
+    background: #0f131a;
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-store .section-title h2,
+body[data-theme="dark"] #tab-qr .section-title h2 {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-store .section-title p,
+body[data-theme="dark"] #tab-qr .section-title p,
+body[data-theme="dark"] #tab-store #store-status,
+body[data-theme="dark"] #tab-qr .qr-match,
+body[data-theme="dark"] #tab-qr .qr-payload,
+body[data-theme="dark"] #tab-qr .qr-label {
+    color: #9aa7bd;
+}
+
+body[data-theme="dark"] #tab-store .store-controls,
+body[data-theme="dark"] #tab-store .store-map,
+body[data-theme="dark"] #tab-store .store-table-wrap,
+body[data-theme="dark"] #tab-store .store-grid-wrap,
+body[data-theme="dark"] #tab-qr .qr-camera-card,
+body[data-theme="dark"] #tab-qr .qr-result-card,
+body[data-theme="dark"] #tab-store .store-card,
+body[data-theme="dark"] #tab-store .store-empty,
+body[data-theme="dark"] #tab-qr .qr-block,
+body[data-theme="dark"] #tab-qr .qr-preview {
+    background: #141a22;
+    border: 1px solid #253044;
+    box-shadow: none;
+}
+
+body[data-theme="dark"] #tab-store .store-controls button,
+body[data-theme="dark"] #tab-store .store-controls select,
+body[data-theme="dark"] #tab-store .store-table .store-route-btn,
+body[data-theme="dark"] #tab-store .store-card .store-route-btn,
+body[data-theme="dark"] #tab-store .store-next-actions button,
+body[data-theme="dark"] #tab-qr .qr-actions button,
+body[data-theme="dark"] #tab-qr .qr-next-actions button {
+    background: #1a2230;
+    color: #e2e8f0;
+    border-color: #334155;
+}
+
+body[data-theme="dark"] #tab-store .store-controls button:not(.ghost),
+body[data-theme="dark"] #tab-store #store-nearest-route-btn,
+body[data-theme="dark"] #tab-qr #qr-start-btn,
+body[data-theme="dark"] #tab-qr #qr-open-round-btn {
+    background: #5da0ff;
+    color: #08111f;
+    border-color: #5da0ff;
+}
+
+body[data-theme="dark"] #tab-store .store-controls button.ghost,
+body[data-theme="dark"] #tab-store .store-next-actions button.ghost,
+body[data-theme="dark"] #tab-qr .qr-actions button.ghost,
+body[data-theme="dark"] #tab-qr .qr-next-actions button.ghost {
+    background: #1a2230;
+    color: #cbd5e1;
+}
+
+body[data-theme="dark"] #tab-store .store-table thead {
+    background: #111a26;
+}
+
+body[data-theme="dark"] #tab-store .store-table th,
+body[data-theme="dark"] #tab-store .store-table td {
+    color: #e2e8f0;
+    border-bottom: 1px solid #253044;
+}
+
+body[data-theme="dark"] #tab-store .store-table tbody tr:hover,
+body[data-theme="dark"] #tab-store .store-table tbody tr:focus {
+    background: rgba(93, 160, 255, 0.12);
+}
+
+body[data-theme="dark"] #tab-draw .draw-toggle-btn,
+body[data-theme="dark"] #tab-draw .ghost,
+body[data-theme="dark"] #tab-draw .preset-btn {
+    background: #1a2230;
+    color: #e2e8f0;
+    border-color: #334155;
+}
+
+body[data-theme="dark"] #tab-draw .draw-toggle-btn:hover,
+body[data-theme="dark"] #tab-draw .preset-btn.is-active,
+body[data-theme="dark"] #tab-draw .preset-btn:hover,
+body[data-theme="dark"] #tab-draw .ghost:hover {
+    background: rgba(93, 160, 255, 0.18);
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-draw .draw-strategy-btn,
+body[data-theme="dark"] #tab-draw .draw-level-buttons button,
+body[data-theme="dark"] #tab-draw .draw-category-row {
+    background: #141a22;
+    color: #f8fafc;
+    border-color: #253044;
+    box-shadow: none;
+}
+
+body[data-theme="dark"] #tab-draw .scenario-pill.ghost,
+body[data-theme="dark"] #tab-draw .scenario-tone,
+body[data-theme="dark"] #tab-draw .scenario-desc,
+body[data-theme="dark"] #tab-draw .draw-category-name {
+    color: #9aa7bd;
+}
+
+body[data-theme="dark"] #tab-draw .scenario-metrics,
+body[data-theme="dark"] #tab-draw .scenario-tags span,
+body[data-theme="dark"] #tab-draw .scenario-impact {
+    color: #e2e8f0;
+}
+
 @media (max-width: 960px) {
     #tab-dashboard .this-week-round {
         padding: 18px 16px;
