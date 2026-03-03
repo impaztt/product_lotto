@@ -901,6 +901,18 @@ body {
         margin: -18px -4vw 0;
         padding: 18px 4vw calc(140px + env(safe-area-inset-bottom));
     }
+    #tab-mypage .section-title,
+    #tab-mypage .mypage-grid,
+    #tab-mypage #auth.section {
+        width: min(100%, 720px);
+        margin-left: auto;
+        margin-right: auto;
+    }
+    #tab-mypage .info-card {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
     #tab-store,
     #tab-qr {
         margin: -18px -4vw 0;
@@ -956,6 +968,13 @@ body {
         margin: -16px -4vw 0;
         padding: 16px 4vw calc(140px + env(safe-area-inset-bottom));
         font-size: 16px;
+    }
+    #tab-mypage .section-title,
+    #tab-mypage .mypage-grid,
+    #tab-mypage #auth.section {
+        width: min(100%, 640px);
+        margin-left: auto;
+        margin-right: auto;
     }
     #tab-mypage .section-title h2 {
         font-size: 30px;
