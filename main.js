@@ -99,8 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const firebaseAuthStatusEl = document.getElementById('firebase-auth-status');
     const mypageAuthBadgeEl = document.getElementById('mypage-auth-badge');
     const mypageNicknameDisplayEl = document.getElementById('mypage-nickname-display');
-    const nicknameInputEl = document.getElementById('nickname-input');
-    const nicknameSaveBtn = document.getElementById('nickname-save-btn');
+    const nicknameOpenModalBtn = document.getElementById('nickname-open-modal-btn');
+    const nicknameModal = document.getElementById('nickname-modal');
+    const nicknameModalCloseBtn = document.getElementById('nickname-modal-close');
+    const nicknameModalInputEl = document.getElementById('nickname-modal-input');
+    const nicknameModalCancelBtn = document.getElementById('nickname-modal-cancel');
+    const nicknameModalSaveBtn = document.getElementById('nickname-modal-save');
     const nicknameStatusEl = document.getElementById('nickname-status');
     const tabButtons = Array.from(document.querySelectorAll('.tab-btn[data-tab]'));
     const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
@@ -973,16 +977,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    if (nicknameSaveBtn) {
-        nicknameSaveBtn.addEventListener('click', async () => {
-            await changeNickname();
+    if (nicknameOpenModalBtn) {
+        nicknameOpenModalBtn.addEventListener('click', () => {
+            openNicknameModal();
         });
     }
-    if (nicknameInputEl) {
-        nicknameInputEl.addEventListener('keydown', async event => {
+    if (nicknameModalCloseBtn) {
+        nicknameModalCloseBtn.addEventListener('click', () => {
+            closeNicknameModal();
+        });
+    }
+    if (nicknameModalCancelBtn) {
+        nicknameModalCancelBtn.addEventListener('click', () => {
+            closeNicknameModal();
+        });
+    }
+    if (nicknameModalSaveBtn) {
+        nicknameModalSaveBtn.addEventListener('click', async () => {
+            await submitNicknameChangeFromModal();
+        });
+    }
+    if (nicknameModalInputEl) {
+        nicknameModalInputEl.addEventListener('keydown', async event => {
             if (event.key === 'Enter') {
                 event.preventDefault();
-                await changeNickname();
+                await submitNicknameChangeFromModal();
+            }
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                closeNicknameModal();
+            }
+        });
+    }
+    if (nicknameModal) {
+        nicknameModal.addEventListener('click', event => {
+            if (event.target === nicknameModal) {
+                closeNicknameModal();
             }
         });
     }
@@ -1300,11 +1330,20 @@ document.addEventListener('DOMContentLoaded', () => {
         authEntryLinks.forEach(link => {
             link.hidden = member;
         });
-        if (nicknameInputEl) {
-            nicknameInputEl.disabled = !member || nicknameSaveInFlight;
+        if (nicknameOpenModalBtn) {
+            nicknameOpenModalBtn.disabled = !member || nicknameSaveInFlight;
         }
-        if (nicknameSaveBtn) {
-            nicknameSaveBtn.disabled = !member || nicknameSaveInFlight;
+        if (nicknameModalInputEl) {
+            nicknameModalInputEl.disabled = !member || nicknameSaveInFlight;
+        }
+        if (nicknameModalSaveBtn) {
+            nicknameModalSaveBtn.disabled = !member || nicknameSaveInFlight;
+        }
+        if (nicknameModalCancelBtn) {
+            nicknameModalCancelBtn.disabled = nicknameSaveInFlight;
+        }
+        if (!member) {
+            closeNicknameModal(true);
         }
         renderNicknameUi();
         if (!firebaseAuthStatusEl) {
@@ -1367,6 +1406,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showActionPopup(message) {
         window.alert(message);
+    }
+
+    function openNicknameModal() {
+        if (!isMember()) {
+            openAuthModal();
+            return;
+        }
+        if (!nicknameModal) {
+            return;
+        }
+        nicknameModal.classList.remove('hidden');
+        if (nicknameModalInputEl) {
+            nicknameModalInputEl.value = '';
+            requestAnimationFrame(() => nicknameModalInputEl.focus());
+        }
+    }
+
+    function closeNicknameModal(force = false) {
+        if (!nicknameModal || (nicknameSaveInFlight && !force)) {
+            return;
+        }
+        nicknameModal.classList.add('hidden');
+        if (nicknameModalInputEl) {
+            nicknameModalInputEl.value = '';
+        }
+    }
+
+    async function submitNicknameChangeFromModal() {
+        if (!nicknameModalInputEl) {
+            return;
+        }
+        await changeNickname(nicknameModalInputEl.value);
     }
 
     async function ensureUserProfile() {
@@ -1437,11 +1508,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function changeNickname() {
-        if (!isMember() || !firebaseDb || !currentUser || !nicknameInputEl) {
+    async function changeNickname(rawNickname) {
+        if (!isMember() || !firebaseDb || !currentUser) {
             return;
         }
-        const nextNickname = String(nicknameInputEl.value || '').trim();
+        const nextNickname = String(rawNickname || '').trim();
         if (!nextNickname) {
             showActionPopup('변경할 닉네임을 입력해 주세요.');
             return;
@@ -1484,7 +1555,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
             await ensureUserProfile();
-            nicknameInputEl.value = '';
+            closeNicknameModal(true);
             renderNicknameUi();
             showActionPopup('닉네임이 변경되었습니다.');
         } catch (error) {

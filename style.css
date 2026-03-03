@@ -2244,6 +2244,32 @@ body[data-theme="light"] .info-list li {
     color: #1e40af;
 }
 
+.label-bullet-btn {
+    border: 0;
+    cursor: pointer;
+}
+
+.label-bullet-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--panel-border);
+    background: var(--bg-soft);
+    color: var(--text);
+    font-size: 14px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
 .info-list strong {
     color: var(--text);
     font-weight: 600;
