@@ -898,8 +898,8 @@ body {
         margin: 0;
     }
     #tab-mypage {
-        margin: -18px -4vw 0;
-        padding: 18px 4vw calc(140px + env(safe-area-inset-bottom));
+        margin: 0;
+        padding: 18px 0 calc(140px + env(safe-area-inset-bottom));
     }
     #tab-mypage .section-title,
     #tab-mypage .mypage-grid,
@@ -965,8 +965,8 @@ body {
         margin: 0;
     }
     #tab-mypage {
-        margin: -16px -4vw 0;
-        padding: 16px 4vw calc(140px + env(safe-area-inset-bottom));
+        margin: 0;
+        padding: 16px 0 calc(140px + env(safe-area-inset-bottom));
         font-size: 16px;
     }
     #tab-mypage .section-title,
