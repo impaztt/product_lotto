@@ -630,6 +630,7 @@ body {
     font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
     font-size: 17px;
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
 #tab-mypage .section-title h2 {
@@ -683,16 +684,28 @@ body {
     line-height: 1.55;
 }
 
+#tab-mypage .info-label {
+    flex: 0 0 auto;
+}
+
+#tab-mypage .info-label-with-bullet {
+    flex-wrap: wrap;
+}
+
 #tab-mypage .info-list strong {
     color: #0f172a;
     font-size: 17px;
     font-weight: 700;
     line-height: 1.45;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 #tab-mypage .info-list li {
     border-bottom: 1px solid rgba(15, 23, 42, 0.08);
     padding: 12px 0;
+    min-width: 0;
 }
 
 #tab-mypage .label-bullet {
