@@ -2225,6 +2225,25 @@ body[data-theme="light"] .info-list li {
     font-size: 13px;
 }
 
+.info-label-with-bullet {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.label-bullet {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1px 6px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    background: rgba(30, 107, 255, 0.14);
+    color: #1e40af;
+}
+
 .info-list strong {
     color: var(--text);
     font-weight: 600;

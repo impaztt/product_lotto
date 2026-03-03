@@ -102,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const nicknameInputEl = document.getElementById('nickname-input');
     const nicknameSaveBtn = document.getElementById('nickname-save-btn');
     const nicknameStatusEl = document.getElementById('nickname-status');
-    const nicknameChangeRemainingEl = document.getElementById('nickname-change-remaining');
     const tabButtons = Array.from(document.querySelectorAll('.tab-btn[data-tab]'));
     const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
     const tabLinks = Array.from(document.querySelectorAll('[data-tab-link]'));
@@ -1431,13 +1430,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         const remaining = getNicknameRemainingChanges();
-        if (nicknameChangeRemainingEl) {
-            if (!member) {
-                nicknameChangeRemainingEl.textContent = '로그인 후 월 2회 변경 가능';
-            } else {
-                nicknameChangeRemainingEl.textContent = `이번 달 남은 변경 횟수: ${remaining}회`;
-            }
-        }
         if (nicknameStatusEl && !member) {
             nicknameStatusEl.textContent = '닉네임은 회원가입(첫 로그인) 시 자동 생성되며 월 최대 2회 변경할 수 있습니다.';
         } else if (nicknameStatusEl && member) {
