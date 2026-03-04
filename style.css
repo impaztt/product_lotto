@@ -5597,9 +5597,15 @@ body.rule-picker-open {
     border-bottom: 1px solid rgba(148, 163, 184, 0.22);
 }
 
+#tab-dashboard .content-tit-wrap .center-wrap {
+    display: flex;
+    justify-content: center;
+}
+
 #tab-dashboard .content-tit {
     font-size: clamp(28px, 3vw, 38px);
     letter-spacing: -0.02em;
+    text-align: center;
 }
 
 #tab-dashboard .header-girdWrap {
