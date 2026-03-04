@@ -103,7 +103,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const scenarioPanel = document.getElementById('draw-scenario-panel');
     const scenarioGrid = document.getElementById('draw-scenario-grid');
     const drawTabPanel = document.getElementById('tab-draw');
+    const drawServiceButtons = Array.from(document.querySelectorAll('.draw-service-btn[data-draw-service]'));
+    const drawModeOnlyPanels = Array.from(document.querySelectorAll('[data-draw-mode-only]'));
     const toggleScenariosBtn = document.getElementById('toggle-scenarios');
+    const premiumBadgeEl = document.getElementById('draw-premium-badge');
+    const premiumLockEl = document.getElementById('draw-premium-lock');
+    const premiumUpgradeBtn = document.getElementById('premium-upgrade-btn');
+    const premiumGenerateBtn = document.getElementById('premium-generate-btn');
+    const premiumCopyAllBtn = document.getElementById('premium-copy-all-btn');
+    const premiumNumbersContainer = document.getElementById('premium-numbers-container');
+    const premiumCopyStatusEl = document.getElementById('premium-copy-status');
     const openRulePickerBtn = document.getElementById('open-rule-picker');
     const closeRulePickerBtn = document.getElementById('close-rule-picker');
     const rulePickerPanel = document.getElementById('rule-picker-panel');
@@ -134,6 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawHorizontalTracks = [scenarioGrid, slotGrid].filter(Boolean);
     const excludeNumberValues = new Set();
     let lastGeneratedDraws = [];
+    let lastPremiumDraws = [];
     let currentRemainingRatio = 1;
     let currentRemainingCombos = 0;
     let currentExcludedCombos = 0;
@@ -622,6 +632,46 @@ document.addEventListener('DOMContentLoaded', () => {
     if (drawCopyAllBtn) {
         drawCopyAllBtn.addEventListener('click', async () => {
             await copyAllGeneratedNumbers();
+        });
+    }
+
+    drawServiceButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const mode = button.dataset.drawService === 'premium' ? 'premium' : 'self';
+            setDrawServiceMode(mode);
+        });
+    });
+
+    if (premiumGenerateBtn) {
+        premiumGenerateBtn.addEventListener('click', () => {
+            if (!isPremiumMember()) {
+                updatePremiumCopyStatus('월정액 이용권이 필요합니다. 먼저 가입/로그인 후 이용권을 시작해 주세요.', true);
+                if (!isMember()) {
+                    openAuthModal();
+                }
+                return;
+            }
+            const recommendations = generatePremiumRecommendations(5);
+            renderPremiumNumbers(recommendations);
+            updatePremiumCopyStatus('추천번호를 갱신했습니다.');
+        });
+    }
+
+    if (premiumCopyAllBtn) {
+        premiumCopyAllBtn.addEventListener('click', async () => {
+            await copyAllPremiumNumbers();
+        });
+    }
+
+    if (premiumUpgradeBtn) {
+        premiumUpgradeBtn.addEventListener('click', event => {
+            if (!isMember()) {
+                event.preventDefault();
+                openAuthModal();
+                return;
+            }
+            event.preventDefault();
+            showActionPopup('월정액 결제 연동 전입니다. 결제 연동 후 이용권 시작 버튼에 연결됩니다.');
         });
     }
 
@@ -1287,6 +1337,8 @@ document.addEventListener('DOMContentLoaded', () => {
             guestLimitEl.textContent = '미로그인 사용자는 하루 50회까지 가능 (1회 1세트).';
             refreshGuestLimitMessage();
         }
+        updatePremiumMembershipUi();
+        setDrawServiceMode(getStoredDrawServiceMode());
     } catch (error) {
         console.error('초기화 오류', error);
     }
@@ -1450,6 +1502,189 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function getStoredDrawServiceMode() {
+        const saved = localStorage.getItem('lotto_draw_service_mode');
+        return saved === 'premium' ? 'premium' : 'self';
+    }
+
+    function getMembershipTier() {
+        if (currentUserProfile && typeof currentUserProfile.membershipTier === 'string') {
+            return currentUserProfile.membershipTier.toLowerCase();
+        }
+        const savedTier = localStorage.getItem('lotto_membership_tier');
+        if (savedTier) {
+            return savedTier.toLowerCase();
+        }
+        return 'free';
+    }
+
+    function isPremiumMember() {
+        if (!isMember()) {
+            return false;
+        }
+        return getMembershipTier() === 'premium';
+    }
+
+    function setDrawServiceMode(mode) {
+        const nextMode = mode === 'premium' ? 'premium' : 'self';
+        localStorage.setItem('lotto_draw_service_mode', nextMode);
+        if (drawTabPanel) {
+            drawTabPanel.setAttribute('data-service-mode', nextMode);
+        }
+        drawServiceButtons.forEach(button => {
+            const selected = button.dataset.drawService === nextMode;
+            button.classList.toggle('is-active', selected);
+            button.setAttribute('aria-selected', String(selected));
+        });
+        drawModeOnlyPanels.forEach(panel => {
+            const only = panel.dataset.drawModeOnly === 'premium' ? 'premium' : 'self';
+            panel.hidden = only !== nextMode;
+        });
+        if (nextMode !== 'self') {
+            setRulePickerOpen(false);
+        }
+        updatePremiumMembershipUi();
+        scheduleDrawHorizontalWidthSync();
+    }
+
+    function updatePremiumMembershipUi() {
+        const premium = isPremiumMember();
+        if (premiumBadgeEl) {
+            premiumBadgeEl.textContent = premium ? 'PREMIUM' : 'FREE';
+            premiumBadgeEl.classList.toggle('is-premium', premium);
+        }
+        if (premiumLockEl) {
+            premiumLockEl.classList.toggle('is-hidden', premium);
+        }
+        if (premiumGenerateBtn) {
+            premiumGenerateBtn.disabled = !premium;
+        }
+        if (premiumUpgradeBtn) {
+            if (!isMember()) {
+                premiumUpgradeBtn.textContent = '가입/로그인 후 시작하기';
+            } else if (premium) {
+                premiumUpgradeBtn.textContent = '월정액 이용중';
+            } else {
+                premiumUpgradeBtn.textContent = '월정액 시작하기';
+            }
+        }
+        if (!premium) {
+            setPremiumCopyButtonState(false);
+            if (!lastPremiumDraws.length) {
+                updatePremiumCopyStatus('월정액 이용권 활성화 시 추천번호를 제공합니다.');
+            }
+        }
+    }
+
+    function generatePremiumRecommendations(count) {
+        const drawCount = Math.max(1, Number(count) || 5);
+        const strategyOrder = ['balanced', 'expanded', 'sum_balance', 'digit_focus', 'light', 'aggressive'];
+        const draws = [];
+        for (let i = 0; i < drawCount; i += 1) {
+            const strategy = strategyOrder[i % strategyOrder.length];
+            const ids = PRESETS[strategy] || [];
+            const activeRules = RULES.filter(rule => ids.includes(rule.id));
+            let numbers = generateNumbersWithRules(activeRules);
+            if (!numbers.length) {
+                numbers = generateUniqueNumbers(6, 1, 45).sort((a, b) => a - b);
+            }
+            draws.push({
+                setNo: i + 1,
+                strategy: PRESETS_LABEL[strategy] || strategy,
+                numbers
+            });
+        }
+        return draws;
+    }
+
+    function renderPremiumNumbers(draws) {
+        if (!premiumNumbersContainer) {
+            return;
+        }
+        premiumNumbersContainer.innerHTML = '';
+        lastPremiumDraws = [];
+        draws.forEach(item => {
+            if (!Array.isArray(item.numbers) || item.numbers.length !== 6) {
+                return;
+            }
+            const row = document.createElement('div');
+            row.className = 'premium-number-row';
+            const meta = document.createElement('div');
+            meta.className = 'premium-row-meta';
+            meta.innerHTML = `<strong>추천 ${item.setNo}</strong><span>${escapeHtml(item.strategy)}</span>`;
+            const balls = document.createElement('div');
+            balls.className = 'premium-number-balls';
+            item.numbers.forEach(number => {
+                const ball = document.createElement('span');
+                ball.className = 'premium-number-ball';
+                ball.textContent = String(number);
+                balls.appendChild(ball);
+            });
+            const tag = document.createElement('span');
+            tag.className = 'premium-row-tag';
+            tag.textContent = 'CURATED';
+            row.appendChild(meta);
+            row.appendChild(balls);
+            row.appendChild(tag);
+            premiumNumbersContainer.appendChild(row);
+            lastPremiumDraws.push({
+                setNo: item.setNo,
+                numbers: [...item.numbers]
+            });
+        });
+        setPremiumCopyButtonState(lastPremiumDraws.length > 0);
+        refreshInsightsDashboard();
+    }
+
+    function setPremiumCopyButtonState(enabled) {
+        if (!premiumCopyAllBtn) {
+            return;
+        }
+        premiumCopyAllBtn.disabled = !enabled;
+    }
+
+    function updatePremiumCopyStatus(message, isError = false) {
+        if (!premiumCopyStatusEl) {
+            return;
+        }
+        premiumCopyStatusEl.textContent = message;
+        premiumCopyStatusEl.classList.toggle('is-error', Boolean(isError));
+    }
+
+    async function copyAllPremiumNumbers() {
+        if (!lastPremiumDraws.length) {
+            updatePremiumCopyStatus('복사할 추천번호가 없습니다. 먼저 추천번호를 받아보세요.', true);
+            setPremiumCopyButtonState(false);
+            return;
+        }
+        const text = lastPremiumDraws
+            .map(item => `추천 ${item.setNo}: ${item.numbers.join(', ')}`)
+            .join('\n');
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.setAttribute('readonly', '');
+                textarea.style.position = 'fixed';
+                textarea.style.top = '-9999px';
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+                const copied = document.execCommand('copy');
+                document.body.removeChild(textarea);
+                if (!copied) {
+                    throw new Error('execCommand copy failed');
+                }
+            }
+            updatePremiumCopyStatus(`추천번호 ${lastPremiumDraws.length}세트를 복사했습니다.`);
+        } catch (error) {
+            console.error('추천번호 전체복사 실패', error);
+            updatePremiumCopyStatus('복사에 실패했습니다. 다시 시도해 주세요.', true);
+        }
+    }
+
     function initFirebase() {
         if (typeof window.firebase === 'undefined') {
             if (firebaseAuthStatusEl) {
@@ -1532,6 +1767,7 @@ document.addEventListener('DOMContentLoaded', () => {
             closeNicknameModal(true);
         }
         renderNicknameUi();
+        updatePremiumMembershipUi();
         if (!firebaseAuthStatusEl) {
             return;
         }

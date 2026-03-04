@@ -1819,11 +1819,15 @@
                     <span class="draw-studio-kicker">Filter Studio</span>
                     <h2>제외 규칙을 설계하면, 확률 변화가 바로 나타납니다.</h2>
                     <p>필터는 “당첨 조합까지 함께 제거될 수 있다”는 가정으로 계산합니다. 실제 당첨 확률은 변하지 않으며 참고용으로만 사용하세요.</p>
+                    <div class="draw-service-switch" role="tablist" aria-label="추첨 이용 방식">
+                        <button class="draw-service-btn is-active" type="button" role="tab" aria-selected="true" data-draw-service="self">직접 선택</button>
+                        <button class="draw-service-btn" type="button" role="tab" aria-selected="false" data-draw-service="premium">월정액 추천</button>
+                    </div>
                 </div>
             </div>
             <section id="rules" class="section rules draw-studio">
-	                <div class="draw-studio-body">
-	                    <aside class="draw-builder">
+		                <div class="draw-studio-body">
+		                    <aside class="draw-builder" data-draw-mode-only="self">
 	                        <div class="draw-panel" id="draw-scenario-panel">
 	                            <div class="draw-panel-header">
 	                                <h3>시나리오 선택</h3>
@@ -2063,8 +2067,8 @@
 	                        </div>
 	                    </aside>
 
-		                    <div class="draw-dashboard">
-	                        <div class="draw-dashboard-unified">
+			                    <div class="draw-dashboard">
+		                        <div class="draw-dashboard-unified" data-draw-mode-only="self">
 	                        <div class="draw-dashboard-grid">
                             <div class="draw-metric-card primary metric-remaining-ratio">
                                 <div class="draw-metric-title">남은 조합 비중</div>
@@ -2159,12 +2163,42 @@
                                     <p class="helper-text" id="guest-limit">미로그인 사용자는 하루 50회까지 가능 (1회 1세트).</p>
                                     <p class="helper-text">팁: 결과가 없다면 규칙을 줄여 보세요.</p>
                                 </div>
-                            </section>
-                        </div>
+	                            </section>
+	                        </div>
+                            <div class="draw-dashboard-unified draw-premium-unified" data-draw-mode-only="premium" hidden>
+                                <section class="draw-metric-card wide draw-premium-hero">
+                                    <div class="draw-premium-header">
+                                        <div>
+                                            <div class="draw-metric-title">Monthly Curated Picks</div>
+                                            <h3>월정액 추천 번호</h3>
+                                            <p class="draw-premium-desc">매주 패턴 분석 기반 추천 세트를 제공합니다. 조건 선택 없이 바로 확인하고 복사할 수 있습니다.</p>
+                                        </div>
+                                        <span class="draw-premium-badge" id="draw-premium-badge">FREE</span>
+                                    </div>
+                                    <div class="draw-premium-plan">
+                                        <div class="draw-premium-plan-item"><strong>추천 세트</strong><span>회차당 5세트</span></div>
+                                        <div class="draw-premium-plan-item"><strong>갱신 주기</strong><span>매주 자동 갱신</span></div>
+                                        <div class="draw-premium-plan-item"><strong>복사 기능</strong><span>전체복사 지원</span></div>
+                                    </div>
+                                </section>
+                                <section class="draw-metric-card wide draw-premium-card">
+                                    <div class="draw-premium-lock" id="draw-premium-lock">
+                                        <strong>월정액 이용권이 필요합니다.</strong>
+                                        <p>가입 완료 후 월정액을 시작하면 추천 번호를 바로 받을 수 있습니다.</p>
+                                        <button type="button" id="premium-upgrade-btn" class="draw-premium-upgrade">가입/로그인 후 시작하기</button>
+                                    </div>
+                                    <div class="draw-premium-controls">
+                                        <button id="premium-generate-btn" type="button">이번 회차 추천번호 받기</button>
+                                        <button id="premium-copy-all-btn" class="ghost" type="button" disabled>추천번호 전체복사</button>
+                                    </div>
+                                    <div class="premium-numbers-container" id="premium-numbers-container"></div>
+                                    <p class="helper-text" id="premium-copy-status" aria-live="polite"></p>
+                                </section>
+                            </div>
 
-                        </div>
+	                        </div>
 
-                        <div class="draw-rules-panel is-open inline" id="rule-picker-panel" aria-hidden="false">
+	                        <div class="draw-rules-panel is-open inline" id="rule-picker-panel" aria-hidden="false" data-draw-mode-only="self">
                             <div class="draw-rules-header">
                                 <div>
                                     <h3>규칙 라이브러리</h3>

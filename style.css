@@ -1207,6 +1207,43 @@ body[data-theme="dark"] #draw-copy-all-btn {
     color: #dbeafe !important;
 }
 
+body[data-theme="dark"] .draw-service-switch {
+    background: rgba(37, 48, 68, 0.8);
+    border-color: rgba(93, 160, 255, 0.26);
+}
+
+body[data-theme="dark"] .draw-service-btn {
+    color: #cbd5e1;
+}
+
+body[data-theme="dark"] .draw-service-btn.is-active {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] .draw-premium-plan-item,
+body[data-theme="dark"] .draw-premium-lock,
+body[data-theme="dark"] .premium-number-row {
+    background: rgba(20, 26, 34, 0.9);
+    border-color: #2f3c50;
+}
+
+body[data-theme="dark"] .draw-premium-desc,
+body[data-theme="dark"] .draw-premium-plan-item span,
+body[data-theme="dark"] .draw-premium-lock p,
+body[data-theme="dark"] .premium-row-meta span {
+    color: #9aa7bd;
+}
+
+body[data-theme="dark"] .draw-premium-badge {
+    background: rgba(59, 130, 246, 0.2);
+    color: #dbeafe;
+}
+
+body[data-theme="dark"] .premium-number-ball {
+    background: rgba(93, 160, 255, 0.2);
+    color: #f8fafc;
+}
+
 @media (max-width: 960px) {
     #tab-dashboard .this-week-round {
         padding: 18px 16px;
@@ -3540,6 +3577,43 @@ body[data-theme="light"] .draw-studio-header {
     font-size: 13px;
 }
 
+#tab-draw [data-draw-mode-only][hidden] {
+    display: none !important;
+}
+
+#tab-draw[data-service-mode="premium"] .draw-studio-body {
+    grid-template-columns: 1fr;
+}
+
+.draw-service-switch {
+    margin-top: 14px;
+    display: inline-grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    padding: 4px;
+    border-radius: 999px;
+    background: #eef2ff;
+    border: 1px solid rgba(30, 107, 255, 0.16);
+    width: min(100%, 320px);
+}
+
+.draw-service-btn {
+    border: 0;
+    border-radius: 999px;
+    padding: 9px 14px;
+    background: transparent;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.draw-service-btn.is-active {
+    background: #1e6bff;
+    color: #ffffff;
+    box-shadow: 0 8px 18px rgba(30, 107, 255, 0.28);
+}
+
 .draw-studio-kicker {
     font-size: 11px;
     letter-spacing: 0.2em;
@@ -4018,6 +4092,189 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
 .draw-dashboard-unified {
     display: grid;
     gap: 14px;
+}
+
+.draw-premium-unified {
+    gap: 16px;
+}
+
+.draw-premium-hero h3 {
+    margin: 6px 0;
+    font-size: clamp(22px, 2.6vw, 30px);
+    line-height: 1.1;
+}
+
+.draw-premium-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: start;
+}
+
+.draw-premium-desc {
+    margin: 0;
+    color: #475569;
+    font-size: 13px;
+}
+
+.draw-premium-badge {
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(15, 23, 42, 0.08);
+    color: #334155;
+}
+
+.draw-premium-badge.is-premium {
+    background: linear-gradient(120deg, rgba(14, 165, 233, 0.22), rgba(30, 107, 255, 0.24));
+    color: #0f172a;
+}
+
+.draw-premium-plan {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.draw-premium-plan-item {
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    background: rgba(248, 250, 252, 0.9);
+    padding: 10px 12px;
+    display: grid;
+    gap: 4px;
+}
+
+.draw-premium-plan-item strong {
+    font-size: 12px;
+}
+
+.draw-premium-plan-item span {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.draw-premium-card {
+    gap: 14px;
+}
+
+.draw-premium-lock {
+    border-radius: 14px;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    background: linear-gradient(135deg, rgba(219, 234, 254, 0.9), rgba(239, 246, 255, 0.95));
+    padding: 14px;
+    display: grid;
+    gap: 8px;
+}
+
+.draw-premium-lock strong {
+    font-size: 14px;
+    color: #0f172a;
+}
+
+.draw-premium-lock p {
+    margin: 0;
+    font-size: 12px;
+    color: #475569;
+}
+
+.draw-premium-lock.is-hidden {
+    display: none;
+}
+
+.draw-premium-upgrade,
+#premium-generate-btn {
+    border: 0;
+    border-radius: 12px;
+    padding: 11px 14px;
+    background: var(--draw-blue, #1e6bff);
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.draw-premium-upgrade {
+    width: fit-content;
+}
+
+.draw-premium-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+#premium-copy-all-btn {
+    border-radius: 12px !important;
+    border: 1px solid rgba(15, 23, 42, 0.16) !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    padding: 12px 18px;
+    font-weight: 700;
+}
+
+#premium-copy-all-btn:disabled,
+#premium-generate-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.premium-numbers-container {
+    display: grid;
+    gap: 10px;
+}
+
+.premium-number-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    background: rgba(248, 250, 252, 0.9);
+}
+
+.premium-row-meta {
+    display: grid;
+    gap: 2px;
+}
+
+.premium-row-meta strong {
+    font-size: 12px;
+}
+
+.premium-row-meta span {
+    font-size: 11px;
+    color: #64748b;
+}
+
+.premium-number-balls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.premium-number-ball {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(30, 107, 255, 0.12);
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.premium-row-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1d4ed8;
 }
 
 .draw-dashboard-grid {
@@ -5251,6 +5508,14 @@ body.rule-picker-open {
     color: #b91c1c;
 }
 
+#premium-copy-status {
+    min-height: 18px;
+}
+
+#premium-copy-status.is-error {
+    color: #b91c1c;
+}
+
 #tab-draw .ghost,
 #tab-draw .preset-btn {
     border: 0;
@@ -5381,6 +5646,10 @@ body.rule-picker-open {
         grid-template-columns: 1fr;
     }
 
+    .draw-service-switch {
+        width: 100%;
+    }
+
     .draw-studio-body {
         grid-template-columns: 1fr;
         gap: 14px;
@@ -5415,6 +5684,14 @@ body.rule-picker-open {
 
     .draw-dashboard-unified .draw-metric-card.wide {
         padding-top: 14px;
+    }
+
+    .draw-premium-plan {
+        grid-template-columns: 1fr;
+    }
+
+    .draw-premium-controls {
+        grid-template-columns: 1fr;
     }
 
     .odds-graph-row {
@@ -5512,6 +5789,10 @@ body.rule-picker-open {
     }
 
     .draw-selected-clear {
+        width: 100%;
+    }
+
+    .draw-premium-upgrade {
         width: 100%;
     }
 
