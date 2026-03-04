@@ -3675,6 +3675,9 @@ body[data-theme="light"] .draw-studio-header {
     cursor: pointer;
     min-height: 140px;
     width: 220px;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
     box-shadow: var(--draw-shadow-soft, 0 10px 22px rgba(15, 23, 42, 0.08));
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
@@ -3727,6 +3730,8 @@ body[data-theme="light"] .draw-studio-header {
     position: relative;
     z-index: 1;
     flex: 0 0 var(--draw-card-width, 220px);
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 #tab-draw .scenario-spacer {
@@ -3749,6 +3754,7 @@ body[data-theme="light"] .draw-studio-header {
     padding: 14px !important;
     row-gap: 10px;
     overflow: hidden !important;
+    box-sizing: border-box;
 }
 
 #draw-scenario-panel .draw-panel-header,
@@ -3763,6 +3769,7 @@ body[data-theme="light"] .draw-studio-header {
     min-width: 0;
     margin: 0;
     padding: 2px 2px 8px;
+    box-sizing: border-box;
     overflow-x: auto;
     overflow-y: hidden;
     overscroll-behavior-x: contain;
@@ -3961,6 +3968,9 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
     min-height: 140px;
     flex: 0 0 var(--draw-card-width, 220px);
     scroll-snap-align: start;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .draw-slot-title {
