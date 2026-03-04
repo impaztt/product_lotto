@@ -1368,11 +1368,14 @@ document.addEventListener('DOMContentLoaded', () => {
             chip.classList.toggle('is-active', isActive);
             chip.setAttribute('aria-pressed', String(isActive));
             if (isActive && shouldCenterActive) {
-                chip.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'nearest',
-                    inline: 'center'
-                });
+                const scroller = chip.closest('.draw-count-scroller');
+                if (scroller) {
+                    const targetLeft = chip.offsetLeft - (scroller.clientWidth - chip.clientWidth) / 2;
+                    scroller.scrollTo({
+                        left: Math.max(0, targetLeft),
+                        behavior: 'smooth'
+                    });
+                }
             }
         });
     }

@@ -3293,6 +3293,9 @@ body[data-theme="light"] .draw-hero {
     border-radius: 0;
     color: var(--draw-text);
     font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 body[data-theme="dark"] #tab-draw {
@@ -4845,10 +4848,15 @@ body.rule-picker-open {
 }
 
 .draw-generator-card .controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
     padding: 12px;
     border-radius: 16px;
     background: var(--draw-soft, rgba(15, 23, 42, 0.04));
     border: 1px solid var(--draw-border, rgba(15, 23, 42, 0.12));
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
 }
 
 #tab-draw .draw-count-wrap {
@@ -4887,6 +4895,10 @@ body.rule-picker-open {
     scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overscroll-behavior-x: contain;
 }
 
 #tab-draw .draw-count-chip {
@@ -4912,8 +4924,15 @@ body.rule-picker-open {
 
 #tab-draw .draw-action-buttons {
     width: 100%;
-    display: flex;
+    max-width: 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
+}
+
+#tab-draw .draw-action-buttons > button {
+    min-width: 0;
 }
 
 #draw-count {
@@ -4975,6 +4994,9 @@ body.rule-picker-open {
 .numbers-container {
     display: grid;
     gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
 }
 
 .number-row {
@@ -4982,6 +5004,9 @@ body.rule-picker-open {
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
 }
 
 .row-label {
@@ -5485,7 +5510,7 @@ body.rule-picker-open {
     }
 
     #tab-draw .draw-action-buttons {
-        flex-direction: column;
+        grid-template-columns: 1fr;
     }
 
     .number-row {
