@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.getElementById('generate-btn');
     const generateCtaBtn = document.querySelector('[data-generate-cta]');
     const drawCountSelect = document.getElementById('draw-count');
+    const drawCountChips = Array.from(document.querySelectorAll('.draw-count-chip[data-draw-count]'));
+    const drawCopyAllBtn = document.getElementById('draw-copy-all-btn');
+    const drawCopyStatusEl = document.getElementById('draw-copy-status');
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
     const ruleInputs = Array.from(document.querySelectorAll('.rules-grid input[type="checkbox"]'));
@@ -113,6 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabLinks = Array.from(document.querySelectorAll('[data-tab-link]'));
     const drawHorizontalTracks = [scenarioGrid, slotGrid].filter(Boolean);
     const excludeNumberValues = new Set();
+    let lastGeneratedDraws = [];
 
     // Weekly tab uses embedded layout directly in the DOM.
     let weeklyStatusEl = null;
@@ -593,6 +597,34 @@ document.addEventListener('DOMContentLoaded', () => {
             generateAndDisplayNumbers();
             incrementGuestCount();
         });
+    }
+
+    if (drawCopyAllBtn) {
+        drawCopyAllBtn.addEventListener('click', async () => {
+            await copyAllGeneratedNumbers();
+        });
+    }
+
+    if (drawCountSelect) {
+        drawCountSelect.addEventListener('change', () => {
+            syncDrawCountChips();
+            refreshGuestLimitMessage();
+        });
+    }
+
+    if (drawCountChips.length && drawCountSelect) {
+        drawCountChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                const targetValue = String(chip.dataset.drawCount || '');
+                if (!targetValue || !drawCountSelect.querySelector(`option[value="${targetValue}"]`)) {
+                    return;
+                }
+                drawCountSelect.value = targetValue;
+                syncDrawCountChips(true);
+                refreshGuestLimitMessage();
+            });
+        });
+        syncDrawCountChips();
     }
 
     if (themeToggle) {
@@ -1290,6 +1322,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displayNumbers(draws) {
         numbersContainer.innerHTML = '';
+        lastGeneratedDraws = [];
         draws.forEach((numbers, index) => {
             const row = document.createElement('div');
             row.classList.add('number-row');
@@ -1315,8 +1348,82 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.appendChild(numberElement);
             });
 
+            lastGeneratedDraws.push({
+                setNo: index + 1,
+                numbers: [...numbers]
+            });
             numbersContainer.appendChild(row);
         });
+        setDrawCopyButtonState(lastGeneratedDraws.length > 0);
+        setDrawCopyStatus('');
+    }
+
+    function syncDrawCountChips(shouldCenterActive = false) {
+        if (!drawCountSelect || !drawCountChips.length) {
+            return;
+        }
+        const selected = String(drawCountSelect.value || '1');
+        drawCountChips.forEach(chip => {
+            const isActive = String(chip.dataset.drawCount || '') === selected;
+            chip.classList.toggle('is-active', isActive);
+            chip.setAttribute('aria-pressed', String(isActive));
+            if (isActive && shouldCenterActive) {
+                chip.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'center'
+                });
+            }
+        });
+    }
+
+    function setDrawCopyButtonState(enabled) {
+        if (!drawCopyAllBtn) {
+            return;
+        }
+        drawCopyAllBtn.disabled = !enabled;
+    }
+
+    function setDrawCopyStatus(message, isError = false) {
+        if (!drawCopyStatusEl) {
+            return;
+        }
+        drawCopyStatusEl.textContent = message;
+        drawCopyStatusEl.classList.toggle('is-error', Boolean(isError));
+    }
+
+    async function copyAllGeneratedNumbers() {
+        if (!lastGeneratedDraws.length) {
+            setDrawCopyStatus('복사할 번호가 없습니다. 먼저 번호를 생성해 주세요.', true);
+            setDrawCopyButtonState(false);
+            return;
+        }
+        const text = lastGeneratedDraws
+            .map(item => `세트 ${item.setNo}: ${item.numbers.join(', ')}`)
+            .join('\n');
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.setAttribute('readonly', '');
+                textarea.style.position = 'fixed';
+                textarea.style.top = '-9999px';
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+                const copied = document.execCommand('copy');
+                document.body.removeChild(textarea);
+                if (!copied) {
+                    throw new Error('execCommand copy failed');
+                }
+            }
+            setDrawCopyStatus(`총 ${lastGeneratedDraws.length}세트를 복사했습니다.`);
+        } catch (error) {
+            console.error('번호 전체복사 실패', error);
+            setDrawCopyStatus('복사에 실패했습니다. 다시 시도해 주세요.', true);
+        }
     }
 
     function initFirebase() {

@@ -2119,22 +2119,40 @@
                                 </div>
                                 <div class="generator-panel">
                                     <div class="controls">
-                                        <label for="draw-count">한 번에 생성할 세트</label>
-                                        <select id="draw-count">
-                                            <option value="1" selected>1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                        </select>
-                                        <button id="generate-btn">번호 생성</button>
+                                        <div class="draw-count-wrap">
+                                            <label for="draw-count">한 번에 생성할 세트</label>
+                                            <select id="draw-count" class="draw-count-native">
+                                                <option value="1" selected>1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                            </select>
+                                            <div class="draw-count-scroller" role="radiogroup" aria-label="한 번에 생성할 세트">
+                                                <button class="draw-count-chip is-active" type="button" data-draw-count="1" aria-pressed="true">1세트</button>
+                                                <button class="draw-count-chip" type="button" data-draw-count="2" aria-pressed="false">2세트</button>
+                                                <button class="draw-count-chip" type="button" data-draw-count="3" aria-pressed="false">3세트</button>
+                                                <button class="draw-count-chip" type="button" data-draw-count="4" aria-pressed="false">4세트</button>
+                                                <button class="draw-count-chip" type="button" data-draw-count="5" aria-pressed="false">5세트</button>
+                                                <button class="draw-count-chip" type="button" data-draw-count="6" aria-pressed="false">6세트</button>
+                                                <button class="draw-count-chip" type="button" data-draw-count="7" aria-pressed="false">7세트</button>
+                                                <button class="draw-count-chip" type="button" data-draw-count="8" aria-pressed="false">8세트</button>
+                                                <button class="draw-count-chip" type="button" data-draw-count="9" aria-pressed="false">9세트</button>
+                                                <button class="draw-count-chip" type="button" data-draw-count="10" aria-pressed="false">10세트</button>
+                                            </div>
+                                        </div>
+                                        <div class="draw-action-buttons">
+                                            <button id="generate-btn">번호 생성</button>
+                                            <button id="draw-copy-all-btn" class="ghost" type="button" disabled>전체복사</button>
+                                        </div>
                                     </div>
                                     <div class="numbers-container"></div>
+                                    <p class="helper-text" id="draw-copy-status" aria-live="polite"></p>
                                     <div class="notice-bar" id="guest-banner">
                                         미로그인 사용자는 하루 50회, 1회 1세트만 가능합니다. 로그인하면 가입 완료로 처리되어 제한이 해제됩니다.
                                     </div>
