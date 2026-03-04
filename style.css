@@ -3591,6 +3591,9 @@ body[data-theme="light"] .draw-studio-header {
     grid-template-columns: minmax(0, 0.32fr) minmax(0, 0.68fr);
     gap: 20px;
     position: relative;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
 }
 
 .draw-builder {
@@ -4005,6 +4008,11 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
 .draw-dashboard {
     display: grid;
     gap: 18px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
 }
 
 .draw-dashboard-unified {
