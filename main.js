@@ -3301,20 +3301,20 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         saveSlotPresets(slots);
         renderSlotPresets();
-        updateRulesStatus(`${slot}번 슬롯에 저장했습니다.`);
+        updateRulesStatus(`${slot}번 보관함에 저장했습니다.`);
     }
 
     function applySlotPreset(slot) {
         const slots = getSlotPresets();
         const data = slots[String(slot)];
         if (!data || !Array.isArray(data.ids)) {
-            updateRulesStatus(`${slot}번 슬롯이 비어 있습니다.`);
+            updateRulesStatus(`${slot}번 보관함이 비어 있습니다.`);
             return;
         }
         setRulesByIds(data.ids);
         syncStrategyButtons('');
         syncGroupLevelButtons();
-        updateRulesStatus(`${slot}번 슬롯을 적용했습니다.`);
+        updateRulesStatus(`${slot}번 보관함을 적용했습니다.`);
     }
 
     function applyPreset(preset) {
