@@ -2738,6 +2738,52 @@
                 </div>
             </div>
         </section>
+
+        <section id="tab-insights" class="tab-panel" role="tabpanel" aria-labelledby="tab-insights-btn" tabindex="0">
+            <div class="section-title">
+                <h2>시각화 인사이트</h2>
+                <p id="insights-updated">추첨 탭 데이터를 기반으로 실시간 분석 지표를 표시합니다.</p>
+            </div>
+            <div class="insights-grid">
+                <article class="insight-card highlight">
+                    <h3>핵심 요약</h3>
+                    <div class="insight-summary">
+                        <div><span>선택 규칙</span><strong id="insight-selected-rules">0개</strong></div>
+                        <div><span>남은 조합 비중</span><strong id="insight-remaining-ratio">100%</strong></div>
+                        <div><span>기대 개선</span><strong id="insight-benefit">변화 없음</strong></div>
+                    </div>
+                </article>
+                <article class="insight-card">
+                    <h3>조합 현황</h3>
+                    <div class="insight-meter">
+                        <div class="insight-meter-track"><span id="insight-meter-fill"></span></div>
+                        <div id="insight-meter-label">남은 조합 비중: 100%</div>
+                    </div>
+                    <div class="insight-dual">
+                        <div><span>남은 조합</span><strong id="insight-remaining-combos">8,145,060개</strong></div>
+                        <div><span>제외 조합</span><strong id="insight-excluded-combos">0개</strong></div>
+                    </div>
+                </article>
+                <article class="insight-card">
+                    <h3>등수별 변화</h3>
+                    <div class="insight-odds-list" id="insight-odds-list">
+                        <div id="insight-odds-1">1등: 1 / 8,145,060 → 1 / 8,145,060</div>
+                        <div id="insight-odds-2">2등: 1 / 1,357,510 → 1 / 1,357,510</div>
+                        <div id="insight-odds-3">3등: 1 / 35,724 → 1 / 35,724</div>
+                        <div id="insight-odds-4">4등: 1 / 733 → 1 / 733</div>
+                        <div id="insight-odds-5">5등: 1 / 45 → 1 / 45</div>
+                    </div>
+                </article>
+                <article class="insight-card">
+                    <h3>시나리오 비교</h3>
+                    <ol class="insight-scenario-list" id="insight-scenario-list"></ol>
+                </article>
+                <article class="insight-card wide">
+                    <h3>최근 생성 번호</h3>
+                    <pre id="insight-generated-list">아직 생성된 번호가 없습니다.</pre>
+                </article>
+            </div>
+        </section>
     </main>
 
     <nav class="bottom-tab-bar" role="tablist" aria-label="하단 탭">
@@ -2760,6 +2806,10 @@
         <button class="tab-btn" id="tab-qr-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-qr" data-tab="qr">
             <span class="tab-icon icon-qr" aria-hidden="true"></span>
             <span class="tab-label">QR스캔</span>
+        </button>
+        <button class="tab-btn" id="tab-insights-btn" type="button" role="tab" aria-selected="false" aria-controls="tab-insights" data-tab="insights">
+            <span class="tab-icon icon-insights" aria-hidden="true"></span>
+            <span class="tab-label">인사이트</span>
         </button>
     </nav>
 

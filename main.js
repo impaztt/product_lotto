@@ -6,6 +6,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawCountChips = Array.from(document.querySelectorAll('.draw-count-chip[data-draw-count]'));
     const drawCopyAllBtn = document.getElementById('draw-copy-all-btn');
     const drawCopyStatusEl = document.getElementById('draw-copy-status');
+    const insightsUpdatedEl = document.getElementById('insights-updated');
+    const insightSelectedRulesEl = document.getElementById('insight-selected-rules');
+    const insightRemainingRatioEl = document.getElementById('insight-remaining-ratio');
+    const insightBenefitEl = document.getElementById('insight-benefit');
+    const insightMeterFillEl = document.getElementById('insight-meter-fill');
+    const insightMeterLabelEl = document.getElementById('insight-meter-label');
+    const insightRemainingCombosEl = document.getElementById('insight-remaining-combos');
+    const insightExcludedCombosEl = document.getElementById('insight-excluded-combos');
+    const insightOddsEls = {
+        1: document.getElementById('insight-odds-1'),
+        2: document.getElementById('insight-odds-2'),
+        3: document.getElementById('insight-odds-3'),
+        4: document.getElementById('insight-odds-4'),
+        5: document.getElementById('insight-odds-5')
+    };
+    const insightScenarioListEl = document.getElementById('insight-scenario-list');
+    const insightGeneratedListEl = document.getElementById('insight-generated-list');
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
     const ruleInputs = Array.from(document.querySelectorAll('.rules-grid input[type="checkbox"]'));
@@ -117,6 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawHorizontalTracks = [scenarioGrid, slotGrid].filter(Boolean);
     const excludeNumberValues = new Set();
     let lastGeneratedDraws = [];
+    let currentRemainingRatio = 1;
+    let currentRemainingCombos = 0;
+    let currentExcludedCombos = 0;
 
     // Weekly tab uses embedded layout directly in the DOM.
     let weeklyStatusEl = null;
@@ -1356,6 +1376,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         setDrawCopyButtonState(lastGeneratedDraws.length > 0);
         setDrawCopyStatus('');
+        refreshInsightsDashboard();
     }
 
     function syncDrawCountChips(shouldCenterActive = false) {
@@ -1961,6 +1982,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (tabId === 'draw') {
             scheduleDrawHorizontalWidthSync();
+        }
+        if (tabId === 'insights') {
+            refreshInsightsDashboard();
         }
         if (tabId === 'qr') {
             startQrScanner();
@@ -3563,6 +3587,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const remainingRatio = getEstimatedRemainingRatio(activeRules);
         const remainingCombos = Math.max(1, Math.round(TOTAL_COMBOS * remainingRatio));
         const excludedCombos = Math.max(0, TOTAL_COMBOS - remainingCombos);
+        currentRemainingRatio = remainingRatio;
+        currentRemainingCombos = remainingCombos;
+        currentExcludedCombos = excludedCombos;
         remainingCombosEl.textContent = `${formatNumber(remainingCombos)}개`;
         excludedCombosEl.textContent = `제외: ${formatNumber(excludedCombos)}개`;
         if (remainingMeterFill) {
@@ -3574,6 +3601,7 @@ document.addEventListener('DOMContentLoaded', () => {
             remainingMeterLabel.textContent = `남은 조합 비중: ${pctLabel}%`;
         }
         updateAdjustedOdds(remainingRatio);
+        refreshInsightsDashboard();
     }
 
     function computeBaseOdds() {
@@ -3724,6 +3752,87 @@ document.addEventListener('DOMContentLoaded', () => {
                 improveEl.textContent = `제외 비중: ${excludedPct}% · 남는 비중: ${remainPct}%`;
             }
         });
+        refreshInsightsDashboard();
+    }
+
+    function refreshInsightsDashboard() {
+        if (!insightSelectedRulesEl) {
+            return;
+        }
+        const selectedCount = ruleInputs.filter(input => input.checked).length;
+        const ratioPct = Math.max(0, Math.min(100, Math.round(currentRemainingRatio * 1000) / 10));
+        const benefitPct = Math.max(0, Math.min(100, Math.round((1 - currentRemainingRatio) * 100)));
+
+        insightSelectedRulesEl.textContent = `${selectedCount}개`;
+        if (insightRemainingRatioEl) {
+            insightRemainingRatioEl.textContent = `${ratioPct}%`;
+        }
+        if (insightBenefitEl) {
+            insightBenefitEl.textContent = benefitPct > 0 ? `유리 ${benefitPct}%` : '변화 없음';
+        }
+        if (insightMeterFillEl) {
+            insightMeterFillEl.style.width = `${ratioPct}%`;
+        }
+        if (insightMeterLabelEl) {
+            insightMeterLabelEl.textContent = `남은 조합 비중: ${ratioPct}%`;
+        }
+        if (insightRemainingCombosEl) {
+            insightRemainingCombosEl.textContent = `${formatNumber(Math.max(1, currentRemainingCombos || TOTAL_COMBOS))}개`;
+        }
+        if (insightExcludedCombosEl) {
+            insightExcludedCombosEl.textContent = `${formatNumber(Math.max(0, currentExcludedCombos))}개`;
+        }
+
+        const baseOdds = {
+            1: TOTAL_COMBOS,
+            2: Math.round(TOTAL_COMBOS / 6),
+            3: Math.round(TOTAL_COMBOS / 228),
+            4: Math.round(TOTAL_COMBOS / (combination(6, 4) * combination(39, 2))),
+            5: Math.round(TOTAL_COMBOS / (combination(6, 3) * combination(39, 3)))
+        };
+        Object.entries(baseOdds).forEach(([rank, base]) => {
+            const el = insightOddsEls[rank];
+            if (!el) {
+                return;
+            }
+            const adjusted = Math.max(1, Math.round(base * Math.max(0.000001, currentRemainingRatio)));
+            el.textContent = `${rank}등: 1 / ${formatNumber(base)} → 1 / ${formatNumber(adjusted)}`;
+        });
+
+        if (insightScenarioListEl) {
+            const scenarios = Object.entries(PRESETS)
+                .filter(([key]) => key !== 'clear')
+                .map(([key, ids]) => {
+                    const ratio = getEstimatedRatioByIds(ids);
+                    const excluded = Math.max(0, TOTAL_COMBOS - Math.round(TOTAL_COMBOS * ratio));
+                    return {
+                        key,
+                        label: PRESETS_LABEL[key] || key,
+                        excluded
+                    };
+                })
+                .sort((a, b) => b.excluded - a.excluded)
+                .slice(0, 4);
+
+            insightScenarioListEl.innerHTML = scenarios.length
+                ? scenarios.map(item => `<li><strong>${escapeHtml(item.label)}</strong><span>${formatNumber(item.excluded)} 제외</span></li>`).join('')
+                : '<li><strong>데이터 준비중</strong><span>시나리오 계산 대기</span></li>';
+        }
+
+        if (insightGeneratedListEl) {
+            if (!lastGeneratedDraws.length) {
+                insightGeneratedListEl.textContent = '아직 생성된 번호가 없습니다.';
+            } else {
+                insightGeneratedListEl.textContent = lastGeneratedDraws
+                    .map(item => `세트 ${item.setNo}: ${item.numbers.join(', ')}`)
+                    .join('\n');
+            }
+        }
+
+        if (insightsUpdatedEl) {
+            const now = new Date();
+            insightsUpdatedEl.textContent = `마지막 갱신: ${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        }
     }
 
     function formatKstDateTime(date) {
@@ -4429,6 +4538,8 @@ document.addEventListener('DOMContentLoaded', () => {
         digit_focus: '끝자리 집중형',
         prime_focus: '소수 집중형'
     });
+
+    refreshInsightsDashboard();
 
     const RULE_DETAILS = {
         all_odd: '6개 숫자가 전부 홀수인 조합을 제외합니다.',
