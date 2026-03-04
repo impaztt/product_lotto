@@ -1244,6 +1244,32 @@ body[data-theme="dark"] .premium-number-ball {
     color: #f8fafc;
 }
 
+body[data-theme="dark"] .premium-product-card {
+    background: rgba(20, 26, 34, 0.9);
+    border-color: #2f3c50;
+}
+
+body[data-theme="dark"] .premium-product-card.is-featured {
+    background: linear-gradient(160deg, rgba(93, 160, 255, 0.18), rgba(20, 26, 34, 0.92));
+}
+
+body[data-theme="dark"] .premium-product-head h4 {
+    color: #bfdbfe;
+}
+
+body[data-theme="dark"] .premium-product-head strong {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] .premium-product-card p,
+body[data-theme="dark"] .premium-product-card ul {
+    color: #9aa7bd;
+}
+
+body[data-theme="dark"] .premium-plan-buy {
+    background: #1e40af;
+}
+
 @media (max-width: 960px) {
     #tab-dashboard .this-week-round {
         padding: 18px 16px;
@@ -4161,6 +4187,78 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
     gap: 14px;
 }
 
+.draw-premium-products {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.premium-product-card {
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    background: rgba(248, 250, 252, 0.9);
+    padding: 14px;
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+}
+
+.premium-product-card.is-featured {
+    border-color: rgba(30, 107, 255, 0.42);
+    background: linear-gradient(160deg, rgba(30, 107, 255, 0.08), rgba(239, 246, 255, 0.96));
+    box-shadow: 0 10px 22px rgba(30, 107, 255, 0.15);
+}
+
+.premium-product-head {
+    display: grid;
+    gap: 4px;
+}
+
+.premium-product-head h4 {
+    margin: 0;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: #1e3a8a;
+}
+
+.premium-product-head strong {
+    font-size: 22px;
+    color: #0f172a;
+}
+
+.premium-product-card p {
+    margin: 0;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.premium-product-card ul {
+    margin: 0;
+    padding-left: 16px;
+    display: grid;
+    gap: 6px;
+    font-size: 12px;
+    color: #334155;
+}
+
+.premium-plan-buy {
+    border: 0;
+    border-radius: 12px;
+    padding: 11px 14px;
+    background: #0f172a;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.premium-plan-buy:hover {
+    background: #1e293b;
+}
+
 .draw-premium-lock {
     border-radius: 14px;
     border: 1px solid rgba(59, 130, 246, 0.3);
@@ -5687,6 +5785,10 @@ body.rule-picker-open {
     }
 
     .draw-premium-plan {
+        grid-template-columns: 1fr;
+    }
+
+    .draw-premium-products {
         grid-template-columns: 1fr;
     }
 

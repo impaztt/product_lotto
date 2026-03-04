@@ -109,6 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const premiumBadgeEl = document.getElementById('draw-premium-badge');
     const premiumLockEl = document.getElementById('draw-premium-lock');
     const premiumUpgradeBtn = document.getElementById('premium-upgrade-btn');
+    const premiumPlanBuyButtons = Array.from(document.querySelectorAll('.premium-plan-buy[data-premium-plan]'));
     const premiumGenerateBtn = document.getElementById('premium-generate-btn');
     const premiumCopyAllBtn = document.getElementById('premium-copy-all-btn');
     const premiumNumbersContainer = document.getElementById('premium-numbers-container');
@@ -674,6 +675,24 @@ document.addEventListener('DOMContentLoaded', () => {
             showActionPopup('월정액 결제 연동 전입니다. 결제 연동 후 이용권 시작 버튼에 연결됩니다.');
         });
     }
+
+    premiumPlanBuyButtons.forEach(button => {
+        button.addEventListener('click', event => {
+            event.preventDefault();
+            const plan = String(button.dataset.premiumPlan || '').toLowerCase();
+            const planNameMap = {
+                starter: 'STARTER',
+                standard: 'STANDARD',
+                master: 'MASTER'
+            };
+            const planName = planNameMap[plan] || '선택 플랜';
+            if (!isMember()) {
+                openAuthModal();
+                return;
+            }
+            showActionPopup(`${planName} 구매 연동은 준비 중입니다. 결제 연결 후 활성화됩니다.`);
+        });
+    });
 
     if (drawCountSelect) {
         drawCountSelect.addEventListener('change', () => {
