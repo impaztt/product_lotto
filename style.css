@@ -3535,7 +3535,28 @@ body[data-theme="light"] .draw-studio-header {
 
 
 #tab-draw .draw-panel {
-    overflow: visible;
+    overflow: hidden;
+}
+
+#draw-scenario-panel,
+#draw-slot-panel {
+    border: 1px solid var(--draw-border, rgba(15, 23, 42, 0.12)) !important;
+    border-radius: 18px !important;
+    background: var(--draw-card, #ffffff) !important;
+    box-shadow: var(--draw-shadow-soft, 0 10px 22px rgba(15, 23, 42, 0.08)) !important;
+    padding: 14px !important;
+}
+
+#draw-scenario-panel .draw-panel-header,
+#draw-slot-panel .draw-panel-header {
+    margin-bottom: 10px;
+}
+
+#draw-scenario-grid,
+#draw-slot-grid {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
 }
 
 #tab-draw .scenario-meta {
