@@ -324,6 +324,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let weeklyNextDrawOverride = null;
     let weeklyExpectedOverride = null;
     let weeklyExpectedUpdatedAt = 0;
+    const DRAW_ENTRY_LOCAL_KEY = 'lotto_guest_tracking_id';
+    let guestTrackingId = '';
 
     function bindWeeklyElements(root) {
         weeklyStatusEl = root.getElementById('weekly-status');
@@ -1319,6 +1321,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
         initFirebase();
+        guestTrackingId = getOrCreateGuestTrackingId();
         syncThemeToggle();
         syncMenuState(false);
         setupExcludeNumberControl();
@@ -1376,7 +1379,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const numbers = generateNumbersWithRules(activeRules);
             draws.push(numbers);
         }
-        displayNumbers(draws);
+        displayNumbers(draws, {
+            ruleIds: activeRules.map(rule => rule.id)
+        });
     }
 
     function getActiveRules() {
@@ -1411,7 +1416,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return Array.from(numbers);
     }
 
-    function displayNumbers(draws) {
+    function displayNumbers(draws, options = {}) {
         numbersContainer.innerHTML = '';
         lastGeneratedDraws = [];
         draws.forEach((numbers, index) => {
@@ -1447,6 +1452,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         setDrawCopyButtonState(lastGeneratedDraws.length > 0);
         setDrawCopyStatus('');
+        if (lastGeneratedDraws.length) {
+            persistGeneratedEntries(lastGeneratedDraws, {
+                sourceMode: 'self',
+                ruleIds: options.ruleIds
+            });
+        }
         refreshInsightsDashboard();
     }
 
@@ -1535,6 +1546,117 @@ document.addEventListener('DOMContentLoaded', () => {
             return savedTier.toLowerCase();
         }
         return 'free';
+    }
+
+    function getOrCreateGuestTrackingId() {
+        try {
+            const stored = localStorage.getItem(DRAW_ENTRY_LOCAL_KEY);
+            if (stored && /^[a-z0-9_-]{12,80}$/i.test(stored)) {
+                return stored;
+            }
+            const next = `guest_${createClientNonce(20)}`;
+            localStorage.setItem(DRAW_ENTRY_LOCAL_KEY, next);
+            return next;
+        } catch (error) {
+            console.warn('guest tracking id storage unavailable', error);
+            return `guest_${createClientNonce(20)}`;
+        }
+    }
+
+    function createClientNonce(length = 16) {
+        const size = Math.max(8, Number(length) || 16);
+        const alphabet = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        if (window.crypto && typeof window.crypto.getRandomValues === 'function') {
+            const values = new Uint8Array(size);
+            window.crypto.getRandomValues(values);
+            return Array.from(values, value => alphabet[value % alphabet.length]).join('');
+        }
+        let text = '';
+        for (let i = 0; i < size; i += 1) {
+            text += alphabet[Math.floor(Math.random() * alphabet.length)];
+        }
+        return text;
+    }
+
+    function getTargetRoundForEntries() {
+        const weeklyRoundText = weeklyThisRoundEl ? String(weeklyThisRoundEl.textContent || '') : '';
+        const weeklyRoundNumber = Number((weeklyRoundText.match(/\d+/) || [])[0] || 0);
+        if (Number.isFinite(weeklyRoundNumber) && weeklyRoundNumber > 0) {
+            return weeklyRoundNumber;
+        }
+        if (Number.isFinite(Number(latestAvailableRound)) && Number(latestAvailableRound) > 0) {
+            return Number(latestAvailableRound) + 1;
+        }
+        if (currentWeeklyData && Number.isFinite(Number(currentWeeklyData.drwNo)) && Number(currentWeeklyData.drwNo) > 0) {
+            return Number(currentWeeklyData.drwNo) + 1;
+        }
+        return Number(estimateLatestRound()) + 1;
+    }
+
+    function normalizeEntryNumbers(numbers) {
+        if (!Array.isArray(numbers)) {
+            return [];
+        }
+        const normalized = Array.from(
+            new Set(
+                numbers
+                    .map(value => Number(value))
+                    .filter(value => Number.isInteger(value) && value >= 1 && value <= 45)
+            )
+        ).sort((a, b) => a - b);
+        return normalized.length === 6 ? normalized : [];
+    }
+
+    async function persistGeneratedEntries(draws, options = {}) {
+        if (!firebaseDb || !window.firebase || !window.firebase.firestore || !Array.isArray(draws) || !draws.length) {
+            return;
+        }
+        try {
+            const targetRound = getTargetRoundForEntries();
+            const userType = isMember() ? 'member' : 'guest';
+            const membershipTier = isMember() ? getMembershipTier() : 'guest';
+            const generationId = `gen_${Date.now()}_${createClientNonce(10)}`;
+            const sourceMode = options.sourceMode === 'premium' ? 'premium' : 'self';
+            const ruleIds = Array.isArray(options.ruleIds)
+                ? Array.from(new Set(options.ruleIds.map(value => String(value || '').trim()).filter(Boolean)))
+                : [];
+            const serverNow = window.firebase.firestore.FieldValue.serverTimestamp();
+            const batch = firebaseDb.batch();
+            let writeCount = 0;
+
+            draws.forEach((draw, index) => {
+                const normalizedNumbers = normalizeEntryNumbers(draw && draw.numbers);
+                if (!normalizedNumbers.length) {
+                    return;
+                }
+                const ref = firebaseDb.collection('draw_entries').doc();
+                const strategy = draw && draw.strategy ? String(draw.strategy).trim() : '';
+                batch.set(ref, {
+                    round: Number(targetRound),
+                    numbers: normalizedNumbers,
+                    numbersKey: normalizedNumbers.join('-'),
+                    setNo: Number(draw && draw.setNo ? draw.setNo : index + 1),
+                    sourceMode,
+                    strategy: strategy || null,
+                    userType,
+                    membershipTier,
+                    uid: currentUser ? currentUser.uid : null,
+                    guestTrackingId: userType === 'guest' ? guestTrackingId : null,
+                    generationId,
+                    ruleIds,
+                    ruleCount: ruleIds.length,
+                    createdAt: serverNow
+                });
+                writeCount += 1;
+            });
+
+            if (!writeCount) {
+                return;
+            }
+            await batch.commit();
+        } catch (error) {
+            console.warn('번호 저장 실패(draw_entries)', error);
+        }
     }
 
     function isPremiumMember() {
@@ -1652,6 +1774,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         setPremiumCopyButtonState(lastPremiumDraws.length > 0);
+        if (lastPremiumDraws.length) {
+            persistGeneratedEntries(draws, {
+                sourceMode: 'premium'
+            });
+        }
         refreshInsightsDashboard();
     }
 

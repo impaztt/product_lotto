@@ -1,0 +1,99 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    function isValidNumbers(numbers) {
+      return numbers is list
+        && numbers.size() == 6
+        && numbers[0] is int && numbers[0] >= 1 && numbers[0] <= 45
+        && numbers[1] is int && numbers[1] >= 1 && numbers[1] <= 45
+        && numbers[2] is int && numbers[2] >= 1 && numbers[2] <= 45
+        && numbers[3] is int && numbers[3] >= 1 && numbers[3] <= 45
+        && numbers[4] is int && numbers[4] >= 1 && numbers[4] <= 45
+        && numbers[5] is int && numbers[5] >= 1 && numbers[5] <= 45
+        && numbers[0] < numbers[1]
+        && numbers[1] < numbers[2]
+        && numbers[2] < numbers[3]
+        && numbers[3] < numbers[4]
+        && numbers[4] < numbers[5];
+    }
+
+    function isValidRuleIds(ruleIds) {
+      return ruleIds is list
+        && ruleIds.size() <= 80
+        && ruleIds.size() >= 0;
+    }
+
+    match /users/{uid} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
+    }
+
+    match /draw_entries/{entryId} {
+      allow create: if request.resource.data.keys().hasOnly([
+          'round',
+          'numbers',
+          'numbersKey',
+          'setNo',
+          'sourceMode',
+          'strategy',
+          'userType',
+          'membershipTier',
+          'uid',
+          'guestTrackingId',
+          'generationId',
+          'ruleIds',
+          'ruleCount',
+          'createdAt'
+        ])
+        && request.resource.data.round is int
+        && request.resource.data.round > 0
+        && isValidNumbers(request.resource.data.numbers)
+        && request.resource.data.numbersKey is string
+        && request.resource.data.numbersKey.size() >= 11
+        && request.resource.data.numbersKey.size() <= 20
+        && request.resource.data.setNo is int
+        && request.resource.data.setNo >= 1
+        && request.resource.data.setNo <= 20
+        && request.resource.data.sourceMode in ['self', 'premium']
+        && request.resource.data.userType in ['guest', 'member']
+        && request.resource.data.membershipTier is string
+        && request.resource.data.membershipTier.size() >= 1
+        && request.resource.data.membershipTier.size() <= 40
+        && (request.resource.data.strategy == null || request.resource.data.strategy is string)
+        && (request.resource.data.guestTrackingId == null || request.resource.data.guestTrackingId is string)
+        && request.resource.data.generationId is string
+        && request.resource.data.generationId.size() >= 10
+        && request.resource.data.generationId.size() <= 64
+        && isValidRuleIds(request.resource.data.ruleIds)
+        && request.resource.data.ruleCount is int
+        && request.resource.data.ruleCount >= 0
+        && request.resource.data.ruleCount <= 80
+        && (
+          (
+            !isSignedIn()
+            && request.resource.data.userType == 'guest'
+            && request.resource.data.uid == null
+          ) || (
+            isSignedIn()
+            && request.resource.data.userType == 'member'
+            && request.resource.data.uid == request.auth.uid
+          )
+        );
+
+      allow read: if isAdmin();
+      allow update, delete: if false;
+    }
+
+    match /draw_stats/{round} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
