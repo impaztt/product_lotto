@@ -131,6 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const firebaseAuthStatusEl = document.getElementById('firebase-auth-status');
     const mypageAuthBadgeEl = document.getElementById('mypage-auth-badge');
     const mypageNicknameDisplayEl = document.getElementById('mypage-nickname-display');
+    const mypageHistoryListEl = document.getElementById('mypage-history-list');
+    const mypageHistoryBadgeEl = document.getElementById('mypage-history-badge');
     const nicknameOpenModalBtn = document.getElementById('nickname-open-modal-btn');
     const nicknameModal = document.getElementById('nickname-modal');
     const nicknameModalCloseBtn = document.getElementById('nickname-modal-close');
@@ -298,6 +300,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const qrPayloadEl = document.getElementById('qr-payload');
     const qrOpenRoundBtn = document.getElementById('qr-open-round-btn');
     const qrCopyNumbersBtn = document.getElementById('qr-copy-numbers-btn');
+    const dashWinRoundLabelEl = document.getElementById('dash-win-round-label');
+    const dashWinStatusEl = document.getElementById('dash-win-status');
+    const dashWinTotalGeneratedEl = document.getElementById('dash-win-total-generated');
+    const dashWinTotalWinnersEl = document.getElementById('dash-win-total-winners');
+    const dashWinRateEl = document.getElementById('dash-win-rate');
+    const dashWinRankEls = {
+        1: document.getElementById('dash-win-rank-1'),
+        2: document.getElementById('dash-win-rank-2'),
+        3: document.getElementById('dash-win-rank-3'),
+        4: document.getElementById('dash-win-rank-4'),
+        5: document.getElementById('dash-win-rank-5')
+    };
     let currentWeeklyData = null;
     let latestAvailableRound = null;
     const roundMetaByNo = new Map();
@@ -326,6 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let weeklyExpectedUpdatedAt = 0;
     const DRAW_ENTRY_LOCAL_KEY = 'lotto_guest_tracking_id';
     let guestTrackingId = '';
+    let lastWinDashboardRound = null;
 
     function bindWeeklyElements(root) {
         weeklyStatusEl = root.getElementById('weekly-status');
@@ -1320,8 +1335,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-        initFirebase();
         guestTrackingId = getOrCreateGuestTrackingId();
+        initFirebase();
         syncThemeToggle();
         syncMenuState(false);
         setupExcludeNumberControl();
@@ -1654,8 +1669,257 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             await batch.commit();
+            loadMypageDrawHistory(true);
         } catch (error) {
             console.warn('번호 저장 실패(draw_entries)', error);
+        }
+    }
+
+    function getHistoryOwnerKey() {
+        if (isMember() && currentUser && currentUser.uid) {
+            return `member:${currentUser.uid}`;
+        }
+        return `guest:${guestTrackingId || ''}`;
+    }
+
+    function getTimestampMillis(value) {
+        if (!value) {
+            return 0;
+        }
+        if (typeof value.toMillis === 'function') {
+            return Number(value.toMillis()) || 0;
+        }
+        if (value.seconds != null) {
+            return Number(value.seconds) * 1000 + Math.floor(Number(value.nanoseconds || 0) / 1000000);
+        }
+        const date = new Date(value);
+        const millis = date.getTime();
+        return Number.isFinite(millis) ? millis : 0;
+    }
+
+    function formatHistoryDateTime(value) {
+        const millis = getTimestampMillis(value);
+        if (!millis) {
+            return '-';
+        }
+        const date = new Date(millis);
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    }
+
+    async function loadMypageDrawHistory(force = false) {
+        if (!mypageHistoryListEl) {
+            return;
+        }
+        if (!firebaseDb) {
+            mypageHistoryListEl.innerHTML = `
+                <li>
+                    <span class="info-label">Firebase 연결 후 이력을 확인할 수 있습니다.</span>
+                    <strong>-</strong>
+                </li>
+            `;
+            return;
+        }
+        const ownerKey = getHistoryOwnerKey();
+        if (!force && mypageHistoryListEl.dataset.ownerKey === ownerKey && mypageHistoryListEl.dataset.loaded === 'true') {
+            return;
+        }
+        mypageHistoryListEl.dataset.ownerKey = ownerKey;
+        mypageHistoryListEl.dataset.loaded = 'false';
+        mypageHistoryListEl.innerHTML = `
+            <li>
+                <span class="info-label">이력을 불러오는 중...</span>
+                <strong>-</strong>
+            </li>
+        `;
+        try {
+            let query = null;
+            if (isMember() && currentUser && currentUser.uid) {
+                query = firebaseDb.collection('draw_entries').where('uid', '==', currentUser.uid);
+            } else {
+                if (!guestTrackingId) {
+                    guestTrackingId = getOrCreateGuestTrackingId();
+                }
+                query = firebaseDb.collection('draw_entries').where('guestTrackingId', '==', guestTrackingId);
+            }
+            const snapshot = await query.get();
+            const groupedMap = new Map();
+            snapshot.docs.forEach(doc => {
+                const data = doc.data() || {};
+                const key = String(data.generationId || doc.id);
+                const existing = groupedMap.get(key);
+                if (!existing) {
+                    groupedMap.set(key, {
+                        generationId: key,
+                        createdAt: data.createdAt || null,
+                        sourceMode: data.sourceMode || 'self',
+                        round: Number(data.round || 0),
+                        setCount: 1
+                    });
+                    return;
+                }
+                existing.setCount += 1;
+                if (getTimestampMillis(data.createdAt) > getTimestampMillis(existing.createdAt)) {
+                    existing.createdAt = data.createdAt || existing.createdAt;
+                }
+            });
+            const rows = Array.from(groupedMap.values())
+                .sort((a, b) => getTimestampMillis(b.createdAt) - getTimestampMillis(a.createdAt))
+                .slice(0, 20);
+            if (!rows.length) {
+                mypageHistoryListEl.innerHTML = `
+                    <li>
+                        <span class="info-label">아직 생성 이력이 없습니다.</span>
+                        <strong>0건</strong>
+                    </li>
+                `;
+                if (mypageHistoryBadgeEl) {
+                    mypageHistoryBadgeEl.textContent = '최근 20회';
+                }
+                mypageHistoryListEl.dataset.loaded = 'true';
+                return;
+            }
+            mypageHistoryListEl.innerHTML = rows.map(row => {
+                const when = formatHistoryDateTime(row.createdAt);
+                const setCount = Number(row.setCount || 0) > 0 ? Number(row.setCount) : 1;
+                const modeText = row.sourceMode === 'premium' ? '월정액' : '직접선택';
+                const roundText = Number(row.round || 0) > 0 ? `${Number(row.round)}회` : '-';
+                return `
+                    <li>
+                        <span class="info-label">${when}</span>
+                        <strong>${setCount}세트 · ${modeText} · ${roundText}</strong>
+                    </li>
+                `;
+            }).join('');
+            if (mypageHistoryBadgeEl) {
+                mypageHistoryBadgeEl.textContent = `최근 ${rows.length}회`;
+            }
+            mypageHistoryListEl.dataset.loaded = 'true';
+        } catch (error) {
+            console.warn('마이페이지 추첨 이력 로드 실패', error);
+            mypageHistoryListEl.innerHTML = `
+                <li>
+                    <span class="info-label">이력을 불러오지 못했습니다.</span>
+                    <strong>재시도 필요</strong>
+                </li>
+            `;
+        }
+    }
+
+    function setLastWeekDashboardFallback(message) {
+        if (dashWinStatusEl) {
+            dashWinStatusEl.textContent = message;
+        }
+        if (dashWinTotalGeneratedEl) {
+            dashWinTotalGeneratedEl.textContent = '-';
+        }
+        if (dashWinTotalWinnersEl) {
+            dashWinTotalWinnersEl.textContent = '-';
+        }
+        if (dashWinRateEl) {
+            dashWinRateEl.textContent = '-';
+        }
+        Object.values(dashWinRankEls).forEach(el => {
+            if (el) {
+                el.textContent = '0';
+            }
+        });
+    }
+
+    function getRankNumberByTicket(numbers, winningNumbers, bonusNumber) {
+        const winSet = new Set(winningNumbers);
+        const matchCount = numbers.filter(value => winSet.has(value)).length;
+        const bonusMatch = numbers.includes(bonusNumber);
+        const rankLabel = getRank(matchCount, bonusMatch);
+        if (rankLabel === '1등') {
+            return 1;
+        }
+        if (rankLabel === '2등') {
+            return 2;
+        }
+        if (rankLabel === '3등') {
+            return 3;
+        }
+        if (rankLabel === '4등') {
+            return 4;
+        }
+        if (rankLabel === '5등') {
+            return 5;
+        }
+        return 0;
+    }
+
+    async function loadLastWeekWinDashboard(roundData, options = {}) {
+        if (!dashWinStatusEl || !dashWinRoundLabelEl) {
+            return;
+        }
+        if (!firebaseDb) {
+            setLastWeekDashboardFallback('Firebase 연결 후 집계를 표시할 수 있습니다.');
+            return;
+        }
+        if (!roundData || !Number.isFinite(Number(roundData.drwNo))) {
+            setLastWeekDashboardFallback('최근 당첨 회차를 불러오는 중입니다.');
+            return;
+        }
+        const roundNo = Number(roundData.drwNo);
+        if (!options.force && lastWinDashboardRound === roundNo) {
+            return;
+        }
+        lastWinDashboardRound = roundNo;
+        dashWinRoundLabelEl.textContent = `지난주 ${roundNo}회`;
+        dashWinStatusEl.textContent = `${roundNo}회 생성번호 당첨 집계를 계산 중입니다...`;
+        try {
+            const snapshot = await firebaseDb.collection('draw_entries').where('round', '==', roundNo).get();
+            const winningNumbers = [
+                Number(roundData.drwtNo1),
+                Number(roundData.drwtNo2),
+                Number(roundData.drwtNo3),
+                Number(roundData.drwtNo4),
+                Number(roundData.drwtNo5),
+                Number(roundData.drwtNo6)
+            ].filter(value => Number.isInteger(value) && value >= 1 && value <= 45);
+            const bonusNumber = Number(roundData.bnusNo);
+            if (winningNumbers.length !== 6 || !Number.isInteger(bonusNumber)) {
+                setLastWeekDashboardFallback('당첨 번호 데이터가 완전하지 않아 집계할 수 없습니다.');
+                return;
+            }
+            const rankCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+            let totalGenerated = 0;
+            let totalWinners = 0;
+            snapshot.forEach(doc => {
+                const data = doc.data() || {};
+                const numbers = normalizeEntryNumbers(data.numbers);
+                if (numbers.length !== 6) {
+                    return;
+                }
+                totalGenerated += 1;
+                const rankNo = getRankNumberByTicket(numbers, winningNumbers, bonusNumber);
+                if (rankNo >= 1 && rankNo <= 5) {
+                    rankCounts[rankNo] += 1;
+                    totalWinners += 1;
+                }
+            });
+            const winRate = totalGenerated > 0 ? (totalWinners / totalGenerated) * 100 : 0;
+            if (dashWinTotalGeneratedEl) {
+                dashWinTotalGeneratedEl.textContent = formatNumber(totalGenerated);
+            }
+            if (dashWinTotalWinnersEl) {
+                dashWinTotalWinnersEl.textContent = formatNumber(totalWinners);
+            }
+            if (dashWinRateEl) {
+                dashWinRateEl.textContent = `${winRate.toFixed(2)}%`;
+            }
+            Object.entries(rankCounts).forEach(([rank, count]) => {
+                const el = dashWinRankEls[Number(rank)];
+                if (el) {
+                    el.textContent = formatNumber(count);
+                }
+            });
+            dashWinStatusEl.textContent = totalGenerated
+                ? `${roundNo}회 기준 ${formatNumber(totalGenerated)}세트 중 ${formatNumber(totalWinners)}세트가 5등 이상 당첨되었습니다.`
+                : `${roundNo}회 기준 집계 대상 생성번호가 아직 없습니다.`;
+        } catch (error) {
+            console.warn('지난주 당첨 대시보드 집계 실패', error);
+            setLastWeekDashboardFallback('집계 데이터 조회에 실패했습니다. 잠시 후 다시 시도해 주세요.');
         }
     }
 
@@ -1870,6 +2134,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 updateAuthUi();
                 refreshGuestLimitMessage();
+                loadMypageDrawHistory(true);
+                if (currentWeeklyData) {
+                    loadLastWeekWinDashboard(currentWeeklyData, { force: true });
+                }
             });
             if (firebaseAuthStatusEl) {
                 firebaseAuthStatusEl.textContent = 'Firebase 연결 완료. 구글 로그인으로 가입을 시작하세요.';
@@ -1914,6 +2182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         renderNicknameUi();
         updatePremiumMembershipUi();
+        loadMypageDrawHistory();
         if (!firebaseAuthStatusEl) {
             return;
         }
@@ -3346,6 +3615,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (weeklyStatusEl) {
             weeklyStatusEl.textContent = `${data.drwNo}회차 당첨 정보가 반영되었습니다.${cached ? ' (캐시)' : ''}`;
         }
+        loadLastWeekWinDashboard(data);
 
         if (weeklyThisRoundEl && !weeklyThisRoundEl.textContent.trim()) {
             weeklyThisRoundEl.textContent = `${Number(data.drwNo) + 1}회`;

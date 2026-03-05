@@ -87,7 +87,7 @@ service cloud.firestore {
           )
         );
 
-      allow read: if isAdmin();
+      allow read: if true;
       allow update, delete: if false;
     }
 

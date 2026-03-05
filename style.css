@@ -2892,6 +2892,21 @@ body[data-theme="light"] .info-list li {
     padding-bottom: 0;
 }
 
+.history-list {
+    max-height: 420px;
+    overflow: auto;
+    padding-right: 4px;
+}
+
+.history-list li {
+    align-items: flex-start;
+}
+
+.history-list .info-label {
+    min-width: 132px;
+    font-variant-numeric: tabular-nums;
+}
+
 .info-label {
     color: var(--text-muted);
     font-size: 13px;
@@ -6476,6 +6491,96 @@ body.rule-picker-open {
     letter-spacing: 0.02em;
 }
 
+#tab-dashboard .dashboard-win-summary {
+    margin: 0 auto 20px;
+    max-width: min(1320px, 100%);
+    border-radius: 24px;
+    border: 1px solid var(--dash-border-strong);
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    box-shadow: var(--dash-shadow);
+    padding: 18px 20px;
+    display: grid;
+    gap: 14px;
+}
+
+#tab-dashboard .dashboard-win-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+#tab-dashboard .dashboard-win-head h3 {
+    margin: 0;
+    font-size: clamp(20px, 2.2vw, 26px);
+    color: var(--dash-title);
+}
+
+#tab-dashboard .dashboard-win-head p {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: var(--dash-muted);
+}
+
+#tab-dashboard .dashboard-win-status {
+    margin: 0;
+    font-size: 13px;
+    color: #475569;
+}
+
+#tab-dashboard .dashboard-win-kpis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+#tab-dashboard .dashboard-win-kpi {
+    border: 1px solid var(--dash-border-soft);
+    border-radius: 14px;
+    padding: 12px;
+    display: grid;
+    gap: 4px;
+    background: #ffffff;
+}
+
+#tab-dashboard .dashboard-win-kpi span {
+    font-size: 12px;
+    color: var(--dash-muted);
+}
+
+#tab-dashboard .dashboard-win-kpi strong {
+    font-size: clamp(22px, 3vw, 30px);
+    line-height: 1.05;
+    color: var(--dash-title);
+    letter-spacing: -0.02em;
+}
+
+#tab-dashboard .dashboard-win-ranks {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+}
+
+#tab-dashboard .dashboard-win-ranks > div {
+    border: 1px solid var(--dash-border-soft);
+    border-radius: 12px;
+    padding: 10px;
+    display: grid;
+    gap: 4px;
+    background: #ffffff;
+    text-align: center;
+}
+
+#tab-dashboard .dashboard-win-ranks span {
+    font-size: 12px;
+    color: var(--dash-muted);
+}
+
+#tab-dashboard .dashboard-win-ranks strong {
+    font-size: 20px;
+    color: var(--dash-title);
+}
+
 #tab-dashboard .draw-wrapper,
 #tab-dashboard .profit-grid,
 #tab-dashboard .draw-img-wrap .img-box,
@@ -6605,6 +6710,34 @@ body[data-theme="dark"] #tab-dashboard .content-tit-wrap {
     border-bottom-color: #283548;
 }
 
+body[data-theme="dark"] #tab-dashboard .dashboard-win-summary {
+    background: linear-gradient(180deg, #121924 0%, #0f1722 100%);
+    border-color: #2b394f;
+    box-shadow: 0 16px 32px rgba(2, 6, 23, 0.42);
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-win-head h3 {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-win-head p,
+body[data-theme="dark"] #tab-dashboard .dashboard-win-status,
+body[data-theme="dark"] #tab-dashboard .dashboard-win-kpi span,
+body[data-theme="dark"] #tab-dashboard .dashboard-win-ranks span {
+    color: #94a3b8;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-win-kpi,
+body[data-theme="dark"] #tab-dashboard .dashboard-win-ranks > div {
+    background: #141f2d;
+    border-color: #2a3b52;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-win-kpi strong,
+body[data-theme="dark"] #tab-dashboard .dashboard-win-ranks strong {
+    color: #e2e8f0;
+}
+
 body[data-theme="dark"] #tab-dashboard .result-prizeCard,
 body[data-theme="dark"] #tab-dashboard .time-circle,
 body[data-theme="dark"] #tab-dashboard .header-goWrap .btn-go,
@@ -6623,6 +6756,14 @@ body[data-theme="dark"] #tab-dashboard .header-goWrap .btn-go:hover {
         border-radius: 20px;
     }
 
+    #tab-dashboard .dashboard-win-kpis {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-dashboard .dashboard-win-ranks {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     #tab-dashboard .draw-wrapper,
     #tab-dashboard .profit-grid {
         padding: 24px 20px;
@@ -6633,6 +6774,10 @@ body[data-theme="dark"] #tab-dashboard .header-goWrap .btn-go:hover {
 @media (max-width: 640px) {
     #tab-dashboard .content-tit {
         font-size: 26px;
+    }
+
+    .history-list {
+        max-height: 360px;
     }
 
     #tab-dashboard .result-infoWrap {

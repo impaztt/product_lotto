@@ -143,11 +143,11 @@
 							</div>
 						</div>
 					</div>
+						</div>
 				</div>
-			</div>
-			<div class="center-wrap">
-				<!-- 로또645 메인 상단 텍스트 -->
-				<div class="draw-wrapper">
+				<div class="center-wrap">
+					<!-- 로또645 메인 상단 텍스트 -->
+					<div class="draw-wrapper">
 					<div class="main-txt-wrap">
 						<p class="txt-center">
 							게임방법 <br></br>
@@ -1443,16 +1443,47 @@
 										<div class="result-winnings-num">
 											<span class="fs-g7" id="dash-pstRnk1SumWnAmt"></span>
 										</div>
-										<div class="result-detail">
-											(<span id="dash-pstRnk1WnAmt"></span>억 원 × <span id="dash-pstRnk1WnNope"></span>명)
+											<div class="result-detail">
+												(<span id="dash-pstRnk1WnAmt"></span>억 원 × <span id="dash-pstRnk1WnNope"></span>명)
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-			</div>
-			<div class="center-wrap">
+				</div>
+                <section class="dashboard-win-summary" aria-labelledby="dash-win-summary-title">
+                    <div class="dashboard-win-head">
+                        <div>
+                            <h3 id="dash-win-summary-title">지난주 당첨 대시보드</h3>
+                            <p>우리 사이트 생성번호의 지난 회차 당첨 결과 집계입니다.</p>
+                        </div>
+                        <span class="badge muted" id="dash-win-round-label">집계 대기</span>
+                    </div>
+                    <p class="dashboard-win-status" id="dash-win-status">최근 회차 데이터와 생성 이력을 집계 중입니다.</p>
+                    <div class="dashboard-win-kpis">
+                        <article class="dashboard-win-kpi">
+                            <span>총 생성 세트</span>
+                            <strong id="dash-win-total-generated">-</strong>
+                        </article>
+                        <article class="dashboard-win-kpi">
+                            <span>당첨 세트(5등 이상)</span>
+                            <strong id="dash-win-total-winners">-</strong>
+                        </article>
+                        <article class="dashboard-win-kpi">
+                            <span>당첨 비율</span>
+                            <strong id="dash-win-rate">-</strong>
+                        </article>
+                    </div>
+                    <div class="dashboard-win-ranks">
+                        <div><span>1등</span><strong id="dash-win-rank-1">0</strong></div>
+                        <div><span>2등</span><strong id="dash-win-rank-2">0</strong></div>
+                        <div><span>3등</span><strong id="dash-win-rank-3">0</strong></div>
+                        <div><span>4등</span><strong id="dash-win-rank-4">0</strong></div>
+                        <div><span>5등</span><strong id="dash-win-rank-5">0</strong></div>
+                    </div>
+                </section>
+				<div class="center-wrap">
 				<!-- 로또645 메인 상단 텍스트 -->
 				<div class="draw-wrapper">
 					<div class="main-txt-wrap">
@@ -2689,20 +2720,12 @@
                 <div class="info-card">
                     <div class="info-header">
                         <h3>추첨 히스토리</h3>
-                        <span class="badge muted">최근 3회</span>
+                        <span class="badge muted" id="mypage-history-badge">최근 20회</span>
                     </div>
-                    <ul class="info-list">
+                    <ul class="info-list history-list" id="mypage-history-list">
                         <li>
-                            <span class="info-label">2026-02-15</span>
-                            <strong>1세트 생성</strong>
-                        </li>
-                        <li>
-                            <span class="info-label">2026-02-14</span>
-                            <strong>2세트 생성</strong>
-                        </li>
-                        <li>
-                            <span class="info-label">2026-02-13</span>
-                            <strong>1세트 생성</strong>
+                            <span class="info-label">이력을 불러오는 중...</span>
+                            <strong>-</strong>
                         </li>
                     </ul>
                 </div>
