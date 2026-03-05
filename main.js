@@ -680,17 +680,17 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', event => {
             event.preventDefault();
             const plan = String(button.dataset.premiumPlan || '').toLowerCase();
-            const planNameMap = {
-                starter: 'STARTER',
-                standard: 'STANDARD',
-                master: 'MASTER'
+            const planMetaMap = {
+                starter: { name: 'STARTER', price: '월 4,900원' },
+                standard: { name: 'STANDARD', price: '월 9,900원' },
+                master: { name: 'MASTER', price: '월 19,900원' }
             };
-            const planName = planNameMap[plan] || '선택 플랜';
+            const planMeta = planMetaMap[plan] || { name: '선택 플랜', price: '가격 정보 준비 중' };
             if (!isMember()) {
                 openAuthModal();
                 return;
             }
-            showActionPopup(`${planName} 구매 연동은 준비 중입니다. 결제 연결 후 활성화됩니다.`);
+            showActionPopup(`${planMeta.name} (${planMeta.price}) 결제 연동은 준비 중입니다. 결제 연결 후 활성화됩니다.`);
         });
     });
 
