@@ -3347,13 +3347,21 @@ body[data-theme="light"] .draw-studio-header {
     padding-bottom: 6px;
     padding-right: 10px;
     scroll-padding-right: 10px;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    scroll-padding-left: 2px;
   
     /* 가로 스와이프 + 세로 스크롤 둘 다 자연스럽게 */
     touch-action: pan-x pan-y;
   }
+
+#tab-draw .scenario-cards::-webkit-scrollbar,
+.draw-slot-grid::-webkit-scrollbar {
+    display: none;
+}
 
 #tab-draw .scenario-cards::after {
     content: "";
@@ -3366,7 +3374,7 @@ body[data-theme="light"] .draw-studio-header {
     display: inline-grid;
     width: var(--draw-card-width, 220px);
     min-height: 140px;
-    scroll-snap-align: start;
+    scroll-snap-align: center;
     pointer-events: auto;
     position: relative;
     z-index: 1;
@@ -3584,9 +3592,14 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
     width: 100%;
     max-width: 100%;
     padding-bottom: 6px;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    scroll-padding-left: 2px;
+    scroll-padding-right: 10px;
+    touch-action: pan-x pan-y;
 }
 
 #draw-slot-panel.is-collapsed #draw-slot-grid {
@@ -3608,7 +3621,7 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
     width: var(--draw-card-width, 220px);
     min-height: 140px;
     flex: 0 0 var(--draw-card-width, 220px);
-    scroll-snap-align: start;
+    scroll-snap-align: center;
     max-width: 100%;
     min-width: 0;
     box-sizing: border-box;
@@ -6449,6 +6462,20 @@ body[data-theme="dark"] #tab-dashboard .dash-intro-sub {
     background: #ffffff;
 }
 
+#tab-draw .draw-studio-header,
+#tab-draw .draw-studio-body,
+#tab-mypage .section-title,
+#tab-mypage .mypage-grid,
+#tab-mypage #auth.section,
+#tab-qr .section-title,
+#tab-qr .qr-layout,
+#tab-store .store-shell-title,
+#tab-store .store-shell-card {
+    width: min(100%, 1280px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .section-kicker {
     display: inline-flex;
     align-items: center;
@@ -6486,15 +6513,6 @@ body[data-theme="dark"] #tab-dashboard .dash-intro-sub {
 #tab-store .store-shell-title {
     display: grid;
     gap: 10px;
-}
-
-#tab-mypage .mypage-grid,
-#tab-mypage #auth.section,
-#tab-qr .qr-layout,
-#tab-store .store-shell-card {
-    max-width: 1280px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 #tab-store .store-shell-card {
@@ -6576,7 +6594,21 @@ body[data-theme="dark"] #tab-store .store-shell-toolbar .ghost {
     #tab-qr .section-title,
     #tab-store .store-shell-title {
         padding: 22px 20px;
+    }
+
+    #tab-draw .draw-studio-header,
+    #tab-mypage .section-title,
+    #tab-qr .section-title,
+    #tab-store .store-shell-title {
         border-radius: 24px;
+    }
+
+    #tab-draw .draw-studio-body,
+    #tab-mypage .mypage-grid,
+    #tab-mypage #auth.section,
+    #tab-qr .qr-layout,
+    #tab-store .store-shell-card {
+        width: min(100%, 920px);
     }
 }
 
@@ -6594,6 +6626,13 @@ body[data-theme="dark"] #tab-store .store-shell-toolbar .ghost {
     #tab-qr .section-title,
     #tab-store .store-shell-title {
         padding: 18px 16px;
+        width: min(100%, 720px);
+    }
+
+    #tab-draw .draw-studio-header,
+    #tab-mypage .section-title,
+    #tab-qr .section-title,
+    #tab-store .store-shell-title {
         border-radius: 20px;
     }
 

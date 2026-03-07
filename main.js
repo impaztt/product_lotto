@@ -63,9 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleRulesBtn = document.getElementById('toggle-rules');
     const strategyButtons = Array.from(document.querySelectorAll('[data-strategy]'));
     const scenarioCards = Array.from(document.querySelectorAll('.draw-scenario-card[data-strategy]'));
-    const scenarioTracks = Array.from(document.querySelectorAll('.scenario-cards'));
-    const SCENARIO_DRAG_THRESHOLD_PX = 12;
-    const SCENARIO_CLICK_SUPPRESS_MS = 220;
+    const horizontalGestureTracks = Array.from(document.querySelectorAll('.scenario-cards, .draw-slot-grid'));
+    const SCENARIO_DRAG_THRESHOLD_PX = 8;
+    const SCENARIO_CLICK_SUPPRESS_MS = 140;
     let suppressScenarioClickUntil = 0;
     let drawWidthSyncRafId = 0;
     let activeStrategy = '';
@@ -807,7 +807,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.applyStrategyFromUI = applyStrategy;
 
-    scenarioTracks.forEach(track => {
+    horizontalGestureTracks.forEach(track => {
         const pointerStarts = new Map();
         let touchStartX = 0;
         let touchStartY = 0;
