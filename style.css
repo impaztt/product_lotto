@@ -6942,3 +6942,20 @@ body[data-theme="dark"] #tab-dashboard .dash-intro-sub {
         padding: 10px 4vw 0;
     }
 }
+
+/* Pull dashboard up to remove header-gap */
+#tab-dashboard.tab-panel.is-active {
+    margin-top: -40px;
+}
+
+@media (max-width: 960px) {
+    #tab-dashboard.tab-panel.is-active {
+        margin-top: -18px;
+    }
+}
+
+@media (max-width: 640px) {
+    #tab-dashboard.tab-panel.is-active {
+        margin-top: -16px;
+    }
+}
