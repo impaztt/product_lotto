@@ -6472,8 +6472,11 @@ body[data-theme="dark"] #tab-dashboard .dash-intro-sub {
 #tab-store .store-shell-title,
 #tab-store .store-shell-card {
     width: min(100%, 1280px);
+    max-width: 100%;
+    min-width: 0;
     margin-left: auto;
     margin-right: auto;
+    box-sizing: border-box;
 }
 
 .section-kicker {
