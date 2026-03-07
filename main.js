@@ -2598,6 +2598,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!tabId) {
             return;
         }
+        const targetButton = tabButtons.find(button => button.dataset.tab === tabId);
+        if (!targetButton) {
+            if (tabId !== 'dashboard') {
+                setActiveTab('dashboard', focusPanel, updateHash);
+            }
+            return;
+        }
         if (tabId !== 'draw') {
             setRulePickerOpen(false);
         }
