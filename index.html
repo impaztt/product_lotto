@@ -11,9 +11,8 @@
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/common.css?v=20260213">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/layout.css?v=20260212">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/main-layout.css?v=20260212">
-	<link rel="stylesheet" href="style.css?v=20260227_2">
+	<link rel="stylesheet" href="style.css?v=20260307_3">
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body data-theme="light">
     <header class="site-header">
@@ -1845,7 +1844,7 @@
 </div>
 </section>
 
-        <section id="tab-draw" class="tab-panel" role="tabpanel" aria-labelledby="tab-draw-btn" tabindex="0">
+        <section id="tab-draw" class="tab-panel app-shell app-shell--draw" role="tabpanel" aria-labelledby="tab-draw-btn" tabindex="0">
             <div class="draw-studio-header">
                 <div class="draw-studio-title">
                     <span class="draw-studio-kicker">Filter Studio</span>
@@ -2678,8 +2677,9 @@
 
         </section>
 
-        <section id="tab-mypage" class="tab-panel" role="tabpanel" aria-labelledby="tab-mypage-btn" tabindex="0">
+        <section id="tab-mypage" class="tab-panel app-shell" role="tabpanel" aria-labelledby="tab-mypage-btn" tabindex="0">
             <div class="section-title">
+                <span class="section-kicker">Account Center</span>
                 <h2>마이페이지</h2>
                 <p>나의 추첨 기록과 프리셋을 관리합니다.</p>
             </div>
@@ -2757,6 +2757,7 @@
 
             <section id="auth" class="section auth">
                 <div class="section-title">
+                    <span class="section-kicker">Member Access</span>
                     <h2>가입(첫 로그인) 및 로그인</h2>
                     <p>구글 또는 카카오 계정으로 간편하게 시작할 수 있습니다.</p>
                 </div>
@@ -2794,18 +2795,30 @@
             </section>
         </section>
 
-        <section id="tab-store" class="tab-panel store-webview-tab" role="tabpanel" aria-labelledby="tab-store-btn" tabindex="0">
-            <iframe
-                class="store-webview-frame"
-                src="/mirror/proxy?url=https%3A%2F%2Fwww.dhlottery.co.kr%2Fprchsplcsrch%2Fhome"
-                title="동행복권 판매점 찾기"
-                loading="eager"
-                referrerpolicy="strict-origin-when-cross-origin">
-            </iframe>
+        <section id="tab-store" class="tab-panel app-shell app-shell--store store-webview-tab" role="tabpanel" aria-labelledby="tab-store-btn" tabindex="0">
+            <div class="section-title store-shell-title">
+                <span class="section-kicker">Nearby Stores</span>
+                <h2>판매점 찾기</h2>
+                <p>동행복권 공식 판매점 페이지를 앱 안에서 바로 확인하고, 필요하면 새 창으로 전환할 수 있습니다.</p>
+            </div>
+            <div class="store-shell-card">
+                <div class="store-shell-toolbar">
+                    <span class="badge muted">공식 페이지 미러</span>
+                    <button id="store-open-official-btn" class="ghost" type="button">공식 페이지 열기</button>
+                </div>
+                <iframe
+                    class="store-webview-frame"
+                    src="/mirror/proxy?url=https%3A%2F%2Fwww.dhlottery.co.kr%2Fprchsplcsrch%2Fhome"
+                    title="동행복권 판매점 찾기"
+                    loading="eager"
+                    referrerpolicy="strict-origin-when-cross-origin">
+                </iframe>
+            </div>
         </section>
 
-        <section id="tab-qr" class="tab-panel" role="tabpanel" aria-labelledby="tab-qr-btn" tabindex="0">
+        <section id="tab-qr" class="tab-panel app-shell" role="tabpanel" aria-labelledby="tab-qr-btn" tabindex="0">
             <div class="section-title">
+                <span class="section-kicker">Ticket Scan</span>
                 <h2>QR 스캔</h2>
                 <p id="qr-status">카메라 권한을 허용한 뒤 로또 QR을 비춰 당첨 여부를 확인하세요.</p>
             </div>
@@ -2850,51 +2863,6 @@
             </div>
         </section>
 
-        <section id="tab-insights" class="tab-panel" role="tabpanel" aria-labelledby="tab-insights-btn" tabindex="0">
-            <div class="section-title">
-                <h2>시각화 인사이트</h2>
-                <p id="insights-updated">추첨 탭 데이터를 기반으로 실시간 분석 지표를 표시합니다.</p>
-            </div>
-            <div class="insights-grid">
-                <article class="insight-card highlight">
-                    <h3>핵심 요약</h3>
-                    <div class="insight-summary">
-                        <div><span>선택 규칙</span><strong id="insight-selected-rules">0개</strong></div>
-                        <div><span>남은 조합 비중</span><strong id="insight-remaining-ratio">100%</strong></div>
-                        <div><span>기대 개선</span><strong id="insight-benefit">변화 없음</strong></div>
-                    </div>
-                </article>
-                <article class="insight-card">
-                    <h3>조합 현황</h3>
-                    <div class="insight-meter">
-                        <div class="insight-meter-track"><span id="insight-meter-fill"></span></div>
-                        <div id="insight-meter-label">남은 조합 비중: 100%</div>
-                    </div>
-                    <div class="insight-dual">
-                        <div><span>남은 조합</span><strong id="insight-remaining-combos">8,145,060개</strong></div>
-                        <div><span>제외 조합</span><strong id="insight-excluded-combos">0개</strong></div>
-                    </div>
-                </article>
-                <article class="insight-card">
-                    <h3>등수별 변화</h3>
-                    <div class="insight-odds-list" id="insight-odds-list">
-                        <div id="insight-odds-1">1등: 1 / 8,145,060 → 1 / 8,145,060</div>
-                        <div id="insight-odds-2">2등: 1 / 1,357,510 → 1 / 1,357,510</div>
-                        <div id="insight-odds-3">3등: 1 / 35,724 → 1 / 35,724</div>
-                        <div id="insight-odds-4">4등: 1 / 733 → 1 / 733</div>
-                        <div id="insight-odds-5">5등: 1 / 45 → 1 / 45</div>
-                    </div>
-                </article>
-                <article class="insight-card">
-                    <h3>시나리오 비교</h3>
-                    <ol class="insight-scenario-list" id="insight-scenario-list"></ol>
-                </article>
-                <article class="insight-card wide">
-                    <h3>최근 생성 번호</h3>
-                    <pre id="insight-generated-list">아직 생성된 번호가 없습니다.</pre>
-                </article>
-            </div>
-        </section>
     </main>
 
     <nav class="bottom-tab-bar" role="tablist" aria-label="하단 탭">
@@ -2964,12 +2932,13 @@
         <button class="sheet-close" type="button">닫기</button>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <script src="firebase-config.js?v=20260302_1"></script>
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore-compat.js"></script>
-    <script src="main.js?v=20260302_6"></script>
+    <script src="scripts/lotto-tabs.js?v=20260307_1"></script>
+    <script src="scripts/lotto-rules.js?v=20260307_1"></script>
+    <script src="main.js?v=20260307_1"></script>
 </body>
 </html>

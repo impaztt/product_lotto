@@ -6,23 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawCountChips = Array.from(document.querySelectorAll('.draw-count-chip[data-draw-count]'));
     const drawCopyAllBtn = document.getElementById('draw-copy-all-btn');
     const drawCopyStatusEl = document.getElementById('draw-copy-status');
-    const insightsUpdatedEl = document.getElementById('insights-updated');
-    const insightSelectedRulesEl = document.getElementById('insight-selected-rules');
-    const insightRemainingRatioEl = document.getElementById('insight-remaining-ratio');
-    const insightBenefitEl = document.getElementById('insight-benefit');
-    const insightMeterFillEl = document.getElementById('insight-meter-fill');
-    const insightMeterLabelEl = document.getElementById('insight-meter-label');
-    const insightRemainingCombosEl = document.getElementById('insight-remaining-combos');
-    const insightExcludedCombosEl = document.getElementById('insight-excluded-combos');
-    const insightOddsEls = {
-        1: document.getElementById('insight-odds-1'),
-        2: document.getElementById('insight-odds-2'),
-        3: document.getElementById('insight-odds-3'),
-        4: document.getElementById('insight-odds-4'),
-        5: document.getElementById('insight-odds-5')
-    };
-    const insightScenarioListEl = document.getElementById('insight-scenario-list');
-    const insightGeneratedListEl = document.getElementById('insight-generated-list');
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
     const ruleInputs = Array.from(document.querySelectorAll('.rules-grid input[type="checkbox"]'));
@@ -86,9 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let suppressScenarioClickUntil = 0;
     let drawWidthSyncRafId = 0;
     let activeStrategy = '';
-    // Filled later with Object.assign to avoid temporal-dead-zone access during early init.
-    const PRESETS = {};
-    const PRESETS_LABEL = {};
+    const storeOpenOfficialBtn = document.getElementById('store-open-official-btn');
     const groupLevelButtons = Array.from(document.querySelectorAll('[data-group-level]'));
     const slotSaveButtons = Array.from(document.querySelectorAll('[data-slot-save]'));
     const slotApplyButtons = Array.from(document.querySelectorAll('[data-slot-apply]'));
@@ -143,6 +124,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = Array.from(document.querySelectorAll('.tab-btn[data-tab]'));
     const tabPanels = Array.from(document.querySelectorAll('.tab-panel'));
     const tabLinks = Array.from(document.querySelectorAll('[data-tab-link]'));
+    const {
+        PRESETS,
+        PRESETS_LABEL,
+        RULE_DETAILS,
+        RULE_SAMPLE_MAP,
+        RULE_STATS,
+        RULES,
+        TOTAL_COMBOS,
+        combination,
+        countBy,
+        countHigh,
+        countLow,
+        countMultiples,
+        countPrimes,
+        getSampleBallClass,
+        longestConsecutiveRun,
+        maxInSameDecade,
+        maxSameLastDigit
+    } = window.LottoRules;
+    const { createTabController } = window.LottoTabs;
     const drawHorizontalTracks = [scenarioGrid, slotGrid].filter(Boolean);
     const excludeNumberValues = new Set();
     let lastGeneratedDraws = [];
@@ -192,60 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let roundSearchInput = null;
     let roundSearchBtn = null;
 
-    const RULE_SAMPLE_MAP = {
-        all_odd: [1, 3, 5, 7, 9, 11],
-        all_even: [2, 4, 6, 8, 10, 12],
-        five_odd_one_even: [1, 3, 5, 7, 9, 12],
-        five_even_one_odd: [2, 4, 6, 8, 10, 13],
-        four_odd_two_even: [1, 3, 5, 7, 10, 12],
-        four_even_two_odd: [2, 4, 6, 8, 11, 13],
-        multiples_of_2_4_plus: [2, 4, 6, 8, 11, 13],
-        multiples_of_2_5_plus: [2, 4, 6, 8, 10, 13],
-        multiples_of_3_3_plus: [3, 6, 9, 12, 22, 31],
-        multiples_of_4_3_plus: [4, 8, 12, 19, 27, 33],
-        multiples_of_5_3_plus: [5, 10, 15, 22, 31, 37],
-        multiples_of_6_3_plus: [6, 12, 18, 25, 33, 41],
-        multiples_of_7_3_plus: [7, 14, 21, 26, 34, 42],
-        consecutive_3_plus: [4, 5, 6, 18, 29, 41],
-        consecutive_4_plus: [9, 10, 11, 12, 25, 38],
-        same_last_digit_3_plus: [1, 11, 21, 4, 18, 33],
-        same_last_digit_4_plus: [2, 12, 22, 32, 7, 19],
-        last_digit_2_plus: [3, 13, 24, 35, 7, 18],
-        last_digit_zero_2_plus: [10, 20, 28, 33, 41, 5],
-        last_digit_five_2_plus: [5, 15, 23, 34, 42, 45],
-        same_decade_4_plus: [1, 4, 7, 9, 12, 33],
-        same_decade_5_plus: [2, 4, 6, 8, 9, 21],
-        all_low_or_high: [1, 4, 7, 12, 18, 22],
-        low_or_high_5_plus: [1, 3, 8, 12, 18, 24],
-        low_1_15_4_plus: [1, 4, 7, 11, 22, 33],
-        mid_16_30_4_plus: [16, 19, 22, 28, 7, 41],
-        high_31_45_4_plus: [31, 34, 38, 41, 9, 20],
-        tight_range: [5, 7, 9, 12, 18, 22],
-        extreme_sum: [1, 3, 5, 7, 9, 11],
-        sum_low_100: [1, 5, 7, 12, 20, 24],
-        sum_high_180: [30, 31, 32, 33, 34, 35],
-        prime_4_plus: [2, 3, 5, 7, 11, 20],
-        prime_5_plus: [2, 3, 5, 7, 11, 26],
-        prime_1_or_less: [4, 8, 12, 16, 18, 23],
-        prime_0: [4, 8, 12, 16, 18, 22]
-    };
-
-    function getSampleBallClass(number) {
-        if (number <= 10) {
-            return 'range-1';
-        }
-        if (number <= 20) {
-            return 'range-2';
-        }
-        if (number <= 30) {
-            return 'range-3';
-        }
-        if (number <= 40) {
-            return 'range-4';
-        }
-        return 'range-5';
-    }
-
     function injectRuleSamples() {
         ruleCards.forEach(card => {
             const input = card.querySelector('input.rule-input');
@@ -278,17 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let compareResult = null;
     let recentCountSelect = null;
     let trendChart = null;
-    const storeStatusEl = document.getElementById('store-status');
-    const storeLocateBtn = document.getElementById('store-locate-btn');
-    const storeRetryBtn = document.getElementById('store-retry-btn');
-    const storeRadiusSelect = document.getElementById('store-radius');
-    const storeMapEl = document.getElementById('store-map');
-    const storeTableBodyEl = document.getElementById('store-table-body');
-    const storeTableEmptyEl = document.getElementById('store-table-empty');
-    const storeGridEl = document.getElementById('store-grid');
-    const storeGridEmptyEl = document.getElementById('store-grid-empty');
-    const storeNearestRouteBtn = document.getElementById('store-nearest-route-btn');
-    const storeSwitchQrBtn = document.getElementById('store-switch-qr-btn');
     const qrStatusEl = document.getElementById('qr-status');
     const qrVideoEl = document.getElementById('qr-video');
     const qrCanvasEl = document.getElementById('qr-canvas');
@@ -315,13 +251,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentWeeklyData = null;
     let latestAvailableRound = null;
     const roundMetaByNo = new Map();
-    let storeMap = null;
-    let storeMarkersLayer = null;
-    let storeUserMarker = null;
-    let storeLastPosition = null;
-    let storeLastResults = [];
-    let storeAutoLoaded = false;
-    let storeLocateInFlight = false;
     let firebaseReady = false;
     let firebaseAuth = null;
     let firebaseDb = null;
@@ -339,6 +268,33 @@ document.addEventListener('DOMContentLoaded', () => {
     let weeklyExpectedOverride = null;
     let weeklyExpectedUpdatedAt = 0;
     const DRAW_ENTRY_LOCAL_KEY = 'lotto_guest_tracking_id';
+
+    const tabController = createTabController({
+        tabButtons,
+        tabPanels,
+        tabLinks,
+        defaultTab: 'dashboard',
+        onWillChange(tabId) {
+            if (tabId !== 'draw') {
+                setRulePickerOpen(false);
+            }
+        },
+        onDidChange({ tabId }) {
+            if (tabId === 'draw') {
+                scheduleDrawHorizontalWidthSync();
+            }
+            if (tabId === 'qr') {
+                startQrScanner();
+            }
+            if (tabId !== 'qr' && qrStream) {
+                stopQrScanner('QR 탭을 벗어나 스캔을 중지했습니다.');
+            }
+        },
+        onLinkNavigate() {
+            syncMenuState(false);
+        }
+    });
+    const { setActiveTab, syncInitialTab } = tabController;
     let guestTrackingId = '';
     let lastWinDashboardRound = null;
 
@@ -430,8 +386,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function normalizeWeeklyLinks() {
-        const root = document.getElementById('tab-weekly');
+    function normalizeRelativeResourceUrls(rootId, { rewriteSrcset = false } = {}) {
+        const root = document.getElementById(rootId);
         if (!root) {
             return;
         }
@@ -448,26 +404,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 el.setAttribute('href', `${prefix}${href}`);
             }
         });
-    }
-
-    function normalizeDashboardLinks() {
-        const root = document.getElementById('tab-dashboard');
-        if (!root) {
+        if (!rewriteSrcset) {
             return;
         }
-        const prefix = 'https://www.dhlottery.co.kr';
-        root.querySelectorAll('[src]').forEach(el => {
-            const src = el.getAttribute('src');
-            if (src && src.startsWith('/')) {
-                el.setAttribute('src', `${prefix}${src}`);
-            }
-        });
-        root.querySelectorAll('a[href]').forEach(el => {
-            const href = el.getAttribute('href');
-            if (href && href.startsWith('/')) {
-                el.setAttribute('href', `${prefix}${href}`);
-            }
-        });
         root.querySelectorAll('[srcset]').forEach(el => {
             const srcset = el.getAttribute('srcset');
             if (!srcset) {
@@ -485,6 +424,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 .join(', ');
             el.setAttribute('srcset', rewritten);
         });
+    }
+
+    function normalizeWeeklyLinks() {
+        normalizeRelativeResourceUrls('tab-weekly');
+    }
+
+    function normalizeDashboardLinks() {
+        normalizeRelativeResourceUrls('tab-dashboard', { rewriteSrcset: true });
     }
 
     function initWeeklyIntroUi() {
@@ -596,45 +543,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateWeeklyCountdownDisplay();
         updateWeeklyNextDrawDisplay();
     }, 1000);
-
-    const TOTAL_COMBOS = Number(combination(45, 6));
-    const RULE_STATS = {
-        all_odd: { ratio: 0.012025, excluded: 97944 },
-        all_even: { ratio: 0.00951, excluded: 77460 },
-        five_odd_one_even: { ratio: 0.09058, excluded: 737780 },
-        five_even_one_odd: { ratio: 0.073665, excluded: 600006 },
-        four_odd_two_even: { ratio: 0.251035, excluded: 2044695 },
-        four_even_two_odd: { ratio: 0.228525, excluded: 1861350 },
-        multiples_of_2_4_plus: { ratio: 0.3117, excluded: 2538815 },
-        multiples_of_3_3_plus: { ratio: 0.31203, excluded: 2541503 },
-        multiples_of_4_3_plus: { ratio: 0.14519, excluded: 1182581 },
-        multiples_of_5_3_plus: { ratio: 0.08387, excluded: 683126 },
-        multiples_of_6_3_plus: { ratio: 0.03924, excluded: 319612 },
-        multiples_of_7_3_plus: { ratio: 0.02339, excluded: 190513 },
-        consecutive_3_plus: { ratio: 0.056345, excluded: 458933 },
-        consecutive_4_plus: { ratio: 0.00392, excluded: 31929 },
-        same_last_digit_3_plus: { ratio: 0.089535, excluded: 729268 },
-        same_last_digit_4_plus: { ratio: 0.003015, excluded: 24557 },
-        last_digit_2_plus: { ratio: 0.79074, excluded: 6440625 },
-        last_digit_zero_2_plus: { ratio: 0.08012, excluded: 652582 },
-        last_digit_five_2_plus: { ratio: 0.12398, excluded: 1009825 },
-        same_decade_4_plus: { ratio: 0.06101, excluded: 496930 },
-        same_decade_5_plus: { ratio: 0.004055, excluded: 33028 },
-        all_low_or_high: { ratio: 0.02172, excluded: 176911 },
-        low_or_high_5_plus: { ratio: 0.187055, excluded: 1523574 },
-        low_1_15_4_plus: { ratio: 0.08482, excluded: 690864 },
-        mid_16_30_4_plus: { ratio: 0.08415, excluded: 685407 },
-        high_31_45_4_plus: { ratio: 0.083835, excluded: 682841 },
-        tight_range: { ratio: 0.040695, excluded: 331463 },
-        extreme_sum: { ratio: 0.045385, excluded: 369664 },
-        sum_low_100: { ratio: 0.10913, excluded: 888870 },
-        sum_high_180: { ratio: 0.085025, excluded: 692534 },
-        prime_4_plus: { ratio: 0.065145, excluded: 530610 },
-        prime_5_plus: { ratio: 0.00799, excluded: 65065 },
-        prime_1_or_less: { ratio: 0.38143, excluded: 3106770 },
-        prime_0: { ratio: 0.089945, excluded: 732607 },
-        multiples_of_2_5_plus: { ratio: 0.082585, excluded: 672660 }
-    };
 
     if (generateBtn) {
         generateBtn.addEventListener('click', () => {
@@ -800,47 +708,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (storeLocateBtn) {
-        storeLocateBtn.addEventListener('click', () => {
-            locateAndLoadStores();
-        });
-    }
-
-    if (storeRetryBtn) {
-        storeRetryBtn.addEventListener('click', () => {
-            if (storeLastPosition) {
-                loadNearbyStores(storeLastPosition);
-                return;
-            }
-            locateAndLoadStores();
-        });
-    }
-
-    if (storeRadiusSelect) {
-        storeRadiusSelect.addEventListener('change', () => {
-            if (storeLastPosition) {
-                loadNearbyStores(storeLastPosition);
-            }
-        });
-    }
-
-    if (storeNearestRouteBtn) {
-        storeNearestRouteBtn.addEventListener('click', () => {
-            if (!storeLastResults.length) {
-                if (storeStatusEl) {
-                    storeStatusEl.textContent = '먼저 현재 위치로 판매점을 조회한 뒤 길찾기를 이용해 주세요.';
-                }
-                return;
-            }
-            const nearest = storeLastResults[0];
-            const url = `https://www.google.com/maps/dir/?api=1&destination=${nearest.lat},${nearest.lng}`;
-            window.location.assign(url);
-        });
-    }
-
-    if (storeSwitchQrBtn) {
-        storeSwitchQrBtn.addEventListener('click', () => {
-            setActiveTab('qr', true);
+    if (storeOpenOfficialBtn) {
+        storeOpenOfficialBtn.addEventListener('click', () => {
+            window.open('https://www.dhlottery.co.kr/prchsplcsrch/home', '_blank', 'noopener');
         });
     }
 
@@ -897,19 +767,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            setActiveTab(button.dataset.tab, true);
-        });
-    });
-
-    tabLinks.forEach(link => {
-        link.addEventListener('click', event => {
-            event.preventDefault();
-            setActiveTab(link.dataset.tabLink, false);
-            syncMenuState(false);
-        });
-    });
+    tabController.bind();
 
     mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
@@ -1419,7 +1277,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (numbers.length === 0) {
             return true;
         }
-        return activeRules.some(rule => rule.exclude(numbers));
+        return activeRules.some(rule => rule.exclude(numbers, excludeNumberValues));
     }
 
     function generateUniqueNumbers(count, min, max) {
@@ -1473,7 +1331,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 ruleIds: options.ruleIds
             });
         }
-        refreshInsightsDashboard();
     }
 
     function syncDrawCountChips(shouldCenterActive = false) {
@@ -2043,7 +1900,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 sourceMode: 'premium'
             });
         }
-        refreshInsightsDashboard();
     }
 
     function setPremiumCopyButtonState(enabled) {
@@ -2579,409 +2435,6 @@ document.addEventListener('DOMContentLoaded', () => {
             track.style.setProperty('--draw-track-width', `${trackWidth}px`);
             track.style.setProperty('--draw-card-width', `${cardWidth}px`);
         });
-    }
-
-    function syncInitialTab() {
-        if (!tabButtons.length || !tabPanels.length) {
-            return;
-        }
-        const hash = window.location.hash;
-        if (hash && hash.startsWith('#tab-')) {
-            const target = hash.replace('#tab-', '');
-            setActiveTab(target, false, false);
-        } else {
-            setActiveTab('dashboard', false, false);
-        }
-    }
-
-    function setActiveTab(tabId, focusPanel, updateHash = true) {
-        if (!tabId) {
-            return;
-        }
-        const targetButton = tabButtons.find(button => button.dataset.tab === tabId);
-        if (!targetButton) {
-            if (tabId !== 'dashboard') {
-                setActiveTab('dashboard', focusPanel, updateHash);
-            }
-            return;
-        }
-        if (tabId !== 'draw') {
-            setRulePickerOpen(false);
-        }
-        const targetPanelId = `tab-${tabId}`;
-        const targetPanel = tabPanels.find(panel => panel.id === targetPanelId);
-        if (!targetPanel) {
-            return;
-        }
-        tabButtons.forEach(button => {
-            const isActive = button.dataset.tab === tabId;
-            button.classList.toggle('is-active', isActive);
-            button.setAttribute('aria-selected', String(isActive));
-        });
-        tabPanels.forEach(panel => {
-            panel.classList.toggle('is-active', panel.id === targetPanelId);
-        });
-        tabLinks.forEach(link => {
-            link.classList.toggle('is-active', link.dataset.tabLink === tabId);
-        });
-        if (updateHash) {
-            history.replaceState(null, '', `#${targetPanelId}`);
-        }
-        if (tabId === 'store') {
-            window.setTimeout(() => {
-                if (storeMap && typeof storeMap.invalidateSize === 'function') {
-                    storeMap.invalidateSize();
-                }
-            }, 80);
-            if (!storeAutoLoaded && !storeLocateInFlight && !storeLastPosition) {
-                storeAutoLoaded = true;
-                locateAndLoadStores();
-            }
-        }
-        if (tabId === 'draw') {
-            scheduleDrawHorizontalWidthSync();
-        }
-        if (tabId === 'insights') {
-            refreshInsightsDashboard();
-        }
-        if (tabId === 'qr') {
-            startQrScanner();
-        }
-        if (tabId !== 'qr' && qrStream) {
-            stopQrScanner('QR 탭을 벗어나 스캔을 중지했습니다.');
-        }
-        if (focusPanel) {
-            targetPanel.focus({ preventScroll: true });
-            targetPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    }
-
-    function locateAndLoadStores() {
-        if (!storeStatusEl) {
-            return;
-        }
-        if (storeLocateInFlight) {
-            return;
-        }
-        if (!navigator.geolocation) {
-            storeStatusEl.textContent = '현재 브라우저에서는 위치 조회를 지원하지 않습니다.';
-            return;
-        }
-        storeLocateInFlight = true;
-        storeStatusEl.textContent = '현재 위치 확인 중입니다. 위치 권한을 허용해 주세요.';
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                storeLocateInFlight = false;
-                storeLastPosition = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
-                loadNearbyStores(storeLastPosition);
-            },
-            error => {
-                storeLocateInFlight = false;
-                storeAutoLoaded = false;
-                const message = mapGeoError(error);
-                storeStatusEl.textContent = message;
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 60000
-            }
-        );
-    }
-
-    async function loadNearbyStores(position) {
-        if (!position || !Number.isFinite(position.lat) || !Number.isFinite(position.lng)) {
-            return;
-        }
-        if (!storeStatusEl) {
-            return;
-        }
-        storeStatusEl.textContent = '주변 판매점을 조회하고 있습니다. 잠시만 기다려 주세요.';
-        const map = ensureStoreMap(position);
-        if (map) {
-            map.setView([position.lat, position.lng], 15);
-            if (storeUserMarker) {
-                storeUserMarker.setLatLng([position.lat, position.lng]);
-            } else {
-                storeUserMarker = window.L.marker([position.lat, position.lng], {
-                    icon: window.L.divIcon({
-                        className: 'user-pin leaflet-div-icon',
-                        iconSize: [14, 14],
-                        iconAnchor: [7, 7]
-                    }),
-                    title: '현재 위치'
-                }).addTo(map).bindPopup('현재 위치');
-            }
-        }
-
-        const radius = getStoreRadius();
-        try {
-            const stores = await fetchNearbyStores(position, radius);
-            renderStoreResults(stores, position);
-            storeStatusEl.textContent = stores.length
-                ? `반경 ${Math.round(radius / 1000 * 10) / 10}km 내 판매점 ${stores.length}곳을 찾았습니다. 하단 버튼으로 길찾기 또는 QR 스캔으로 이동하세요.`
-                : '주변 판매점이 적게 검색되었습니다. 반경을 3km 이상으로 넓혀 다시 조회해 주세요.';
-        } catch (error) {
-            logProxyError('storeFinder', error, { position, radius });
-            renderStoreResults([], position);
-            const detail = error && error.message ? ` (${error.message})` : '';
-            storeStatusEl.textContent = `판매점 데이터를 불러오지 못했습니다. API 경로 또는 네트워크를 확인해 주세요.${detail}`;
-        }
-    }
-
-    function ensureStoreMap(center) {
-        if (!storeMapEl) {
-            if (storeStatusEl) {
-                storeStatusEl.textContent = '지도를 초기화하지 못했습니다. 페이지를 새로고침해 주세요.';
-            }
-            return null;
-        }
-        if (!window.L) {
-            if (storeMapEl) {
-                storeMapEl.innerHTML = '<div class="store-empty">지도를 불러오지 못했습니다. 목록/그리드는 정상 조회됩니다.</div>';
-            }
-            return null;
-        }
-        if (!storeMap) {
-            storeMap = window.L.map(storeMapEl, {
-                zoomControl: true
-            }).setView([center.lat, center.lng], 14);
-            window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; OpenStreetMap'
-            }).addTo(storeMap);
-            storeMarkersLayer = window.L.layerGroup().addTo(storeMap);
-        }
-        return storeMap;
-    }
-
-    async function fetchNearbyStores(position, radius) {
-        const proxyCandidates = getStoreProxyCandidates();
-        const params = new URLSearchParams({
-            lat: String(position.lat),
-            lng: String(position.lng),
-            radius: String(radius)
-        });
-        const errors = [];
-
-        for (const proxyBase of proxyCandidates) {
-            const url = `${proxyBase}?${params.toString()}`;
-            try {
-                const payload = await fetchStoreProxyPayload(url);
-                const list = Array.isArray(payload.stores) ? payload.stores : [];
-                return list
-                    .map(item => ({
-                        name: item.name || '복권 판매점',
-                        address: item.address || '',
-                        lat: Number(item.lat),
-                        lng: Number(item.lng),
-                        distance: Number.isFinite(Number(item.distance))
-                            ? Number(item.distance)
-                            : distanceInMeters(position.lat, position.lng, Number(item.lat), Number(item.lng))
-                    }))
-                    .filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lng))
-                    .sort((a, b) => a.distance - b.distance)
-                    .slice(0, 30);
-            } catch (error) {
-                errors.push(`${proxyBase}: ${error && error.message ? error.message : String(error)}`);
-            }
-        }
-
-        throw new Error(errors.join(' | ') || 'store proxy unavailable');
-    }
-
-    async function fetchStoreProxyPayload(url) {
-        const controller = new AbortController();
-        const timeoutId = window.setTimeout(() => controller.abort(), 8000);
-        try {
-            const response = await fetch(url, {
-                cache: 'no-store',
-                signal: controller.signal
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-            const payload = await response.json();
-            if (!payload || payload.returnValue !== 'success') {
-                throw new Error(payload?.message || 'invalid payload');
-            }
-            return payload;
-        } finally {
-            window.clearTimeout(timeoutId);
-        }
-    }
-
-    function getStoreProxyCandidates() {
-        const raw = [
-            window.STORE_PROXY_URL,
-            '/api/stores',
-            '/functions/api/stores',
-            '/.netlify/functions/stores'
-        ];
-        return raw
-            .map(value => String(value || '').trim())
-            .filter(Boolean)
-            .filter((value, index, arr) => arr.indexOf(value) === index);
-    }
-
-    function renderStoreResults(stores, position) {
-        storeLastResults = Array.isArray(stores) ? stores : [];
-        if (storeMarkersLayer) {
-            storeMarkersLayer.clearLayers();
-        }
-        if (storeTableBodyEl) {
-            storeTableBodyEl.innerHTML = '';
-        }
-        if (storeTableEmptyEl) {
-            storeTableEmptyEl.hidden = true;
-        }
-        if (storeGridEl) {
-            storeGridEl.innerHTML = '';
-        }
-        if (storeGridEmptyEl) {
-            storeGridEmptyEl.hidden = true;
-        }
-        if (!stores.length) {
-            if (storeTableEmptyEl) {
-                storeTableEmptyEl.hidden = false;
-            }
-            if (storeGridEmptyEl) {
-                storeGridEmptyEl.hidden = false;
-            }
-            return;
-        }
-        stores.forEach((store, index) => {
-            if (storeMarkersLayer) {
-                window.L.marker([store.lat, store.lng], {
-                    icon: window.L.divIcon({
-                        className: 'store-pin leaflet-div-icon',
-                        iconSize: [14, 14],
-                        iconAnchor: [7, 7]
-                    }),
-                    title: store.name
-                })
-                    .addTo(storeMarkersLayer)
-                    .bindPopup(`${escapeHtml(store.name)}<br>${escapeHtml(store.address || '')}<br>${formatDistance(store.distance)}`);
-            }
-            if (!storeTableBodyEl) {
-                return;
-            }
-            const row = document.createElement('tr');
-            row.tabIndex = 0;
-            const routeUrl = getRouteUrl(store);
-            row.innerHTML = `
-                <td class="store-rank">${index + 1}</td>
-                <td><strong>${escapeHtml(store.name)}</strong></td>
-                <td>${escapeHtml(store.address || '주소 정보 없음')}</td>
-                <td class="store-distance">${formatDistance(store.distance)}</td>
-                <td class="store-action"><button type="button" class="store-route-btn">길찾기</button></td>
-            `;
-            row.addEventListener('click', () => {
-                if (storeMap) {
-                    storeMap.setView([store.lat, store.lng], 17);
-                }
-            });
-            row.addEventListener('keydown', event => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    row.click();
-                }
-            });
-            const routeBtn = row.querySelector('.store-route-btn');
-            if (routeBtn) {
-                routeBtn.addEventListener('click', event => {
-                    event.stopPropagation();
-                    window.location.assign(routeUrl);
-                });
-            }
-            storeTableBodyEl.appendChild(row);
-
-            if (storeGridEl) {
-                const card = document.createElement('div');
-                card.className = 'store-card';
-                card.innerHTML = `
-                    <strong>${escapeHtml(store.name)}</strong>
-                    <div class="store-meta">${escapeHtml(store.address || '주소 정보 없음')}</div>
-                    <div class="store-distance">${formatDistance(store.distance)}</div>
-                    <button type="button" class="store-route-btn">길찾기</button>
-                `;
-                card.addEventListener('click', () => {
-                    if (storeMap) {
-                        storeMap.setView([store.lat, store.lng], 17);
-                    }
-                });
-                const cardBtn = card.querySelector('.store-route-btn');
-                if (cardBtn) {
-                    cardBtn.addEventListener('click', event => {
-                        event.stopPropagation();
-                        window.location.assign(routeUrl);
-                    });
-                }
-                storeGridEl.appendChild(card);
-            }
-        });
-
-        if (storeMap && stores.length) {
-            const bounds = window.L.latLngBounds([
-                [position.lat, position.lng],
-                ...stores.map(store => [store.lat, store.lng])
-            ]);
-            storeMap.fitBounds(bounds, { padding: [24, 24], maxZoom: 16 });
-            window.setTimeout(() => {
-                storeMap.invalidateSize();
-            }, 60);
-        }
-    }
-
-    function getRouteUrl(store) {
-        return `https://www.google.com/maps/dir/?api=1&destination=${store.lat},${store.lng}`;
-    }
-
-    function getStoreRadius() {
-        const value = Number(storeRadiusSelect ? storeRadiusSelect.value : 2000);
-        if (!Number.isFinite(value) || value <= 0) {
-            return 2000;
-        }
-        return value;
-    }
-
-    function formatDistance(meters) {
-        if (!Number.isFinite(meters) || meters < 0) {
-            return '-';
-        }
-        if (meters < 1000) {
-            return `${Math.round(meters)}m`;
-        }
-        return `${(meters / 1000).toFixed(2)}km`;
-    }
-
-    function distanceInMeters(lat1, lon1, lat2, lon2) {
-        const toRad = degree => degree * (Math.PI / 180);
-        const earth = 6371000;
-        const dLat = toRad(lat2 - lat1);
-        const dLon = toRad(lon2 - lon1);
-        const a = Math.sin(dLat / 2) ** 2
-            + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-        return 2 * earth * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    }
-
-    function mapGeoError(error) {
-        if (!error || typeof error.code !== 'number') {
-            return '위치 정보를 가져오지 못했습니다.';
-        }
-        if (error.code === 1) {
-            return '위치 권한이 거부되었습니다. 브라우저 권한을 허용해 주세요.';
-        }
-        if (error.code === 2) {
-            return '현재 위치를 확인할 수 없습니다. GPS/네트워크 상태를 확인해 주세요.';
-        }
-        if (error.code === 3) {
-            return '위치 요청 시간이 초과되었습니다. 다시 시도해 주세요.';
-        }
-        return '위치 정보를 가져오지 못했습니다.';
     }
 
     function escapeHtml(value) {
@@ -4260,7 +3713,6 @@ document.addEventListener('DOMContentLoaded', () => {
             remainingMeterLabel.textContent = `남은 조합 비중: ${pctLabel}%`;
         }
         updateAdjustedOdds(remainingRatio);
-        refreshInsightsDashboard();
     }
 
     function computeBaseOdds() {
@@ -4411,87 +3863,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 improveEl.textContent = `제외 비중: ${excludedPct}% · 남는 비중: ${remainPct}%`;
             }
         });
-        refreshInsightsDashboard();
-    }
-
-    function refreshInsightsDashboard() {
-        if (!insightSelectedRulesEl) {
-            return;
-        }
-        const selectedCount = ruleInputs.filter(input => input.checked).length;
-        const ratioPct = Math.max(0, Math.min(100, Math.round(currentRemainingRatio * 1000) / 10));
-        const benefitPct = Math.max(0, Math.min(100, Math.round((1 - currentRemainingRatio) * 100)));
-
-        insightSelectedRulesEl.textContent = `${selectedCount}개`;
-        if (insightRemainingRatioEl) {
-            insightRemainingRatioEl.textContent = `${ratioPct}%`;
-        }
-        if (insightBenefitEl) {
-            insightBenefitEl.textContent = benefitPct > 0 ? `유리 ${benefitPct}%` : '변화 없음';
-        }
-        if (insightMeterFillEl) {
-            insightMeterFillEl.style.width = `${ratioPct}%`;
-        }
-        if (insightMeterLabelEl) {
-            insightMeterLabelEl.textContent = `남은 조합 비중: ${ratioPct}%`;
-        }
-        if (insightRemainingCombosEl) {
-            insightRemainingCombosEl.textContent = `${formatNumber(Math.max(1, currentRemainingCombos || TOTAL_COMBOS))}개`;
-        }
-        if (insightExcludedCombosEl) {
-            insightExcludedCombosEl.textContent = `${formatNumber(Math.max(0, currentExcludedCombos))}개`;
-        }
-
-        const baseOdds = {
-            1: TOTAL_COMBOS,
-            2: Math.round(TOTAL_COMBOS / 6),
-            3: Math.round(TOTAL_COMBOS / 228),
-            4: Math.round(TOTAL_COMBOS / (combination(6, 4) * combination(39, 2))),
-            5: Math.round(TOTAL_COMBOS / (combination(6, 3) * combination(39, 3)))
-        };
-        Object.entries(baseOdds).forEach(([rank, base]) => {
-            const el = insightOddsEls[rank];
-            if (!el) {
-                return;
-            }
-            const adjusted = Math.max(1, Math.round(base * Math.max(0.000001, currentRemainingRatio)));
-            el.textContent = `${rank}등: 1 / ${formatNumber(base)} → 1 / ${formatNumber(adjusted)}`;
-        });
-
-        if (insightScenarioListEl) {
-            const scenarios = Object.entries(PRESETS)
-                .filter(([key]) => key !== 'clear')
-                .map(([key, ids]) => {
-                    const ratio = getEstimatedRatioByIds(ids);
-                    const excluded = Math.max(0, TOTAL_COMBOS - Math.round(TOTAL_COMBOS * ratio));
-                    return {
-                        key,
-                        label: PRESETS_LABEL[key] || key,
-                        excluded
-                    };
-                })
-                .sort((a, b) => b.excluded - a.excluded)
-                .slice(0, 4);
-
-            insightScenarioListEl.innerHTML = scenarios.length
-                ? scenarios.map(item => `<li><strong>${escapeHtml(item.label)}</strong><span>${formatNumber(item.excluded)} 제외</span></li>`).join('')
-                : '<li><strong>데이터 준비중</strong><span>시나리오 계산 대기</span></li>';
-        }
-
-        if (insightGeneratedListEl) {
-            if (!lastGeneratedDraws.length) {
-                insightGeneratedListEl.textContent = '아직 생성된 번호가 없습니다.';
-            } else {
-                insightGeneratedListEl.textContent = lastGeneratedDraws
-                    .map(item => `세트 ${item.setNo}: ${item.numbers.join(', ')}`)
-                    .join('\n');
-            }
-        }
-
-        if (insightsUpdatedEl) {
-            const now = new Date();
-            insightsUpdatedEl.textContent = `마지막 갱신: ${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-        }
     }
 
     function formatKstDateTime(date) {
@@ -4959,337 +4330,4 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn(`[lotto-proxy] ${stage}`, { error, ...meta });
     }
 
-
-    function combination(n, k) {
-        let result = 1;
-        for (let i = 1; i <= k; i += 1) {
-            result = (result * (n - (k - i))) / i;
-        }
-        return Math.round(result);
-    }
-
-    const RULES = [
-        {
-            id: 'all_odd',
-            exclude: numbers => numbers.every(number => number % 2 === 1)
-        },
-        {
-            id: 'all_even',
-            exclude: numbers => numbers.every(number => number % 2 === 0)
-        },
-        {
-            id: 'five_odd_one_even',
-            exclude: numbers => countBy(numbers, number => number % 2 === 1) === 5
-        },
-        {
-            id: 'five_even_one_odd',
-            exclude: numbers => countBy(numbers, number => number % 2 === 0) === 5
-        },
-        {
-            id: 'four_odd_two_even',
-            exclude: numbers => countBy(numbers, number => number % 2 === 1) === 4
-        },
-        {
-            id: 'four_even_two_odd',
-            exclude: numbers => countBy(numbers, number => number % 2 === 0) === 4
-        },
-        {
-            id: 'multiples_of_2_4_plus',
-            exclude: numbers => countMultiples(numbers, 2) >= 4
-        },
-        {
-            id: 'multiples_of_2_5_plus',
-            exclude: numbers => countMultiples(numbers, 2) >= 5
-        },
-        {
-            id: 'multiples_of_3_3_plus',
-            exclude: numbers => countMultiples(numbers, 3) >= 3
-        },
-        {
-            id: 'multiples_of_4_3_plus',
-            exclude: numbers => countMultiples(numbers, 4) >= 3
-        },
-        {
-            id: 'multiples_of_5_3_plus',
-            exclude: numbers => countMultiples(numbers, 5) >= 3
-        },
-        {
-            id: 'multiples_of_6_3_plus',
-            exclude: numbers => countMultiples(numbers, 6) >= 3
-        },
-        {
-            id: 'multiples_of_7_3_plus',
-            exclude: numbers => countMultiples(numbers, 7) >= 3
-        },
-        {
-            id: 'consecutive_3_plus',
-            exclude: numbers => longestConsecutiveRun(numbers) >= 3
-        },
-        {
-            id: 'consecutive_4_plus',
-            exclude: numbers => longestConsecutiveRun(numbers) >= 4
-        },
-        {
-            id: 'same_last_digit_3_plus',
-            exclude: numbers => maxSameLastDigit(numbers) >= 3
-        },
-        {
-            id: 'same_last_digit_4_plus',
-            exclude: numbers => maxSameLastDigit(numbers) >= 4
-        },
-        {
-            id: 'last_digit_2_plus',
-            exclude: numbers => maxSameLastDigit(numbers) >= 2
-        },
-        {
-            id: 'last_digit_zero_2_plus',
-            exclude: numbers => countBy(numbers, number => number % 10 === 0) >= 2
-        },
-        {
-            id: 'last_digit_five_2_plus',
-            exclude: numbers => countBy(numbers, number => number % 10 === 5) >= 2
-        },
-        {
-            id: 'same_decade_4_plus',
-            exclude: numbers => maxInSameDecade(numbers) >= 4
-        },
-        {
-            id: 'same_decade_5_plus',
-            exclude: numbers => maxInSameDecade(numbers) >= 5
-        },
-        {
-            id: 'all_low_or_high',
-            exclude: numbers => numbers.every(number => number <= 22) || numbers.every(number => number >= 23)
-        },
-        {
-            id: 'low_or_high_5_plus',
-            exclude: numbers => Math.max(countLow(numbers), countHigh(numbers)) >= 5
-        },
-        {
-            id: 'low_1_15_4_plus',
-            exclude: numbers => countBy(numbers, number => number <= 15) >= 4
-        },
-        {
-            id: 'mid_16_30_4_plus',
-            exclude: numbers => countBy(numbers, number => number >= 16 && number <= 30) >= 4
-        },
-        {
-            id: 'high_31_45_4_plus',
-            exclude: numbers => countBy(numbers, number => number >= 31) >= 4
-        },
-        {
-            id: 'tight_range',
-            exclude: numbers => (numbers[numbers.length - 1] - numbers[0]) < 20
-        },
-        {
-            id: 'extreme_sum',
-            exclude: numbers => {
-                const sum = numbers.reduce((acc, number) => acc + number, 0);
-                return sum <= 80 || sum >= 200;
-            }
-        },
-        {
-            id: 'sum_low_100',
-            exclude: numbers => numbers.reduce((acc, number) => acc + number, 0) <= 100
-        },
-        {
-            id: 'sum_high_180',
-            exclude: numbers => numbers.reduce((acc, number) => acc + number, 0) >= 180
-        },
-        {
-            id: 'prime_4_plus',
-            exclude: numbers => countPrimes(numbers) >= 4
-        },
-        {
-            id: 'prime_5_plus',
-            exclude: numbers => countPrimes(numbers) >= 5
-        },
-        {
-            id: 'prime_1_or_less',
-            exclude: numbers => countPrimes(numbers) <= 1
-        },
-        {
-            id: 'prime_0',
-            exclude: numbers => countPrimes(numbers) === 0
-        },
-        {
-            id: 'exclude_number',
-            exclude: numbers => {
-                if (!excludeNumberValues.size) {
-                    return false;
-                }
-                return numbers.some(number => excludeNumberValues.has(number));
-            }
-        }
-    ];
-
-    Object.assign(PRESETS, {
-        light: [
-            'all_odd',
-            'all_even',
-            'consecutive_4_plus',
-            'same_last_digit_4_plus',
-            'extreme_sum'
-        ],
-        conservative: [
-            'all_odd',
-            'all_even',
-            'same_last_digit_4_plus'
-        ],
-        balanced: [
-            'five_odd_one_even',
-            'five_even_one_odd',
-            'multiples_of_2_4_plus',
-            'multiples_of_3_3_plus',
-            'same_decade_4_plus',
-            'tight_range'
-        ],
-        expanded: [
-            'same_decade_4_plus',
-            'tight_range',
-            'last_digit_2_plus',
-            'same_last_digit_3_plus',
-            'consecutive_3_plus'
-        ],
-        aggressive: [
-            'four_odd_two_even',
-            'four_even_two_odd',
-            'multiples_of_4_3_plus',
-            'multiples_of_5_3_plus',
-            'multiples_of_6_3_plus',
-            'consecutive_3_plus',
-            'same_last_digit_3_plus',
-            'all_low_or_high',
-            'low_or_high_5_plus',
-            'prime_4_plus'
-        ],
-        range_focus: [
-            'same_decade_5_plus',
-            'tight_range',
-            'all_low_or_high',
-            'low_or_high_5_plus'
-        ],
-        sum_balance: [
-            'sum_low_100',
-            'sum_high_180',
-            'extreme_sum'
-        ],
-        digit_focus: [
-            'last_digit_zero_2_plus',
-            'last_digit_five_2_plus',
-            'same_last_digit_3_plus'
-        ],
-        prime_focus: [
-            'prime_0',
-            'prime_1_or_less',
-            'prime_4_plus'
-        ]
-    });
-
-    Object.assign(PRESETS_LABEL, {
-        light: '보수형',
-        conservative: '편중 최소형',
-        balanced: '균형형',
-        expanded: '분포 강화형',
-        aggressive: '공격형',
-        range_focus: '구간 집중형',
-        sum_balance: '합계 안정형',
-        digit_focus: '끝자리 집중형',
-        prime_focus: '소수 집중형'
-    });
-
-    refreshInsightsDashboard();
-
-    const RULE_DETAILS = {
-        all_odd: '6개 숫자가 전부 홀수인 조합을 제외합니다.',
-        all_even: '6개 숫자가 전부 짝수인 조합을 제외합니다.',
-        five_odd_one_even: '홀수가 5개로 과도하게 치우친 조합을 제외합니다.',
-        five_even_one_odd: '짝수가 5개로 과도하게 치우친 조합을 제외합니다.',
-        four_odd_two_even: '홀수가 4개로 우세한 조합을 제외합니다.',
-        four_even_two_odd: '짝수가 4개로 우세한 조합을 제외합니다.',
-        multiples_of_2_4_plus: '짝수가 4개 이상 포함된 조합을 제외합니다.',
-        multiples_of_2_5_plus: '짝수가 5개 이상 포함된 조합을 제외합니다.',
-        multiples_of_3_3_plus: '3의 배수가 3개 이상인 조합을 제외합니다.',
-        multiples_of_4_3_plus: '4의 배수가 3개 이상인 조합을 제외합니다.',
-        multiples_of_5_3_plus: '5의 배수가 3개 이상인 조합을 제외합니다.',
-        multiples_of_6_3_plus: '6의 배수가 3개 이상인 조합을 제외합니다.',
-        multiples_of_7_3_plus: '7의 배수가 3개 이상인 조합을 제외합니다.',
-        consecutive_3_plus: '연속된 숫자가 3개 이상인 조합을 제외합니다.',
-        consecutive_4_plus: '연속된 숫자가 4개 이상인 조합을 제외합니다.',
-        same_last_digit_3_plus: '끝자리 숫자가 3개 이상 같은 조합을 제외합니다.',
-        same_last_digit_4_plus: '끝자리 숫자가 4개 이상 같은 조합을 제외합니다.',
-        last_digit_2_plus: '끝자리 숫자가 2개 이상 반복되는 조합을 제외합니다.',
-        last_digit_zero_2_plus: '끝자리가 0인 숫자가 2개 이상인 조합을 제외합니다.',
-        last_digit_five_2_plus: '끝자리가 5인 숫자가 2개 이상인 조합을 제외합니다.',
-        same_decade_4_plus: '같은 10단위 구간이 4개 이상인 조합을 제외합니다.',
-        same_decade_5_plus: '같은 10단위 구간이 5개 이상인 조합을 제외합니다.',
-        all_low_or_high: '1-22 또는 23-45에 모두 몰린 조합을 제외합니다.',
-        low_or_high_5_plus: '저/고 구간 중 한쪽이 5개 이상인 조합을 제외합니다.',
-        low_1_15_4_plus: '1-15 구간이 4개 이상인 조합을 제외합니다.',
-        mid_16_30_4_plus: '16-30 구간이 4개 이상인 조합을 제외합니다.',
-        high_31_45_4_plus: '31-45 구간이 4개 이상인 조합을 제외합니다.',
-        tight_range: '최대-최소 범위가 20 미만인 조합을 제외합니다.',
-        extreme_sum: '6개 합계가 너무 낮거나 높은 조합을 제외합니다.',
-        sum_low_100: '6개 합계가 100 이하인 조합을 제외합니다.',
-        sum_high_180: '6개 합계가 180 이상인 조합을 제외합니다.',
-        prime_4_plus: '소수가 4개 이상 포함된 조합을 제외합니다.',
-        prime_5_plus: '소수가 5개 이상 포함된 조합을 제외합니다.',
-        prime_1_or_less: '소수가 1개 이하인 조합을 제외합니다.',
-        prime_0: '소수가 하나도 없는 조합을 제외합니다.',
-        exclude_number: '선택한 번호가 포함된 조합을 모두 제외합니다.'
-    };
-
-
-    function countBy(numbers, predicate) {
-        return numbers.reduce((count, number) => (predicate(number) ? count + 1 : count), 0);
-    }
-
-    function countMultiples(numbers, divisor) {
-        return countBy(numbers, number => number % divisor === 0);
-    }
-
-    function countLow(numbers) {
-        return countBy(numbers, number => number <= 22);
-    }
-
-    function countHigh(numbers) {
-        return countBy(numbers, number => number >= 23);
-    }
-
-    function countPrimes(numbers) {
-        const primes = new Set([2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43]);
-        return countBy(numbers, number => primes.has(number));
-    }
-
-    function longestConsecutiveRun(numbers) {
-        let longest = 1;
-        let current = 1;
-        for (let i = 1; i < numbers.length; i += 1) {
-            if (numbers[i] === numbers[i - 1] + 1) {
-                current += 1;
-                longest = Math.max(longest, current);
-            } else {
-                current = 1;
-            }
-        }
-        return longest;
-    }
-
-    function maxSameLastDigit(numbers) {
-        const counts = new Map();
-        numbers.forEach(number => {
-            const key = number % 10;
-            counts.set(key, (counts.get(key) || 0) + 1);
-        });
-        return Math.max(...counts.values());
-    }
-
-    function maxInSameDecade(numbers) {
-        const counts = new Map();
-        numbers.forEach(number => {
-            const key = Math.floor(number / 10);
-            counts.set(key, (counts.get(key) || 0) + 1);
-        });
-        return Math.max(...counts.values());
-    }
 });
