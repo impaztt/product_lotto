@@ -9359,3 +9359,62 @@ textarea {
     outline: none !important;
     box-shadow: none !important;
 }
+
+/* Draw status flow cleanup */
+#tab-draw .draw-service-context {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+#tab-draw .draw-service-context-label {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: #eef5ff;
+    border: 1px solid rgba(49, 130, 246, 0.14);
+    color: #1b64da;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+
+#tab-draw #draw-membership-status {
+    font-size: 13px;
+    font-weight: 800;
+    color: #191f28;
+    letter-spacing: -0.02em;
+}
+
+#tab-draw .draw-service-context-note {
+    color: #6b7684;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+@media (max-width: 768px) {
+    #tab-draw .draw-service-context {
+        gap: 6px;
+        margin-top: 6px;
+    }
+
+    #tab-draw .draw-service-context-label {
+        min-height: 26px;
+        padding: 0 9px;
+        font-size: 10px;
+    }
+
+    #tab-draw #draw-membership-status {
+        font-size: 12px;
+    }
+
+    #tab-draw .draw-service-context-note {
+        flex-basis: 100%;
+        font-size: 11px;
+        line-height: 1.4;
+    }
+}

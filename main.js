@@ -1611,8 +1611,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getStoredDrawServiceMode() {
-        const saved = localStorage.getItem('lotto_draw_service_mode');
-        return saved === 'premium' ? 'premium' : 'self';
+        return 'self';
     }
 
     function getMembershipTier() {
@@ -1829,11 +1828,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (drawMembershipNoteEl) {
             if (!isMember()) {
-                drawMembershipNoteEl.textContent = '로그인 후 프리미엄 이용권을 활성화하면 월정액 추천 세트를 바로 받을 수 있습니다.';
+                drawMembershipNoteEl.textContent = '로그인 후 이용권을 시작하면 추천번호를 바로 받을 수 있습니다.';
             } else if (isPremiumMember()) {
-                drawMembershipNoteEl.textContent = `${plan.label} 플랜이 연결되어 있습니다. 추천 세트와 전체복사를 바로 사용할 수 있습니다.`;
+                drawMembershipNoteEl.textContent = `${plan.label} 플랜으로 추천번호와 전체복사를 바로 사용할 수 있습니다.`;
             } else {
-                drawMembershipNoteEl.textContent = '현재는 직접 선택 모드입니다. 이용권을 시작하면 큐레이션 추천이 함께 열립니다.';
+                drawMembershipNoteEl.textContent = '현재는 직접 선택 모드입니다. 필요할 때만 월정액 추천으로 전환할 수 있습니다.';
             }
         }
         const selectedCount = ruleInputs.filter(input => input.checked).length;
@@ -2343,7 +2342,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setDrawServiceMode(mode) {
         const nextMode = mode === 'premium' ? 'premium' : 'self';
-        localStorage.setItem('lotto_draw_service_mode', nextMode);
         if (drawTabPanel) {
             drawTabPanel.setAttribute('data-service-mode', nextMode);
         }
