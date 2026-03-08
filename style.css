@@ -8926,3 +8926,429 @@ textarea {
         min-height: 40px;
     }
 }
+
+/* Draw tab density refinement */
+#tab-draw .draw-studio-header {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 18px 20px !important;
+}
+
+#tab-draw .draw-studio-title {
+    display: grid;
+    gap: 8px;
+}
+
+#tab-draw .draw-studio-kicker {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+}
+
+#tab-draw .draw-studio-title h2 {
+    max-width: 680px;
+    margin: 0;
+    font-size: clamp(24px, 2.3vw, 30px);
+    line-height: 1.18;
+}
+
+#tab-draw .draw-studio-title p {
+    max-width: 620px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+#tab-draw .draw-service-switch {
+    margin-top: 8px;
+    width: min(100%, 296px);
+    padding: 3px;
+    gap: 4px;
+}
+
+#tab-draw .draw-service-btn {
+    min-height: 40px;
+    padding: 0 12px;
+    font-size: 12px;
+}
+
+#tab-draw .draw-studio {
+    margin-top: 6px;
+}
+
+#tab-draw .draw-studio-body,
+#tab-draw .draw-dashboard-unified,
+#tab-draw .draw-premium-unified,
+#tab-draw .draw-builder {
+    gap: 14px;
+}
+
+#tab-draw .draw-builder {
+    top: 96px;
+}
+
+#tab-draw .draw-panel,
+#draw-scenario-panel,
+#draw-slot-panel,
+#tab-draw .draw-metric-card,
+#tab-draw .draw-rules-panel,
+#tab-draw .draw-selected-board,
+#tab-draw .draw-membership-banner,
+#tab-draw .draw-filter-overview,
+#tab-draw .draw-premium-lock {
+    border-radius: 20px !important;
+}
+
+#tab-draw .draw-panel,
+#draw-scenario-panel,
+#draw-slot-panel {
+    gap: 10px;
+    padding: 14px 16px !important;
+}
+
+#tab-draw .draw-panel-header {
+    gap: 8px;
+}
+
+#tab-draw .draw-panel-header h3,
+#tab-draw .draw-selected-board .draw-panel-header h3,
+#tab-draw .draw-premium-products-head h3 {
+    font-size: 15px;
+}
+
+#tab-draw .draw-toggle-btn {
+    min-height: 34px;
+    padding: 7px 11px;
+    font-size: 11px;
+}
+
+#tab-draw .scenario-cards,
+#tab-draw .draw-slot-grid {
+    --draw-card-width: 204px;
+    gap: 8px;
+    padding-bottom: 4px;
+    padding-right: 10px;
+    scroll-padding-right: 10px;
+}
+
+#tab-draw .draw-scenario-card,
+#tab-draw .draw-slot-card,
+#tab-draw .draw-scenario-btn {
+    min-height: 126px;
+}
+
+#tab-draw .draw-strategy-btn,
+#tab-draw .draw-slot-card {
+    border-radius: 16px;
+    padding: 14px;
+}
+
+#tab-draw .draw-scenario-btn {
+    gap: 6px;
+}
+
+#tab-draw .scenario-meta {
+    gap: 6px;
+}
+
+#tab-draw .scenario-pill,
+#tab-draw .scenario-tone {
+    font-size: 9px;
+}
+
+#tab-draw .scenario-pill {
+    padding: 4px 7px;
+}
+
+#tab-draw .scenario-title {
+    font-size: 15px;
+}
+
+#tab-draw .scenario-desc {
+    font-size: 11px;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+#tab-draw .scenario-metrics {
+    gap: 2px;
+    font-size: 10px;
+}
+
+#tab-draw .scenario-impact {
+    font-size: 10px;
+}
+
+#tab-draw .draw-selected-board {
+    gap: 10px;
+    padding: 14px 16px !important;
+}
+
+#tab-draw .draw-selected-lead,
+#tab-draw .draw-selected-helper,
+#tab-draw #draw-filter-detail,
+#tab-draw .draw-premium-products-head p,
+#tab-draw .draw-premium-lock p,
+#tab-draw #premium-copy-status,
+#tab-draw .rules-hint {
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+#tab-draw .draw-filter-overview {
+    gap: 8px;
+    padding: 14px 16px !important;
+}
+
+#tab-draw #draw-selection-summary {
+    font-size: clamp(19px, 2vw, 23px);
+    line-height: 1.28;
+}
+
+#tab-draw .draw-selected-count {
+    font-size: 11px;
+    padding: 5px 9px;
+}
+
+#tab-draw .draw-selected-toolbar button,
+#tab-draw .draw-selected-toolbar #open-rule-picker,
+#tab-draw .draw-action-buttons > button,
+#tab-draw .draw-count-chip,
+#tab-draw .premium-plan-buy,
+#tab-draw .draw-premium-upgrade,
+#tab-draw #premium-generate-btn,
+#tab-draw #premium-copy-all-btn {
+    min-height: 42px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#tab-draw .draw-selected-toolbar button,
+#tab-draw .draw-count-chip {
+    font-size: 12px;
+}
+
+#tab-draw .draw-selected-presets {
+    gap: 8px;
+}
+
+#tab-draw .draw-selected-presets .preset-btn {
+    min-height: 34px;
+    padding: 0 10px;
+    border-radius: 10px;
+    font-size: 11px;
+}
+
+#tab-draw .draw-selected-list {
+    gap: 8px;
+    max-height: 292px;
+}
+
+#tab-draw .draw-selected-group,
+#tab-draw .draw-selected-empty {
+    padding: 10px;
+}
+
+#tab-draw .draw-selected-chip {
+    gap: 6px;
+    padding: 6px 9px;
+}
+
+#tab-draw .draw-metric-card {
+    gap: 10px;
+    padding: 15px 16px;
+}
+
+#tab-draw .draw-metric-title,
+#tab-draw .draw-premium-badge,
+#tab-draw .draw-membership-banner-kicker,
+#tab-draw .draw-filter-kicker,
+#tab-draw .premium-product-label {
+    font-size: 10px;
+}
+
+#tab-draw .odds-graph {
+    gap: 10px;
+}
+
+#tab-draw .odds-graph-row,
+#tab-draw .odds-graph-note {
+    padding: 8px 10px;
+}
+
+#tab-draw .draw-membership-banner {
+    gap: 12px;
+    padding: 16px 18px;
+}
+
+#tab-draw .draw-membership-banner strong {
+    font-size: clamp(20px, 2.5vw, 28px);
+}
+
+#tab-draw .draw-membership-banner p {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+#tab-draw .draw-premium-summary {
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+#tab-draw .draw-premium-plan {
+    gap: 10px;
+}
+
+#tab-draw .draw-premium-plan-item {
+    min-height: 72px;
+    padding: 12px;
+}
+
+#tab-draw .draw-premium-products {
+    gap: 12px;
+}
+
+#tab-draw .premium-product-card {
+    min-height: 372px;
+    padding: 16px;
+    border-radius: 20px;
+    gap: 10px;
+}
+
+#tab-draw .premium-product-head strong {
+    font-size: 26px;
+}
+
+#tab-draw .premium-product-card p,
+#tab-draw .premium-product-card ul,
+#tab-draw .premium-product-fit,
+#tab-draw .premium-product-foot {
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+#tab-draw .premium-product-foot {
+    padding-top: 8px;
+}
+
+#tab-draw .draw-premium-lock,
+#tab-draw .premium-empty-state {
+    padding: 14px 16px;
+}
+
+@media (max-width: 768px) {
+    #tab-draw .draw-studio-header {
+        margin-bottom: 10px;
+        padding: 16px 16px !important;
+    }
+
+    #tab-draw .draw-studio-title h2 {
+        font-size: clamp(22px, 6.2vw, 26px);
+    }
+
+    #tab-draw .draw-studio-title p {
+        font-size: 12px;
+    }
+
+    #tab-draw .draw-service-switch {
+        width: 100%;
+        max-width: none;
+    }
+
+    #tab-draw .draw-studio-body,
+    #tab-draw .draw-builder {
+        gap: 12px;
+    }
+
+    #tab-draw .draw-panel,
+    #draw-scenario-panel,
+    #draw-slot-panel,
+    #tab-draw .draw-metric-card,
+    #tab-draw .draw-selected-board,
+    #tab-draw .draw-membership-banner,
+    #tab-draw .draw-filter-overview,
+    #tab-draw .draw-premium-lock,
+    #tab-draw .premium-empty-state {
+        padding: 13px 14px !important;
+    }
+
+    #tab-draw .scenario-cards,
+    #tab-draw .draw-slot-grid {
+        --draw-card-width: min(72vw, 236px);
+        gap: 10px;
+    }
+
+    #tab-draw .draw-scenario-card,
+    #tab-draw .draw-slot-card,
+    #tab-draw .draw-scenario-btn {
+        min-height: 118px;
+    }
+
+    #tab-draw .draw-selected-toolbar,
+    #tab-draw .draw-action-buttons {
+        gap: 8px;
+    }
+
+    #tab-draw .draw-premium-products {
+        gap: 10px;
+    }
+
+    #tab-draw .premium-product-card {
+        min-height: 0;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 640px) {
+    #tab-draw.app-shell {
+        padding-top: 10px;
+    }
+
+    #tab-draw .draw-studio-header {
+        padding: 14px 14px !important;
+    }
+
+    #tab-draw .draw-studio-title {
+        gap: 6px;
+    }
+
+    #tab-draw .draw-studio-title h2 {
+        font-size: 22px;
+    }
+
+    #tab-draw .draw-service-btn {
+        min-height: 38px;
+        font-size: 12px;
+    }
+
+    #tab-draw .scenario-cards,
+    #tab-draw .draw-slot-grid {
+        --draw-card-width: min(70vw, 224px);
+    }
+
+    #tab-draw .draw-strategy-btn,
+    #tab-draw .draw-slot-card,
+    #tab-draw .draw-panel,
+    #draw-scenario-panel,
+    #draw-slot-panel,
+    #tab-draw .draw-metric-card,
+    #tab-draw .draw-selected-board,
+    #tab-draw .draw-membership-banner,
+    #tab-draw .draw-filter-overview,
+    #tab-draw .draw-premium-lock,
+    #tab-draw .premium-empty-state {
+        border-radius: 18px !important;
+    }
+
+    #tab-draw #draw-selection-summary {
+        font-size: 18px;
+    }
+
+    #tab-draw .draw-premium-plan-item {
+        min-height: 0;
+        padding: 11px 12px;
+    }
+}
