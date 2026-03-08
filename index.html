@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/common.css?v=20260213">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/layout.css?v=20260212">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/main-layout.css?v=20260212">
-		<link rel="stylesheet" href="style.css?v=20260308_1">
+		<link rel="stylesheet" href="style.css?v=20260308_2">
 
 </head>
 <body data-theme="light">
@@ -3076,6 +3076,41 @@
         </button>
     </nav>
 
+    <div id="welcome-modal" class="modal modal-onboarding hidden" role="dialog" aria-modal="true" aria-labelledby="welcome-modal-title">
+        <div class="modal-content onboarding-modal-content">
+            <button class="modal-close onboarding-close" type="button" aria-label="닫기" data-welcome-close="dismiss">닫기</button>
+            <div class="onboarding-hero">
+                <span class="onboarding-kicker">WELCOME BENEFIT</span>
+                <h3 id="welcome-modal-title">가입 없이 바로 써볼 수 있지만, 가입하면 서비스가 완전히 달라집니다.</h3>
+                <p class="modal-text onboarding-copy">
+                    번호 생성은 지금 바로 가능합니다. 가입하면 생성 이력 저장, 번호 보관함 관리,
+                    월정액 추천 기능까지 한 화면에서 이어서 사용할 수 있습니다.
+                </p>
+            </div>
+            <div class="onboarding-benefits" aria-label="가입 혜택">
+                <article class="onboarding-benefit-card">
+                    <span class="onboarding-benefit-label">History</span>
+                    <strong>생성 번호 이력 자동 저장</strong>
+                    <p>언제 어떤 방식으로 번호를 만들었는지 마이페이지에서 바로 확인합니다.</p>
+                </article>
+                <article class="onboarding-benefit-card">
+                    <span class="onboarding-benefit-label">Premium</span>
+                    <strong>월정액 추천과 보관함 연동</strong>
+                    <p>프리미엄 플랜을 시작하면 추천 세트와 저장된 전략을 한 번에 관리할 수 있습니다.</p>
+                </article>
+                <article class="onboarding-benefit-card">
+                    <span class="onboarding-benefit-label">Trust</span>
+                    <strong>가입 전에도 바로 체험 가능</strong>
+                    <p>회원가입 없이 번호 생성은 바로 가능하고, 필요할 때만 간편 로그인으로 전환하면 됩니다.</p>
+                </article>
+            </div>
+            <div class="onboarding-actions">
+                <button class="cta onboarding-primary" type="button" data-welcome-action="auth">가입하고 시작</button>
+                <button class="ghost onboarding-secondary" type="button" data-welcome-action="browse">가입 없이 둘러보기</button>
+            </div>
+            <button class="onboarding-dismiss" type="button" data-welcome-close="dismiss">나중에 보기</button>
+        </div>
+    </div>
     <div id="auth-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="auth-title">
         <div class="modal-content">
             <div class="modal-header">
@@ -3128,6 +3163,6 @@
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore-compat.js"></script>
     <script src="scripts/lotto-tabs.js?v=20260307_1"></script>
     <script src="scripts/lotto-rules.js?v=20260307_1"></script>
-    <script src="main.js?v=20260308_1"></script>
+    <script src="main.js?v=20260308_2"></script>
 </body>
 </html>

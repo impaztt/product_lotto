@@ -2748,6 +2748,193 @@ body[data-theme="light"] .info-list li {
     font-size: 14px;
 }
 
+.modal-onboarding {
+    background: rgba(15, 23, 42, 0.58);
+    backdrop-filter: blur(18px);
+}
+
+.onboarding-modal-content {
+    position: relative;
+    overflow: hidden;
+    width: min(680px, 92vw);
+    padding: 30px;
+    gap: 22px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 32px;
+    background:
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.16), transparent 30%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 255, 0.98) 62%, rgba(241, 245, 249, 0.98) 100%);
+    box-shadow: 0 34px 70px rgba(15, 23, 42, 0.24);
+    animation: onboardingRise 0.35s ease;
+}
+
+.onboarding-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 1;
+    min-width: 42px;
+}
+
+.onboarding-hero {
+    display: grid;
+    gap: 12px;
+    padding-right: 84px;
+}
+
+.onboarding-kicker {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.08);
+    color: #2563eb;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+}
+
+#welcome-modal-title {
+    margin: 0;
+    color: #0f172a;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.16;
+    letter-spacing: -0.03em;
+}
+
+.onboarding-copy {
+    margin: 0;
+    max-width: 560px;
+    color: #516173;
+    line-height: 1.7;
+}
+
+.onboarding-benefits {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.onboarding-benefit-card {
+    display: grid;
+    gap: 10px;
+    min-height: 176px;
+    padding: 18px;
+    border-radius: 24px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88);
+}
+
+.onboarding-benefit-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #64748b;
+}
+
+.onboarding-benefit-card strong {
+    color: #0f172a;
+    font-size: 19px;
+    line-height: 1.35;
+}
+
+.onboarding-benefit-card p {
+    margin: 0;
+    color: #5b6b80;
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.onboarding-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.onboarding-actions .cta,
+.onboarding-actions .ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 54px;
+    width: 100%;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.onboarding-primary {
+    box-shadow: 0 16px 28px rgba(15, 23, 42, 0.14);
+}
+
+.onboarding-secondary {
+    background: rgba(255, 255, 255, 0.94);
+}
+
+.onboarding-dismiss {
+    justify-self: center;
+    border: 0;
+    background: transparent;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+@keyframes onboardingRise {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.985);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+    .modal-onboarding {
+        align-items: flex-end;
+        padding: 12px;
+    }
+
+    .onboarding-modal-content {
+        width: min(100%, 100%);
+        padding: 22px 18px calc(20px + env(safe-area-inset-bottom));
+        border-radius: 28px;
+    }
+
+    .onboarding-hero {
+        padding-right: 56px;
+    }
+
+    .onboarding-benefits,
+    .onboarding-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .onboarding-benefit-card {
+        min-height: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    #welcome-modal-title {
+        font-size: 27px;
+    }
+
+    .onboarding-copy {
+        font-size: 13px;
+    }
+
+    .onboarding-actions .cta,
+    .onboarding-actions .ghost {
+        min-height: 50px;
+    }
+}
+
 .section {
     background: var(--panel);
     border: 1px solid var(--panel-border);

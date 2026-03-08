@@ -104,6 +104,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const rulesSection = document.getElementById('rules');
     const guestLimitEl = document.getElementById('guest-limit');
     const guestBannerEl = document.getElementById('guest-banner');
+    const welcomeModal = document.getElementById('welcome-modal');
+    const welcomeAuthBtn = document.querySelector('[data-welcome-action="auth"]');
+    const welcomeBrowseBtn = document.querySelector('[data-welcome-action="browse"]');
+    const welcomeDismissButtons = Array.from(document.querySelectorAll('[data-welcome-close]'));
     const authModal = document.getElementById('auth-modal');
     const authButtons = Array.from(document.querySelectorAll('[data-auth]'));
     const authEntryLinks = Array.from(document.querySelectorAll('[data-open-auth]'));
@@ -286,6 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastWeeklyRenderMode = 'live';
     let lastWeeklyRenderSource = 'proxy';
     let firebaseReady = false;
+    let authStateResolved = false;
     let firebaseAuth = null;
     let firebaseDb = null;
     let currentUser = null;
@@ -302,10 +307,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let weeklyExpectedOverride = null;
     let weeklyExpectedUpdatedAt = 0;
     let toastHideTimer = 0;
+    let welcomeModalTimer = 0;
     const DRAW_ENTRY_LOCAL_KEY = 'lotto_guest_tracking_id';
     const GENERATION_STATS_KEY = 'lotto_generation_stats';
     const RULES_UPDATED_AT_KEY = 'lotto_rules_updated_at';
     const CUSTOM_PRESET_UPDATED_AT_KEY = 'lotto_custom_preset_updated_at';
+    const ONBOARDING_SEEN_KEY = 'lotto_onboarding_seen_at';
 
     const tabController = createTabController({
         tabButtons,
@@ -1059,6 +1066,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    if (welcomeAuthBtn) {
+        welcomeAuthBtn.addEventListener('click', () => {
+            closeWelcomeModal({ remember: true });
+            openAuthModal();
+        });
+    }
+
+    if (welcomeBrowseBtn) {
+        welcomeBrowseBtn.addEventListener('click', () => {
+            closeWelcomeModal({ remember: true });
+            showActionPopup('가입 없이도 바로 이용할 수 있습니다. 필요할 때 로그인으로 전환하면 이력과 추천 기능이 이어집니다.');
+        });
+    }
+
+    welcomeDismissButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            closeWelcomeModal({ remember: true });
+        });
+    });
+
+    if (welcomeModal) {
+        welcomeModal.addEventListener('click', event => {
+            if (event.target === welcomeModal) {
+                closeWelcomeModal({ remember: true });
+            }
+        });
+    }
+
     authEntryLinks.forEach(link => {
         link.addEventListener('click', event => {
             event.preventDefault();
@@ -1282,6 +1317,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setupRuleDetails();
         syncInitialTab();
         syncNavTabLinks(getCurrentActiveTabId());
+        scheduleWelcomeModal();
         window.addEventListener('message', event => {
             if (!event || !event.data || event.data.type !== 'switch-tab') {
                 return;
@@ -2148,6 +2184,72 @@ document.addEventListener('DOMContentLoaded', () => {
         return getMembershipPlanMeta().id !== 'free';
     }
 
+    function hasSeenWelcomeModal() {
+        try {
+            return Boolean(localStorage.getItem(ONBOARDING_SEEN_KEY));
+        } catch (error) {
+            console.warn('온보딩 표시 상태 조회 실패', error);
+            return false;
+        }
+    }
+
+    function rememberWelcomeModalSeen() {
+        try {
+            localStorage.setItem(ONBOARDING_SEEN_KEY, new Date().toISOString());
+        } catch (error) {
+            console.warn('온보딩 표시 상태 저장 실패', error);
+        }
+    }
+
+    function closeWelcomeModal(options = {}) {
+        const { remember = false } = options;
+        if (welcomeModalTimer) {
+            window.clearTimeout(welcomeModalTimer);
+            welcomeModalTimer = 0;
+        }
+        if (remember) {
+            rememberWelcomeModalSeen();
+        }
+        if (!welcomeModal) {
+            return;
+        }
+        welcomeModal.classList.add('hidden');
+    }
+
+    function openWelcomeModal() {
+        if (!welcomeModal || isMember() || hasSeenWelcomeModal()) {
+            return;
+        }
+        closeAuthModal();
+        welcomeModal.classList.remove('hidden');
+    }
+
+    function scheduleWelcomeModal() {
+        if (!welcomeModal || isMember() || hasSeenWelcomeModal()) {
+            return;
+        }
+        if (firebaseReady && !authStateResolved) {
+            if (welcomeModalTimer) {
+                window.clearTimeout(welcomeModalTimer);
+            }
+            welcomeModalTimer = window.setTimeout(() => {
+                welcomeModalTimer = 0;
+                scheduleWelcomeModal();
+            }, 300);
+            return;
+        }
+        if (welcomeModalTimer) {
+            window.clearTimeout(welcomeModalTimer);
+        }
+        welcomeModalTimer = window.setTimeout(() => {
+            welcomeModalTimer = 0;
+            if (isMember() || hasSeenWelcomeModal()) {
+                return;
+            }
+            openWelcomeModal();
+        }, 1200);
+    }
+
     function setDrawServiceMode(mode) {
         const nextMode = mode === 'premium' ? 'premium' : 'self';
         localStorage.setItem('lotto_draw_service_mode', nextMode);
@@ -2356,6 +2458,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initFirebase() {
         if (typeof window.firebase === 'undefined') {
+            authStateResolved = true;
             if (firebaseAuthStatusEl) {
                 firebaseAuthStatusEl.textContent = 'Firebase SDK 로딩 실패: 네트워크 또는 스크립트 로딩 상태를 확인하세요.';
             }
@@ -2364,6 +2467,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const config = window.LOTTO_FIREBASE_CONFIG || {};
         if (!config.apiKey || !config.authDomain || !config.projectId || !config.appId) {
+            authStateResolved = true;
             if (firebaseAuthStatusEl) {
                 firebaseAuthStatusEl.textContent = 'firebase-config.js에 Firebase 웹 앱 설정값을 입력해 주세요.';
             }
@@ -2378,6 +2482,7 @@ document.addEventListener('DOMContentLoaded', () => {
             firebaseDb = window.firebase.firestore();
             firebaseReady = true;
             firebaseAuth.onAuthStateChanged(async user => {
+                authStateResolved = true;
                 currentUser = user || null;
                 try {
                     if (currentUser) {
@@ -2403,6 +2508,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             firebaseReady = false;
+            authStateResolved = true;
             console.error('Firebase 초기화 실패', error);
             if (firebaseAuthStatusEl) {
                 firebaseAuthStatusEl.textContent = 'Firebase 초기화 실패: 설정값/도메인/콘솔 오류를 확인하세요.';
@@ -2417,6 +2523,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateAuthUi() {
         const member = isMember();
+        if (member) {
+            closeWelcomeModal();
+        }
         authLogoutButtons.forEach(button => {
             button.disabled = !member;
             button.hidden = !member;
@@ -2773,6 +2882,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!authModal) {
             return;
         }
+        closeWelcomeModal({ remember: true });
         authModal.classList.remove('hidden');
     }
 
