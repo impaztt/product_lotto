@@ -8497,3 +8497,346 @@ main {
         filter: none;
     }
 }
+
+/* Mobile tactile QA refinement */
+html {
+    scroll-padding-top: 88px;
+    scroll-padding-bottom: calc(124px + env(safe-area-inset-bottom));
+    -webkit-tap-highlight-color: rgba(49, 130, 246, 0.14);
+}
+
+button,
+[role="button"],
+a,
+input,
+select,
+textarea {
+    touch-action: manipulation;
+}
+
+@media (max-width: 768px) {
+    main {
+        padding: 10px 4vw calc(156px + env(safe-area-inset-bottom));
+        gap: 24px;
+    }
+
+    .site-header {
+        padding: 12px 4vw 10px;
+    }
+
+    .mobile-menu {
+        top: 62px;
+        padding: 14px 4vw 20px;
+    }
+
+    .mobile-nav a {
+        min-height: 48px;
+    }
+
+    .bottom-tab-bar {
+        gap: 4px;
+        padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+    }
+
+    .bottom-tab-bar .tab-btn {
+        min-height: 60px;
+        padding: 10px 4px 12px;
+        gap: 4px;
+    }
+
+    .bottom-tab-bar .tab-label {
+        font-size: 12px;
+    }
+
+    .tab-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 12px;
+    }
+
+    .app-toast {
+        width: min(calc(100vw - 24px), 520px);
+        bottom: calc(102px + env(safe-area-inset-bottom));
+        padding: 15px 18px;
+    }
+
+    #tab-weekly .container-box,
+    #tab-dashboard .container-box {
+        padding-bottom: calc(124px + env(safe-area-inset-bottom));
+    }
+
+    #tab-draw.app-shell,
+    #tab-mypage.app-shell,
+    #tab-qr.app-shell,
+    #tab-store.app-shell.store-webview-tab {
+        margin-top: -12px;
+        padding: 14px 4vw calc(156px + env(safe-area-inset-bottom));
+    }
+
+    #tab-dashboard .dash-intro-head,
+    #tab-draw .draw-studio-header,
+    #tab-mypage .section-title,
+    #tab-qr .section-title,
+    #tab-store .store-shell-title {
+        margin-bottom: 16px;
+        padding: 18px 16px !important;
+        gap: 12px;
+    }
+
+    #tab-dashboard .content-tit,
+    #tab-draw .draw-studio-title h2,
+    #tab-mypage .section-title h2,
+    #tab-qr .section-title h2,
+    #tab-store .store-shell-title h2 {
+        font-size: clamp(24px, 7vw, 28px);
+    }
+
+    .dash-intro-actions,
+    .auth-buttons,
+    .modal-actions,
+    #tab-mypage .mypage-inline-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .dash-intro-actions .cta,
+    .dash-intro-actions .ghost,
+    .auth-btn,
+    #auth .ghost,
+    .modal-actions .cta,
+    .modal-actions .ghost,
+    #tab-mypage .mypage-inline-actions .ghost {
+        width: 100%;
+        min-height: 48px;
+        justify-content: center;
+    }
+
+    .dash-ops-strip {
+        margin: 14px auto 20px;
+        gap: 12px;
+    }
+
+    .dash-ops-card {
+        min-height: 136px;
+        padding: 18px;
+    }
+
+    #tab-dashboard .result-infoWrap {
+        padding: 18px 16px !important;
+    }
+
+    .draw-studio {
+        margin-top: 8px;
+    }
+
+    #tab-draw .draw-studio-body {
+        gap: 14px;
+    }
+
+    .draw-builder {
+        position: static;
+        top: auto;
+        gap: 14px;
+    }
+
+    .draw-service-switch {
+        width: 100%;
+        max-width: none;
+    }
+
+    .draw-service-btn {
+        min-height: 48px;
+        font-size: 14px;
+    }
+
+    #tab-draw .draw-panel,
+    #draw-scenario-panel,
+    #draw-slot-panel,
+    .draw-rules-panel,
+    .draw-filter-overview,
+    .draw-selected-board {
+        padding: 16px !important;
+    }
+
+    #tab-draw .draw-panel-header {
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    #tab-draw .draw-toggle-btn,
+    #tab-draw .draw-count-chip,
+    .draw-selected-toolbar button,
+    #tab-draw .draw-selected-toolbar #open-rule-picker,
+    #generate-btn,
+    #draw-copy-all-btn,
+    #premium-generate-btn,
+    #premium-copy-all-btn,
+    .premium-plan-buy,
+    .draw-premium-upgrade {
+        min-height: 46px;
+    }
+
+    .draw-selected-toolbar,
+    #tab-draw .draw-action-buttons {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .draw-filter-overview-head {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    #draw-selection-summary {
+        font-size: clamp(22px, 6vw, 28px);
+    }
+
+    #tab-draw .scenario-cards,
+    .draw-slot-grid {
+        gap: 12px;
+        padding-bottom: 10px;
+        padding-right: 14px;
+        scroll-padding-right: 14px;
+    }
+
+    #tab-draw .draw-scenario-card,
+    #tab-draw .draw-slot-card {
+        width: min(82vw, 280px);
+        min-height: 156px;
+        flex-basis: min(82vw, 280px);
+    }
+
+    #tab-mypage .section-title {
+        margin-bottom: 16px;
+    }
+
+    #tab-mypage .mypage-overview,
+    #tab-mypage .mypage-grid--details {
+        gap: 14px;
+    }
+
+    #tab-mypage .mypage-overview,
+    #tab-mypage .mypage-status-strip {
+        margin-bottom: 14px;
+    }
+
+    #tab-mypage .mypage-hero-card {
+        padding: 20px !important;
+        gap: 14px;
+    }
+
+    #tab-mypage .mypage-hero-head {
+        gap: 10px;
+    }
+
+    #tab-mypage .mypage-hero-head h3 {
+        font-size: 24px;
+    }
+
+    #tab-mypage .mypage-hero-email {
+        font-size: clamp(24px, 7vw, 30px);
+    }
+
+    #tab-mypage .mypage-hero-block {
+        padding: 13px 14px;
+    }
+
+    #tab-mypage .mypage-status-kpi {
+        min-height: 112px;
+        padding: 18px !important;
+    }
+
+    #tab-mypage .mypage-grid--details .info-card,
+    #tab-mypage .auth-card {
+        padding: 20px !important;
+    }
+
+    .modal-content,
+    .onboarding-modal-content {
+        width: min(calc(100vw - 20px), 520px);
+        border-radius: 24px;
+    }
+}
+
+@media (max-width: 640px) {
+    main {
+        padding: 8px 4vw calc(152px + env(safe-area-inset-bottom));
+        gap: 20px;
+    }
+
+    .site-header {
+        padding: 11px 4vw 9px;
+    }
+
+    #tab-dashboard .content-tit-wrap {
+        padding: 0 0 4px;
+    }
+
+    #tab-dashboard .dash-intro-head,
+    #tab-draw .draw-studio-header,
+    #tab-mypage .section-title,
+    #tab-qr .section-title,
+    #tab-store .store-shell-title {
+        padding: 16px 14px !important;
+    }
+
+    #tab-dashboard .content-draw-wrap > .center-wrap,
+    #tab-dashboard .draw-bg > .center-wrap {
+        padding: 8px 4vw 0;
+    }
+
+    .dash-intro-points span,
+    .mypage-title-points span,
+    #tab-mypage .mypage-plan-pills span {
+        min-height: 34px;
+        font-size: 12px;
+    }
+
+    .dash-intro-actions {
+        gap: 8px;
+    }
+
+    .dash-ops-card {
+        min-height: 124px;
+        padding: 16px;
+    }
+
+    #tab-dashboard .result-infoWrap,
+    .draw-proof-item,
+    .draw-premium-lock,
+    .draw-filter-overview {
+        padding: 14px !important;
+    }
+
+    #tab-draw.app-shell,
+    #tab-mypage.app-shell,
+    #tab-qr.app-shell,
+    #tab-store.app-shell.store-webview-tab {
+        padding-top: 12px;
+    }
+
+    #tab-draw .draw-studio-header {
+        margin-bottom: 12px;
+    }
+
+    #tab-draw .draw-scenario-card,
+    #tab-draw .draw-slot-card {
+        width: min(84vw, 264px);
+        flex-basis: min(84vw, 264px);
+    }
+
+    #tab-mypage .mypage-hero-card {
+        padding: 18px !important;
+    }
+
+    #tab-mypage .mypage-status-kpi strong {
+        font-size: 26px;
+    }
+
+    .app-toast {
+        bottom: calc(98px + env(safe-area-inset-bottom));
+        border-radius: 18px;
+        font-size: 13px;
+    }
+}
