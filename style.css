@@ -9418,3 +9418,226 @@ textarea {
         line-height: 1.4;
     }
 }
+
+/* Draw filter UX refinement */
+#tab-draw .draw-selection-dock {
+    position: sticky;
+    top: 96px;
+    z-index: 8;
+    display: grid;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+#tab-draw .draw-selection-dock.has-selection {
+    border-color: rgba(49, 130, 246, 0.22);
+    box-shadow: 0 16px 30px rgba(49, 130, 246, 0.12);
+}
+
+#tab-draw .draw-selection-dock-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+#tab-draw .draw-selection-dock-copy {
+    display: grid;
+    gap: 4px;
+}
+
+#tab-draw .draw-selection-dock-kicker {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: #1b64da;
+}
+
+#tab-draw #draw-dock-title {
+    font-size: 15px;
+    line-height: 1.25;
+    color: #191f28;
+    letter-spacing: -0.02em;
+}
+
+#tab-draw .draw-selection-dock-meta {
+    font-size: 12px;
+    line-height: 1.45;
+    color: #6b7684;
+}
+
+#tab-draw .draw-selection-dock-clear {
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(220, 38, 38, 0.12);
+    background: rgba(254, 242, 242, 0.96);
+    color: #b42318;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+#tab-draw .draw-selection-dock-preview {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+}
+
+#tab-draw .draw-selection-dock-preview::-webkit-scrollbar {
+    display: none;
+}
+
+#tab-draw .draw-selection-dock-chip,
+#tab-draw .draw-selection-dock-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#tab-draw .draw-selection-dock-chip {
+    border: 1px solid rgba(49, 130, 246, 0.14);
+    background: #ffffff;
+    color: #355070;
+}
+
+#tab-draw .draw-selection-dock-chip::after {
+    content: "×";
+    margin-left: 6px;
+    color: #8b95a1;
+    font-weight: 800;
+}
+
+#tab-draw .draw-selection-dock-more {
+    background: #eef5ff;
+    color: #1b64da;
+}
+
+#tab-draw .draw-selected-board {
+    background: linear-gradient(180deg, #ffffff, #fbfcfe);
+    border-color: rgba(148, 163, 184, 0.16);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
+}
+
+#tab-draw .draw-selected-header {
+    padding-bottom: 2px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+#tab-draw .draw-selected-board .draw-panel-header h3 {
+    font-size: 16px;
+    letter-spacing: -0.02em;
+}
+
+#tab-draw .draw-selected-lead {
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+#tab-draw .draw-selected-sub {
+    background: #f8fafc;
+}
+
+#tab-draw .draw-filter-overview {
+    gap: 6px;
+    padding: 12px 14px !important;
+    border-radius: 18px !important;
+    background: #f8fafc;
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    box-shadow: none;
+}
+
+#tab-draw .draw-filter-overview-head {
+    align-items: center;
+}
+
+#tab-draw .draw-filter-kicker {
+    font-size: 10px;
+    color: #6b7684;
+    letter-spacing: 0.1em;
+}
+
+#tab-draw #draw-selection-summary {
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+}
+
+#tab-draw #draw-filter-detail {
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+#tab-draw .draw-selected-toolbar {
+    gap: 10px;
+}
+
+#tab-draw .draw-selected-list {
+    gap: 8px;
+    max-height: 264px;
+}
+
+#tab-draw .draw-selected-group {
+    border-radius: 14px;
+    padding: 10px;
+}
+
+#tab-draw .draw-selected-chip {
+    border-radius: 999px;
+    background: #f8fafc;
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    #tab-draw .draw-selection-dock {
+        top: 76px;
+        margin-bottom: 12px;
+        padding: 11px 12px;
+        border-radius: 18px;
+    }
+
+    #tab-draw .draw-selection-dock-head {
+        gap: 8px;
+    }
+
+    #tab-draw .draw-selection-dock-clear {
+        min-height: 34px;
+        padding: 0 10px;
+        font-size: 11px;
+    }
+
+    #tab-draw .draw-selection-dock-chip,
+    #tab-draw .draw-selection-dock-more {
+        min-height: 32px;
+        padding: 0 10px;
+        font-size: 11px;
+    }
+
+    #tab-draw .draw-selected-header {
+        gap: 10px;
+    }
+
+    #tab-draw .draw-selected-board .draw-panel-header h3 {
+        font-size: 15px;
+    }
+
+    #tab-draw #draw-selection-summary {
+        font-size: 17px;
+    }
+}

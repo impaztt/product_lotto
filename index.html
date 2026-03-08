@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/common.css?v=20260213">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/layout.css?v=20260212">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/main-layout.css?v=20260212">
-		<link rel="stylesheet" href="style.css?v=20260308_7">
+		<link rel="stylesheet" href="style.css?v=20260308_8">
 
 </head>
 <body data-theme="light">
@@ -2200,8 +2200,8 @@
 		                        <div class="draw-panel draw-selected-board draw-selected-focus">
 		                            <div class="draw-panel-header draw-selected-header">
 		                                    <div class="draw-selected-title-wrap">
-		                                    <h3>필터 현황</h3>
-		                                        <p class="draw-selected-lead">지금 담은 규칙을 한 번에 읽고, 저장하고, 바로 생성으로 이어갑니다.</p>
+		                                    <h3>선택한 필터</h3>
+		                                        <p class="draw-selected-lead">지금 고른 규칙을 저장하고 바로 생성까지 이어갈 수 있습니다.</p>
 		                                    </div>
 		                                <div class="draw-selected-actions draw-selected-actions--minimal">
 		                                    <span class="draw-selected-sub" id="rules-visible-count">표시: 0/0</span>
@@ -2209,7 +2209,7 @@
 		                            </div>
 		                            <div class="draw-filter-overview">
 		                                <div class="draw-filter-overview-head">
-		                                    <span class="draw-filter-kicker">현재 필터</span>
+		                                    <span class="draw-filter-kicker">요약</span>
 		                                    <span class="draw-selected-count" id="rules-selected-count">0개</span>
 		                                </div>
 		                                <strong id="draw-selection-summary">필터를 아직 적용하지 않았습니다.</strong>
@@ -2234,6 +2234,17 @@
 
 			                    <div class="draw-dashboard">
 		                        <div class="draw-dashboard-unified" data-draw-mode-only="self">
+                            <section class="draw-selection-dock" id="draw-selection-dock">
+                                <div class="draw-selection-dock-head">
+                                    <div class="draw-selection-dock-copy">
+                                        <span class="draw-selection-dock-kicker">선택 상태</span>
+                                        <strong id="draw-dock-title">아직 필터 없음</strong>
+                                        <span class="draw-selection-dock-meta" id="draw-dock-meta">시나리오 또는 규칙을 선택하면 여기서 계속 보입니다.</span>
+                                    </div>
+                                    <button id="draw-dock-clear" class="draw-selection-dock-clear" type="button" hidden>전체 해제</button>
+                                </div>
+                                <div class="draw-selection-dock-preview" id="draw-selection-dock-preview" hidden></div>
+                            </section>
 	                        <div class="draw-dashboard-grid">
                             <div class="draw-metric-card primary metric-remaining-ratio">
                                 <div class="draw-metric-title">남은 조합 비중</div>
@@ -3185,6 +3196,6 @@
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore-compat.js"></script>
     <script src="scripts/lotto-tabs.js?v=20260307_1"></script>
     <script src="scripts/lotto-rules.js?v=20260307_1"></script>
-    <script src="main.js?v=20260308_4"></script>
+    <script src="main.js?v=20260308_5"></script>
 </body>
 </html>

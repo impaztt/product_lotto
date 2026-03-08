@@ -32,6 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedRulesListEl = document.getElementById('selected-rules-list');
     const selectedRulesEmptyEl = document.getElementById('selected-rules-empty');
     const selectedClearBtn = document.getElementById('selected-clear-btn');
+    const drawSelectionDockEl = document.getElementById('draw-selection-dock');
+    const drawSelectionDockTitleEl = document.getElementById('draw-dock-title');
+    const drawSelectionDockMetaEl = document.getElementById('draw-dock-meta');
+    const drawSelectionDockPreviewEl = document.getElementById('draw-selection-dock-preview');
+    const drawSelectionDockClearBtn = document.getElementById('draw-dock-clear');
     const oddsBenefitSummaryEl = document.getElementById('odds-benefit-summary');
     const oddsBaseEls = {
         1: document.getElementById('odds-base-1'),
@@ -1342,11 +1347,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    if (drawSelectionDockPreviewEl) {
+        drawSelectionDockPreviewEl.addEventListener('click', event => {
+            const button = event.target.closest('.draw-selection-dock-chip');
+            if (!button) {
+                return;
+            }
+            const value = button.dataset.value;
+            if (!value) {
+                return;
+            }
+            const targetInput = ruleInputs.find(input => input.value === value);
+            if (targetInput) {
+                targetInput.checked = false;
+                targetInput.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        });
+    }
+
+    function clearSelectedRules() {
+        setRulesByIds([]);
+        syncStrategyButtons('clear');
+        syncGroupLevelButtons();
+    }
+
     if (selectedClearBtn) {
         selectedClearBtn.addEventListener('click', () => {
-            setRulesByIds([]);
-            syncStrategyButtons('clear');
-            syncGroupLevelButtons();
+            clearSelectedRules();
+        });
+    }
+
+    if (drawSelectionDockClearBtn) {
+        drawSelectionDockClearBtn.addEventListener('click', () => {
+            clearSelectedRules();
         });
     }
 
@@ -1837,15 +1870,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const selectedCount = ruleInputs.filter(input => input.checked).length;
         if (drawSelectionSummaryEl) {
-            drawSelectionSummaryEl.textContent = selectedCount ? `${selectedCount}개 필터를 정교하게 적용 중입니다.` : '필터를 아직 적용하지 않았습니다.';
+            drawSelectionSummaryEl.textContent = selectedCount ? `${selectedCount}개 필터 선택됨` : '아직 선택된 필터가 없습니다.';
         }
         if (drawFilterDetailEl) {
             if (!selectedCount) {
-                drawFilterDetailEl.textContent = '시나리오를 선택하거나 규칙 라이브러리에서 직접 조합을 설계해 보세요.';
+                drawFilterDetailEl.textContent = '시나리오 또는 규칙을 추가해 조합을 좁혀보세요.';
                 return;
             }
-            const remainPct = Math.max(0, Math.min(100, Math.round(currentRemainingRatio * 1000) / 10));
-            drawFilterDetailEl.textContent = `남은 조합 ${formatNumber(currentRemainingCombos)}개 · 제외 ${formatNumber(currentExcludedCombos)}개 · 생존 비중 ${remainPct}%`;
+            const remainPct = Number.isFinite(currentRemainingRatio)
+                ? Math.max(0, Math.min(100, Math.round(currentRemainingRatio * 1000) / 10))
+                : 100;
+            const remainingValue = Number.isFinite(currentRemainingCombos) ? formatNumber(currentRemainingCombos) : '-';
+            const excludedValue = Number.isFinite(currentExcludedCombos) ? formatNumber(currentExcludedCombos) : '-';
+            drawFilterDetailEl.textContent = `남은 조합 ${remainingValue}개 · 제외 ${excludedValue}개 · 생존 비중 ${remainPct}%`;
         }
     }
 
@@ -4241,6 +4278,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const input = card.querySelector('.rule-input');
             return input && input.checked;
         });
+        updateDrawSelectionDock(selectedCards);
         if (!selectedCards.length) {
             selectedRulesEmptyEl.hidden = false;
             return;
@@ -4288,6 +4326,52 @@ document.addEventListener('DOMContentLoaded', () => {
             section.appendChild(chips);
             selectedRulesListEl.appendChild(section);
         });
+    }
+
+    function updateDrawSelectionDock(selectedCards) {
+        if (!drawSelectionDockEl || !drawSelectionDockTitleEl || !drawSelectionDockMetaEl || !drawSelectionDockPreviewEl) {
+            return;
+        }
+        const items = Array.isArray(selectedCards) ? selectedCards : [];
+        if (!items.length) {
+            drawSelectionDockEl.classList.remove('has-selection');
+            drawSelectionDockTitleEl.textContent = '아직 필터 없음';
+            drawSelectionDockMetaEl.textContent = '시나리오 또는 규칙을 선택하면 여기서 계속 보입니다.';
+            drawSelectionDockPreviewEl.hidden = true;
+            drawSelectionDockPreviewEl.innerHTML = '';
+            if (drawSelectionDockClearBtn) {
+                drawSelectionDockClearBtn.hidden = true;
+            }
+            return;
+        }
+
+        drawSelectionDockEl.classList.add('has-selection');
+        drawSelectionDockTitleEl.textContent = `${items.length}개 필터 적용 중`;
+        const remainPct = Number.isFinite(currentRemainingRatio)
+            ? Math.max(0, Math.min(100, Math.round(currentRemainingRatio * 1000) / 10))
+            : 100;
+        const remainingValue = Number.isFinite(currentRemainingCombos) ? formatNumber(currentRemainingCombos) : '-';
+        drawSelectionDockMetaEl.textContent = `남은 조합 ${remainingValue}개 · 생존 비중 ${remainPct}%`;
+        if (drawSelectionDockClearBtn) {
+            drawSelectionDockClearBtn.hidden = false;
+        }
+
+        const previewItems = items.slice(0, 8).map(card => {
+            const input = card.querySelector('.rule-input');
+            return {
+                value: input ? input.value : '',
+                title: card.dataset.title || card.querySelector('.rule-title')?.textContent || '규칙'
+            };
+        }).filter(item => item.value);
+
+        const moreCount = items.length - previewItems.length;
+        drawSelectionDockPreviewEl.hidden = false;
+        drawSelectionDockPreviewEl.innerHTML = previewItems
+            .map(item => (
+                `<button type="button" class="draw-selection-dock-chip" data-value="${escapeHtml(item.value)}">${escapeHtml(item.title)}</button>`
+            ))
+            .join('')
+            + (moreCount > 0 ? `<span class="draw-selection-dock-more">+${moreCount}</span>` : '');
     }
 
     function updateGroupButtons() {
