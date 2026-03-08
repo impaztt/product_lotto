@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileLinks = mobileMenu ? Array.from(mobileMenu.querySelectorAll('a')) : [];
+    const navTabLinks = Array.from(document.querySelectorAll('.main-nav [data-tab-link], .mobile-nav [data-tab-link]'));
     const presetButtons = Array.from(document.querySelectorAll('.preset-btn'));
     const saveRulesBtn = document.getElementById('save-rules');
     const loadRulesBtn = document.getElementById('load-rules');
@@ -114,6 +115,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const mypageNicknameDisplayEl = document.getElementById('mypage-nickname-display');
     const mypageHistoryListEl = document.getElementById('mypage-history-list');
     const mypageHistoryBadgeEl = document.getElementById('mypage-history-badge');
+    const mypageProfileEmailEl = document.getElementById('mypage-profile-email');
+    const mypageMembershipTierEl = document.getElementById('mypage-membership-tier');
+    const mypageMembershipTierSummaryEl = document.getElementById('mypage-membership-tier-summary');
+    const mypageMembershipDescEl = document.getElementById('mypage-membership-desc');
+    const mypageMembershipNextEl = document.getElementById('mypage-membership-next');
+    const mypagePlanNoteEl = document.getElementById('mypage-plan-note');
+    const mypagePlanManageBtn = document.getElementById('mypage-plan-manage-btn');
+    const mypagePlanCancelBtn = document.getElementById('mypage-plan-cancel-btn');
+    const mypagePresetBadgeEl = document.getElementById('mypage-preset-badge');
+    const mypagePresetSummaryEl = document.getElementById('mypage-preset-summary');
+    const mypagePresetUpdatedEl = document.getElementById('mypage-preset-updated');
+    const mypageSlotSummaryEl = document.getElementById('mypage-slot-summary');
+    const mypageSlotUpdatedEl = document.getElementById('mypage-slot-updated');
+    const mypageStatsGeneratedEl = document.getElementById('mypage-stats-generated');
+    const mypageStatsRoundEl = document.getElementById('mypage-stats-round');
+    const mypageStatsModeEl = document.getElementById('mypage-stats-mode');
+    const mypageSlotApplyButtons = Array.from(document.querySelectorAll('[data-mypage-slot-apply]'));
     const nicknameOpenModalBtn = document.getElementById('nickname-open-modal-btn');
     const nicknameModal = document.getElementById('nickname-modal');
     const nicknameModalCloseBtn = document.getElementById('nickname-modal-close');
@@ -236,6 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const qrPayloadEl = document.getElementById('qr-payload');
     const qrOpenRoundBtn = document.getElementById('qr-open-round-btn');
     const qrCopyNumbersBtn = document.getElementById('qr-copy-numbers-btn');
+    const appToastEl = document.getElementById('app-toast');
     const dashWinRoundLabelEl = document.getElementById('dash-win-round-label');
     const dashWinStatusEl = document.getElementById('dash-win-status');
     const dashWinTotalGeneratedEl = document.getElementById('dash-win-total-generated');
@@ -248,9 +267,24 @@ document.addEventListener('DOMContentLoaded', () => {
         4: document.getElementById('dash-win-rank-4'),
         5: document.getElementById('dash-win-rank-5')
     };
+    const dashSyncStatusEl = document.getElementById('dash-sync-status');
+    const dashSyncTimeEl = document.getElementById('dash-sync-time');
+    const dashMembershipChipEl = document.getElementById('dash-membership-chip');
+    const dashActivityChipEl = document.getElementById('dash-activity-chip');
+    const drawTargetRoundEl = document.getElementById('draw-target-round');
+    const drawMembershipStatusEl = document.getElementById('draw-membership-status');
+    const drawSelectionSummaryEl = document.getElementById('draw-selection-summary');
     let currentWeeklyData = null;
     let latestAvailableRound = null;
     const roundMetaByNo = new Map();
+    let mainInfoCache = {
+        ts: 0,
+        rounds: []
+    };
+    let mainInfoInflight = null;
+    let lastWeeklyRenderedAt = 0;
+    let lastWeeklyRenderMode = 'live';
+    let lastWeeklyRenderSource = 'proxy';
     let firebaseReady = false;
     let firebaseAuth = null;
     let firebaseDb = null;
@@ -267,7 +301,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let weeklyNextDrawOverride = null;
     let weeklyExpectedOverride = null;
     let weeklyExpectedUpdatedAt = 0;
+    let toastHideTimer = 0;
     const DRAW_ENTRY_LOCAL_KEY = 'lotto_guest_tracking_id';
+    const GENERATION_STATS_KEY = 'lotto_generation_stats';
+    const RULES_UPDATED_AT_KEY = 'lotto_rules_updated_at';
+    const CUSTOM_PRESET_UPDATED_AT_KEY = 'lotto_custom_preset_updated_at';
 
     const tabController = createTabController({
         tabButtons,
@@ -280,6 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         onDidChange({ tabId }) {
+            syncNavTabLinks(tabId);
             if (tabId === 'draw') {
                 scheduleDrawHorizontalWidthSync();
             }
@@ -597,12 +636,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             event.preventDefault();
-            showActionPopup('월정액 결제 연동 전입니다. 결제 연동 후 이용권 시작 버튼에 연결됩니다.');
+            setActiveTab('draw', true);
+            setDrawServiceMode('premium');
+            showActionPopup('플랜을 선택하면 프리미엄 추천을 바로 사용할 수 있습니다.');
         });
     }
 
     premiumPlanBuyButtons.forEach(button => {
-        button.addEventListener('click', event => {
+        button.addEventListener('click', async event => {
             event.preventDefault();
             const plan = String(button.dataset.premiumPlan || '').toLowerCase();
             const planMetaMap = {
@@ -615,7 +656,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 openAuthModal();
                 return;
             }
-            showActionPopup(`${planMeta.name} (${planMeta.price}) 결제 연동은 준비 중입니다. 결제 연결 후 활성화됩니다.`);
+            await setMembershipTier(plan);
+            setActiveTab('draw', true);
+            setDrawServiceMode('premium');
+            showActionPopup(`${planMeta.name} 플랜이 활성화되었습니다. ${planMeta.price} 구성을 기준으로 프리미엄 추천을 바로 사용할 수 있습니다.`);
         });
     });
 
@@ -935,11 +979,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    mypageSlotApplyButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const slot = Number(button.dataset.mypageSlotApply);
+            if (!Number.isFinite(slot)) {
+                return;
+            }
+            setActiveTab('draw', true);
+            setDrawServiceMode('self');
+            applySlotPreset(slot);
+        });
+    });
+
     if (saveRulesBtn) {
         saveRulesBtn.addEventListener('click', () => {
             const selected = ruleInputs.filter(input => input.checked).map(input => input.value);
             localStorage.setItem('lotto_rules', JSON.stringify(selected));
+            localStorage.setItem(RULES_UPDATED_AT_KEY, new Date().toISOString());
             updateRulesStatus('선택한 규칙을 저장했습니다.');
+            updateMypageSummaryUi();
         });
     }
 
@@ -953,7 +1011,9 @@ document.addEventListener('DOMContentLoaded', () => {
         customSaveBtn.addEventListener('click', () => {
             const selected = ruleInputs.filter(input => input.checked).map(input => input.value);
             localStorage.setItem('lotto_custom_preset', JSON.stringify(selected));
+            localStorage.setItem(CUSTOM_PRESET_UPDATED_AT_KEY, new Date().toISOString());
             updateRulesStatus('내 프리셋을 저장했습니다.');
+            updateMypageSummaryUi();
         });
     }
 
@@ -987,6 +1047,7 @@ document.addEventListener('DOMContentLoaded', () => {
             syncStrategyButtons('');
             syncGroupLevelButtons();
             updateRulesStatus('내 프리셋을 적용했습니다.');
+            updateMypageSummaryUi();
         });
     }
 
@@ -1019,6 +1080,25 @@ document.addEventListener('DOMContentLoaded', () => {
             await signOutFirebaseUser();
         });
     });
+
+    if (mypagePlanManageBtn) {
+        mypagePlanManageBtn.addEventListener('click', () => {
+            if (!isMember()) {
+                openAuthModal();
+                return;
+            }
+            setActiveTab('draw', true);
+            setDrawServiceMode('premium');
+            showActionPopup('원하는 플랜을 선택하거나 현재 활성화된 플랜으로 추천번호를 생성할 수 있습니다.');
+        });
+    }
+
+    if (mypagePlanCancelBtn) {
+        mypagePlanCancelBtn.addEventListener('click', async () => {
+            await setMembershipTier('free');
+            showActionPopup('무료 플랜으로 전환했습니다.');
+        });
+    }
 
     if (nicknameOpenModalBtn) {
         nicknameOpenModalBtn.addEventListener('click', () => {
@@ -1211,6 +1291,7 @@ document.addEventListener('DOMContentLoaded', () => {
         applyRulePickerFilter();
         setupRuleDetails();
         syncInitialTab();
+        syncNavTabLinks(getCurrentActiveTabId());
         window.addEventListener('message', event => {
             if (!event || !event.data || event.data.type !== 'switch-tab') {
                 return;
@@ -1234,6 +1315,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         updatePremiumMembershipUi();
         setDrawServiceMode(getStoredDrawServiceMode());
+        updateDrawContextUi();
+        updateDashboardSummaryUi();
+        updateMypageSummaryUi();
     } catch (error) {
         console.error('초기화 오류', error);
     }
@@ -1326,6 +1410,11 @@ document.addEventListener('DOMContentLoaded', () => {
         setDrawCopyButtonState(lastGeneratedDraws.length > 0);
         setDrawCopyStatus('');
         if (lastGeneratedDraws.length) {
+            recordGenerationStats({
+                sourceMode: 'self',
+                setCount: lastGeneratedDraws.length,
+                round: getTargetRoundForEntries()
+            });
             persistGeneratedEntries(lastGeneratedDraws, {
                 sourceMode: 'self',
                 ruleIds: options.ruleIds
@@ -1448,6 +1537,262 @@ document.addEventListener('DOMContentLoaded', () => {
             text += alphabet[Math.floor(Math.random() * alphabet.length)];
         }
         return text;
+    }
+
+    function readStoredRuleIds(key) {
+        try {
+            const raw = localStorage.getItem(key);
+            if (!raw) {
+                return [];
+            }
+            const parsed = JSON.parse(raw);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+            console.warn('저장된 규칙 로드 실패', error);
+            return [];
+        }
+    }
+
+    function getGenerationStats() {
+        try {
+            const raw = localStorage.getItem(GENERATION_STATS_KEY);
+            if (!raw) {
+                return {
+                    sessions: 0,
+                    totalSets: 0,
+                    lastSourceMode: 'self',
+                    lastRound: 0,
+                    lastGeneratedAt: ''
+                };
+            }
+            const parsed = JSON.parse(raw);
+            return {
+                sessions: Number(parsed.sessions || 0),
+                totalSets: Number(parsed.totalSets || 0),
+                lastSourceMode: parsed.lastSourceMode === 'premium' ? 'premium' : 'self',
+                lastRound: Number(parsed.lastRound || 0),
+                lastGeneratedAt: parsed.lastGeneratedAt ? String(parsed.lastGeneratedAt) : ''
+            };
+        } catch (error) {
+            console.warn('생성 통계 로드 실패', error);
+            return {
+                sessions: 0,
+                totalSets: 0,
+                lastSourceMode: 'self',
+                lastRound: 0,
+                lastGeneratedAt: ''
+            };
+        }
+    }
+
+    function saveGenerationStats(stats) {
+        try {
+            localStorage.setItem(GENERATION_STATS_KEY, JSON.stringify(stats));
+        } catch (error) {
+            console.warn('생성 통계 저장 실패', error);
+        }
+    }
+
+    function recordGenerationStats({ sourceMode = 'self', setCount = 0, round = 0 } = {}) {
+        const current = getGenerationStats();
+        const next = {
+            sessions: current.sessions + 1,
+            totalSets: current.totalSets + Math.max(0, Number(setCount) || 0),
+            lastSourceMode: sourceMode === 'premium' ? 'premium' : 'self',
+            lastRound: Number(round) > 0 ? Number(round) : current.lastRound,
+            lastGeneratedAt: new Date().toISOString()
+        };
+        saveGenerationStats(next);
+        updateDashboardSummaryUi();
+        updateMypageSummaryUi();
+    }
+
+    function formatRelativeTime(value) {
+        const date = value instanceof Date ? value : new Date(value);
+        const millis = date.getTime();
+        if (!Number.isFinite(millis)) {
+            return '-';
+        }
+        const diff = Date.now() - millis;
+        if (diff < 60 * 1000) {
+            return '방금 전';
+        }
+        if (diff < 60 * 60 * 1000) {
+            return `${Math.floor(diff / (60 * 1000))}분 전`;
+        }
+        if (diff < 24 * 60 * 60 * 1000) {
+            return `${Math.floor(diff / (60 * 60 * 1000))}시간 전`;
+        }
+        return formatSlotDate(date.toISOString());
+    }
+
+    function getMembershipPlanMeta(tier = getMembershipTier()) {
+        const normalized = String(tier || 'free').trim().toLowerCase();
+        const planMap = {
+            free: {
+                id: 'free',
+                label: 'FREE',
+                description: '직접 선택, 보관함 저장, 생성 히스토리를 기본 제공',
+                nextLabel: '업그레이드 가능',
+                note: '직접 선택만 활성화'
+            },
+            starter: {
+                id: 'starter',
+                label: 'STARTER',
+                description: '주 1회 추천 3세트와 최근 4주 히스토리를 제공',
+                nextLabel: '주 1회 자동 추천',
+                note: '입문형 추천 플랜 활성화'
+            },
+            standard: {
+                id: 'standard',
+                label: 'STANDARD',
+                description: '회차당 추천 5세트와 최근 12주 히스토리를 제공',
+                nextLabel: '주 2회 자동 추천',
+                note: '표준형 추천 플랜 활성화'
+            },
+            master: {
+                id: 'master',
+                label: 'MASTER',
+                description: '우선 추천과 심화 리포트를 포함한 집중형 플랜',
+                nextLabel: '주 3회 자동 추천',
+                note: '고급형 추천 플랜 활성화'
+            },
+            premium: {
+                id: 'premium',
+                label: 'PREMIUM',
+                description: '추천 5세트와 프리미엄 복사 기능을 제공합니다.',
+                nextLabel: '프리미엄 추천 활성화',
+                note: '프리미엄 추천 사용 가능'
+            }
+        };
+        return planMap[normalized] || planMap.free;
+    }
+
+    function updateDashboardSummaryUi() {
+        if (dashSyncStatusEl) {
+            if (currentWeeklyData && Number(currentWeeklyData.drwNo) > 0) {
+                const label = lastWeeklyRenderMode === 'cached' ? '캐시 반영' : '실시간 반영';
+                dashSyncStatusEl.textContent = `${currentWeeklyData.drwNo}회 ${label}`;
+            } else {
+                dashSyncStatusEl.textContent = '최신 회차를 확인하는 중입니다.';
+            }
+        }
+        if (dashSyncTimeEl) {
+            if (lastWeeklyRenderedAt) {
+                const sourceLabel = lastWeeklyRenderSource === 'main-info' ? '공식 메인 정보' : '공식 회차 데이터';
+                dashSyncTimeEl.textContent = `${formatRelativeTime(lastWeeklyRenderedAt)} · ${sourceLabel}`;
+            } else {
+                dashSyncTimeEl.textContent = '공식 데이터를 불러오면 상태가 즉시 반영됩니다.';
+            }
+        }
+        if (dashMembershipChipEl) {
+            dashMembershipChipEl.textContent = isMember() ? getMembershipPlanMeta().label : '로그인 전';
+        }
+        if (dashActivityChipEl) {
+            const stats = getGenerationStats();
+            if (stats.totalSets > 0) {
+                const modeLabel = stats.lastSourceMode === 'premium' ? '추천' : '직접선택';
+                dashActivityChipEl.textContent = `누적 ${formatNumber(stats.totalSets)}세트 · 최근 ${modeLabel}`;
+            } else {
+                dashActivityChipEl.textContent = '아직 생성 이력이 없습니다.';
+            }
+        }
+    }
+
+    function updateDrawContextUi() {
+        if (drawTargetRoundEl) {
+            const targetRound = getTargetRoundForEntries();
+            drawTargetRoundEl.textContent = Number(targetRound) > 0 ? `${targetRound}회 저장` : '-';
+        }
+        if (drawMembershipStatusEl) {
+            drawMembershipStatusEl.textContent = isMember() ? getMembershipPlanMeta().label : '로그인 전';
+        }
+        if (drawSelectionSummaryEl) {
+            const selectedCount = ruleInputs.filter(input => input.checked).length;
+            drawSelectionSummaryEl.textContent = selectedCount ? `${selectedCount}개 규칙 활성화` : '선택된 규칙 없음';
+        }
+    }
+
+    function updateMypageSummaryUi() {
+        const plan = getMembershipPlanMeta();
+        const stats = getGenerationStats();
+        const savedRules = readStoredRuleIds('lotto_rules');
+        const customPreset = readStoredRuleIds('lotto_custom_preset');
+        const savedRulesUpdatedAt = localStorage.getItem(RULES_UPDATED_AT_KEY) || '';
+        const customPresetUpdatedAt = localStorage.getItem(CUSTOM_PRESET_UPDATED_AT_KEY) || '';
+        const slotPresets = getSlotPresets();
+        const activeSlots = Object.values(slotPresets).filter(value => Array.isArray(value && value.ids) && value.ids.length).length;
+        const latestSlot = Object.values(slotPresets)
+            .filter(value => value && value.savedAt)
+            .sort((a, b) => new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime())[0] || null;
+        const strongestPresetCount = Math.max(savedRules.length, customPreset.length);
+        const latestPresetAt = [savedRulesUpdatedAt, customPresetUpdatedAt]
+            .filter(Boolean)
+            .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0] || '';
+
+        if (mypageProfileEmailEl) {
+            if (currentUser && currentUser.email) {
+                mypageProfileEmailEl.textContent = currentUser.email;
+            } else if (isMember() && currentUser) {
+                mypageProfileEmailEl.textContent = currentUser.uid;
+            } else {
+                mypageProfileEmailEl.textContent = '로그인 전';
+            }
+        }
+        if (mypageMembershipTierEl) {
+            mypageMembershipTierEl.textContent = isMember() ? plan.label : 'FREE';
+        }
+        if (mypageMembershipTierSummaryEl) {
+            mypageMembershipTierSummaryEl.textContent = isMember() ? plan.label : 'FREE';
+        }
+        if (mypageMembershipDescEl) {
+            mypageMembershipDescEl.textContent = isMember()
+                ? plan.description
+                : '로그인 후 플랜을 활성화하면 프리미엄 추천번호를 바로 이용할 수 있습니다.';
+        }
+        if (mypageMembershipNextEl) {
+            mypageMembershipNextEl.textContent = isMember() ? plan.nextLabel : '업그레이드 가능';
+        }
+        if (mypagePlanNoteEl) {
+            mypagePlanNoteEl.textContent = isMember() ? plan.note : '직접 선택만 활성화';
+        }
+        if (mypagePlanManageBtn) {
+            mypagePlanManageBtn.textContent = isMember() ? '플랜 관리' : '로그인 후 플랜 시작';
+        }
+        if (mypagePlanCancelBtn) {
+            mypagePlanCancelBtn.hidden = !isPremiumMember();
+        }
+        if (mypagePresetBadgeEl) {
+            mypagePresetBadgeEl.textContent = `${strongestPresetCount}개`;
+        }
+        if (mypagePresetSummaryEl) {
+            if (strongestPresetCount) {
+                mypagePresetSummaryEl.textContent = `저장 규칙 ${savedRules.length}개 · 내 프리셋 ${customPreset.length}개`;
+            } else {
+                mypagePresetSummaryEl.textContent = '저장된 프리셋 없음';
+            }
+        }
+        if (mypagePresetUpdatedEl) {
+            mypagePresetUpdatedEl.textContent = latestPresetAt ? formatRelativeTime(latestPresetAt) : '-';
+        }
+        if (mypageSlotSummaryEl) {
+            mypageSlotSummaryEl.textContent = activeSlots ? `${activeSlots}개 보관함 사용 중` : '비어있음';
+        }
+        if (mypageSlotUpdatedEl) {
+            mypageSlotUpdatedEl.textContent = latestSlot && latestSlot.savedAt
+                ? `최근 저장: ${formatSlotDate(latestSlot.savedAt)}`
+                : '보관함 1~3번의 최근 저장 상태를 반영합니다.';
+        }
+        if (mypageStatsGeneratedEl) {
+            mypageStatsGeneratedEl.textContent = `${formatNumber(stats.totalSets || 0)}세트`;
+        }
+        if (mypageStatsRoundEl) {
+            const round = Number(stats.lastRound || getTargetRoundForEntries() || 0);
+            mypageStatsRoundEl.textContent = round > 0 ? `${round}회` : '-';
+        }
+        if (mypageStatsModeEl) {
+            mypageStatsModeEl.textContent = stats.lastSourceMode === 'premium' ? '월정액 추천' : '직접선택';
+        }
     }
 
     function getTargetRoundForEntries() {
@@ -1784,7 +2129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isMember()) {
             return false;
         }
-        return getMembershipTier() === 'premium';
+        return getMembershipPlanMeta().id !== 'free';
     }
 
     function setDrawServiceMode(mode) {
@@ -1810,9 +2155,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updatePremiumMembershipUi() {
+        const plan = getMembershipPlanMeta();
         const premium = isPremiumMember();
         if (premiumBadgeEl) {
-            premiumBadgeEl.textContent = premium ? 'PREMIUM' : 'FREE';
+            premiumBadgeEl.textContent = premium ? plan.label : 'FREE';
             premiumBadgeEl.classList.toggle('is-premium', premium);
         }
         if (premiumLockEl) {
@@ -1825,17 +2171,53 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isMember()) {
                 premiumUpgradeBtn.textContent = '가입/로그인 후 시작하기';
             } else if (premium) {
-                premiumUpgradeBtn.textContent = '월정액 이용중';
+                premiumUpgradeBtn.textContent = `${plan.label} 이용중`;
             } else {
-                premiumUpgradeBtn.textContent = '월정액 시작하기';
+                premiumUpgradeBtn.textContent = '플랜 선택하기';
             }
         }
         if (!premium) {
+            lastPremiumDraws = [];
             setPremiumCopyButtonState(false);
+            if (premiumNumbersContainer) {
+                premiumNumbersContainer.innerHTML = '<div class="premium-empty-state">아직 추천번호가 없습니다. 플랜을 활성화한 뒤 이번 회차 추천을 받아보세요.</div>';
+            }
             if (!lastPremiumDraws.length) {
                 updatePremiumCopyStatus('월정액 이용권 활성화 시 추천번호를 제공합니다.');
             }
+        } else if (!lastPremiumDraws.length) {
+            updatePremiumCopyStatus(`${plan.label} 플랜 활성화 완료. 추천번호 받기로 이번 회차 세트를 생성해 보세요.`);
         }
+        updateDrawContextUi();
+        updateDashboardSummaryUi();
+        updateMypageSummaryUi();
+    }
+
+    async function setMembershipTier(tier) {
+        const nextTier = ['starter', 'standard', 'master', 'premium'].includes(String(tier || '').toLowerCase())
+            ? String(tier).toLowerCase()
+            : 'free';
+        localStorage.setItem('lotto_membership_tier', nextTier);
+        if (currentUserProfile) {
+            currentUserProfile = {
+                ...currentUserProfile,
+                membershipTier: nextTier,
+                subscriptionUpdatedAt: new Date().toISOString()
+            };
+        }
+        if (firebaseDb && currentUser) {
+            try {
+                await firebaseDb.collection('users').doc(currentUser.uid).set({
+                    membershipTier: nextTier,
+                    subscriptionStatus: nextTier === 'free' ? 'inactive' : 'active',
+                    subscriptionUpdatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+                await ensureUserProfile();
+            } catch (error) {
+                console.warn('멤버십 상태 저장 실패', error);
+            }
+        }
+        updatePremiumMembershipUi();
     }
 
     function generatePremiumRecommendations(count) {
@@ -1896,6 +2278,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         setPremiumCopyButtonState(lastPremiumDraws.length > 0);
         if (lastPremiumDraws.length) {
+            recordGenerationStats({
+                sourceMode: 'premium',
+                setCount: lastPremiumDraws.length,
+                round: getTargetRoundForEntries()
+            });
             persistGeneratedEntries(draws, {
                 sourceMode: 'premium'
             });
@@ -2098,7 +2485,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showActionPopup(message) {
-        window.alert(message);
+        if (!appToastEl) {
+            window.alert(message);
+            return;
+        }
+        appToastEl.textContent = String(message || '');
+        appToastEl.hidden = false;
+        appToastEl.classList.add('is-visible');
+        if (toastHideTimer) {
+            window.clearTimeout(toastHideTimer);
+        }
+        toastHideTimer = window.setTimeout(() => {
+            appToastEl.classList.remove('is-visible');
+            appToastEl.hidden = true;
+        }, 2600);
     }
 
     function openNicknameModal() {
@@ -2148,6 +2548,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 uid: currentUser.uid,
                 email: currentUser.email || '',
                 nickname,
+                membershipTier: getMembershipTier() || 'free',
                 createdAt: serverNow,
                 updatedAt: serverNow,
                 nicknameUpdatedAt: serverNow,
@@ -2689,6 +3090,25 @@ document.addEventListener('DOMContentLoaded', () => {
         menuToggle.textContent = open ? '닫기' : '메뉴';
     }
 
+    function syncNavTabLinks(activeTabId) {
+        navTabLinks.forEach(link => {
+            const active = String(link.dataset.tabLink || '') === String(activeTabId || '');
+            link.classList.toggle('is-active', active);
+            if (active) {
+                link.setAttribute('aria-current', 'page');
+            } else {
+                link.removeAttribute('aria-current');
+            }
+        });
+    }
+
+    function getCurrentActiveTabId() {
+        const activeButton = tabButtons.find(button =>
+            button.classList.contains('is-active') || button.getAttribute('aria-selected') === 'true'
+        );
+        return activeButton ? String(activeButton.dataset.tab || 'dashboard') : 'dashboard';
+    }
+
     async function fetchLatestDraw() {
         const hasWeeklyUi = Boolean(
             weeklyLatestRoundEl ||
@@ -2971,27 +3391,132 @@ document.addEventListener('DOMContentLoaded', () => {
                 weeklyCountdownSubEl.textContent = `제${current.ltEpsd}회 추첨: ${formatKstDateTime(date)} (KST)`;
             }
         }
+        if (current?.ltEpsd) {
+            const resolvedLatestRound = Math.max(1, Number(current.ltEpsd) - 1);
+            if (resolvedLatestRound > 0) {
+                const previousLatestRound = Number(latestAvailableRound || 0);
+                latestAvailableRound = resolvedLatestRound;
+                initRoundSelect(resolvedLatestRound);
+                syncRoundSearchDefault(resolvedLatestRound, { force: previousLatestRound !== resolvedLatestRound });
+                if (!currentWeeklyData || Number(currentWeeklyData.drwNo || 0) < resolvedLatestRound) {
+                    fetchLatestDraw();
+                }
+            }
+        }
+        updateDrawContextUi();
+        updateDashboardSummaryUi();
+        updateMypageSummaryUi();
+    }
+
+    function annotateDrawDataSource(data, source) {
+        if (!data || typeof data !== 'object') {
+            return data;
+        }
+        return {
+            ...data,
+            _source: source
+        };
+    }
+
+    function mapMainInfoItemToDrawData(item) {
+        if (!item || !Number(item.ltEpsd)) {
+            return null;
+        }
+        const dateRaw = String(item.ltRflYmd || '').replace(/[^\d]/g, '');
+        return annotateDrawDataSource({
+            returnValue: 'success',
+            drwNo: Number(item.ltEpsd),
+            drwNoDate: dateRaw.length === 8 ? `${dateRaw.slice(0, 4)}-${dateRaw.slice(4, 6)}-${dateRaw.slice(6, 8)}` : '',
+            drwtNo1: Number(item.tm1WnNo),
+            drwtNo2: Number(item.tm2WnNo),
+            drwtNo3: Number(item.tm3WnNo),
+            drwtNo4: Number(item.tm4WnNo),
+            drwtNo5: Number(item.tm5WnNo),
+            drwtNo6: Number(item.tm6WnNo),
+            bnusNo: Number(item.bnsWnNo),
+            firstPrzwnerCo: Number(item.rnk1WnNope || 0),
+            firstWinamnt: Number(item.rnk1WnAmt || 0),
+            firstAccumamnt: Number(item.rnk1SumWnAmt || 0),
+            totSellamnt: Number(item.rlvtEpsdSumNtslAmt || 0)
+        }, 'main-info');
+    }
+
+    async function fetchRecentMainInfoRounds(force = false) {
+        const maxAge = 1000 * 60;
+        if (!force && mainInfoCache.rounds.length && Date.now() - mainInfoCache.ts < maxAge) {
+            return mainInfoCache.rounds;
+        }
+        if (!force && mainInfoInflight) {
+            return mainInfoInflight;
+        }
+        const targetUrl = '/mirror/proxy?url=https%3A%2F%2Fwww.dhlottery.co.kr%2FselectMainInfo.do';
+        mainInfoInflight = fetch(targetUrl, { cache: 'no-store' })
+            .then(async response => {
+                if (!response.ok) {
+                    throw new Error(`main info ${response.status}`);
+                }
+                const payload = await response.json();
+                const list = payload?.data?.result?.pstLtEpstInfo?.lt645;
+                const rounds = Array.isArray(list)
+                    ? list.map(mapMainInfoItemToDrawData).filter(Boolean)
+                    : [];
+                mainInfoCache = {
+                    ts: Date.now(),
+                    rounds
+                };
+                return rounds;
+            })
+            .finally(() => {
+                mainInfoInflight = null;
+            });
+        return mainInfoInflight;
+    }
+
+    async function fetchDrawDataFromMainInfo(round) {
+        const rounds = await fetchRecentMainInfoRounds();
+        const targetRound = Number(round);
+        return rounds.find(item => Number(item.drwNo) === targetRound) || null;
     }
 
     async function fetchDrawData(round) {
         const proxyBase = window.LOTTO_PROXY_URL || '/api/lotto';
         const url = `${proxyBase}?drwNo=${round}`;
-        const controller = new AbortController();
-        const timeoutId = window.setTimeout(() => controller.abort(), 6000);
-        const response = await fetch(url, {
-            cache: 'no-store',
-            signal: controller.signal
-        });
-        window.clearTimeout(timeoutId);
-        if (!response.ok) {
-            throw new Error(`응답 실패: ${response.status}`);
+        let lastError = null;
+        try {
+            const controller = new AbortController();
+            const timeoutId = window.setTimeout(() => controller.abort(), 6000);
+            const response = await fetch(url, {
+                cache: 'no-store',
+                signal: controller.signal
+            });
+            window.clearTimeout(timeoutId);
+            if (!response.ok) {
+                throw new Error(`응답 실패: ${response.status}`);
+            }
+            const payload = await response.json();
+            if (payload && payload.returnValue === 'success') {
+                return annotateDrawDataSource(payload, 'proxy');
+            }
+            lastError = new Error(payload?.message || '유효한 응답이 아닙니다.');
+        } catch (error) {
+            lastError = error;
         }
-        return response.json();
+        const fallback = await fetchDrawDataFromMainInfo(round).catch(error => {
+            logProxyError('fetchDrawDataFromMainInfo', error, { round });
+            return null;
+        });
+        if (fallback) {
+            return fallback;
+        }
+        throw lastError || new Error('회차 데이터를 불러오지 못했습니다.');
     }
 
     function renderWeeklyData(data, { cached }) {
         rememberRoundMeta(data);
         currentWeeklyData = data;
+        lastWeeklyRenderedAt = Date.now();
+        lastWeeklyRenderMode = cached ? 'cached' : 'live';
+        lastWeeklyRenderSource = data && data._source ? data._source : 'proxy';
         const numbers = [
             data.drwtNo1,
             data.drwtNo2,
@@ -3089,7 +3614,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dashThisDateEl && !dashThisDateEl.textContent.trim()) {
             dashThisDateEl.textContent = formatShortDate(getNextSaturdayDrawTime(getKstNow()));
         }
-
+        updateDrawContextUi();
+        updateDashboardSummaryUi();
+        updateMypageSummaryUi();
     }
 
     function formatCurrency(value) {
@@ -3414,6 +3941,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveSlotPresets(slots);
         renderSlotPresets();
         updateRulesStatus(`${slot}번 보관함에 저장했습니다.`);
+        updateMypageSummaryUi();
     }
 
     function applySlotPreset(slot) {
@@ -3427,6 +3955,7 @@ document.addEventListener('DOMContentLoaded', () => {
         syncStrategyButtons('');
         syncGroupLevelButtons();
         updateRulesStatus(`${slot}번 보관함을 적용했습니다.`);
+        updateMypageSummaryUi();
     }
 
     function applyPreset(preset) {
@@ -3442,6 +3971,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateRulesStatus(`${PRESETS_LABEL[preset]} 규칙을 적용했습니다.`);
         syncStrategyButtons(preset);
         syncGroupLevelButtons();
+        updateMypageSummaryUi();
     }
 
     function applySavedRules(fromButton = false) {
@@ -3461,6 +3991,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (fromButton) {
                 updateRulesStatus('저장된 규칙을 불러왔습니다.');
             }
+            updateMypageSummaryUi();
         } catch (error) {
             console.warn('저장된 규칙 파싱 실패', error);
             localStorage.removeItem('lotto_rules');
@@ -3485,6 +4016,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         renderSelectedRules();
         updateGroupButtons();
+        updateDrawContextUi();
+        updateMypageSummaryUi();
     }
 
     function renderSelectedRules() {
@@ -3874,6 +4407,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${yyyy}-${mm}-${dd} ${hh}:${min}`;
     }
 
+    function cacheRoundOnly(data) {
+        try {
+            const payload = {
+                data,
+                ts: Date.now()
+            };
+            localStorage.setItem(`lotto_round_${data.drwNo}`, JSON.stringify(payload));
+        } catch (error) {
+            console.warn('캐시 저장 실패', error);
+        }
+    }
+
     function cacheWeekly(data) {
         try {
             const payload = {
@@ -3882,7 +4427,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             localStorage.setItem('lotto_weekly_cache', JSON.stringify(payload));
             localStorage.setItem('lotto_last_round', String(data.drwNo));
-            localStorage.setItem(`lotto_round_${data.drwNo}`, JSON.stringify(payload));
+            cacheRoundOnly(data);
         } catch (error) {
             console.warn('캐시 저장 실패', error);
         }
@@ -4043,7 +4588,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await fetchDrawData(round);
             if (data && data.returnValue === 'success') {
                 renderWeeklyData(data, { cached: false });
-                cacheWeekly(data);
+                if (Number(data.drwNo) === Number(latestAvailableRound)) {
+                    cacheWeekly(data);
+                } else {
+                    cacheRoundOnly(data);
+                }
                 if (trendChart && (trendChart.classList.contains('is-empty') || !trendChart.children.length)) {
                     renderTrendChart([data]);
                 }
@@ -4115,7 +4664,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await fetchDrawData(round);
             if (data && data.returnValue === 'success') {
                 fillRecentCard(card, data);
-                cacheWeekly(data);
+                cacheRoundOnly(data);
                 return data;
             }
         } catch (error) {

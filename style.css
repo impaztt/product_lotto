@@ -6648,3 +6648,282 @@ body[data-theme="dark"] #tab-store .store-shell-toolbar .ghost {
         width: 100%;
     }
 }
+
+/* Premium mobile-first dashboard and account refresh */
+.dash-ops-strip {
+    width: min(100%, 1160px);
+    margin: 18px auto 28px;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.dash-ops-card {
+    appearance: none;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 28px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    display: grid;
+    gap: 8px;
+    text-align: left;
+}
+
+.dash-ops-card strong {
+    font-size: clamp(18px, 2vw, 24px);
+    line-height: 1.2;
+    color: #0f172a;
+}
+
+.dash-ops-card p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #5b6b80;
+}
+
+.dash-ops-kicker {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #1d4ed8;
+}
+
+.dash-ops-card--primary {
+    background: linear-gradient(135deg, rgba(229, 241, 255, 0.98), rgba(255, 255, 255, 0.96));
+}
+
+.dash-ops-card--action {
+    cursor: pointer;
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.dash-ops-card--action:hover {
+    transform: translateY(-2px);
+    border-color: rgba(29, 78, 216, 0.22);
+    box-shadow: 0 22px 44px rgba(29, 78, 216, 0.12);
+}
+
+.draw-studio-brief {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.studio-brief-card {
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 22px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    display: grid;
+    gap: 6px;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+.studio-brief-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #64748b;
+}
+
+.studio-brief-card strong {
+    font-size: 22px;
+    line-height: 1.15;
+    color: #0f172a;
+}
+
+.studio-brief-card p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: #64748b;
+}
+
+#tab-draw .draw-selected-presets {
+    margin-top: 4px;
+}
+
+.draw-premium-results {
+    display: grid;
+    gap: 14px;
+}
+
+.premium-empty-state {
+    border: 1px dashed rgba(59, 130, 246, 0.26);
+    border-radius: 18px;
+    padding: 18px 16px;
+    background: linear-gradient(135deg, rgba(239, 246, 255, 0.8), rgba(248, 250, 252, 0.92));
+    color: #4b5563;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+#tab-mypage .info-card--wide {
+    grid-column: 1 / -1;
+}
+
+#tab-mypage .mypage-plan-summary {
+    display: grid;
+    gap: 6px;
+    padding: 4px 0 10px;
+}
+
+#tab-mypage .mypage-plan-summary strong {
+    font-size: 28px;
+    line-height: 1.1;
+    color: #0f172a;
+}
+
+#tab-mypage .mypage-plan-summary p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #64748b;
+}
+
+#tab-mypage .mypage-inline-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+#tab-mypage .mypage-inline-actions .ghost {
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    background: rgba(248, 250, 252, 0.92);
+    color: #0f172a;
+    border-radius: 14px;
+    padding: 11px 14px;
+    font-weight: 700;
+}
+
+#tab-mypage .history-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+#tab-mypage .history-list li:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+#tab-mypage .history-list .info-label {
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+#tab-mypage .history-list strong {
+    font-size: 14px;
+    line-height: 1.45;
+    text-align: right;
+    color: #0f172a;
+}
+
+.app-toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(96px + env(safe-area-inset-bottom));
+    transform: translate(-50%, 12px);
+    width: min(92vw, 520px);
+    padding: 14px 18px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.94);
+    color: #ffffff;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.45;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.26);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease, transform 180ms ease;
+    z-index: 70;
+}
+
+.app-toast.is-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+body[data-theme="dark"] .dash-ops-card,
+body[data-theme="dark"] .studio-brief-card,
+body[data-theme="dark"] .premium-empty-state,
+body[data-theme="dark"] #tab-mypage .mypage-inline-actions .ghost {
+    background: rgba(15, 23, 42, 0.86);
+    border-color: rgba(148, 163, 184, 0.18);
+}
+
+body[data-theme="dark"] .dash-ops-card strong,
+body[data-theme="dark"] .studio-brief-card strong,
+body[data-theme="dark"] #tab-mypage .mypage-plan-summary strong,
+body[data-theme="dark"] #tab-mypage .history-list strong {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] .dash-ops-card p,
+body[data-theme="dark"] .studio-brief-card p,
+body[data-theme="dark"] .premium-empty-state,
+body[data-theme="dark"] #tab-mypage .mypage-plan-summary p,
+body[data-theme="dark"] #tab-mypage .history-list .info-label {
+    color: rgba(226, 232, 240, 0.82);
+}
+
+@media (max-width: 1080px) {
+    .dash-ops-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .draw-studio-brief {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .dash-ops-strip {
+        padding: 0 16px;
+        grid-template-columns: 1fr;
+    }
+
+    .draw-studio-brief {
+        grid-template-columns: 1fr;
+    }
+
+    .draw-premium-controls {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-mypage .mypage-inline-actions {
+        flex-direction: column;
+    }
+
+    #tab-mypage .mypage-inline-actions .ghost {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .dash-ops-card {
+        border-radius: 22px;
+        padding: 18px;
+    }
+
+    .studio-brief-card {
+        border-radius: 18px;
+    }
+
+    .app-toast {
+        bottom: calc(88px + env(safe-area-inset-bottom));
+        border-radius: 20px;
+        font-size: 13px;
+    }
+}

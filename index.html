@@ -11,18 +11,38 @@
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/common.css?v=20260213">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/layout.css?v=20260212">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/main-layout.css?v=20260212">
-	<link rel="stylesheet" href="style.css?v=20260307_4">
+		<link rel="stylesheet" href="style.css?v=20260308_1">
 
 </head>
 <body data-theme="light">
     <header class="site-header">
         <div class="logo">로또픽스튜디오</div>
+        <nav class="main-nav" aria-label="주요 메뉴">
+            <a href="#dashboard" data-tab-link="dashboard" class="is-active">대시보드</a>
+            <a href="#draw" data-tab-link="draw">번호 생성</a>
+            <a href="#mypage" data-tab-link="mypage">마이페이지</a>
+            <a href="#store" data-tab-link="store">판매점</a>
+            <a href="#qr" data-tab-link="qr">QR 확인</a>
+        </nav>
         <div class="header-actions">
+            <button id="theme-toggle" class="icon-btn" type="button" aria-label="테마 전환">
+                <span class="theme-icon" aria-hidden="true"></span>
+            </button>
             <a class="ghost" href="#auth" data-open-auth="true">로그인</a>
             <a class="cta" href="#auth" data-open-auth="true">시작하기</a>
             <button id="header-logout-btn" class="ghost" type="button" data-logout="true" hidden>로그아웃</button>
+            <button id="menu-toggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu">메뉴</button>
         </div>
     </header>
+    <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+        <nav class="mobile-nav" aria-label="모바일 메뉴">
+            <a href="#dashboard" data-tab-link="dashboard" class="is-active">대시보드</a>
+            <a href="#draw" data-tab-link="draw">번호 생성</a>
+            <a href="#mypage" data-tab-link="mypage">마이페이지</a>
+            <a href="#store" data-tab-link="store">판매점</a>
+            <a href="#qr" data-tab-link="qr">QR 확인</a>
+        </nav>
+    </div>
 
     <main class="tab-layout">
         <section id="tab-weekly" class="tab-panel" role="tabpanel" aria-labelledby="tab-weekly-btn" tabindex="0">
@@ -90,11 +110,12 @@
 											<div class="time-txt">초</div>
 										</div>
 									</div>
-									<div class="winnings-txt">1등 예상 총 당첨금</div>
-									<div class="winnings" id="rnk1ExpcAmt"></div>
-									<button class="btn-butNow" type="button" id="btnBuyLt645"
-										title="새창">바로구매</button>
-									<div class="winnings-txt">구매한도 5천 원/1회차</div>
+										<div class="winnings-txt">1등 예상 총 당첨금</div>
+										<div class="winnings" id="rnk1ExpcAmt"></div>
+										<div class="winnings-txt" id="weekly-expected-note">공식 예상 조회중</div>
+										<button class="btn-butNow" type="button" id="btnBuyLt645"
+											title="새창">바로구매</button>
+										<div class="winnings-txt">구매한도 5천 원/1회차</div>
 								</div>
 							</div>
 						</div>
@@ -141,15 +162,78 @@
 									가이드</button>
 							</div>
 						</div>
-					</div>
 						</div>
-				</div>
-				<div class="center-wrap">
-					<!-- 로또645 메인 상단 텍스트 -->
+							</div>
+					</div>
+					<div class="center-wrap">
+						<section class="weekly-feature" aria-labelledby="weekly-insight-title">
+							<article class="weekly-feature-card primary">
+								<div class="weekly-feature-title">실시간 회차 상태</div>
+								<strong id="weekly-status" class="weekly-feature-amount">최신 회차를 확인하는 중입니다.</strong>
+								<div class="weekly-feature-sub">다음 추첨까지 <span id="weekly-next-draw">-</span></div>
+								<div id="weekly-countdown" class="weekly-feature-sub">-</div>
+								<div id="weekly-countdown-sub" class="weekly-feature-sub">공식 추첨 일정을 확인하는 중입니다.</div>
+							</article>
+							<article class="weekly-feature-card">
+								<div class="weekly-feature-title" id="weekly-insight-title">회차 바로 조회</div>
+								<div class="weekly-controls">
+									<label for="weekly-round-select">회차 선택</label>
+									<select id="weekly-round-select" aria-label="회차 선택"></select>
+									<span id="weekly-round-hint" class="weekly-hint">선택된 회차: -</span>
+								</div>
+								<div class="search-row">
+									<input id="round-search-input" type="number" inputmode="numeric" min="1" placeholder="조회할 회차 입력">
+									<button id="round-search-btn" type="button">조회</button>
+								</div>
+							</article>
+						</section>
+						<section class="weekly-recent" aria-labelledby="recent-rounds-title">
+							<div class="weekly-recent-header">
+								<div class="section-title compact">
+									<h3 id="recent-rounds-title">최근 회차 브라우저</h3>
+									<p>카드를 눌러 다른 회차를 빠르게 확인하고 흐름을 비교합니다.</p>
+								</div>
+								<div class="recent-controls">
+									<label for="recent-count">표시 수</label>
+									<select id="recent-count" aria-label="최근 회차 표시 수">
+										<option value="4">4개</option>
+										<option value="6" selected>6개</option>
+										<option value="8">8개</option>
+									</select>
+								</div>
+							</div>
+							<div id="recent-rounds" class="recent-list"></div>
+						</section>
+						<section class="weekly-actions" aria-label="회차 도구">
+							<div class="info-card">
+								<div class="info-header">
+									<h3>내 번호 빠른 비교</h3>
+									<span class="badge muted">즉시 확인</span>
+								</div>
+								<div class="compare-grid">
+									<input id="compare-input" type="text" inputmode="numeric" placeholder="예: 3, 11, 18, 27, 34, 41">
+									<input id="compare-bonus" type="number" inputmode="numeric" min="1" max="45" placeholder="보너스 번호(선택)">
+									<button id="compare-btn" type="button">당첨 여부 확인</button>
+								</div>
+								<div id="compare-result" class="compare-result">당첨번호와 비교할 번호를 입력해 주세요.</div>
+							</div>
+							<div class="info-card weekly-chart">
+								<div class="info-header">
+									<h3>최근 1등 당첨금 추이</h3>
+									<span class="badge muted">최근 회차</span>
+								</div>
+								<div id="trend-chart" class="trend-chart is-empty">
+									<div class="trend-empty">최근 회차 데이터를 불러오는 중입니다.</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="center-wrap">
+						<!-- 로또645 메인 상단 텍스트 -->
 					<div class="draw-wrapper">
 					<div class="main-txt-wrap">
 						<p class="txt-center">
-							게임방법 <br></br>
+							게임방법 <br>
 						</p>
 						<p class="txt-center">
 							<span class="color-lt645">1~45</span>까지 숫자 중 <span
@@ -1446,15 +1530,43 @@
 										<div class="result-winnings-num">
 											<span class="fs-g7" id="dash-pstRnk1SumWnAmt"></span>
 										</div>
-											<div class="result-detail">
-												(<span id="dash-pstRnk1WnAmt"></span>억 원 × <span id="dash-pstRnk1WnNope"></span>명)
+												<div class="result-detail">
+													(<span id="dash-pstRnk1WnAmt"></span>억 원 × <span id="dash-pstRnk1WnNope"></span>명)
+												</div>
 											</div>
+										</div>
+										<div class="header-goWrap">
+											<button class="btn-go" type="button" id="dash-btnWnStrc">당첨구조</button>
+											<button class="btn-go" type="button" id="dash-btnPrchsMthd">구매방법</button>
+											<button class="btn-go btn-lg01" type="button" data-tab-link="draw">번호생성</button>
+											<button class="btn-go btn-lg02" type="button" data-tab-link="qr">QR확인</button>
 										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-				</div>
+					</div>
+			</div>
+                <section class="dash-ops-strip" aria-label="대시보드 빠른 요약">
+                    <article class="dash-ops-card dash-ops-card--primary">
+                        <span class="dash-ops-kicker">Data Sync</span>
+                        <strong id="dash-sync-status">최신 회차를 확인하는 중입니다.</strong>
+                        <p id="dash-sync-time">공식 데이터를 불러오면 상태가 즉시 반영됩니다.</p>
+                    </article>
+                    <button class="dash-ops-card dash-ops-card--action" type="button" data-tab-link="draw">
+                        <span class="dash-ops-kicker">번호 생성</span>
+                        <strong>필터 스튜디오 열기</strong>
+                        <p>직접 선택과 프리미엄 추천을 한 곳에서 이어서 진행합니다.</p>
+                    </button>
+                    <button class="dash-ops-card dash-ops-card--action" type="button" data-tab-link="qr">
+                        <span class="dash-ops-kicker">QR Check</span>
+                        <strong>QR 스캔으로 당첨 확인</strong>
+                        <p>모바일 카메라로 바로 인식하고 해당 회차 화면으로 이동합니다.</p>
+                    </button>
+                    <article class="dash-ops-card">
+                        <span class="dash-ops-kicker">Membership</span>
+                        <strong id="dash-membership-chip">FREE</strong>
+                        <p id="dash-activity-chip">아직 생성 이력이 없습니다.</p>
+                    </article>
+                </section>
                 <section class="dashboard-win-summary" aria-labelledby="dash-win-summary-title">
                     <div class="dashboard-win-head">
                         <div>
@@ -1489,10 +1601,10 @@
 				<div class="center-wrap">
 				<!-- 로또645 메인 상단 텍스트 -->
 				<div class="draw-wrapper">
-					<div class="main-txt-wrap">
-						<p class="txt-center">
-							게임방법 <br></br>
-						</p>
+					<div class="main-txt-wrap" id="dash-prchsMthdDiv">
+							<p class="txt-center">
+								게임방법 <br>
+							</p>
 						<p class="txt-center">
 							<span class="color-lt645">1~45</span>까지 숫자 중 <span
 								class="color-lt645">내가 선택한 6개 숫자</span>와
@@ -1841,22 +1953,42 @@
 							</div></li>
 					</ul>
 					
-</div>
-</section>
+					</div>
+				</div>
+			</div>
+		</div>
+		</section>
 
-        <section id="tab-draw" class="tab-panel app-shell app-shell--draw" role="tabpanel" aria-labelledby="tab-draw-btn" tabindex="0">
-            <div class="draw-studio-header">
-                <div class="draw-studio-title">
-                    <span class="draw-studio-kicker">Filter Studio</span>
-                    <h2>제외 규칙을 설계하면, 확률 변화가 바로 나타납니다.</h2>
-                    <p>필터는 “당첨 조합까지 함께 제거될 수 있다”는 가정으로 계산합니다. 실제 당첨 확률은 변하지 않으며 참고용으로만 사용하세요.</p>
-                    <div class="draw-service-switch" role="tablist" aria-label="추첨 이용 방식">
-                        <button class="draw-service-btn is-active" type="button" role="tab" aria-selected="true" data-draw-service="self">직접 선택</button>
-                        <button class="draw-service-btn" type="button" role="tab" aria-selected="false" data-draw-service="premium">월정액 추천</button>
-                    </div>
-                </div>
-            </div>
-            <section id="rules" class="section rules draw-studio">
+	        <section id="tab-draw" class="tab-panel app-shell app-shell--draw" role="tabpanel" aria-labelledby="tab-draw-btn" tabindex="0">
+	            <div class="draw-studio-header">
+	                <div class="draw-studio-title">
+	                    <span class="draw-studio-kicker">Filter Studio</span>
+	                    <h2>모바일에서도 한눈에 이해되는 로또 설계 스튜디오</h2>
+	                    <p>직접 제외수를 설계하거나 프리미엄 추천을 받아보세요. 최신 회차 기준과 저장 상태를 같은 화면에서 바로 확인할 수 있습니다.</p>
+	                    <div class="draw-service-switch" role="tablist" aria-label="추첨 이용 방식">
+	                        <button class="draw-service-btn is-active" type="button" role="tab" aria-selected="true" data-draw-service="self">직접 선택</button>
+	                        <button class="draw-service-btn" type="button" role="tab" aria-selected="false" data-draw-service="premium">월정액 추천</button>
+	                    </div>
+                        <div class="draw-studio-brief" aria-label="추첨 핵심 상태">
+                            <article class="studio-brief-card">
+                                <span class="studio-brief-label">이번 저장 기준</span>
+                                <strong id="draw-target-round">-</strong>
+                                <p>생성된 번호는 다음 회차 기준으로 저장됩니다.</p>
+                            </article>
+                            <article class="studio-brief-card">
+                                <span class="studio-brief-label">현재 이용 상태</span>
+                                <strong id="draw-membership-status">FREE</strong>
+                                <p>로그인 후 프리미엄 플랜을 활성화할 수 있습니다.</p>
+                            </article>
+                            <article class="studio-brief-card">
+                                <span class="studio-brief-label">필터 현황</span>
+                                <strong id="draw-selection-summary">선택된 규칙 없음</strong>
+                                <p>적용 중인 필터 수와 저장 상태를 빠르게 확인합니다.</p>
+                            </article>
+                        </div>
+	                </div>
+	            </div>
+	            <section id="rules" class="section rules draw-studio">
 		                <div class="draw-studio-body">
 		                    <aside class="draw-builder" data-draw-mode-only="self">
 	                        <div class="draw-panel" id="draw-scenario-panel">
@@ -2088,13 +2220,19 @@
 	                                </div>
 	                            </div>
                                 <span id="rules-status" class="rules-status" aria-live="polite"></span>
-                                <div class="draw-selected-toolbar">
-                                    <button id="open-rule-picker" type="button">+ 규칙 추가/제거</button>
-	                                <button class="draw-selected-clear" id="selected-clear-btn" type="button">전체 해제</button>
-                                </div>
-	                            <div class="draw-selected-helper">칩을 누르면 즉시 제거됩니다.</div>
-	                            <div id="selected-rules-list" class="draw-selected-list"></div>
-	                            <div id="selected-rules-empty" class="draw-selected-empty">선택된 규칙이 없습니다. ‘규칙 추가/제거’로 시작하세요.</div>
+		                                <div class="draw-selected-toolbar">
+		                                    <button id="open-rule-picker" type="button">+ 규칙 추가/제거</button>
+		                                <button class="draw-selected-clear" id="selected-clear-btn" type="button">전체 해제</button>
+		                                </div>
+                                        <div class="draw-selected-presets">
+                                            <button id="save-rules" class="preset-btn" type="button">현재 규칙 저장</button>
+                                            <button id="load-rules" class="preset-btn" type="button">저장 규칙 불러오기</button>
+                                            <button id="custom-save" class="preset-btn" type="button">내 프리셋 저장</button>
+                                            <button id="custom-apply" class="preset-btn" type="button">내 프리셋 적용</button>
+                                        </div>
+		                            <div class="draw-selected-helper">칩을 누르면 즉시 제거됩니다.</div>
+		                            <div id="selected-rules-list" class="draw-selected-list"></div>
+		                            <div id="selected-rules-empty" class="draw-selected-empty">선택된 규칙이 없습니다. ‘규칙 추가/제거’로 시작하세요.</div>
 	                        </div>
 	                    </aside>
 
@@ -2134,16 +2272,16 @@
                                 <div class="odds-graph-note">
                                     2~5등도 동일 비율로 변화합니다.
                                     <div class="odds-graph-inline">
-                                        2등 <span id="odds-base-2">1 / 1,357,510</span> → <span id="odds-adj-2">-</span>
+                                        2등 <span id="odds-base-2">1 / 1,357,510</span> → <span id="odds-adj-2">-</span> <span class="odds-delta" id="odds-delta-2">-</span>
                                     </div>
                                     <div class="odds-graph-inline">
-                                        3등 <span id="odds-base-3">1 / 35,724</span> → <span id="odds-adj-3">-</span>
+                                        3등 <span id="odds-base-3">1 / 35,724</span> → <span id="odds-adj-3">-</span> <span class="odds-delta" id="odds-delta-3">-</span>
                                     </div>
                                     <div class="odds-graph-inline">
-                                        4등 <span id="odds-base-4">1 / 733</span> → <span id="odds-adj-4">-</span>
+                                        4등 <span id="odds-base-4">1 / 733</span> → <span id="odds-adj-4">-</span> <span class="odds-delta" id="odds-delta-4">-</span>
                                     </div>
                                     <div class="odds-graph-inline">
-                                        5등 <span id="odds-base-5">1 / 45</span> → <span id="odds-adj-5">-</span>
+                                        5등 <span id="odds-base-5">1 / 45</span> → <span id="odds-adj-5">-</span> <span class="odds-delta" id="odds-delta-5">-</span>
                                     </div>
                                 </div>
                             </div>
@@ -2275,12 +2413,34 @@
                                                 <span>전용 리포트 포함</span>
                                             </div>
                                             <button type="button" class="premium-plan-buy" data-premium-plan="master">MASTER 시작하기</button>
-                                        </article>
-                                    </div>
-                                </section>
-                            </div>
+	                                        </article>
+	                                    </div>
+	                                </section>
+                                    <section class="draw-metric-card wide draw-premium-card draw-premium-results" data-draw-mode-only="premium" hidden>
+                                        <div class="draw-premium-products-head">
+                                            <div>
+                                                <h3>이번 회차 추천번호</h3>
+                                                <p>활성화된 플랜 기준으로 즉시 추천번호를 만들고 마이페이지 히스토리에 저장합니다.</p>
+                                            </div>
+                                            <span class="premium-trust-chip">자동 저장 · 전체복사 지원</span>
+                                        </div>
+                                        <div class="draw-premium-lock" id="draw-premium-lock">
+                                            <strong>프리미엄 플랜 활성화 후 추천번호를 받을 수 있습니다.</strong>
+                                            <p>로그인 후 STARTER / STANDARD / MASTER 중 하나를 활성화하면 즉시 이용 가능합니다.</p>
+                                            <button id="premium-upgrade-btn" class="draw-premium-upgrade" type="button">가입/로그인 후 시작하기</button>
+                                        </div>
+                                        <div class="draw-premium-controls">
+                                            <button id="premium-generate-btn" type="button">추천번호 받기</button>
+                                            <button id="premium-copy-all-btn" class="ghost" type="button" disabled>전체복사</button>
+                                        </div>
+                                        <div class="premium-numbers-container" id="premium-numbers-container">
+                                            <div class="premium-empty-state">아직 추천번호가 없습니다. 플랜을 활성화한 뒤 이번 회차 추천을 받아보세요.</div>
+                                        </div>
+                                        <p class="helper-text" id="premium-copy-status" aria-live="polite">월정액 활성화 시 추천번호를 제공합니다.</p>
+                                    </section>
+	                            </div>
 
-	                        </div>
+		                        </div>
 
 	                        <div class="draw-rules-panel is-open inline" id="rule-picker-panel" aria-hidden="false" data-draw-mode-only="self">
                             <div class="draw-rules-header">
@@ -2671,89 +2831,131 @@
             </div>
         </div>
 	                    </div>
-        </div>
             </section>
             <div id="rule-picker-backdrop" class="rule-picker-backdrop" hidden></div>
 
         </section>
 
-        <section id="tab-mypage" class="tab-panel app-shell" role="tabpanel" aria-labelledby="tab-mypage-btn" tabindex="0">
-            <div class="section-title">
-                <span class="section-kicker">Account Center</span>
-                <h2>마이페이지</h2>
-                <p>나의 추첨 기록과 프리셋을 관리합니다.</p>
-            </div>
-            <div class="mypage-grid">
-                <div class="info-card">
-                    <div class="info-header">
-                        <h3>내 정보</h3>
+	        <section id="tab-mypage" class="tab-panel app-shell" role="tabpanel" aria-labelledby="tab-mypage-btn" tabindex="0">
+	            <div class="section-title">
+	                <span class="section-kicker">Account Center</span>
+	                <h2>마이페이지</h2>
+	                <p>계정 상태, 프리셋, 멤버십, 생성 이력을 한 곳에서 관리합니다.</p>
+	            </div>
+	            <div class="mypage-grid">
+	                <div class="info-card">
+	                    <div class="info-header">
+	                        <h3>내 정보</h3>
                         <span class="badge muted" id="mypage-auth-badge">미로그인</span>
                     </div>
                     <ul class="info-list">
-                        <li>
-                            <span class="info-label info-label-with-bullet">현재 닉네임 <button id="nickname-open-modal-btn" class="label-bullet label-bullet-btn" type="button">변경</button></span>
-                            <strong id="mypage-nickname-display">첫 로그인 시 8자리 랜덤 닉네임 자동 부여</strong>
-                        </li>
-                        <li>
-                            <span class="info-label">멤버십</span>
-                            <strong>무료</strong>
-                        </li>
-                    </ul>
-                    <p class="helper-text" id="nickname-status">닉네임은 회원가입(첫 로그인) 시 자동 생성되며 월 최대 2회 변경할 수 있습니다.</p>
-                </div>
-                <div class="info-card">
-                    <div class="info-header">
-                        <h3>저장된 프리셋</h3>
-                        <span class="badge muted">0개</span>
-                    </div>
-                    <ul class="info-list">
-                        <li>
-                            <span class="info-label">내 프리셋</span>
-                            <strong>저장된 프리셋 없음</strong>
-                        </li>
-                        <li>
-                            <span class="info-label">최근 적용</span>
-                            <strong>-</strong>
-                        </li>
-                        <li>
-                            <span class="info-label">공유 설정</span>
-                            <strong>비공개</strong>
-                        </li>
-                    </ul>
-                </div>
-                <div class="info-card">
-                    <div class="info-header">
-                        <h3>추첨 히스토리</h3>
-                        <span class="badge muted" id="mypage-history-badge">최근 20회</span>
-                    </div>
-                    <ul class="info-list history-list" id="mypage-history-list">
-                        <li>
-                            <span class="info-label">이력을 불러오는 중...</span>
-                            <strong>-</strong>
-                        </li>
-                    </ul>
-                </div>
-                <div class="info-card">
-                    <div class="info-header">
-                        <h3>결제/구독</h3>
-                        <span class="badge muted">설정</span>
-                    </div>
-                    <ul class="info-list">
-                        <li>
-                            <span class="info-label">현재 플랜</span>
-                            <strong>무료</strong>
-                        </li>
-                        <li>
-                            <span class="info-label">다음 결제일</span>
-                            <strong>-</strong>
-                        </li>
-                        <li>
-                            <span class="info-label">구독 관리</span>
-                            <strong>문의 후 안내</strong>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+	                        <li>
+	                            <span class="info-label info-label-with-bullet">현재 닉네임 <button id="nickname-open-modal-btn" class="label-bullet label-bullet-btn" type="button">변경</button></span>
+	                            <strong id="mypage-nickname-display">첫 로그인 시 8자리 랜덤 닉네임 자동 부여</strong>
+	                        </li>
+	                        <li>
+	                            <span class="info-label">계정 상태</span>
+	                            <strong id="mypage-profile-email">로그인 전</strong>
+	                        </li>
+	                        <li>
+	                            <span class="info-label">멤버십</span>
+	                            <strong id="mypage-membership-tier">FREE</strong>
+	                        </li>
+	                    </ul>
+	                    <p class="helper-text" id="nickname-status">닉네임은 회원가입(첫 로그인) 시 자동 생성되며 월 최대 2회 변경할 수 있습니다.</p>
+	                </div>
+	                <div class="info-card">
+	                    <div class="info-header">
+	                        <h3>이용 현황</h3>
+	                        <span class="badge muted">실시간</span>
+	                    </div>
+	                    <ul class="info-list">
+	                        <li>
+	                            <span class="info-label">총 생성 세트</span>
+	                            <strong id="mypage-stats-generated">0세트</strong>
+	                        </li>
+	                        <li>
+	                            <span class="info-label">타깃 회차</span>
+	                            <strong id="mypage-stats-round">-</strong>
+	                        </li>
+	                        <li>
+	                            <span class="info-label">주 이용 모드</span>
+	                            <strong id="mypage-stats-mode">직접선택</strong>
+	                        </li>
+	                    </ul>
+                        <div class="mypage-inline-actions">
+                            <button class="ghost" type="button" data-tab-link="draw">번호 생성하러 가기</button>
+                            <button class="ghost" type="button" data-tab-link="qr">QR 확인하기</button>
+                        </div>
+	                </div>
+	                <div class="info-card">
+	                    <div class="info-header">
+	                        <h3>프리셋 &amp; 보관함</h3>
+	                        <span class="badge muted" id="mypage-preset-badge">0개</span>
+	                    </div>
+	                    <ul class="info-list">
+	                        <li>
+	                            <span class="info-label">저장된 규칙</span>
+	                            <strong id="mypage-preset-summary">저장된 프리셋 없음</strong>
+	                        </li>
+                            <li>
+                                <span class="info-label">마지막 저장</span>
+                                <strong id="mypage-preset-updated">-</strong>
+                            </li>
+                            <li>
+                                <span class="info-label">보관함 상태</span>
+                                <strong id="mypage-slot-summary">비어있음</strong>
+                            </li>
+	                    </ul>
+                        <p class="helper-text" id="mypage-slot-updated">보관함 1~3번의 최근 저장 상태를 반영합니다.</p>
+                        <div class="mypage-inline-actions">
+                            <button class="ghost" type="button" data-tab-link="draw">규칙 편집</button>
+                            <button class="ghost" type="button" data-mypage-slot-apply="1">보관함 1 적용</button>
+                            <button class="ghost" type="button" data-mypage-slot-apply="2">보관함 2 적용</button>
+                            <button class="ghost" type="button" data-mypage-slot-apply="3">보관함 3 적용</button>
+                        </div>
+	                </div>
+	                <div class="info-card">
+	                    <div class="info-header">
+	                        <h3>결제/구독</h3>
+	                        <span class="badge muted">플랜</span>
+	                    </div>
+                        <div class="mypage-plan-summary">
+                            <strong id="mypage-membership-tier-summary">FREE</strong>
+                            <p id="mypage-membership-desc">로그인 후 플랜을 활성화하면 프리미엄 추천번호를 바로 이용할 수 있습니다.</p>
+                        </div>
+	                    <ul class="info-list">
+	                        <li>
+	                            <span class="info-label">현재 플랜</span>
+	                            <strong id="mypage-membership-next">업그레이드 가능</strong>
+	                        </li>
+	                        <li>
+	                            <span class="info-label">추천 상태</span>
+	                            <strong id="mypage-plan-note">직접 선택만 활성화</strong>
+	                        </li>
+	                        <li>
+	                            <span class="info-label">플랜 관리</span>
+	                            <strong>마이페이지에서 즉시 변경 가능</strong>
+	                        </li>
+	                    </ul>
+                        <div class="mypage-inline-actions">
+                            <button id="mypage-plan-manage-btn" class="ghost" type="button">플랜 관리</button>
+                            <button id="mypage-plan-cancel-btn" class="ghost" type="button" hidden>무료 플랜 전환</button>
+                        </div>
+	                </div>
+	                <div class="info-card info-card--wide">
+	                    <div class="info-header">
+	                        <h3>추첨 히스토리</h3>
+	                        <span class="badge muted" id="mypage-history-badge">최근 20회</span>
+	                    </div>
+	                    <ul class="info-list history-list" id="mypage-history-list">
+	                        <li>
+	                            <span class="info-label">이력을 불러오는 중...</span>
+	                            <strong>-</strong>
+	                        </li>
+	                    </ul>
+	                </div>
+	            </div>
 
             <section id="auth" class="section auth">
                 <div class="section-title">
@@ -2922,11 +3124,12 @@
         </div>
     </div>
 
-    <footer class="site-footer">
-        <p>로또픽스튜디오. 결과를 보장하지 않으며 선택 과정을 돕기 위한 도구입니다.</p>
-    </footer>
+	    <footer class="site-footer">
+	        <p>로또픽스튜디오. 결과를 보장하지 않으며 선택 과정을 돕기 위한 도구입니다.</p>
+	    </footer>
+        <div id="app-toast" class="app-toast" role="status" aria-live="polite" hidden></div>
 
-    <div id="detail-sheet" class="detail-sheet" role="dialog" aria-modal="true">
+	    <div id="detail-sheet" class="detail-sheet" role="dialog" aria-modal="true">
         <h4>규칙 상세</h4>
         <p>설명</p>
         <button class="sheet-close" type="button">닫기</button>
@@ -2939,6 +3142,6 @@
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore-compat.js"></script>
     <script src="scripts/lotto-tabs.js?v=20260307_1"></script>
     <script src="scripts/lotto-rules.js?v=20260307_1"></script>
-    <script src="main.js?v=20260307_2"></script>
+    <script src="main.js?v=20260308_1"></script>
 </body>
 </html>
