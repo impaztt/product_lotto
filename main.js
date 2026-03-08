@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const excludeNumberTitle = document.getElementById('exclude-number-title');
     const excludeNumberRule = document.getElementById('exclude-number-rule');
     const menuToggle = document.getElementById('menu-toggle');
+    const menuToggleText = menuToggle ? menuToggle.querySelector('.menu-toggle-text') : null;
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileLinks = mobileMenu ? Array.from(mobileMenu.querySelectorAll('a')) : [];
     const navTabLinks = Array.from(document.querySelectorAll('.main-nav [data-tab-link], .mobile-nav [data-tab-link]'));
@@ -3294,9 +3295,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         body.classList.toggle('menu-open', open);
+        menuToggle.classList.toggle('is-open', open);
         menuToggle.setAttribute('aria-expanded', String(open));
+        menuToggle.setAttribute('aria-label', open ? '메뉴 닫기' : '메뉴 열기');
         mobileMenu.setAttribute('aria-hidden', String(!open));
-        menuToggle.textContent = open ? '닫기' : '메뉴';
+        if (menuToggleText) {
+            menuToggleText.textContent = open ? '닫기' : '메뉴';
+        }
     }
 
     function syncNavTabLinks(activeTabId) {

@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/common.css?v=20260213">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/layout.css?v=20260212">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/main-layout.css?v=20260212">
-		<link rel="stylesheet" href="style.css?v=20260308_3">
+		<link rel="stylesheet" href="style.css?v=20260308_4">
 
 </head>
 <body data-theme="light">
@@ -25,10 +25,16 @@
             <a href="#qr" data-tab-link="qr">QR 확인</a>
         </nav>
         <div class="header-actions">
-            <a class="ghost" href="#auth" data-open-auth="true">로그인</a>
-            <a class="cta" href="#auth" data-open-auth="true">시작하기</a>
+            <button id="header-auth-btn" class="cta" type="button" data-open-auth="true">시작하기</button>
             <button id="header-logout-btn" class="ghost" type="button" data-logout="true" hidden>로그아웃</button>
-            <button id="menu-toggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu">메뉴</button>
+            <button id="menu-toggle" class="menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobile-menu">
+                <span class="menu-toggle-bars" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+                <span class="menu-toggle-text">메뉴</span>
+            </button>
         </div>
     </header>
     <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
@@ -1964,20 +1970,6 @@
 		                        <button class="draw-service-btn is-active" type="button" role="tab" aria-selected="true" data-draw-service="self">직접 선택</button>
 		                        <button class="draw-service-btn" type="button" role="tab" aria-selected="false" data-draw-service="premium">월정액 추천</button>
 		                    </div>
-                            <div class="draw-studio-proof" aria-label="번호 생성 핵심 안내">
-                                <article class="draw-proof-item">
-                                    <strong>직접 설계</strong>
-                                    <span>제외수와 규칙을 빠르게 조합</span>
-                                </article>
-                                <article class="draw-proof-item">
-                                    <strong>저장 연동</strong>
-                                    <span>생성 결과와 전략을 바로 보관</span>
-                                </article>
-                                <article class="draw-proof-item">
-                                    <strong>추천 전환</strong>
-                                    <span>이용권 활성화 시 월정액 추천으로 이어짐</span>
-                                </article>
-                            </div>
 		                </div>
 		            </div>
 		            <section id="rules" class="section rules draw-studio">
@@ -3196,6 +3188,6 @@
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore-compat.js"></script>
     <script src="scripts/lotto-tabs.js?v=20260307_1"></script>
     <script src="scripts/lotto-rules.js?v=20260307_1"></script>
-    <script src="main.js?v=20260308_2"></script>
+    <script src="main.js?v=20260308_3"></script>
 </body>
 </html>
