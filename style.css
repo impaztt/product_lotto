@@ -7397,3 +7397,508 @@ body[data-theme="dark"] #tab-mypage .history-list .info-label {
         grid-template-columns: 1fr;
     }
 }
+
+/* Toss-inspired premium polish */
+:root,
+body[data-theme="light"] {
+    --bg: #f2f4f6;
+    --bg-soft: #ffffff;
+    --panel: #ffffff;
+    --panel-border: rgba(2, 32, 71, 0.08);
+    --text: #191f28;
+    --text-muted: #8b95a1;
+    --accent: #3182f6;
+    --accent-dark: #1b64da;
+    --accent-soft: rgba(49, 130, 246, 0.12);
+    --teal: #3182f6;
+    --shadow: 0 8px 24px rgba(2, 32, 71, 0.06);
+}
+
+body {
+    font-family: 'Pretendard Variable', 'Pretendard', 'Noto Sans KR', sans-serif;
+    background: linear-gradient(180deg, #f8fafc 0%, #f2f4f6 100%);
+    color: var(--text);
+}
+
+main {
+    background: linear-gradient(180deg, #f8fafc 0%, #f2f4f6 100%);
+    gap: 56px;
+}
+
+.site-header {
+    padding: 18px 6vw 14px;
+    background: rgba(255, 255, 255, 0.86);
+    border-bottom: 1px solid rgba(2, 32, 71, 0.08);
+    box-shadow: 0 1px 0 rgba(2, 32, 71, 0.03);
+    backdrop-filter: blur(18px);
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #191f28;
+}
+
+.main-nav {
+    gap: 10px;
+}
+
+.main-nav a {
+    padding: 10px 14px;
+    border-radius: 14px;
+    color: #6b7684;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    transition: background 160ms ease, color 160ms ease;
+}
+
+.main-nav a:hover {
+    color: #191f28;
+    background: rgba(2, 32, 71, 0.04);
+}
+
+.main-nav a.is-active,
+.mobile-nav a.is-active {
+    color: #1b64da;
+    background: #eef5ff;
+    font-weight: 800;
+}
+
+.header-actions {
+    gap: 10px;
+}
+
+.cta,
+.ghost,
+.menu-toggle {
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.cta {
+    background: #3182f6;
+    box-shadow: 0 12px 24px rgba(49, 130, 246, 0.18);
+}
+
+.cta:hover {
+    background: #1b64da;
+}
+
+.ghost,
+.menu-toggle {
+    background: #f2f4f6;
+    border-color: rgba(2, 32, 71, 0.08);
+    color: #4e5968;
+}
+
+.mobile-menu {
+    top: 72px;
+    padding: 16px 5vw 24px;
+    background: rgba(255, 255, 255, 0.96);
+    border-bottom: 1px solid rgba(2, 32, 71, 0.08);
+    box-shadow: 0 20px 40px rgba(2, 32, 71, 0.12);
+}
+
+.mobile-nav a {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #f8fafc;
+    color: #4e5968;
+    font-weight: 700;
+}
+
+.bottom-tab-bar {
+    background: rgba(255, 255, 255, 0.96);
+    border-top: 1px solid rgba(2, 32, 71, 0.08);
+    box-shadow: 0 -16px 36px rgba(2, 32, 71, 0.08);
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+}
+
+.bottom-tab-bar .tab-btn {
+    color: #8b95a1;
+    border-radius: 18px;
+    padding: 9px 8px 10px;
+    font-weight: 700;
+}
+
+.bottom-tab-bar .tab-btn.is-active {
+    background: #eef5ff;
+    color: #1b64da;
+}
+
+.tab-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 12px;
+    background: #f2f4f6;
+}
+
+.bottom-tab-bar .tab-btn.is-active .tab-icon {
+    background: #dbeafe;
+}
+
+.tab-label {
+    font-size: 11px;
+    letter-spacing: -0.02em;
+}
+
+:is(#tab-draw, #tab-mypage, #tab-qr, #tab-store).app-shell::before {
+    background:
+        radial-gradient(circle at top left, rgba(49, 130, 246, 0.08), transparent 38%),
+        linear-gradient(180deg, rgba(248, 251, 255, 0.96), rgba(248, 251, 255, 0));
+}
+
+#tab-dashboard .content-tit-wrap {
+    padding: 0 0 14px;
+    background: transparent;
+    border-bottom: 0;
+}
+
+#tab-dashboard .dash-intro-head,
+#tab-draw .draw-studio-header,
+#tab-mypage .section-title,
+#tab-qr .section-title,
+#tab-store .store-shell-title,
+.section,
+.info-card,
+.weekly-feature-card,
+#tab-dashboard .result-infoWrap,
+#tab-dashboard .dashboard-win-summary,
+.dash-ops-card,
+#tab-draw .draw-panel,
+#draw-scenario-panel,
+#draw-slot-panel,
+.draw-rules-panel,
+.draw-selected-board,
+#tab-mypage .info-card,
+#tab-mypage .auth-card,
+#tab-mypage #auth.section,
+#tab-mypage .mypage-hero-card,
+#tab-mypage .mypage-status-kpi,
+#tab-qr .qr-camera-card,
+#tab-qr .qr-result-card,
+#tab-store .store-shell-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(2, 32, 71, 0.08) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 8px 24px rgba(2, 32, 71, 0.06) !important;
+}
+
+#tab-dashboard .dash-intro-head,
+#tab-draw .draw-studio-header,
+#tab-mypage .section-title,
+#tab-qr .section-title,
+#tab-store .store-shell-title {
+    padding: 26px 28px;
+}
+
+#tab-dashboard .content-tit,
+.draw-studio-title h2,
+.section-title h2,
+#welcome-modal-title,
+#tab-mypage .mypage-hero-head h3 {
+    letter-spacing: -0.03em;
+    color: #191f28;
+}
+
+#tab-dashboard .content-tit {
+    text-align: left;
+}
+
+.dash-intro-kicker,
+.draw-studio-kicker,
+.section-kicker,
+.dash-ops-kicker,
+.draw-membership-banner-kicker,
+.draw-filter-kicker,
+.onboarding-kicker {
+    color: #1b64da;
+}
+
+#tab-dashboard .dash-intro-sub,
+.draw-studio-title p,
+.section-title p,
+.helper-text,
+.modal-text,
+#draw-filter-detail,
+#tab-mypage .mypage-plan-summary p,
+#tab-mypage .history-list .info-label,
+.onboarding-copy,
+.onboarding-benefit-card p {
+    color: #6b7684;
+}
+
+#tab-dashboard .upcoming-timer,
+#tab-dashboard .result-ballWrapper,
+#tab-dashboard .result-prizeCard,
+.draw-filter-overview,
+.weekly-feature-card.primary,
+#tab-mypage .mypage-hero-block,
+.onboarding-benefit-card {
+    background: #f8fafc;
+    border: 1px solid rgba(2, 32, 71, 0.05);
+    box-shadow: none;
+}
+
+#tab-dashboard .result-round,
+#tab-dashboard .result-winnings-num,
+.dash-ops-card strong,
+#tab-mypage .mypage-status-kpi strong {
+    color: #191f28;
+    letter-spacing: -0.03em;
+}
+
+.dash-ops-card--primary {
+    background: linear-gradient(180deg, #eef5ff, #ffffff) !important;
+}
+
+#tab-dashboard .header-goWrap .btn-go,
+#tab-dashboard .btn-go,
+#tab-dashboard .btn-line,
+#tab-dashboard .btn-viewProfit,
+#tab-dashboard .btn-viewLine,
+#tab-dashboard .btn-goTerms,
+#tab-weekly .btn-go,
+#tab-weekly .btn-line,
+#tab-weekly .btn-viewProfit,
+#tab-weekly .btn-viewLine,
+#tab-weekly .btn-goTerms {
+    background: #ffffff !important;
+    border-color: rgba(2, 32, 71, 0.08) !important;
+    color: #1b64da !important;
+    border-radius: 14px !important;
+    box-shadow: none !important;
+}
+
+.draw-service-switch {
+    background: #f2f4f6;
+    border: 0;
+    box-shadow: inset 0 0 0 1px rgba(2, 32, 71, 0.06);
+}
+
+.draw-service-btn {
+    min-height: 44px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.draw-service-btn.is-active {
+    background: #ffffff;
+    color: #1b64da;
+    border: 1px solid rgba(49, 130, 246, 0.18);
+    box-shadow: 0 6px 16px rgba(2, 32, 71, 0.08);
+}
+
+#tab-draw .draw-toggle-btn,
+#tab-draw .ghost,
+#tab-draw .preset-btn,
+#draw-copy-all-btn,
+#tab-draw .draw-selected-toolbar #open-rule-picker,
+#tab-mypage .mypage-inline-actions .ghost,
+#tab-store .store-shell-toolbar .ghost,
+.modal-close {
+    background: #f2f4f6 !important;
+    border: 1px solid rgba(2, 32, 71, 0.08) !important;
+    color: #4e5968 !important;
+}
+
+#generate-btn,
+.draw-cta-card button,
+.premium-plan-buy,
+#round-search-btn,
+#compare-btn,
+#qr-start-btn,
+.submit-btn,
+.btn-butNow,
+.onboarding-primary {
+    background: #3182f6 !important;
+    border-color: #3182f6 !important;
+    color: #ffffff !important;
+    box-shadow: 0 12px 24px rgba(49, 130, 246, 0.18);
+}
+
+#tab-draw .draw-scenario-card,
+#tab-draw .draw-slot-card,
+.rule-group {
+    background: #ffffff;
+    border: 1px solid rgba(2, 32, 71, 0.08);
+    box-shadow: 0 6px 18px rgba(2, 32, 71, 0.05);
+}
+
+.draw-strategy-btn.is-active {
+    background: #eef5ff;
+    border-color: rgba(49, 130, 246, 0.3);
+    box-shadow: 0 12px 24px rgba(49, 130, 246, 0.12);
+}
+
+#tab-draw .scenario-pill {
+    background: #eef5ff;
+    color: #1b64da;
+}
+
+#tab-draw .scenario-pill.ghost {
+    background: #f2f4f6;
+    color: #6b7684;
+}
+
+.draw-membership-banner {
+    background: linear-gradient(135deg, #eef5ff, #f8fbff);
+    border: 1px solid rgba(49, 130, 246, 0.14);
+    box-shadow: 0 14px 28px rgba(49, 130, 246, 0.12);
+    color: #191f28;
+}
+
+.draw-membership-banner strong,
+.draw-membership-banner p {
+    color: inherit;
+}
+
+.draw-membership-banner p {
+    color: #4e5968;
+}
+
+.draw-membership-banner-mark {
+    background: #3182f6;
+    border: 0;
+    color: #ffffff;
+}
+
+.draw-filter-overview {
+    padding: 20px;
+}
+
+#draw-selection-summary {
+    color: #191f28;
+}
+
+#tab-mypage .mypage-hero-card--account {
+    background: linear-gradient(180deg, #ffffff, #fbfcfe);
+}
+
+#tab-mypage .mypage-hero-card--plan {
+    background: linear-gradient(180deg, #eef5ff, #ffffff 72%);
+    color: #191f28;
+}
+
+#tab-mypage .mypage-hero-card--plan .section-kicker,
+#tab-mypage .mypage-hero-card--plan .helper-text,
+#tab-mypage .mypage-hero-card--plan .info-label,
+#tab-mypage .mypage-hero-card--plan .mypage-plan-summary p {
+    color: #6b7684;
+}
+
+#tab-mypage .mypage-hero-card--plan .mypage-plan-summary strong {
+    color: #1b64da;
+}
+
+#tab-mypage .mypage-plan-badge {
+    background: #3182f6;
+    border: 0;
+    color: #ffffff;
+    box-shadow: 0 10px 20px rgba(49, 130, 246, 0.18);
+}
+
+#tab-mypage .mypage-plan-pills span,
+#tab-mypage .mypage-hero-card--plan .mypage-inline-actions .ghost {
+    background: #ffffff;
+    border: 1px solid rgba(2, 32, 71, 0.08);
+    color: #4e5968;
+}
+
+#tab-mypage .mypage-status-kpi span {
+    font-weight: 700;
+    color: #8b95a1;
+}
+
+#tab-mypage .mypage-status-kpi strong {
+    font-size: 30px;
+}
+
+.badge {
+    background: #eef5ff;
+    color: #1b64da;
+    font-weight: 700;
+}
+
+.badge.muted {
+    background: #f2f4f6;
+    color: #6b7684;
+}
+
+.modal-content,
+.onboarding-modal-content {
+    background: linear-gradient(180deg, #ffffff, #f8fbff);
+    border: 1px solid rgba(2, 32, 71, 0.08);
+    border-radius: 28px;
+    box-shadow: 0 24px 48px rgba(2, 32, 71, 0.14);
+}
+
+.auth-btn {
+    min-height: 52px;
+    background: #ffffff;
+    border: 1px solid rgba(2, 32, 71, 0.08);
+    color: #191f28;
+}
+
+.site-footer {
+    background: transparent;
+    color: #8b95a1;
+    padding-bottom: 120px;
+}
+
+@media (max-width: 768px) {
+    .site-header {
+        padding: 14px 5vw 12px;
+    }
+
+    .header-actions {
+        gap: 8px;
+    }
+
+    #tab-dashboard .dash-intro-head,
+    #tab-draw .draw-studio-header,
+    #tab-mypage .section-title,
+    #tab-qr .section-title,
+    #tab-store .store-shell-title {
+        padding: 22px 20px;
+        border-radius: 20px !important;
+    }
+
+    .section,
+    .info-card,
+    .weekly-feature-card,
+    #tab-dashboard .result-infoWrap,
+    #tab-dashboard .dashboard-win-summary,
+    .dash-ops-card,
+    #tab-draw .draw-panel,
+    #draw-scenario-panel,
+    #draw-slot-panel,
+    .draw-rules-panel,
+    .draw-selected-board,
+    #tab-mypage .info-card,
+    #tab-mypage .auth-card,
+    #tab-mypage #auth.section,
+    #tab-mypage .mypage-hero-card,
+    #tab-mypage .mypage-status-kpi,
+    #tab-qr .qr-camera-card,
+    #tab-qr .qr-result-card,
+    #tab-store .store-shell-card {
+        border-radius: 20px !important;
+    }
+
+    .bottom-tab-bar {
+        padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+    }
+
+    .bottom-tab-bar .tab-btn {
+        border-radius: 16px;
+    }
+}
