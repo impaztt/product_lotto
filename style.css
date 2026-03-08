@@ -7898,7 +7898,352 @@ main {
         padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
     }
 
-    .bottom-tab-bar .tab-btn {
+.bottom-tab-bar .tab-btn {
         border-radius: 16px;
+    }
+}
+
+/* Premium product hierarchy refinement */
+.dash-intro-head {
+    gap: 16px;
+}
+
+.dash-intro-points,
+.mypage-title-points {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.dash-intro-points span,
+.mypage-title-points span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: #f2f4f6;
+    border: 1px solid rgba(2, 32, 71, 0.06);
+    color: #4e5968;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.dash-intro-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.dash-intro-actions .cta,
+.dash-intro-actions .ghost {
+    min-height: 48px;
+    padding: 0 18px;
+}
+
+.dash-ops-strip {
+    width: min(100%, 1160px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    padding: 0;
+    margin: 18px auto 28px;
+}
+
+.dash-ops-card {
+    min-height: 156px;
+    padding: 24px;
+    border-radius: 24px;
+    align-content: start;
+}
+
+.dash-ops-card strong {
+    font-size: clamp(22px, 2vw, 28px);
+}
+
+.dash-ops-card--primary {
+    background: linear-gradient(180deg, #eef5ff, #ffffff) !important;
+}
+
+.dashboard-win-summary {
+    overflow: hidden;
+}
+
+.dashboard-win-kpi,
+.dashboard-win-ranks > div {
+    border-radius: 18px !important;
+}
+
+.draw-studio-title {
+    gap: 14px;
+}
+
+.draw-studio-title h2 {
+    max-width: 760px;
+}
+
+.draw-studio-proof {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.draw-proof-item {
+    display: grid;
+    gap: 6px;
+    padding: 16px 18px;
+    border-radius: 18px;
+    background: #f8fafc;
+    border: 1px solid rgba(2, 32, 71, 0.06);
+}
+
+.draw-proof-item strong {
+    font-size: 15px;
+    line-height: 1.35;
+    color: #191f28;
+    letter-spacing: -0.02em;
+}
+
+.draw-proof-item span {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #6b7684;
+}
+
+.draw-service-switch {
+    width: min(100%, 360px);
+}
+
+.draw-metric-title,
+.dash-ops-kicker,
+.draw-studio-kicker,
+.section-kicker,
+.draw-membership-banner-kicker,
+.draw-filter-kicker,
+.onboarding-kicker,
+.premium-product-label,
+.draw-premium-badge {
+    letter-spacing: -0.01em;
+    text-transform: none;
+}
+
+.draw-premium-header {
+    gap: 18px;
+}
+
+.draw-premium-summary {
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #4e5968;
+}
+
+.draw-premium-plan {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.draw-premium-plan-item {
+    min-height: 84px;
+    align-content: start;
+    border-radius: 18px;
+    padding: 14px 16px;
+}
+
+.draw-premium-plan-item strong {
+    font-size: 13px;
+    color: #191f28;
+}
+
+.draw-premium-plan-item span {
+    line-height: 1.5;
+}
+
+.draw-premium-products {
+    gap: 16px;
+}
+
+.premium-product-card {
+    padding: 20px;
+    border-radius: 24px;
+    min-height: 430px;
+}
+
+.premium-product-card.is-featured {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 36px rgba(49, 130, 246, 0.12);
+}
+
+.premium-product-head {
+    gap: 6px;
+}
+
+.premium-product-head h4 {
+    font-size: 13px;
+    letter-spacing: -0.01em;
+}
+
+.premium-product-head strong {
+    font-size: 30px;
+    letter-spacing: -0.03em;
+}
+
+.premium-product-fit {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    min-height: 30px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: #f2f4f6;
+    color: #4e5968;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.premium-product-card ul {
+    gap: 8px;
+    padding-left: 18px;
+    line-height: 1.6;
+}
+
+.premium-plan-buy {
+    width: 100%;
+    min-height: 48px;
+    border-radius: 16px;
+    font-size: 14px;
+}
+
+.premium-trust-chip {
+    background: #eef5ff;
+    border-color: rgba(49, 130, 246, 0.14);
+    color: #1b64da;
+}
+
+.draw-premium-lock {
+    border-radius: 18px;
+    padding: 18px;
+}
+
+.draw-premium-controls {
+    gap: 12px;
+}
+
+#premium-generate-btn,
+#premium-copy-all-btn,
+.draw-premium-upgrade {
+    min-height: 48px;
+    border-radius: 16px;
+}
+
+.premium-empty-state {
+    border-radius: 18px;
+    padding: 22px 20px;
+}
+
+#tab-mypage .section-title {
+    gap: 14px;
+}
+
+#tab-mypage .mypage-overview {
+    gap: 20px;
+}
+
+#tab-mypage .mypage-hero-card {
+    padding: 30px;
+}
+
+#tab-mypage .mypage-hero-email {
+    font-size: clamp(28px, 3vw, 40px);
+}
+
+#tab-mypage .mypage-hero-block {
+    border-radius: 20px;
+}
+
+#tab-mypage .mypage-status-strip {
+    gap: 16px;
+}
+
+#tab-mypage .mypage-status-kpi {
+    min-height: 132px;
+    align-content: start;
+}
+
+#tab-mypage .mypage-grid--details .info-card {
+    padding: 24px;
+}
+
+#tab-mypage #auth.section .section-title {
+    margin-bottom: 0;
+    padding: 0;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+#tab-mypage .auth-card {
+    padding: 24px;
+    border-radius: 22px;
+}
+
+#tab-mypage .auth-card h3 {
+    margin: 0;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    color: #191f28;
+}
+
+#tab-mypage .auth-card p,
+#tab-mypage .auth-card li {
+    color: #6b7684;
+    line-height: 1.6;
+}
+
+@media (max-width: 1080px) {
+    .draw-studio-proof,
+    .draw-premium-plan {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .dash-intro-actions,
+    .draw-studio-proof,
+    .draw-premium-plan {
+        grid-template-columns: 1fr;
+    }
+
+    .dash-intro-actions {
+        display: grid;
+    }
+
+    .dash-intro-actions .cta,
+    .dash-intro-actions .ghost {
+        width: 100%;
+    }
+
+    .dash-ops-strip {
+        grid-template-columns: 1fr;
+    }
+
+    .dash-ops-card {
+        min-height: 0;
+        padding: 20px;
+    }
+
+    .draw-proof-item,
+    .draw-premium-lock {
+        padding: 16px;
+    }
+
+    .premium-product-card {
+        min-height: 0;
+        transform: none !important;
+    }
+
+    #tab-mypage .mypage-hero-card,
+    #tab-mypage .mypage-grid--details .info-card,
+    #tab-mypage .auth-card {
+        padding: 22px;
     }
 }
