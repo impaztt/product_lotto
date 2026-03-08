@@ -308,6 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let weeklyExpectedUpdatedAt = 0;
     let toastHideTimer = 0;
     let welcomeModalTimer = 0;
+    let revealObserver = null;
     const DRAW_ENTRY_LOCAL_KEY = 'lotto_guest_tracking_id';
     const GENERATION_STATS_KEY = 'lotto_generation_stats';
     const RULES_UPDATED_AT_KEY = 'lotto_rules_updated_at';
@@ -324,8 +325,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 setRulePickerOpen(false);
             }
         },
-        onDidChange({ tabId }) {
+        onDidChange({ tabId, targetPanel }) {
             syncNavTabLinks(tabId);
+            syncActiveTabState(tabId);
+            refreshRevealMotion(targetPanel);
             if (tabId === 'draw') {
                 scheduleDrawHorizontalWidthSync();
             }
@@ -343,6 +346,90 @@ document.addEventListener('DOMContentLoaded', () => {
     const { setActiveTab, syncInitialTab } = tabController;
     let guestTrackingId = '';
     let lastWinDashboardRound = null;
+
+    function getRevealTargets(root = document) {
+        return Array.from(root.querySelectorAll([
+            '.dash-intro-head',
+            '.dash-ops-card',
+            '.dashboard-win-summary',
+            '#tab-dashboard .result-infoWrap',
+            '.draw-studio-header',
+            '.draw-panel',
+            '.draw-metric-card',
+            '.premium-product-card',
+            '.draw-premium-lock',
+            '.mypage-hero-card',
+            '.mypage-status-kpi',
+            '#tab-mypage .info-card',
+            '#tab-mypage .auth-card',
+            '.weekly-feature-card',
+            '.info-card',
+            '.onboarding-benefit-card'
+        ].join(',')));
+    }
+
+    function syncActiveTabState(tabId = getCurrentActiveTabId()) {
+        if (!body) {
+            return;
+        }
+        body.dataset.activeTab = String(tabId || 'dashboard');
+    }
+
+    function setupRevealMotion() {
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const targets = getRevealTargets();
+        if (!targets.length) {
+            return;
+        }
+        targets.forEach((element, index) => {
+            element.classList.add('reveal-item');
+            element.style.setProperty('--reveal-delay', `${Math.min(index * 28, 220)}ms`);
+        });
+        if (prefersReducedMotion || typeof window.IntersectionObserver !== 'function') {
+            targets.forEach(element => {
+                element.classList.add('is-visible');
+            });
+            return;
+        }
+        if (revealObserver) {
+            revealObserver.disconnect();
+        }
+        revealObserver = new window.IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                }
+                entry.target.classList.add('is-visible');
+                revealObserver.unobserve(entry.target);
+            });
+        }, {
+            threshold: 0.12,
+            rootMargin: '0px 0px -12% 0px'
+        });
+        targets.forEach(element => {
+            if (!element.classList.contains('is-visible')) {
+                revealObserver.observe(element);
+            }
+        });
+    }
+
+    function refreshRevealMotion(root = null) {
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const targetRoot = root instanceof Element ? root : document.getElementById(`tab-${getCurrentActiveTabId()}`);
+        if (!targetRoot) {
+            return;
+        }
+        const targets = getRevealTargets(targetRoot);
+        targets.forEach((element, index) => {
+            element.classList.add('reveal-item');
+            element.style.setProperty('--reveal-delay', `${Math.min(index * 34, 240)}ms`);
+            if (prefersReducedMotion) {
+                element.classList.add('is-visible');
+            } else if (revealObserver && !element.classList.contains('is-visible')) {
+                revealObserver.observe(element);
+            }
+        });
+    }
 
     function bindWeeklyElements(root) {
         weeklyStatusEl = root.getElementById('weekly-status');
@@ -1317,6 +1404,9 @@ document.addEventListener('DOMContentLoaded', () => {
         setupRuleDetails();
         syncInitialTab();
         syncNavTabLinks(getCurrentActiveTabId());
+        syncActiveTabState(getCurrentActiveTabId());
+        setupRevealMotion();
+        refreshRevealMotion(document.getElementById(`tab-${getCurrentActiveTabId()}`));
         scheduleWelcomeModal();
         window.addEventListener('message', event => {
             if (!event || !event.data || event.data.type !== 'switch-tab') {
@@ -2614,6 +2704,8 @@ document.addEventListener('DOMContentLoaded', () => {
             window.alert(message);
             return;
         }
+        appToastEl.classList.remove('is-visible');
+        void appToastEl.offsetWidth;
         appToastEl.textContent = String(message || '');
         appToastEl.hidden = false;
         appToastEl.classList.add('is-visible');
