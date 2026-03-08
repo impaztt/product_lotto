@@ -6930,7 +6930,7 @@ body[data-theme="dark"] #tab-mypage .history-list .info-label {
 
 /* Premium layout refinement */
 #tab-dashboard .content-tit-wrap {
-    padding-top: 10px;
+    padding: 0 0 10px;
 }
 
 .draw-membership-banner {
@@ -7194,7 +7194,7 @@ body[data-theme="dark"] #tab-mypage .history-list .info-label {
 
 @media (max-width: 768px) {
     #tab-dashboard .content-tit-wrap {
-        padding-top: 0;
+        padding: 0 0 8px;
     }
 
     .draw-membership-banner {
