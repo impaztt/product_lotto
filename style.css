@@ -6927,3 +6927,286 @@ body[data-theme="dark"] #tab-mypage .history-list .info-label {
         font-size: 13px;
     }
 }
+
+/* Premium layout refinement */
+#tab-dashboard .content-tit-wrap {
+    padding-top: 10px;
+}
+
+.draw-membership-banner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+    padding: 20px 22px;
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.26), transparent 44%),
+        linear-gradient(135deg, #0f172a, #102c63 58%, #0f7a72);
+    color: #f8fafc;
+    box-shadow: 0 22px 44px rgba(15, 23, 42, 0.18);
+}
+
+.draw-membership-banner-copy {
+    display: grid;
+    gap: 8px;
+}
+
+.draw-membership-banner-kicker {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(226, 232, 240, 0.78);
+}
+
+.draw-membership-banner strong {
+    font-size: clamp(24px, 3vw, 34px);
+    line-height: 1.08;
+}
+
+.draw-membership-banner p {
+    margin: 0;
+    color: rgba(226, 232, 240, 0.84);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.draw-membership-banner-mark {
+    align-self: start;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+}
+
+.draw-filter-overview {
+    display: grid;
+    gap: 10px;
+    padding: 18px;
+    border-radius: 22px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(241, 245, 249, 0.92));
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.draw-filter-overview-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.draw-filter-kicker {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #2563eb;
+}
+
+#draw-selection-summary {
+    font-size: clamp(20px, 2.3vw, 28px);
+    line-height: 1.22;
+    color: #0f172a;
+}
+
+#draw-filter-detail {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #5b6b80;
+}
+
+.draw-selected-actions--minimal {
+    justify-items: start;
+}
+
+#tab-mypage .section-title {
+    margin-bottom: 24px;
+}
+
+#tab-mypage .mypage-overview {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+#tab-mypage .mypage-hero-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 28px;
+    padding: 28px;
+    display: grid;
+    gap: 18px;
+    box-shadow: 0 24px 54px rgba(15, 23, 42, 0.12);
+}
+
+#tab-mypage .mypage-hero-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.24), transparent 36%);
+    pointer-events: none;
+}
+
+#tab-mypage .mypage-hero-card--account {
+    background: linear-gradient(135deg, #f8fafc, #ffffff 58%, #e2e8f0);
+}
+
+#tab-mypage .mypage-hero-card--plan {
+    background: linear-gradient(135deg, #0f172a, #102c63 58%, #0f7a72);
+    color: #f8fafc;
+}
+
+#tab-mypage .mypage-hero-head {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+#tab-mypage .mypage-hero-head h3 {
+    margin: 6px 0 0;
+    font-size: 28px;
+    line-height: 1.2;
+    color: inherit;
+}
+
+#tab-mypage .mypage-hero-email {
+    font-size: clamp(24px, 3.2vw, 36px);
+    line-height: 1.16;
+    color: inherit;
+    word-break: break-word;
+}
+
+#tab-mypage .mypage-hero-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+#tab-mypage .mypage-hero-block {
+    display: grid;
+    gap: 6px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+#tab-mypage .mypage-hero-block strong {
+    color: #0f172a;
+    font-size: 18px;
+    line-height: 1.35;
+}
+
+#tab-mypage .mypage-hero-card--plan .section-kicker,
+#tab-mypage .mypage-hero-card--plan .helper-text,
+#tab-mypage .mypage-hero-card--plan .info-label,
+#tab-mypage .mypage-hero-card--plan .mypage-plan-summary p {
+    color: rgba(226, 232, 240, 0.84);
+}
+
+#tab-mypage .mypage-hero-card--plan .mypage-plan-summary strong {
+    color: #ffffff;
+    font-size: clamp(30px, 3.5vw, 40px);
+}
+
+#tab-mypage .mypage-plan-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+}
+
+#tab-mypage .mypage-plan-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#tab-mypage .mypage-plan-pills span {
+    padding: 9px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #f8fafc;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#tab-mypage .mypage-hero-card--plan .mypage-inline-actions .ghost {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+}
+
+#tab-mypage .mypage-status-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+#tab-mypage .mypage-status-kpi {
+    padding: 20px 22px;
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    display: grid;
+    gap: 8px;
+}
+
+#tab-mypage .mypage-status-kpi span {
+    font-size: 13px;
+    color: #64748b;
+}
+
+#tab-mypage .mypage-status-kpi strong {
+    font-size: 26px;
+    line-height: 1.16;
+    color: #0f172a;
+}
+
+#tab-mypage .mypage-grid--details {
+    gap: 18px;
+}
+
+@media (max-width: 1080px) {
+    #tab-mypage .mypage-overview,
+    #tab-mypage .mypage-status-strip {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    #tab-dashboard .content-tit-wrap {
+        padding-top: 0;
+    }
+
+    .draw-membership-banner {
+        grid-template-columns: 1fr;
+        padding: 18px;
+    }
+
+    #tab-mypage .mypage-hero-card {
+        padding: 22px;
+    }
+
+    #tab-mypage .mypage-hero-row {
+        grid-template-columns: 1fr;
+    }
+}

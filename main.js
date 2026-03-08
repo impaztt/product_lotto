@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawCountChips = Array.from(document.querySelectorAll('.draw-count-chip[data-draw-count]'));
     const drawCopyAllBtn = document.getElementById('draw-copy-all-btn');
     const drawCopyStatusEl = document.getElementById('draw-copy-status');
-    const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
     const ruleInputs = Array.from(document.querySelectorAll('.rules-grid input[type="checkbox"]'));
     const excludeNumberGrid = document.getElementById('exclude-number-grid');
@@ -271,9 +270,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const dashSyncTimeEl = document.getElementById('dash-sync-time');
     const dashMembershipChipEl = document.getElementById('dash-membership-chip');
     const dashActivityChipEl = document.getElementById('dash-activity-chip');
-    const drawTargetRoundEl = document.getElementById('draw-target-round');
     const drawMembershipStatusEl = document.getElementById('draw-membership-status');
+    const drawMembershipNoteEl = document.getElementById('draw-membership-note');
     const drawSelectionSummaryEl = document.getElementById('draw-selection-summary');
+    const drawFilterDetailEl = document.getElementById('draw-filter-detail');
     let currentWeeklyData = null;
     let latestAvailableRound = null;
     const roundMetaByNo = new Map();
@@ -683,15 +683,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         syncDrawCountChips();
-    }
-
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = body.getAttribute('data-theme') || 'dark';
-            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            body.setAttribute('data-theme', nextTheme);
-            syncThemeToggle();
-        });
     }
 
     if (menuToggle) {
@@ -1275,7 +1266,6 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         guestTrackingId = getOrCreateGuestTrackingId();
         initFirebase();
-        syncThemeToggle();
         syncMenuState(false);
         setupExcludeNumberControl();
         applySavedRules();
@@ -1700,16 +1690,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateDrawContextUi() {
-        if (drawTargetRoundEl) {
-            const targetRound = getTargetRoundForEntries();
-            drawTargetRoundEl.textContent = Number(targetRound) > 0 ? `${targetRound}회 저장` : '-';
-        }
+        const plan = getMembershipPlanMeta();
         if (drawMembershipStatusEl) {
-            drawMembershipStatusEl.textContent = isMember() ? getMembershipPlanMeta().label : '로그인 전';
+            if (!isMember()) {
+                drawMembershipStatusEl.textContent = '로그인 필요';
+            } else if (isPremiumMember()) {
+                drawMembershipStatusEl.textContent = `${plan.label} 활성화`;
+            } else {
+                drawMembershipStatusEl.textContent = 'FREE 이용 중';
+            }
         }
+        if (drawMembershipNoteEl) {
+            if (!isMember()) {
+                drawMembershipNoteEl.textContent = '로그인 후 프리미엄 이용권을 활성화하면 월정액 추천 세트를 바로 받을 수 있습니다.';
+            } else if (isPremiumMember()) {
+                drawMembershipNoteEl.textContent = `${plan.label} 플랜이 연결되어 있습니다. 추천 세트와 전체복사를 바로 사용할 수 있습니다.`;
+            } else {
+                drawMembershipNoteEl.textContent = '현재는 직접 선택 모드입니다. 이용권을 시작하면 큐레이션 추천이 함께 열립니다.';
+            }
+        }
+        const selectedCount = ruleInputs.filter(input => input.checked).length;
         if (drawSelectionSummaryEl) {
-            const selectedCount = ruleInputs.filter(input => input.checked).length;
-            drawSelectionSummaryEl.textContent = selectedCount ? `${selectedCount}개 규칙 활성화` : '선택된 규칙 없음';
+            drawSelectionSummaryEl.textContent = selectedCount ? `${selectedCount}개 필터를 정교하게 적용 중입니다.` : '필터를 아직 적용하지 않았습니다.';
+        }
+        if (drawFilterDetailEl) {
+            if (!selectedCount) {
+                drawFilterDetailEl.textContent = '시나리오를 선택하거나 규칙 라이브러리에서 직접 조합을 설계해 보세요.';
+                return;
+            }
+            const remainPct = Math.max(0, Math.min(100, Math.round(currentRemainingRatio * 1000) / 10));
+            drawFilterDetailEl.textContent = `남은 조합 ${formatNumber(currentRemainingCombos)}개 · 제외 ${formatNumber(currentExcludedCombos)}개 · 생존 비중 ${remainPct}%`;
         }
     }
 
@@ -1754,10 +1764,16 @@ document.addEventListener('DOMContentLoaded', () => {
             mypageMembershipNextEl.textContent = isMember() ? plan.nextLabel : '업그레이드 가능';
         }
         if (mypagePlanNoteEl) {
-            mypagePlanNoteEl.textContent = isMember() ? plan.note : '직접 선택만 활성화';
+            if (!isMember()) {
+                mypagePlanNoteEl.textContent = '로그인 후 이용권 시작 가능';
+            } else if (isPremiumMember()) {
+                mypagePlanNoteEl.textContent = '프리미엄 추천 활성화';
+            } else {
+                mypagePlanNoteEl.textContent = 'FREE 상태 · 직접 선택 가능';
+            }
         }
         if (mypagePlanManageBtn) {
-            mypagePlanManageBtn.textContent = isMember() ? '플랜 관리' : '로그인 후 플랜 시작';
+            mypagePlanManageBtn.textContent = isMember() ? '이용권 관리' : '로그인하고 시작';
         }
         if (mypagePlanCancelBtn) {
             mypagePlanCancelBtn.hidden = !isPremiumMember();
@@ -2583,7 +2599,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderNicknameUi() {
         const member = isMember();
         if (mypageAuthBadgeEl) {
-            mypageAuthBadgeEl.textContent = member ? '가입완료' : '미로그인';
+            mypageAuthBadgeEl.textContent = member ? '로그인 중' : '로그아웃';
         }
         if (mypageNicknameDisplayEl) {
             if (!member) {
@@ -2773,15 +2789,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const mm = String(today.getMonth() + 1).padStart(2, '0');
         const dd = String(today.getDate()).padStart(2, '0');
         return `${yyyy}${mm}${dd}`;
-    }
-
-    function syncThemeToggle() {
-        if (!themeToggle) {
-            return;
-        }
-        const currentTheme = body.getAttribute('data-theme') || 'dark';
-        themeToggle.setAttribute('aria-label', currentTheme === 'dark' ? '라이트 모드' : '다크 모드');
-        themeToggle.setAttribute('title', currentTheme === 'dark' ? '라이트 모드' : '다크 모드');
     }
 
     function getViewportWidth() {
@@ -4246,6 +4253,7 @@ document.addEventListener('DOMContentLoaded', () => {
             remainingMeterLabel.textContent = `남은 조합 비중: ${pctLabel}%`;
         }
         updateAdjustedOdds(remainingRatio);
+        updateDrawContextUi();
     }
 
     function computeBaseOdds() {
