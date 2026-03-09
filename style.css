@@ -8648,8 +8648,9 @@ textarea {
     }
 
     #tab-dashboard.tab-panel.is-active {
-        margin-left: -4vw;
-        margin-right: -4vw;
+        width: 100vw;
+        max-width: 100vw;
+        margin-left: calc(50% - 50vw);
     }
 
     #tab-dashboard .content-tit-wrap .center-wrap {
@@ -8664,9 +8665,10 @@ textarea {
     }
 
     #tab-draw.app-shell {
-        margin-top: -12px;
-        margin-left: -4vw;
-        margin-right: -4vw;
+        width: 100vw;
+        max-width: 100vw;
+        margin: -12px 0 0;
+        margin-left: calc(50% - 50vw);
         padding-top: 14px;
         padding-left: 0;
         padding-right: 0;
