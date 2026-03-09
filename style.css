@@ -9422,11 +9422,11 @@ textarea {
 /* Draw filter UX refinement */
 #tab-draw .draw-selection-dock {
     position: sticky;
-    top: 96px;
-    z-index: 8;
+    top: 92px;
+    z-index: 12;
     display: grid;
     gap: 10px;
-    margin-bottom: 14px;
+    margin: 14px 0 16px;
     padding: 12px 14px;
     border-radius: 20px;
     border: 1px solid rgba(148, 163, 184, 0.18);
@@ -9453,10 +9453,34 @@ textarea {
     gap: 4px;
 }
 
+#tab-draw .draw-selection-dock-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
 #tab-draw .draw-selection-dock-kicker {
     font-size: 10px;
     font-weight: 800;
     letter-spacing: 0.12em;
+    color: #1b64da;
+}
+
+#tab-draw .draw-selection-dock-scenario {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: #f2f4f6;
+    color: #6b7684;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+#tab-draw .draw-selection-dock-scenario.is-active {
+    background: #eef5ff;
     color: #1b64da;
 }
 
@@ -9471,6 +9495,24 @@ textarea {
     font-size: 12px;
     line-height: 1.45;
     color: #6b7684;
+}
+
+#tab-draw .draw-selection-dock-actions {
+    display: grid;
+    justify-items: end;
+    gap: 8px;
+}
+
+#tab-draw .draw-selection-dock-stat {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.05);
+    color: #4e5968;
+    font-size: 11px;
+    font-weight: 800;
 }
 
 #tab-draw .draw-selection-dock-clear {
@@ -9515,6 +9557,12 @@ textarea {
     border: 1px solid rgba(49, 130, 246, 0.14);
     background: #ffffff;
     color: #355070;
+}
+
+#tab-draw .draw-selection-dock-chip.is-fresh {
+    border-color: rgba(49, 130, 246, 0.26);
+    background: #eef5ff;
+    color: #1b64da;
 }
 
 #tab-draw .draw-selection-dock-chip::after {
@@ -9606,14 +9654,21 @@ textarea {
 
 @media (max-width: 768px) {
     #tab-draw .draw-selection-dock {
-        top: 76px;
-        margin-bottom: 12px;
+        top: 72px;
+        margin: 10px 0 14px;
         padding: 11px 12px;
         border-radius: 18px;
     }
 
     #tab-draw .draw-selection-dock-head {
+        flex-direction: column;
+        align-items: stretch;
         gap: 8px;
+    }
+
+    #tab-draw .draw-selection-dock-actions {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
     }
 
     #tab-draw .draw-selection-dock-clear {

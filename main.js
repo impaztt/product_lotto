@@ -35,6 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawSelectionDockEl = document.getElementById('draw-selection-dock');
     const drawSelectionDockTitleEl = document.getElementById('draw-dock-title');
     const drawSelectionDockMetaEl = document.getElementById('draw-dock-meta');
+    const drawSelectionDockScenarioEl = document.getElementById('draw-dock-scenario');
+    const drawSelectionDockStatEl = document.getElementById('draw-dock-stat');
     const drawSelectionDockPreviewEl = document.getElementById('draw-selection-dock-preview');
     const drawSelectionDockClearBtn = document.getElementById('draw-dock-clear');
     const oddsBenefitSummaryEl = document.getElementById('odds-benefit-summary');
@@ -71,9 +73,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const scenarioCards = Array.from(document.querySelectorAll('.draw-scenario-card[data-strategy]'));
     const horizontalGestureTracks = Array.from(document.querySelectorAll('.scenario-cards, .draw-slot-grid'));
     const SCENARIO_DRAG_THRESHOLD_PX = 8;
+    const SCENARIO_TAP_THRESHOLD_PX = 10;
     const SCENARIO_CLICK_SUPPRESS_MS = 140;
     let drawWidthSyncRafId = 0;
     let activeStrategy = '';
+    let lastDrawInteraction = null;
+    let lastScenarioActivation = {
+        strategy: '',
+        at: 0
+    };
     const storeOpenOfficialBtn = document.getElementById('store-open-official-btn');
     const groupLevelButtons = Array.from(document.querySelectorAll('[data-group-level]'));
     const slotSaveButtons = Array.from(document.querySelectorAll('[data-slot-save]'));
@@ -928,11 +936,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Scenario cards are handled here only; avoid duplicate bindings (inline/global) across input types.
     scenarioCards.forEach(card => {
+        let pointerStart = null;
+
+        const clearPointerStart = () => {
+            pointerStart = null;
+        };
+
         card.removeAttribute('onclick');
+        card.addEventListener('pointerdown', event => {
+            if (event.pointerType === 'mouse' && event.button !== 0) {
+                return;
+            }
+            pointerStart = {
+                x: event.clientX,
+                y: event.clientY,
+                pointerType: event.pointerType || ''
+            };
+        }, { passive: true });
+        card.addEventListener('pointerup', event => {
+            if (!pointerStart) {
+                return;
+            }
+            const dx = Math.abs(event.clientX - pointerStart.x);
+            const dy = Math.abs(event.clientY - pointerStart.y);
+            const pointerType = event.pointerType || pointerStart.pointerType || '';
+            const isTap = dx <= SCENARIO_TAP_THRESHOLD_PX && dy <= SCENARIO_TAP_THRESHOLD_PX;
+            clearPointerStart();
+            if (!isTap || !pointerType || pointerType === 'mouse') {
+                return;
+            }
+            event.preventDefault();
+            event.stopPropagation();
+            activateScenarioSelection(card.dataset.strategy);
+        });
+        card.addEventListener('pointercancel', clearPointerStart, { passive: true });
         card.addEventListener('click', event => {
             event.preventDefault();
             event.stopPropagation();
-            applyStrategy(card.dataset.strategy);
+            activateScenarioSelection(card.dataset.strategy);
         });
     });
 
@@ -1140,9 +1181,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateRulesStatus('저장된 내 프리셋이 없습니다.');
                 return;
             }
+            rememberDrawInteraction({
+                type: 'preset',
+                label: '내 프리셋',
+                selected: true
+            });
+            clearActiveStrategySelection();
             const ids = JSON.parse(saved);
             setRulesByIds(ids);
-            syncStrategyButtons('');
             syncGroupLevelButtons();
             updateRulesStatus('내 프리셋을 적용했습니다.');
             updateMypageSummaryUi();
@@ -1302,9 +1348,14 @@ document.addEventListener('DOMContentLoaded', () => {
             groupInputs.forEach(input => {
                 input.checked = !allChecked;
             });
+            rememberDrawInteraction({
+                type: 'group',
+                label: `${group} ${allChecked ? '해제' : '선택'}`,
+                selected: !allChecked
+            });
+            clearActiveStrategySelection();
             updateSelectionCount();
             updateCombinedEstimates();
-            syncStrategyButtons('');
             syncGroupLevelButtons();
         });
     });
@@ -1319,6 +1370,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ruleInputs.forEach(input => {
         input.addEventListener('change', () => {
+            const sourceCard = input.closest('.rule-card');
+            rememberDrawInteraction({
+                type: 'rule',
+                value: input.value,
+                label: sourceCard?.dataset.title || sourceCard?.querySelector('.rule-title')?.textContent || '규칙',
+                selected: Boolean(input.checked)
+            });
             if (input.value === 'exclude_number' && !input.checked && excludeNumberValues.size) {
                 excludeNumberValues.clear();
                 if (excludeNumberGrid) {
@@ -1329,9 +1387,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.removeItem('lotto_exclude_numbers');
                 updateExcludeNumberLabel();
             }
+            clearActiveStrategySelection();
             updateSelectionCount();
             updateCombinedEstimates();
-            syncStrategyButtons('');
             syncGroupLevelButtons();
         });
     });
@@ -1373,6 +1431,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function clearSelectedRules() {
+        rememberDrawInteraction({
+            type: 'clear',
+            label: '전체 해제',
+            selected: false
+        });
+        activeStrategy = '';
         setRulesByIds([]);
         syncStrategyButtons('clear');
         syncGroupLevelButtons();
@@ -4025,6 +4089,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     localStorage.removeItem('lotto_exclude_numbers');
                 }
+                rememberDrawInteraction({
+                    type: 'rule',
+                    value: 'exclude_number',
+                    label: `제외수 ${num}번`,
+                    selected: excludeNumberValues.has(num)
+                });
+                clearActiveStrategySelection();
                 updateSelectionCount();
                 updateCombinedEstimates();
                 updateScenarioMetrics();
@@ -4046,26 +4117,43 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyStrategy(strategy) {
         const presetIds = PRESETS[strategy] || [];
         if (strategy === 'clear') {
+            rememberDrawInteraction({
+                type: 'clear',
+                label: '전체 해제',
+                selected: false
+            });
+            activeStrategy = '';
             setRulesByIds([]);
             updateRulesStatus('전략을 초기화했습니다.');
             syncStrategyButtons('clear');
             syncGroupLevelButtons();
-            activeStrategy = '';
             return;
         }
         if (strategy && strategy === activeStrategy) {
+            rememberDrawInteraction({
+                type: 'scenario',
+                value: strategy,
+                label: PRESETS_LABEL[strategy] || '전략',
+                selected: false
+            });
+            activeStrategy = '';
             setRulesByIds([]);
             updateRulesStatus('전략을 해제했습니다.');
             syncStrategyButtons('');
             syncGroupLevelButtons();
-            activeStrategy = '';
             return;
         }
+        rememberDrawInteraction({
+            type: 'scenario',
+            value: strategy,
+            label: PRESETS_LABEL[strategy] || '전략',
+            selected: true
+        });
+        activeStrategy = strategy || '';
         setRulesByIds(presetIds);
         updateRulesStatus(`${PRESETS_LABEL[strategy] || '전략'}을 적용했습니다.`);
         syncStrategyButtons(strategy);
         syncGroupLevelButtons();
-        activeStrategy = strategy || '';
     }
 
     function applyGroupLevel(group, level) {
@@ -4091,11 +4179,15 @@ document.addEventListener('DOMContentLoaded', () => {
         ordered.forEach((input, index) => {
             input.checked = index < targetCount;
         });
+        rememberDrawInteraction({
+            type: 'group-level',
+            label: `${group} ${level}단계`,
+            selected: targetCount > 0
+        });
+        clearActiveStrategySelection();
         updateSelectionCount();
         updateCombinedEstimates();
-        syncStrategyButtons('');
         syncGroupLevelButtons();
-        activeStrategy = '';
     }
 
     function syncStrategyButtons(activeStrategy) {
@@ -4217,12 +4309,25 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyPreset(preset) {
         const presetIds = PRESETS[preset] || [];
         if (preset === 'clear') {
+            rememberDrawInteraction({
+                type: 'clear',
+                label: '전체 해제',
+                selected: false
+            });
+            activeStrategy = '';
             setRulesByIds([]);
             updateRulesStatus('모든 선택을 해제했습니다.');
             syncStrategyButtons('clear');
             syncGroupLevelButtons();
             return;
         }
+        rememberDrawInteraction({
+            type: 'scenario',
+            value: preset,
+            label: PRESETS_LABEL[preset] || preset,
+            selected: true
+        });
+        activeStrategy = preset || '';
         setRulesByIds(presetIds);
         updateRulesStatus(`${PRESETS_LABEL[preset]} 규칙을 적용했습니다.`);
         syncStrategyButtons(preset);
@@ -4241,8 +4346,13 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const savedIdsRaw = JSON.parse(saved);
             const savedIds = Array.isArray(savedIdsRaw) ? savedIdsRaw : [];
+            rememberDrawInteraction({
+                type: 'preset',
+                label: '저장 규칙',
+                selected: savedIds.length > 0
+            });
+            clearActiveStrategySelection();
             setRulesByIds(savedIds);
-            syncStrategyButtons('');
             syncGroupLevelButtons();
             if (fromButton) {
                 updateRulesStatus('저장된 규칙을 불러왔습니다.');
@@ -4335,15 +4445,77 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function rememberDrawInteraction(detail) {
+        lastDrawInteraction = detail ? { ...detail, at: Date.now() } : null;
+    }
+
+    function clearActiveStrategySelection() {
+        activeStrategy = '';
+        syncStrategyButtons('');
+    }
+
+    function activateScenarioSelection(strategy) {
+        if (!strategy) {
+            return;
+        }
+        const now = Date.now();
+        if (lastScenarioActivation.strategy === strategy && now - lastScenarioActivation.at < 320) {
+            return;
+        }
+        lastScenarioActivation = {
+            strategy,
+            at: now
+        };
+        applyStrategy(strategy);
+    }
+
+    function describeDrawInteraction() {
+        if (!lastDrawInteraction || !lastDrawInteraction.label) {
+            return '';
+        }
+        if (lastDrawInteraction.type === 'scenario') {
+            return lastDrawInteraction.selected
+                ? `최근 시나리오: ${lastDrawInteraction.label}`
+                : `최근 해제: ${lastDrawInteraction.label}`;
+        }
+        if (lastDrawInteraction.type === 'rule') {
+            return `최근 ${lastDrawInteraction.selected ? '선택' : '해제'}: ${lastDrawInteraction.label}`;
+        }
+        if (lastDrawInteraction.type === 'group') {
+            return `최근 그룹 변경: ${lastDrawInteraction.label}`;
+        }
+        if (lastDrawInteraction.type === 'group-level') {
+            return `최근 단계 적용: ${lastDrawInteraction.label}`;
+        }
+        if (lastDrawInteraction.type === 'preset') {
+            return `최근 적용: ${lastDrawInteraction.label}`;
+        }
+        if (lastDrawInteraction.type === 'clear') {
+            return '최근 동작: 전체 해제';
+        }
+        return `최근 변경: ${lastDrawInteraction.label}`;
+    }
+
     function updateDrawSelectionDock(selectedCards) {
         if (!drawSelectionDockEl || !drawSelectionDockTitleEl || !drawSelectionDockMetaEl || !drawSelectionDockPreviewEl) {
             return;
         }
         const items = Array.isArray(selectedCards) ? selectedCards : [];
+        const hasScenario = Boolean(activeStrategy && activeStrategy !== 'clear');
+        const recentText = describeDrawInteraction();
+        if (drawSelectionDockScenarioEl) {
+            drawSelectionDockScenarioEl.textContent = hasScenario
+                ? `${PRESETS_LABEL[activeStrategy] || activeStrategy} 시나리오`
+                : (items.length ? '수동 조정 중' : '직접 선택');
+            drawSelectionDockScenarioEl.classList.toggle('is-active', hasScenario);
+        }
+        if (drawSelectionDockStatEl) {
+            drawSelectionDockStatEl.textContent = items.length ? `${items.length}개 선택` : '선택 없음';
+        }
         if (!items.length) {
             drawSelectionDockEl.classList.remove('has-selection');
-            drawSelectionDockTitleEl.textContent = '아직 필터 없음';
-            drawSelectionDockMetaEl.textContent = '시나리오 또는 규칙을 선택하면 여기서 계속 보입니다.';
+            drawSelectionDockTitleEl.textContent = lastDrawInteraction?.type === 'clear' ? '필터를 모두 해제했습니다.' : '아직 필터 없음';
+            drawSelectionDockMetaEl.textContent = recentText || '시나리오 또는 규칙을 선택하면 여기서 계속 보입니다.';
             drawSelectionDockPreviewEl.hidden = true;
             drawSelectionDockPreviewEl.innerHTML = '';
             if (drawSelectionDockClearBtn) {
@@ -4353,21 +4525,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         drawSelectionDockEl.classList.add('has-selection');
-        drawSelectionDockTitleEl.textContent = `${items.length}개 필터 적용 중`;
+        drawSelectionDockTitleEl.textContent = hasScenario
+            ? `${PRESETS_LABEL[activeStrategy] || activeStrategy} · ${items.length}개 필터 적용 중`
+            : `${items.length}개 필터 적용 중`;
         const remainPct = Number.isFinite(currentRemainingRatio)
             ? Math.max(0, Math.min(100, Math.round(currentRemainingRatio * 1000) / 10))
             : 100;
         const remainingValue = Number.isFinite(currentRemainingCombos) ? formatNumber(currentRemainingCombos) : '-';
-        drawSelectionDockMetaEl.textContent = `남은 조합 ${remainingValue}개 · 생존 비중 ${remainPct}%`;
+        drawSelectionDockMetaEl.textContent = recentText
+            ? `${recentText} · 남은 조합 ${remainingValue}개 · 생존 비중 ${remainPct}%`
+            : `남은 조합 ${remainingValue}개 · 생존 비중 ${remainPct}%`;
         if (drawSelectionDockClearBtn) {
             drawSelectionDockClearBtn.hidden = false;
         }
 
-        const previewItems = items.slice(0, 8).map(card => {
+        const prioritizedValue = lastDrawInteraction?.type === 'rule' && lastDrawInteraction.selected
+            ? lastDrawInteraction.value
+            : '';
+        const orderedItems = items.slice().sort((leftCard, rightCard) => {
+            const leftValue = leftCard.querySelector('.rule-input')?.value || '';
+            const rightValue = rightCard.querySelector('.rule-input')?.value || '';
+            if (leftValue === prioritizedValue) {
+                return -1;
+            }
+            if (rightValue === prioritizedValue) {
+                return 1;
+            }
+            return 0;
+        });
+        const previewItems = orderedItems.slice(0, 8).map(card => {
             const input = card.querySelector('.rule-input');
             return {
                 value: input ? input.value : '',
-                title: card.dataset.title || card.querySelector('.rule-title')?.textContent || '규칙'
+                title: card.dataset.title || card.querySelector('.rule-title')?.textContent || '규칙',
+                isFresh: Boolean(prioritizedValue && input && input.value === prioritizedValue)
             };
         }).filter(item => item.value);
 
@@ -4375,7 +4566,7 @@ document.addEventListener('DOMContentLoaded', () => {
         drawSelectionDockPreviewEl.hidden = false;
         drawSelectionDockPreviewEl.innerHTML = previewItems
             .map(item => (
-                `<button type="button" class="draw-selection-dock-chip" data-value="${escapeHtml(item.value)}">${escapeHtml(item.title)}</button>`
+                `<button type="button" class="draw-selection-dock-chip${item.isFresh ? ' is-fresh' : ''}" data-value="${escapeHtml(item.value)}">${escapeHtml(item.title)}</button>`
             ))
             .join('')
             + (moreCount > 0 ? `<span class="draw-selection-dock-more">+${moreCount}</span>` : '');

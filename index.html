@@ -1978,6 +1978,23 @@
 		                </div>
 		            </div>
 		            <section id="rules" class="section rules draw-studio">
+                        <section class="draw-selection-dock" id="draw-selection-dock" data-draw-mode-only="self" aria-live="polite">
+                            <div class="draw-selection-dock-head">
+                                <div class="draw-selection-dock-copy">
+                                    <div class="draw-selection-dock-meta-row">
+                                        <span class="draw-selection-dock-kicker">선택 상태</span>
+                                        <span class="draw-selection-dock-scenario" id="draw-dock-scenario">직접 선택</span>
+                                    </div>
+                                    <strong id="draw-dock-title">아직 필터 없음</strong>
+                                    <span class="draw-selection-dock-meta" id="draw-dock-meta">시나리오 또는 규칙을 선택하면 여기서 계속 보입니다.</span>
+                                </div>
+                                <div class="draw-selection-dock-actions">
+                                    <span class="draw-selection-dock-stat" id="draw-dock-stat">선택 없음</span>
+                                    <button id="draw-dock-clear" class="draw-selection-dock-clear" type="button" hidden>전체 해제</button>
+                                </div>
+                            </div>
+                            <div class="draw-selection-dock-preview" id="draw-selection-dock-preview" hidden></div>
+                        </section>
 		                <div class="draw-studio-body">
 		                    <aside class="draw-builder" data-draw-mode-only="self">
 	                        <div class="draw-panel" id="draw-scenario-panel">
@@ -2234,17 +2251,6 @@
 
 			                    <div class="draw-dashboard">
 		                        <div class="draw-dashboard-unified" data-draw-mode-only="self">
-                            <section class="draw-selection-dock" id="draw-selection-dock">
-                                <div class="draw-selection-dock-head">
-                                    <div class="draw-selection-dock-copy">
-                                        <span class="draw-selection-dock-kicker">선택 상태</span>
-                                        <strong id="draw-dock-title">아직 필터 없음</strong>
-                                        <span class="draw-selection-dock-meta" id="draw-dock-meta">시나리오 또는 규칙을 선택하면 여기서 계속 보입니다.</span>
-                                    </div>
-                                    <button id="draw-dock-clear" class="draw-selection-dock-clear" type="button" hidden>전체 해제</button>
-                                </div>
-                                <div class="draw-selection-dock-preview" id="draw-selection-dock-preview" hidden></div>
-                            </section>
 	                        <div class="draw-dashboard-grid">
                             <div class="draw-metric-card primary metric-remaining-ratio">
                                 <div class="draw-metric-title">남은 조합 비중</div>
