@@ -39,11 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawSelectionDockMetaEl = document.getElementById('draw-dock-meta');
     const drawSelectionDockScenarioEl = document.getElementById('draw-dock-scenario');
     const drawSelectionDockStatEl = document.getElementById('draw-dock-stat');
+    const drawSelectionDockBodyEl = document.getElementById('draw-selection-dock-body');
     const drawSelectionDockMetricsEl = document.getElementById('draw-selection-dock-metrics');
     const drawSelectionDockRemainingEl = document.getElementById('draw-dock-remaining');
     const drawSelectionDockRatioEl = document.getElementById('draw-dock-ratio');
     const drawSelectionDockBenefitEl = document.getElementById('draw-dock-benefit');
     const drawSelectionDockPreviewEl = document.getElementById('draw-selection-dock-preview');
+    const drawSelectionDockToggleBtn = document.getElementById('draw-dock-toggle');
     const drawSelectionDockClearBtn = document.getElementById('draw-dock-clear');
     const oddsBenefitSummaryEl = document.getElementById('odds-benefit-summary');
     const oddsBaseEls = {
@@ -82,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const SCENARIO_TAP_THRESHOLD_PX = 10;
     const SCENARIO_CLICK_SUPPRESS_MS = 140;
     let drawWidthSyncRafId = 0;
+    let isDrawSelectionDockCollapsed = false;
     let activeStrategy = '';
     let lastDrawInteraction = null;
     let lastScenarioActivation = {
@@ -1438,6 +1441,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function setDrawSelectionDockCollapsed(collapsed) {
+        const shouldCollapse = Boolean(collapsed);
+        isDrawSelectionDockCollapsed = shouldCollapse;
+        if (drawSelectionDockEl) {
+            drawSelectionDockEl.classList.toggle('is-collapsed', shouldCollapse);
+        }
+        if (drawSelectionDockBodyEl) {
+            drawSelectionDockBodyEl.hidden = shouldCollapse;
+        }
+        if (drawSelectionDockToggleBtn) {
+            drawSelectionDockToggleBtn.textContent = shouldCollapse ? '펼치기' : '접기';
+            drawSelectionDockToggleBtn.setAttribute('aria-expanded', String(!shouldCollapse));
+            drawSelectionDockToggleBtn.setAttribute(
+                'aria-label',
+                shouldCollapse ? '적용 필터 펼치기' : '적용 필터 접기'
+            );
+        }
+    }
+
     function clearSelectedRules() {
         rememberDrawInteraction({
             type: 'clear',
@@ -1459,6 +1481,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (drawSelectionDockClearBtn) {
         drawSelectionDockClearBtn.addEventListener('click', () => {
             clearSelectedRules();
+        });
+    }
+
+    if (drawSelectionDockToggleBtn) {
+        drawSelectionDockToggleBtn.addEventListener('click', () => {
+            if (!drawSelectionDockEl || !drawSelectionDockEl.classList.contains('has-selection')) {
+                return;
+            }
+            setDrawSelectionDockCollapsed(!isDrawSelectionDockCollapsed);
         });
     }
 
@@ -4586,6 +4617,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (!items.length) {
             drawSelectionDockEl.classList.remove('has-selection');
+            setDrawSelectionDockCollapsed(false);
             drawSelectionDockTitleEl.textContent = lastDrawInteraction?.type === 'clear' ? '필터를 모두 해제했습니다.' : '아직 필터 없음';
             drawSelectionDockMetaEl.textContent = recentText || '시나리오 또는 규칙을 선택하면 여기서 계속 보입니다.';
             if (drawSelectionDockMetricsEl) {
@@ -4593,6 +4625,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             drawSelectionDockPreviewEl.hidden = true;
             drawSelectionDockPreviewEl.innerHTML = '';
+            if (drawSelectionDockToggleBtn) {
+                drawSelectionDockToggleBtn.hidden = true;
+            }
             if (drawSelectionDockClearBtn) {
                 drawSelectionDockClearBtn.hidden = true;
             }
@@ -4622,6 +4657,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (drawSelectionDockBenefitEl) {
             drawSelectionDockBenefitEl.textContent = benefitPct > 0 ? `유리 ${benefitPct}%` : '변화 없음';
+        }
+        if (drawSelectionDockToggleBtn) {
+            drawSelectionDockToggleBtn.hidden = false;
         }
         if (drawSelectionDockClearBtn) {
             drawSelectionDockClearBtn.hidden = false;
@@ -4658,6 +4696,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ))
             .join('')
             + (moreCount > 0 ? `<span class="draw-selection-dock-more">+${moreCount}</span>` : '');
+        setDrawSelectionDockCollapsed(isDrawSelectionDockCollapsed);
     }
 
     function updateGroupButtons() {
