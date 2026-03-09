@@ -4540,6 +4540,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const items = Array.isArray(selectedCards) ? selectedCards : [];
+        if (drawTabPanel) {
+            drawTabPanel.classList.toggle('has-selection-dock', items.length > 0);
+        }
         const hasScenario = Boolean(activeStrategy && activeStrategy !== 'clear');
         const recentText = describeDrawInteraction();
         if (drawSelectionDockScenarioEl) {
@@ -4571,9 +4574,13 @@ document.addEventListener('DOMContentLoaded', () => {
             ? Math.max(0, Math.min(100, Math.round(currentRemainingRatio * 1000) / 10))
             : 100;
         const remainingValue = Number.isFinite(currentRemainingCombos) ? formatNumber(currentRemainingCombos) : '-';
+        const benefitPct = Number.isFinite(currentRemainingRatio)
+            ? Math.max(0, Math.round((1 - Math.max(0.000001, Math.min(1, currentRemainingRatio))) * 100))
+            : 0;
+        const benefitText = benefitPct > 0 ? `1등 기준 유리 ${benefitPct}%` : '확률 변화 없음';
         drawSelectionDockMetaEl.textContent = recentText
-            ? `${recentText} · 남은 조합 ${remainingValue}개 · 생존 비중 ${remainPct}%`
-            : `남은 조합 ${remainingValue}개 · 생존 비중 ${remainPct}%`;
+            ? `${recentText} · 남은 조합 ${remainingValue}개 · 생존 비중 ${remainPct}% · ${benefitText}`
+            : `남은 조합 ${remainingValue}개 · 생존 비중 ${remainPct}% · ${benefitText}`;
         if (drawSelectionDockClearBtn) {
             drawSelectionDockClearBtn.hidden = false;
         }
