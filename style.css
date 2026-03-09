@@ -8647,9 +8647,30 @@ textarea {
         padding-bottom: calc(124px + env(safe-area-inset-bottom));
     }
 
+    #tab-dashboard.tab-panel.is-active {
+        margin-left: -4vw;
+        margin-right: -4vw;
+    }
+
+    #tab-dashboard .content-tit-wrap .center-wrap {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    #tab-dashboard .content-draw-wrap > .center-wrap,
+    #tab-dashboard .draw-bg > .center-wrap {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
     #tab-draw.app-shell {
-        margin: -12px 0 0;
-        padding: 14px 4vw calc(156px + env(safe-area-inset-bottom));
+        margin-top: -12px;
+        margin-left: -4vw;
+        margin-right: -4vw;
+        padding-top: 14px;
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: calc(156px + env(safe-area-inset-bottom));
     }
 
     #tab-mypage.app-shell,
@@ -8869,7 +8890,7 @@ textarea {
 
     #tab-dashboard .content-draw-wrap > .center-wrap,
     #tab-dashboard .draw-bg > .center-wrap {
-        padding: 8px 4vw 0;
+        padding: 8px 0 0;
     }
 
     .dash-intro-points span,
