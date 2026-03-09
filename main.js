@@ -3132,6 +3132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (drawSelectionDockPlaceholderEl) {
             drawSelectionDockPlaceholderEl.style.removeProperty('width');
+            drawSelectionDockPlaceholderEl.style.removeProperty('height');
         }
     }
 
@@ -3142,6 +3143,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const viewportWidth = Number.isFinite(forcedViewportWidth) && forcedViewportWidth > 0
             ? forcedViewportWidth
             : Math.floor(getViewportWidth());
+        if (viewportWidth <= 768) {
+            if (drawSelectionDockPlaceholderEl) {
+                drawSelectionDockPlaceholderEl.style.removeProperty('width');
+                const reserveHeight = drawTabPanel.classList.contains('has-selection-dock') && !drawSelectionDockEl.hidden
+                    ? Math.ceil(drawSelectionDockEl.getBoundingClientRect().height) + 10
+                    : 0;
+                drawSelectionDockPlaceholderEl.style.height = `${reserveHeight}px`;
+            }
+            if (drawTabPanel) {
+                drawTabPanel.style.removeProperty('--draw-dock-width');
+            }
+            return;
+        }
         if (viewportWidth <= 960 || !drawSelectedBoardEl) {
             resetDrawSelectionDockLayout();
             return;
@@ -3155,6 +3169,7 @@ document.addEventListener('DOMContentLoaded', () => {
         drawTabPanel.style.setProperty('--draw-dock-width', `${dockWidth}px`);
         if (drawSelectionDockPlaceholderEl) {
             drawSelectionDockPlaceholderEl.style.width = `${dockWidth}px`;
+            drawSelectionDockPlaceholderEl.style.height = '0px';
         }
     }
 
