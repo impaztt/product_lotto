@@ -4343,6 +4343,8 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
     opacity: 1;
     pointer-events: auto;
     margin-top: 18px;
+    margin-left: auto;
+    margin-right: auto;
     box-sizing: border-box;
 }
 
@@ -6652,6 +6654,7 @@ body[data-theme="dark"] #tab-dashboard .dash-intro-sub {
 
 #tab-draw .draw-studio-header,
 #tab-draw .draw-studio-body,
+#tab-draw .draw-rules-panel.inline,
 #tab-mypage .section-title,
 #tab-mypage .mypage-grid,
 #tab-mypage #auth.section,
@@ -6795,6 +6798,7 @@ body[data-theme="dark"] #tab-store .store-shell-toolbar .ghost {
     }
 
     #tab-draw .draw-studio-body,
+    #tab-draw .draw-rules-panel.inline,
     #tab-mypage .mypage-grid,
     #tab-mypage #auth.section,
     #tab-qr .qr-layout,
@@ -9403,6 +9407,7 @@ textarea {
     #tab-draw .draw-membership-banner,
     #tab-draw .draw-filter-overview,
     #tab-draw .draw-premium-lock,
+    #tab-draw .draw-rules-panel.inline,
     #tab-draw .premium-empty-state {
         padding: 13px 14px !important;
     }
