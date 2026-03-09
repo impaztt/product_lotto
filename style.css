@@ -8647,7 +8647,11 @@ textarea {
         padding-bottom: calc(124px + env(safe-area-inset-bottom));
     }
 
-    #tab-draw.app-shell,
+    #tab-draw.app-shell {
+        margin: -12px 0 0;
+        padding: 14px 4vw calc(156px + env(safe-area-inset-bottom));
+    }
+
     #tab-mypage.app-shell,
     #tab-qr.app-shell,
     #tab-store.app-shell.store-webview-tab {
