@@ -3150,10 +3150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (viewportWidth <= 768) {
             if (drawSelectionDockPlaceholderEl) {
                 drawSelectionDockPlaceholderEl.style.removeProperty('width');
-                const reserveHeight = drawTabPanel.classList.contains('has-selection-dock') && !drawSelectionDockEl.hidden
-                    ? Math.ceil(drawSelectionDockEl.getBoundingClientRect().height) + 10
-                    : 0;
-                drawSelectionDockPlaceholderEl.style.height = `${reserveHeight}px`;
+                drawSelectionDockPlaceholderEl.style.height = '0px';
             }
             if (drawTabPanel) {
                 drawTabPanel.style.removeProperty('--draw-dock-width');

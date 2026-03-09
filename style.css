@@ -9803,23 +9803,18 @@ textarea {
         border-left: 0;
         border-right: 0;
         box-shadow: 0 18px 36px rgba(15, 23, 42, 0.14);
-        transform: translateY(-18px);
         opacity: 0;
         pointer-events: none;
-        transition: transform 0.22s ease, opacity 0.22s ease, box-shadow 0.22s ease;
+        transition: opacity 0.18s ease, box-shadow 0.18s ease;
     }
 
     #tab-draw.has-selection-dock .draw-selection-dock {
         opacity: 1;
         pointer-events: auto;
-        transform: translateY(0);
     }
 
     #tab-draw .draw-selection-dock-placeholder {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-        height: 0;
+        display: none;
     }
 
     #tab-draw .draw-selection-dock-head {
