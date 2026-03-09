@@ -9674,6 +9674,7 @@ textarea {
 }
 
 #tab-draw .draw-selection-dock-head {
+    position: relative;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -9689,6 +9690,11 @@ textarea {
 #tab-draw .draw-selection-dock-copy {
     display: grid;
     gap: 4px;
+    min-width: 0;
+}
+
+#tab-draw .draw-selection-dock.has-selection .draw-selection-dock-copy {
+    padding-right: 84px;
 }
 
 #tab-draw .draw-selection-dock-meta-row {
@@ -9798,6 +9804,10 @@ textarea {
 }
 
 #tab-draw .draw-selection-dock-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
     border: 1px solid rgba(148, 163, 184, 0.22);
     background: rgba(248, 250, 252, 0.96);
     color: #355070;
@@ -9836,6 +9846,12 @@ textarea {
     overflow-y: hidden;
     padding-bottom: 2px;
     scrollbar-width: none;
+}
+
+#tab-draw .draw-selection-dock-body[hidden],
+#tab-draw .draw-selection-dock-metrics[hidden],
+#tab-draw .draw-selection-dock-preview[hidden] {
+    display: none !important;
 }
 
 #tab-draw .draw-selection-dock-preview::-webkit-scrollbar {
@@ -10033,6 +10049,14 @@ textarea {
         min-height: 34px;
         padding: 0 10px;
         font-size: 11px;
+    }
+
+    #tab-draw .draw-selection-dock.has-selection .draw-selection-dock-copy {
+        padding-right: 76px;
+    }
+
+    #tab-draw .draw-selection-dock-toggle {
+        top: 2px;
     }
 
     #tab-draw .draw-selection-dock-chip,
