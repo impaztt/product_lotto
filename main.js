@@ -1860,37 +1860,37 @@ document.addEventListener('DOMContentLoaded', () => {
             free: {
                 id: 'free',
                 label: 'FREE',
-                description: '직접 선택, 보관함 저장, 생성 히스토리를 기본 제공',
-                nextLabel: '업그레이드 가능',
-                note: '직접 선택만 활성화'
+                description: '직접 선택과 저장 기능을 바로 사용할 수 있어요.',
+                nextLabel: '추천 플랜 보기',
+                note: '직접 선택 사용 중'
             },
             starter: {
                 id: 'starter',
                 label: 'STARTER',
-                description: '주 1회 추천 3세트와 최근 4주 히스토리를 제공',
-                nextLabel: '주 1회 자동 추천',
-                note: '입문형 추천 플랜 활성화'
+                description: '주 1회 추천 3세트와 최근 4주 기록을 제공해요.',
+                nextLabel: '주 1회 추천',
+                note: '입문 플랜 사용 중'
             },
             standard: {
                 id: 'standard',
                 label: 'STANDARD',
-                description: '회차당 추천 5세트와 최근 12주 히스토리를 제공',
-                nextLabel: '주 2회 자동 추천',
-                note: '표준형 추천 플랜 활성화'
+                description: '주 2회 추천 5세트와 최근 12주 기록을 제공해요.',
+                nextLabel: '주 2회 추천',
+                note: '표준 플랜 사용 중'
             },
             master: {
                 id: 'master',
                 label: 'MASTER',
-                description: '우선 추천과 심화 리포트를 포함한 집중형 플랜',
-                nextLabel: '주 3회 자동 추천',
-                note: '고급형 추천 플랜 활성화'
+                description: '주 3회 추천과 심화 리포트를 함께 제공해요.',
+                nextLabel: '주 3회 추천',
+                note: '집중 관리 플랜 사용 중'
             },
             premium: {
                 id: 'premium',
                 label: 'PREMIUM',
-                description: '추천 5세트와 프리미엄 복사 기능을 제공합니다.',
-                nextLabel: '프리미엄 추천 활성화',
-                note: '프리미엄 추천 사용 가능'
+                description: '추천 번호와 전체 복사 기능을 바로 사용할 수 있어요.',
+                nextLabel: '프리미엄 사용 중',
+                note: '프리미엄 기능 사용 중'
             }
         };
         return planMap[normalized] || planMap.free;
@@ -1988,7 +1988,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (isMember() && currentUser) {
                 mypageProfileEmailEl.textContent = currentUser.uid;
             } else {
-                mypageProfileEmailEl.textContent = '로그인 전';
+                mypageProfileEmailEl.textContent = '로그인해 주세요';
             }
         }
         if (mypageMembershipTierEl) {
@@ -2000,22 +2000,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mypageMembershipDescEl) {
             mypageMembershipDescEl.textContent = isMember()
                 ? plan.description
-                : '로그인 후 플랜을 활성화하면 프리미엄 추천번호를 바로 이용할 수 있습니다.';
+                : '로그인하면 추천 플랜과 저장한 기록을 바로 이어서 볼 수 있어요.';
         }
         if (mypageMembershipNextEl) {
-            mypageMembershipNextEl.textContent = isMember() ? plan.nextLabel : '업그레이드 가능';
+            mypageMembershipNextEl.textContent = isMember() ? plan.nextLabel : '로그인 후 시작';
         }
         if (mypagePlanNoteEl) {
             if (!isMember()) {
-                mypagePlanNoteEl.textContent = '로그인 후 이용권 시작 가능';
+                mypagePlanNoteEl.textContent = '로그인하면 바로 시작';
             } else if (isPremiumMember()) {
-                mypagePlanNoteEl.textContent = '프리미엄 추천 활성화';
+                mypagePlanNoteEl.textContent = '추천 플랜 사용 중';
             } else {
-                mypagePlanNoteEl.textContent = 'FREE 상태 · 직접 선택 가능';
+                mypagePlanNoteEl.textContent = '직접 선택 사용 중';
             }
         }
         if (mypagePlanManageBtn) {
-            mypagePlanManageBtn.textContent = isMember() ? '이용권 관리' : '로그인하고 시작';
+            mypagePlanManageBtn.textContent = isMember() ? '플랜 관리' : '로그인하고 시작';
         }
         if (mypagePlanCancelBtn) {
             mypagePlanCancelBtn.hidden = !isPremiumMember();
@@ -2025,21 +2025,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (mypagePresetSummaryEl) {
             if (strongestPresetCount) {
-                mypagePresetSummaryEl.textContent = `저장 규칙 ${savedRules.length}개 · 내 프리셋 ${customPreset.length}개`;
+                mypagePresetSummaryEl.textContent = `규칙 ${savedRules.length}개 · 내 프리셋 ${customPreset.length}개`;
             } else {
-                mypagePresetSummaryEl.textContent = '저장된 프리셋 없음';
+                mypagePresetSummaryEl.textContent = '아직 저장한 규칙이 없어요';
             }
         }
         if (mypagePresetUpdatedEl) {
-            mypagePresetUpdatedEl.textContent = latestPresetAt ? formatRelativeTime(latestPresetAt) : '-';
+            mypagePresetUpdatedEl.textContent = latestPresetAt ? formatRelativeTime(latestPresetAt) : '아직 저장 없음';
         }
         if (mypageSlotSummaryEl) {
-            mypageSlotSummaryEl.textContent = activeSlots ? `${activeSlots}개 보관함 사용 중` : '비어있음';
+            mypageSlotSummaryEl.textContent = activeSlots ? `보관함 ${activeSlots}칸 사용 중` : '비어 있어요';
         }
         if (mypageSlotUpdatedEl) {
             mypageSlotUpdatedEl.textContent = latestSlot && latestSlot.savedAt
-                ? `최근 저장: ${formatSlotDate(latestSlot.savedAt)}`
-                : '보관함 1~3번의 최근 저장 상태를 반영합니다.';
+                ? `최근 저장 ${formatSlotDate(latestSlot.savedAt)}`
+                : '보관함 1~3 상태가 여기에 보여요.';
         }
         if (mypageStatsGeneratedEl) {
             mypageStatsGeneratedEl.textContent = `${formatNumber(stats.totalSets || 0)}세트`;
@@ -2049,7 +2049,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mypageStatsRoundEl.textContent = round > 0 ? `${round}회` : '-';
         }
         if (mypageStatsModeEl) {
-            mypageStatsModeEl.textContent = stats.lastSourceMode === 'premium' ? '월정액 추천' : '직접선택';
+            mypageStatsModeEl.textContent = stats.lastSourceMode === 'premium' ? '자동 추천' : '직접 선택';
         }
     }
 
@@ -2228,12 +2228,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!rows.length) {
                 mypageHistoryListEl.innerHTML = `
                     <li>
-                        <span class="info-label">아직 생성 이력이 없습니다.</span>
-                        <strong>0건</strong>
+                        <span class="info-label">아직 활동이 없어요.</span>
+                        <strong>첫 생성 후 표시</strong>
                     </li>
                 `;
                 if (mypageHistoryBadgeEl) {
-                    mypageHistoryBadgeEl.textContent = '최근 20회';
+                    mypageHistoryBadgeEl.textContent = '최근 20건';
                 }
                 mypageHistoryListEl.dataset.loaded = 'true';
                 return;
@@ -2241,25 +2241,25 @@ document.addEventListener('DOMContentLoaded', () => {
             mypageHistoryListEl.innerHTML = rows.map(row => {
                 const when = formatHistoryDateTime(row.createdAt);
                 const setCount = Number(row.setCount || 0) > 0 ? Number(row.setCount) : 1;
-                const modeText = row.sourceMode === 'premium' ? '월정액' : '직접선택';
+                const modeText = row.sourceMode === 'premium' ? '자동 추천' : '직접 선택';
                 const roundText = Number(row.round || 0) > 0 ? `${Number(row.round)}회` : '-';
                 return `
                     <li>
                         <span class="info-label">${when}</span>
-                        <strong>${setCount}세트 · ${modeText} · ${roundText}</strong>
+                        <strong>${modeText} · ${roundText} · ${setCount}세트</strong>
                     </li>
                 `;
             }).join('');
             if (mypageHistoryBadgeEl) {
-                mypageHistoryBadgeEl.textContent = `최근 ${rows.length}회`;
+                mypageHistoryBadgeEl.textContent = `최근 ${rows.length}건`;
             }
             mypageHistoryListEl.dataset.loaded = 'true';
         } catch (error) {
             console.warn('마이페이지 추첨 이력 로드 실패', error);
             mypageHistoryListEl.innerHTML = `
                 <li>
-                    <span class="info-label">이력을 불러오지 못했습니다.</span>
-                    <strong>재시도 필요</strong>
+                    <span class="info-label">불러오지 못했어요.</span>
+                    <strong>다시 시도해 주세요</strong>
                 </li>
             `;
         }
@@ -2698,7 +2698,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } catch (error) {
                     console.error('프로필 로드 실패', error);
                     if (nicknameStatusEl) {
-                        nicknameStatusEl.textContent = '프로필을 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.';
+                        nicknameStatusEl.textContent = '프로필을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.';
                     }
                 }
                 updateAuthUi();
@@ -2709,14 +2709,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             if (firebaseAuthStatusEl) {
-                firebaseAuthStatusEl.textContent = 'Firebase 연결 완료. 구글 로그인으로 가입을 시작하세요.';
+                firebaseAuthStatusEl.textContent = '로그인 준비가 끝났어요. 바로 계속할 수 있어요.';
             }
         } catch (error) {
             firebaseReady = false;
             authStateResolved = true;
             console.error('Firebase 초기화 실패', error);
             if (firebaseAuthStatusEl) {
-                firebaseAuthStatusEl.textContent = 'Firebase 초기화 실패: 설정값/도메인/콘솔 오류를 확인하세요.';
+                firebaseAuthStatusEl.textContent = '로그인 준비에 실패했어요. 설정을 다시 확인해 주세요.';
             }
         }
         updateAuthUi();
@@ -2772,7 +2772,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return;
         }
-        firebaseAuthStatusEl.textContent = '로그아웃 상태입니다. 구글 로그인을 진행하세요.';
+        firebaseAuthStatusEl.textContent = '로그인하면 저장한 정보가 바로 이어져요.';
     }
 
     async function signInWithGoogle() {
@@ -2890,7 +2890,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await profileRef.set(initialProfile);
             currentUserProfile = initialProfile;
             if (nicknameStatusEl) {
-                nicknameStatusEl.textContent = `가입 완료: 자동 닉네임 '${nickname}'이(가) 생성되었습니다.`;
+                nicknameStatusEl.textContent = `가입이 완료됐어요. 자동 닉네임 '${nickname}'이 만들어졌습니다.`;
             }
             return;
         }
@@ -2915,11 +2915,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderNicknameUi() {
         const member = isMember();
         if (mypageAuthBadgeEl) {
-            mypageAuthBadgeEl.textContent = member ? '로그인 중' : '로그아웃';
+            mypageAuthBadgeEl.textContent = member ? '로그인됨' : '미로그인';
         }
         if (mypageNicknameDisplayEl) {
             if (!member) {
-                mypageNicknameDisplayEl.textContent = '첫 로그인 시 8자리 랜덤 닉네임 자동 부여';
+                mypageNicknameDisplayEl.textContent = '첫 로그인 후 자동으로 정해져요';
             } else if (currentUserProfile && currentUserProfile.nickname) {
                 mypageNicknameDisplayEl.textContent = currentUserProfile.nickname;
             } else {
@@ -2928,9 +2928,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const remaining = getNicknameRemainingChanges();
         if (nicknameStatusEl && !member) {
-            nicknameStatusEl.textContent = '닉네임은 회원가입(첫 로그인) 시 자동 생성되며 월 최대 2회 변경할 수 있습니다.';
+            nicknameStatusEl.textContent = '첫 로그인하면 닉네임이 자동으로 만들어지고, 이후 월 2번까지 바꿀 수 있어요.';
         } else if (nicknameStatusEl && member) {
-            nicknameStatusEl.textContent = `닉네임은 이번 달에 최대 2회까지 변경할 수 있습니다. (남은 횟수 ${remaining}회)`;
+            nicknameStatusEl.textContent = `이번 달 닉네임 변경 가능 횟수는 ${remaining}회 남았어요.`;
         }
     }
 
