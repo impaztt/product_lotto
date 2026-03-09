@@ -179,6 +179,8 @@ body {
 
 #tab-dashboard .container-box {
     background: #ffffff;
+    margin-top: 0;
+    padding-top: 0;
     padding-bottom: 80px;
 }
 
@@ -7664,6 +7666,7 @@ main {
 }
 
 #tab-dashboard .content-tit-wrap {
+    margin: 0;
     padding: 0 0 14px;
     background: transparent;
     border-bottom: 0;
