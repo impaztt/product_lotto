@@ -1323,6 +1323,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.visualViewport.addEventListener('resize', scheduleDrawHorizontalWidthSync, { passive: true });
     }
     window.addEventListener('resize', scheduleDrawHorizontalWidthSync, { passive: true });
+    window.addEventListener('scroll', scheduleDrawHorizontalWidthSync, { passive: true });
     window.addEventListener('orientationchange', () => {
         window.setTimeout(scheduleDrawHorizontalWidthSync, 120);
     }, { passive: true });
@@ -3134,6 +3135,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function resetDrawSelectionDockLayout() {
         if (drawTabPanel) {
             drawTabPanel.style.removeProperty('--draw-dock-width');
+            drawTabPanel.style.removeProperty('--draw-dock-top');
         }
         if (drawSelectionDockPlaceholderEl) {
             drawSelectionDockPlaceholderEl.style.removeProperty('width');
@@ -3148,6 +3150,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (siteHeaderEl) {
             const headerHeight = Math.ceil(siteHeaderEl.getBoundingClientRect().height || 0);
             drawTabPanel.style.setProperty('--site-header-height', `${headerHeight}px`);
+            const pageScrollTop = Math.max(
+                Number(window.scrollY) || 0,
+                Number(document.documentElement && document.documentElement.scrollTop) || 0
+            );
+            const dockTop = pageScrollTop > Math.max(24, headerHeight - 4) ? 0 : headerHeight;
+            drawTabPanel.style.setProperty('--draw-dock-top', `${dockTop}px`);
         }
         const viewportWidth = Number.isFinite(forcedViewportWidth) && forcedViewportWidth > 0
             ? forcedViewportWidth

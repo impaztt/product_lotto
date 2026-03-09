@@ -9829,7 +9829,7 @@ textarea {
         position: fixed;
         left: 0;
         right: 0;
-        top: var(--site-header-height, 0px);
+        top: var(--draw-dock-top, var(--site-header-height, 0px));
         bottom: auto;
         z-index: 70;
         width: 100%;
