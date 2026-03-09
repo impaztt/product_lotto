@@ -38,6 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawSelectionDockMetaEl = document.getElementById('draw-dock-meta');
     const drawSelectionDockScenarioEl = document.getElementById('draw-dock-scenario');
     const drawSelectionDockStatEl = document.getElementById('draw-dock-stat');
+    const drawSelectionDockMetricsEl = document.getElementById('draw-selection-dock-metrics');
+    const drawSelectionDockRemainingEl = document.getElementById('draw-dock-remaining');
+    const drawSelectionDockRatioEl = document.getElementById('draw-dock-ratio');
+    const drawSelectionDockBenefitEl = document.getElementById('draw-dock-benefit');
     const drawSelectionDockPreviewEl = document.getElementById('draw-selection-dock-preview');
     const drawSelectionDockClearBtn = document.getElementById('draw-dock-clear');
     const oddsBenefitSummaryEl = document.getElementById('odds-benefit-summary');
@@ -4573,6 +4577,9 @@ document.addEventListener('DOMContentLoaded', () => {
             drawSelectionDockEl.classList.remove('has-selection');
             drawSelectionDockTitleEl.textContent = lastDrawInteraction?.type === 'clear' ? '필터를 모두 해제했습니다.' : '아직 필터 없음';
             drawSelectionDockMetaEl.textContent = recentText || '시나리오 또는 규칙을 선택하면 여기서 계속 보입니다.';
+            if (drawSelectionDockMetricsEl) {
+                drawSelectionDockMetricsEl.hidden = true;
+            }
             drawSelectionDockPreviewEl.hidden = true;
             drawSelectionDockPreviewEl.innerHTML = '';
             if (drawSelectionDockClearBtn) {
@@ -4592,10 +4599,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const benefitPct = Number.isFinite(currentRemainingRatio)
             ? Math.max(0, Math.round((1 - Math.max(0.000001, Math.min(1, currentRemainingRatio))) * 100))
             : 0;
-        const benefitText = benefitPct > 0 ? `1등 기준 유리 ${benefitPct}%` : '확률 변화 없음';
-        drawSelectionDockMetaEl.textContent = recentText
-            ? `${recentText} · 남은 조합 ${remainingValue}개 · 생존 비중 ${remainPct}% · ${benefitText}`
-            : `남은 조합 ${remainingValue}개 · 생존 비중 ${remainPct}% · ${benefitText}`;
+        drawSelectionDockMetaEl.textContent = recentText || '선택 내용과 확률 변화가 여기서 계속 갱신됩니다.';
+        if (drawSelectionDockMetricsEl) {
+            drawSelectionDockMetricsEl.hidden = false;
+        }
+        if (drawSelectionDockRemainingEl) {
+            drawSelectionDockRemainingEl.textContent = `${remainingValue}개`;
+        }
+        if (drawSelectionDockRatioEl) {
+            drawSelectionDockRatioEl.textContent = `${remainPct}%`;
+        }
+        if (drawSelectionDockBenefitEl) {
+            drawSelectionDockBenefitEl.textContent = benefitPct > 0 ? `유리 ${benefitPct}%` : '변화 없음';
+        }
         if (drawSelectionDockClearBtn) {
             drawSelectionDockClearBtn.hidden = false;
         }

@@ -9603,6 +9603,34 @@ textarea {
     color: #6b7684;
 }
 
+#tab-draw .draw-selection-dock-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+#tab-draw .draw-selection-dock-metric {
+    display: grid;
+    gap: 3px;
+    padding: 10px 12px;
+    border-radius: 16px;
+    background: #f8fafc;
+    border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+#tab-draw .draw-selection-dock-metric strong {
+    font-size: 13px;
+    line-height: 1.2;
+    color: #191f28;
+}
+
+#tab-draw .draw-selection-dock-metric span {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #6b7684;
+}
+
 #tab-draw .draw-selection-dock-actions {
     display: grid;
     justify-items: end;
@@ -9761,18 +9789,21 @@ textarea {
 @media (max-width: 768px) {
     #tab-draw .draw-selection-dock {
         position: fixed;
-        left: 50%;
-        right: auto;
-        top: calc(74px + env(safe-area-inset-top));
+        left: 0;
+        right: 0;
+        top: 0;
         bottom: auto;
         z-index: 70;
-        width: min(calc(100% - 16px), 560px);
-        max-width: calc(100% - 16px);
+        width: 100%;
+        max-width: 100%;
         margin: 0;
-        padding: 12px 12px 10px;
-        border-radius: 20px;
-        box-shadow: 0 18px 42px rgba(15, 23, 42, 0.18);
-        transform: translate(-50%, -18px);
+        padding: calc(12px + env(safe-area-inset-top)) 14px 12px;
+        border-radius: 0 0 24px 24px;
+        border-top: 0;
+        border-left: 0;
+        border-right: 0;
+        box-shadow: 0 18px 36px rgba(15, 23, 42, 0.14);
+        transform: translateY(-18px);
         opacity: 0;
         pointer-events: none;
         transition: transform 0.22s ease, opacity 0.22s ease, box-shadow 0.22s ease;
@@ -9781,7 +9812,7 @@ textarea {
     #tab-draw.has-selection-dock .draw-selection-dock {
         opacity: 1;
         pointer-events: auto;
-        transform: translate(-50%, 0);
+        transform: translateY(0);
     }
 
     #tab-draw .draw-selection-dock-placeholder {
@@ -9802,12 +9833,32 @@ textarea {
         align-items: center;
     }
 
+    #tab-draw .draw-selection-dock-metrics {
+        gap: 6px;
+    }
+
+    #tab-draw .draw-selection-dock-metric {
+        padding: 9px 10px;
+        border-radius: 14px;
+    }
+
+    #tab-draw .draw-selection-dock-metric strong {
+        font-size: 12px;
+    }
+
+    #tab-draw .draw-selection-dock-metric span {
+        font-size: 9px;
+        letter-spacing: 0.03em;
+    }
+
     #tab-draw #draw-dock-title {
-        font-size: 14px;
+        font-size: 15px;
+        line-height: 1.25;
     }
 
     #tab-draw .draw-selection-dock-meta {
-        font-size: 11px;
+        font-size: 12px;
+        line-height: 1.5;
     }
 
     #tab-draw .draw-selection-dock-clear {
