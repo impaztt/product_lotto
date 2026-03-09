@@ -9420,12 +9420,18 @@ textarea {
 }
 
 /* Draw filter UX refinement */
+#tab-draw {
+    --draw-dock-width: 100%;
+}
+
 #tab-draw .draw-selection-dock {
     position: sticky;
     top: 92px;
     z-index: 12;
     display: grid;
     gap: 10px;
+    width: min(100%, var(--draw-dock-width));
+    max-width: 100%;
     margin: 14px 0 16px;
     padding: 12px 14px;
     border-radius: 20px;
@@ -9434,6 +9440,12 @@ textarea {
     box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
+}
+
+#tab-draw .draw-selection-dock-placeholder {
+    width: min(100%, var(--draw-dock-width));
+    max-width: 100%;
+    height: 0;
 }
 
 #tab-draw .draw-selection-dock.has-selection {

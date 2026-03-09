@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedRulesEmptyEl = document.getElementById('selected-rules-empty');
     const selectedClearBtn = document.getElementById('selected-clear-btn');
     const drawSelectionDockEl = document.getElementById('draw-selection-dock');
+    const drawSelectionDockPlaceholderEl = document.getElementById('draw-selection-dock-placeholder');
     const drawSelectionDockTitleEl = document.getElementById('draw-dock-title');
     const drawSelectionDockMetaEl = document.getElementById('draw-dock-meta');
     const drawSelectionDockScenarioEl = document.getElementById('draw-dock-scenario');
@@ -97,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const scenarioPanel = document.getElementById('draw-scenario-panel');
     const scenarioGrid = document.getElementById('draw-scenario-grid');
     const drawTabPanel = document.getElementById('tab-draw');
+    const drawSelectedBoardEl = document.querySelector('#tab-draw .draw-selected-board');
     const drawServiceButtons = Array.from(document.querySelectorAll('.draw-service-btn[data-draw-service]'));
     const drawModeOnlyPanels = Array.from(document.querySelectorAll('[data-draw-mode-only]'));
     const toggleScenariosBtn = document.getElementById('toggle-scenarios');
@@ -3118,15 +3120,51 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         drawWidthSyncRafId = window.requestAnimationFrame(() => {
             drawWidthSyncRafId = 0;
-            syncDrawHorizontalCardWidths();
+            const viewportWidth = Math.floor(getViewportWidth());
+            syncDrawHorizontalCardWidths(viewportWidth);
+            syncDrawSelectionDockLayout(viewportWidth);
         });
     }
 
-    function syncDrawHorizontalCardWidths() {
+    function resetDrawSelectionDockLayout() {
+        if (drawTabPanel) {
+            drawTabPanel.style.removeProperty('--draw-dock-width');
+        }
+        if (drawSelectionDockPlaceholderEl) {
+            drawSelectionDockPlaceholderEl.style.removeProperty('width');
+        }
+    }
+
+    function syncDrawSelectionDockLayout(forcedViewportWidth) {
+        if (!drawSelectionDockEl || !drawTabPanel) {
+            return;
+        }
+        const viewportWidth = Number.isFinite(forcedViewportWidth) && forcedViewportWidth > 0
+            ? forcedViewportWidth
+            : Math.floor(getViewportWidth());
+        if (viewportWidth <= 960 || !drawSelectedBoardEl) {
+            resetDrawSelectionDockLayout();
+            return;
+        }
+        const boardRect = drawSelectedBoardEl.getBoundingClientRect();
+        if (boardRect.width <= 0 || boardRect.height <= 0) {
+            resetDrawSelectionDockLayout();
+            return;
+        }
+        const dockWidth = Math.round(boardRect.width);
+        drawTabPanel.style.setProperty('--draw-dock-width', `${dockWidth}px`);
+        if (drawSelectionDockPlaceholderEl) {
+            drawSelectionDockPlaceholderEl.style.width = `${dockWidth}px`;
+        }
+    }
+
+    function syncDrawHorizontalCardWidths(forcedViewportWidth) {
         if (!drawTabPanel || !drawHorizontalTracks.length) {
             return;
         }
-        const viewportWidth = Math.floor(getViewportWidth());
+        const viewportWidth = Number.isFinite(forcedViewportWidth) && forcedViewportWidth > 0
+            ? forcedViewportWidth
+            : Math.floor(getViewportWidth());
         if (!viewportWidth) {
             return;
         }
@@ -4396,6 +4434,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return input && input.checked;
         });
         updateDrawSelectionDock(selectedCards);
+        scheduleDrawHorizontalWidthSync();
         if (!selectedCards.length) {
             selectedRulesEmptyEl.hidden = false;
             return;
