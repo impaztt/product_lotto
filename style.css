@@ -3283,7 +3283,8 @@ body[data-theme="light"] .draw-hero {
     font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
     width: 100%;
     max-width: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
+    overflow-y: visible;
 }
 
 body[data-theme="dark"] #tab-draw {
