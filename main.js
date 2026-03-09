@@ -72,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const horizontalGestureTracks = Array.from(document.querySelectorAll('.scenario-cards, .draw-slot-grid'));
     const SCENARIO_DRAG_THRESHOLD_PX = 8;
     const SCENARIO_CLICK_SUPPRESS_MS = 140;
-    let suppressScenarioClickUntil = 0;
     let drawWidthSyncRafId = 0;
     let activeStrategy = '';
     const storeOpenOfficialBtn = document.getElementById('store-open-official-btn');
@@ -933,9 +932,6 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('click', event => {
             event.preventDefault();
             event.stopPropagation();
-            if (Date.now() < suppressScenarioClickUntil) {
-                return;
-            }
             applyStrategy(card.dataset.strategy);
         });
     });
@@ -948,12 +944,18 @@ document.addEventListener('DOMContentLoaded', () => {
         let touchStartY = 0;
         let touchDragging = false;
         let touchTracking = false;
+        let suppressNextClick = false;
+        let suppressTimerId = 0;
 
         const suppressClick = () => {
-            suppressScenarioClickUntil = Math.max(
-                suppressScenarioClickUntil,
-                Date.now() + SCENARIO_CLICK_SUPPRESS_MS
-            );
+            suppressNextClick = true;
+            if (suppressTimerId) {
+                window.clearTimeout(suppressTimerId);
+            }
+            suppressTimerId = window.setTimeout(() => {
+                suppressNextClick = false;
+                suppressTimerId = 0;
+            }, SCENARIO_CLICK_SUPPRESS_MS);
         };
 
         track.addEventListener('pointerdown', event => {
@@ -1031,9 +1033,14 @@ document.addEventListener('DOMContentLoaded', () => {
         track.addEventListener('touchcancel', clearTouch, { passive: true });
 
         track.addEventListener('click', event => {
-            if (Date.now() < suppressScenarioClickUntil) {
+            if (suppressNextClick) {
                 event.preventDefault();
                 event.stopPropagation();
+                suppressNextClick = false;
+                if (suppressTimerId) {
+                    window.clearTimeout(suppressTimerId);
+                    suppressTimerId = 0;
+                }
             }
         }, true);
     });
