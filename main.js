@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const scenarioPanel = document.getElementById('draw-scenario-panel');
     const scenarioGrid = document.getElementById('draw-scenario-grid');
     const drawTabPanel = document.getElementById('tab-draw');
+    const drawStudioBodyEl = drawTabPanel ? drawTabPanel.querySelector('.draw-studio-body') : null;
     const drawSelectedBoardEl = document.querySelector('#tab-draw .draw-selected-board');
     const drawServiceButtons = Array.from(document.querySelectorAll('.draw-service-btn[data-draw-service]'));
     const drawModeOnlyPanels = Array.from(document.querySelectorAll('[data-draw-mode-only]'));
@@ -301,6 +302,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawMembershipNoteEl = document.getElementById('draw-membership-note');
     const drawSelectionSummaryEl = document.getElementById('draw-selection-summary');
     const drawFilterDetailEl = document.getElementById('draw-filter-detail');
+    const drawBottomGenerateBarEl = document.getElementById('draw-bottom-generate-bar');
+    const drawBottomGenerateSummaryEl = document.getElementById('draw-bottom-generate-summary');
+    const drawBottomGenerateDetailEl = document.getElementById('draw-bottom-generate-detail');
     let currentWeeklyData = null;
     let latestAvailableRound = null;
     const roundMetaByNo = new Map();
@@ -784,6 +788,7 @@ document.addEventListener('DOMContentLoaded', () => {
         drawCountSelect.addEventListener('change', () => {
             syncDrawCountChips();
             refreshGuestLimitMessage();
+            updateDrawContextUi();
         });
     }
 
@@ -797,6 +802,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 drawCountSelect.value = targetValue;
                 syncDrawCountChips(true);
                 refreshGuestLimitMessage();
+                updateDrawContextUi();
             });
         });
         syncDrawCountChips();
@@ -1982,6 +1988,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (drawSelectionSummaryEl) {
             drawSelectionSummaryEl.textContent = selectedCount ? `${selectedCount}개 필터 선택됨` : '아직 선택된 필터가 없습니다.';
         }
+        if (drawBottomGenerateBarEl) {
+            drawBottomGenerateBarEl.classList.toggle('has-selection', selectedCount > 0);
+        }
+        const drawCount = Math.max(1, parseInt(drawCountSelect?.value || '1', 10) || 1);
+        if (drawBottomGenerateSummaryEl) {
+            drawBottomGenerateSummaryEl.textContent = selectedCount
+                ? `${drawCount}세트 · ${selectedCount}개 필터 반영`
+                : `${drawCount}세트 바로 생성`;
+        }
+        if (drawBottomGenerateDetailEl) {
+            if (!selectedCount) {
+                drawBottomGenerateDetailEl.textContent = '필터 없이도 바로 만들 수 있고, 시나리오를 고르면 결과를 더 좁힐 수 있습니다.';
+            } else {
+                const remainPct = Number.isFinite(currentRemainingRatio)
+                    ? Math.max(0, Math.min(100, Math.round(currentRemainingRatio * 1000) / 10))
+                    : 100;
+                const remainingValue = Number.isFinite(currentRemainingCombos) ? formatNumber(currentRemainingCombos) : '-';
+                drawBottomGenerateDetailEl.textContent = `남은 조합 ${remainingValue}개 · 생존 비중 ${remainPct}% 기준으로 생성합니다.`;
+            }
+        }
         if (drawFilterDetailEl) {
             if (!selectedCount) {
                 drawFilterDetailEl.textContent = '시나리오 또는 규칙을 추가해 조합을 좁혀보세요.';
@@ -3158,9 +3184,34 @@ document.addEventListener('DOMContentLoaded', () => {
         drawWidthSyncRafId = window.requestAnimationFrame(() => {
             drawWidthSyncRafId = 0;
             const viewportWidth = Math.floor(getViewportWidth());
+            syncDrawFlowLayout(viewportWidth);
             syncDrawHorizontalCardWidths(viewportWidth);
             syncDrawSelectionDockLayout(viewportWidth);
         });
+    }
+
+    function syncDrawFlowLayout(forcedViewportWidth) {
+        if (!scenarioPanel || !slotPanel || !drawSelectedBoardEl || !rulePickerPanel || !drawStudioBodyEl) {
+            return;
+        }
+        if (
+            drawSelectedBoardEl.parentElement === slotPanel.parentElement
+            && drawSelectedBoardEl.nextElementSibling !== slotPanel
+        ) {
+            drawSelectedBoardEl.insertAdjacentElement('afterend', slotPanel);
+        }
+        const viewportWidth = Number.isFinite(forcedViewportWidth) && forcedViewportWidth > 0
+            ? forcedViewportWidth
+            : Math.floor(getViewportWidth());
+        if (viewportWidth <= 960) {
+            if (scenarioPanel.nextElementSibling !== rulePickerPanel) {
+                scenarioPanel.insertAdjacentElement('afterend', rulePickerPanel);
+            }
+            return;
+        }
+        if (drawStudioBodyEl.nextElementSibling !== rulePickerPanel) {
+            drawStudioBodyEl.insertAdjacentElement('afterend', rulePickerPanel);
+        }
     }
 
     function resetDrawSelectionDockLayout() {
