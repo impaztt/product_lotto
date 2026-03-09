@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawCopyAllBtn = document.getElementById('draw-copy-all-btn');
     const drawCopyStatusEl = document.getElementById('draw-copy-status');
     const body = document.body;
+    const siteHeaderEl = document.querySelector('.site-header');
     const ruleInputs = Array.from(document.querySelectorAll('.rules-grid input[type="checkbox"]'));
     const excludeNumberGrid = document.getElementById('exclude-number-grid');
     const excludeNumberCard = document.getElementById('exclude-number-card');
@@ -3144,6 +3145,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!drawSelectionDockEl || !drawTabPanel) {
             return;
         }
+        if (siteHeaderEl) {
+            const headerHeight = Math.ceil(siteHeaderEl.getBoundingClientRect().height || 0);
+            drawTabPanel.style.setProperty('--site-header-height', `${headerHeight}px`);
+        }
         const viewportWidth = Number.isFinite(forcedViewportWidth) && forcedViewportWidth > 0
             ? forcedViewportWidth
             : Math.floor(getViewportWidth());
@@ -4248,6 +4253,7 @@ document.addEventListener('DOMContentLoaded', () => {
         strategyButtons.forEach(button => {
             const isActive = activeStrategy && button.dataset.strategy === activeStrategy;
             button.classList.toggle('is-active', Boolean(isActive));
+            button.setAttribute('aria-pressed', String(Boolean(isActive)));
         });
     }
 
