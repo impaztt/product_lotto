@@ -3131,35 +3131,38 @@ body[data-theme="light"] .info-list li {
     }
 
     .onboarding-hero {
-        gap: 10px;
+        gap: 8px;
         padding-right: 54px;
     }
 
     #welcome-modal-title {
-        font-size: clamp(24px, 4.8vw, 30px);
+        font-size: clamp(23px, 4.6vw, 28px);
     }
 
     .onboarding-copy {
-        font-size: 13px;
+        font-size: 12px;
+        line-height: 1.5;
     }
 
     .onboarding-slide-card {
-        min-height: 304px;
-        padding: 18px;
+        gap: 14px;
+        min-height: 264px;
+        padding: 16px;
         border-radius: 24px;
     }
 
     .onboarding-card-head strong {
-        font-size: 22px;
+        font-size: 20px;
     }
 
     .onboarding-card-head p {
-        font-size: 13px;
+        font-size: 12px;
+        line-height: 1.5;
     }
 
     .onboarding-feature-item {
         grid-template-columns: 48px 1fr;
-        padding: 13px 14px;
+        padding: 12px 13px;
     }
 
     .onboarding-feature-icon {
@@ -3181,8 +3184,8 @@ body[data-theme="light"] .info-list li {
     }
 
     .onboarding-plan-chip {
-        min-height: 84px;
-        padding: 12px 10px;
+        min-height: 72px;
+        padding: 10px 9px;
         border-radius: 18px;
     }
 
@@ -3194,8 +3197,8 @@ body[data-theme="light"] .info-list li {
 
     .onboarding-actions .cta,
     .onboarding-actions .ghost {
-        min-height: 46px;
-        font-size: 13px;
+        min-height: 42px;
+        font-size: 12px;
     }
 }
 
@@ -3204,18 +3207,19 @@ body[data-theme="light"] .info-list li {
         padding: 24px 8px calc(108px + env(safe-area-inset-bottom));
     }
 
-    #welcome-modal-title {
-        font-size: clamp(21px, 6.2vw, 25px);
-    }
-
-    .onboarding-copy {
-        font-size: 12px;
-    }
-
     .onboarding-modal-content {
         max-height: min(calc(100dvh - 142px - env(safe-area-inset-bottom)), 620px);
         padding: 18px 12px calc(18px + env(safe-area-inset-bottom));
         border-radius: 24px;
+    }
+
+    #welcome-modal-title {
+        font-size: clamp(20px, 5.8vw, 23px);
+    }
+
+    .onboarding-copy {
+        font-size: 11px;
+        line-height: 1.45;
     }
 
     .onboarding-modal-content::before {
@@ -3229,72 +3233,74 @@ body[data-theme="light"] .info-list li {
     }
 
     .onboarding-summary-pill {
-        min-height: 30px;
-        font-size: 11px;
+        min-height: 28px;
+        font-size: 10px;
     }
 
     .onboarding-slide-card {
-        min-height: 278px;
-        padding: 16px;
+        gap: 12px;
+        min-height: 226px;
+        padding: 14px;
         border-radius: 18px;
     }
 
     .onboarding-card-head {
-        gap: 8px;
+        gap: 6px;
     }
 
     .onboarding-card-head strong {
-        font-size: 19px;
+        font-size: 17px;
     }
 
     .onboarding-card-head p {
-        font-size: 12px;
-        line-height: 1.55;
+        font-size: 11px;
+        line-height: 1.45;
     }
 
     .onboarding-feature-item {
         grid-template-columns: 44px 1fr;
-        gap: 10px;
-        padding: 12px;
+        gap: 8px;
+        padding: 10px;
         border-radius: 18px;
     }
 
     .onboarding-feature-icon {
-        min-height: 44px;
-        border-radius: 14px;
-        font-size: 11px;
+        min-height: 40px;
+        border-radius: 12px;
+        font-size: 10px;
     }
 
     .onboarding-feature-copy strong,
     .onboarding-plan-chip strong {
-        font-size: 13px;
+        font-size: 12px;
     }
 
     .onboarding-feature-copy p {
-        font-size: 11px;
+        font-size: 10px;
+        line-height: 1.35;
     }
 
     .onboarding-plan-row {
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
+        gap: 6px;
     }
 
     .onboarding-plan-chip {
-        min-height: 74px;
-        padding: 10px 9px;
-        border-radius: 18px;
+        min-height: 64px;
+        padding: 9px 8px;
+        border-radius: 16px;
     }
 
     .onboarding-plan-chip span {
-        font-size: 10px;
+        font-size: 9px;
         letter-spacing: 0;
     }
 
     .onboarding-actions .cta,
     .onboarding-actions .ghost {
-        min-height: 44px;
-        font-size: 12px;
-        padding: 0 8px;
+        min-height: 40px;
+        font-size: 11px;
+        padding: 0 6px;
     }
 }
 
