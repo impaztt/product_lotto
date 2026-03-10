@@ -12982,6 +12982,9 @@ body[data-theme="dark"] #tab-dashboard .dashboard-inline-btn {
     color: #191f28;
     font-size: clamp(30px, 3vw, 40px);
     line-height: 1.08;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #tab-dashboard .dash-intro-sub {
@@ -12989,15 +12992,9 @@ body[data-theme="dark"] #tab-dashboard .dashboard-inline-btn {
     color: #6b7684;
     font-size: 15px;
     line-height: 1.6;
-}
-
-#tab-dashboard .dashboard-hero-pills span {
-    min-height: 34px;
-    padding: 0 12px;
-    background: #ffffff;
-    border: 1px solid rgba(2, 32, 71, 0.08);
-    color: #4e5968;
-    backdrop-filter: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #tab-dashboard .dash-intro-actions .cta,
@@ -13080,6 +13077,16 @@ body[data-theme="dark"] #tab-dashboard .dashboard-inline-btn {
     gap: 12px;
 }
 
+#tab-dashboard .dashboard-card-head > *,
+#tab-dashboard .dashboard-win-head > div,
+#tab-dashboard .dashboard-section-head > div,
+#tab-dashboard .dashboard-round-copy,
+#tab-dashboard .dashboard-signal-card,
+#tab-dashboard .dashboard-win-kpi,
+#tab-dashboard .dashboard-win-ranks > div {
+    min-width: 0;
+}
+
 #tab-dashboard .dashboard-card-meta,
 #tab-dashboard .dashboard-countdown-head,
 #tab-dashboard .dashboard-win-kpi span,
@@ -13101,6 +13108,28 @@ body[data-theme="dark"] #tab-dashboard .dashboard-inline-btn {
 
 #tab-dashboard .dashboard-round-copy strong {
     font-size: clamp(22px, 2.2vw, 28px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#tab-dashboard .dashboard-card-meta,
+#tab-dashboard .dashboard-signal-card strong,
+#tab-dashboard .dashboard-signal-card p,
+#tab-dashboard .dashboard-round-copy p,
+#tab-dashboard .dashboard-prize-label,
+#tab-dashboard .dashboard-prize-note,
+#tab-dashboard .dashboard-win-head h3,
+#tab-dashboard .dashboard-win-head p,
+#tab-dashboard .dashboard-section-head h3,
+#tab-dashboard .dashboard-win-status,
+#tab-dashboard .dashboard-section-head p,
+#tab-dashboard .dashboard-ticket-highlight,
+#tab-dashboard .dashboard-win-kpi span,
+#tab-dashboard .dashboard-method-step span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #tab-dashboard .dashboard-countdown .time-circle,
@@ -13312,7 +13341,6 @@ body[data-theme="dark"] #tab-dashboard .dashboard-signal-card p {
         border-radius: 22px !important;
     }
 
-    #tab-dashboard .dashboard-hero-pills,
     #tab-dashboard .dash-intro-actions {
         gap: 8px;
     }

@@ -2079,15 +2079,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const label = lastWeeklyRenderMode === 'cached' ? '캐시 반영' : '실시간 반영';
                 dashSyncStatusEl.textContent = `${currentWeeklyData.drwNo}회 ${label}`;
             } else {
-                dashSyncStatusEl.textContent = '최신 회차를 확인하는 중입니다.';
+                dashSyncStatusEl.textContent = '최신 회차 확인 중';
             }
         }
         if (dashSyncTimeEl) {
             if (lastWeeklyRenderedAt) {
-                const sourceLabel = lastWeeklyRenderSource === 'main-info' ? '공식 메인 정보' : '공식 회차 데이터';
+                const sourceLabel = lastWeeklyRenderSource === 'main-info' ? '메인 정보' : '공식 데이터';
                 dashSyncTimeEl.textContent = `${formatRelativeTime(lastWeeklyRenderedAt)} · ${sourceLabel}`;
             } else {
-                dashSyncTimeEl.textContent = '공식 데이터를 불러오면 상태가 즉시 반영됩니다.';
+                dashSyncTimeEl.textContent = '공식 데이터 대기 중';
             }
         }
         if (dashMembershipChipEl) {
@@ -2099,7 +2099,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const modeLabel = stats.lastSourceMode === 'premium' ? '추천' : '직접선택';
                 dashActivityChipEl.textContent = `누적 ${formatNumber(stats.totalSets)}세트 · 최근 ${modeLabel}`;
             } else {
-                dashActivityChipEl.textContent = '아직 생성 이력이 없습니다.';
+                dashActivityChipEl.textContent = '생성 이력 없음';
             }
         }
     }
@@ -2542,11 +2542,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (!firebaseDb) {
-            setLastWeekDashboardFallback('Firebase 연결 후 집계를 표시할 수 있습니다.');
+            setLastWeekDashboardFallback('Firebase 연결 후 집계 가능');
             return;
         }
         if (!roundData || !Number.isFinite(Number(roundData.drwNo))) {
-            setLastWeekDashboardFallback('최근 당첨 회차를 불러오는 중입니다.');
+            setLastWeekDashboardFallback('최근 회차 확인 중');
             return;
         }
         const roundNo = Number(roundData.drwNo);
@@ -2555,7 +2555,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         pendingWinDashboardRound = roundNo;
         dashWinRoundLabelEl.textContent = `지난주 ${roundNo}회`;
-        dashWinStatusEl.textContent = `${roundNo}회 생성번호 당첨 집계를 계산 중입니다...`;
+        dashWinStatusEl.textContent = `${roundNo}회 집계 계산 중`;
         try {
             const snapshot = await firebaseDb.collection('draw_entries').where('round', '==', roundNo).get();
             const winningNumbers = [
@@ -2568,7 +2568,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ].filter(value => Number.isInteger(value) && value >= 1 && value <= 45);
             const bonusNumber = Number(roundData.bnusNo);
             if (winningNumbers.length !== 6 || !Number.isInteger(bonusNumber)) {
-                setLastWeekDashboardFallback('당첨 번호 데이터가 완전하지 않아 집계할 수 없습니다.');
+                setLastWeekDashboardFallback('당첨 번호 확인 필요');
                 return;
             }
             const rankCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
@@ -2605,11 +2605,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             lastWinDashboardRound = roundNo;
             dashWinStatusEl.textContent = totalGenerated
-                ? `${roundNo}회 기준 ${formatNumber(totalGenerated)}세트 중 ${formatNumber(totalWinners)}세트가 5등 이상 당첨되었습니다.`
-                : `${roundNo}회 기준 저장된 생성번호가 아직 없어 집계할 데이터가 없습니다.`;
+                ? `${roundNo}회 · ${formatNumber(totalGenerated)}세트 중 ${formatNumber(totalWinners)}세트 당첨`
+                : `${roundNo}회 · 집계할 번호 없음`;
         } catch (error) {
             console.warn('지난주 당첨 대시보드 집계 실패', error);
-            setLastWeekDashboardFallback('집계 데이터 조회에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+            setLastWeekDashboardFallback('집계 조회 실패');
         } finally {
             if (pendingWinDashboardRound === roundNo) {
                 pendingWinDashboardRound = null;
