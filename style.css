@@ -13813,3 +13813,220 @@ body[data-theme="dark"] #tab-dashboard .dashboard-signal-card p {
         font-size: 13px;
     }
 }
+
+/* Unified tab typography */
+#tab-dashboard,
+#tab-draw,
+#tab-mypage,
+#tab-store,
+#tab-qr {
+    --tab-display-size: clamp(28px, 3.1vw, 36px);
+    --tab-heading-size: clamp(21px, 2.1vw, 25px);
+    --tab-card-title-size: 17px;
+    --tab-body-size: 15px;
+    --tab-meta-size: 13px;
+    --tab-label-size: 11px;
+    --tab-weight-body: 500;
+    --tab-weight-strong: 700;
+    --tab-weight-heading: 800;
+    font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
+}
+
+#tab-dashboard button,
+#tab-draw button,
+#tab-mypage button,
+#tab-store button,
+#tab-qr button,
+#tab-dashboard input,
+#tab-draw input,
+#tab-mypage input,
+#tab-store input,
+#tab-qr input,
+#tab-dashboard select,
+#tab-draw select,
+#tab-mypage select,
+#tab-store select,
+#tab-qr select {
+    font-family: inherit;
+}
+
+#tab-dashboard .content-tit,
+#tab-draw .draw-studio-title h2,
+#tab-mypage .section-title h2,
+#tab-store .store-shell-title h2,
+#tab-qr .section-title h2 {
+    font-size: var(--tab-display-size);
+    font-weight: var(--tab-weight-heading);
+    line-height: 1.08;
+    letter-spacing: -0.05em;
+}
+
+#tab-dashboard .dash-intro-kicker,
+#tab-dashboard .dashboard-card-kicker,
+#tab-dashboard .dashboard-section-kicker,
+#tab-dashboard .dashboard-countdown-head,
+#tab-dashboard .profit-cate,
+#tab-draw .draw-studio-kicker,
+#tab-mypage .section-kicker,
+#tab-store .section-kicker,
+#tab-qr .section-kicker {
+    font-size: var(--tab-label-size);
+    font-weight: var(--tab-weight-heading);
+    line-height: 1.2;
+    letter-spacing: 0.12em;
+}
+
+#tab-draw .draw-selection-dock-kicker,
+#tab-draw .draw-service-context-label,
+#tab-draw .draw-metric-title,
+#tab-mypage .info-label,
+#tab-qr .qr-label {
+    font-size: var(--tab-label-size);
+    font-weight: var(--tab-weight-heading);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+}
+
+#tab-dashboard .dashboard-signal-card strong,
+#tab-dashboard .dashboard-round-copy strong,
+#tab-dashboard .dashboard-win-head h3,
+#tab-dashboard .dashboard-section-head h3,
+#tab-draw .draw-panel-header h3,
+#tab-draw .draw-selected-title-wrap h3,
+#tab-mypage .mypage-hero-card h3,
+#tab-mypage .info-header h3,
+#tab-mypage .mypage-access-head h3,
+#tab-qr .qr-camera-head h3,
+#tab-qr .qr-result-head h3 {
+    font-size: var(--tab-heading-size);
+    font-weight: var(--tab-weight-heading);
+    line-height: 1.12;
+    letter-spacing: -0.04em;
+}
+
+#tab-dashboard .info-cate,
+#tab-draw .scenario-title,
+#tab-draw .draw-slot-title,
+#tab-draw .draw-odds-title,
+#tab-draw #draw-selection-summary,
+#tab-mypage .mypage-shortcut-btn strong,
+#tab-qr .qr-numbers,
+#tab-qr .qr-match {
+    font-size: var(--tab-card-title-size);
+    font-weight: var(--tab-weight-strong);
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+}
+
+#tab-dashboard .dash-intro-sub,
+#tab-dashboard .dashboard-signal-card p,
+#tab-dashboard .dashboard-round-copy p,
+#tab-dashboard .dashboard-win-head p,
+#tab-dashboard .dashboard-section-head p,
+#tab-dashboard .dashboard-win-status,
+#tab-dashboard .dashboard-card-meta,
+#tab-dashboard .dashboard-prize-label,
+#tab-dashboard .dashboard-prize-note,
+#tab-dashboard .result-winnings-txt,
+#tab-dashboard .result-detail,
+#tab-dashboard .dashboard-ticket-highlight,
+#tab-dashboard .dashboard-ticket-list li,
+#tab-dashboard .dbchck-txt,
+#tab-dashboard .info-txt,
+#tab-dashboard .txt-head,
+#tab-dashboard .txt-tail,
+#tab-dashboard .fs-15,
+#tab-dashboard .fs-sm,
+#tab-draw .draw-studio-title p,
+#tab-draw .draw-service-context-note,
+#tab-draw .draw-selection-dock-meta,
+#tab-draw .scenario-desc,
+#tab-draw .scenario-metrics span,
+#tab-draw .scenario-impact,
+#tab-draw .draw-selected-lead,
+#tab-draw #draw-filter-detail,
+#tab-draw .draw-selected-helper,
+#tab-draw .draw-metric-sub,
+#tab-draw .odds-graph-sub,
+#tab-draw .odds-graph-note,
+#tab-draw .draw-slot-meta,
+#tab-mypage .section-title p,
+#tab-mypage .mypage-account-helper,
+#tab-mypage .mypage-plan-summary p,
+#tab-mypage .helper-text,
+#tab-store .store-shell-title p,
+#tab-store .store-shell-toolbar,
+#tab-qr #qr-status,
+#tab-qr .qr-payload {
+    font-size: var(--tab-body-size);
+    font-weight: var(--tab-weight-body);
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+}
+
+#tab-dashboard .dashboard-win-kpi span,
+#tab-dashboard .dashboard-win-ranks span,
+#tab-draw .scenario-pill,
+#tab-draw .scenario-tone,
+#tab-draw .scenario-tags span,
+#tab-draw .draw-selected-count,
+#tab-mypage .badge,
+#tab-store .badge,
+#tab-qr .badge {
+    font-size: var(--tab-meta-size);
+    font-weight: var(--tab-weight-strong);
+    letter-spacing: -0.01em;
+}
+
+#tab-dashboard .dash-intro-actions .cta,
+#tab-dashboard .dash-intro-actions .ghost,
+#tab-dashboard .dashboard-primary-btn,
+#tab-dashboard .dashboard-inline-btn,
+#tab-draw .draw-service-btn,
+#tab-draw .draw-toggle-btn,
+#tab-draw .draw-selected-toolbar button,
+#tab-draw .preset-btn,
+#tab-draw .draw-bottom-generate-btn,
+#tab-mypage .mypage-inline-actions .cta,
+#tab-mypage .mypage-inline-actions .ghost,
+#tab-mypage .mypage-shortcut-btn,
+#tab-store .store-shell-toolbar .ghost,
+#tab-qr .qr-actions button,
+#tab-qr .qr-next-actions button {
+    font-size: 14px;
+    font-weight: var(--tab-weight-heading);
+    letter-spacing: -0.02em;
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard,
+    #tab-draw,
+    #tab-mypage,
+    #tab-store,
+    #tab-qr {
+        --tab-display-size: clamp(24px, 6.2vw, 28px);
+        --tab-heading-size: 19px;
+        --tab-card-title-size: 16px;
+        --tab-body-size: 13px;
+        --tab-meta-size: 12px;
+        --tab-label-size: 10px;
+    }
+
+    #tab-dashboard .dash-intro-actions .cta,
+    #tab-dashboard .dash-intro-actions .ghost,
+    #tab-dashboard .dashboard-primary-btn,
+    #tab-dashboard .dashboard-inline-btn,
+    #tab-draw .draw-service-btn,
+    #tab-draw .draw-toggle-btn,
+    #tab-draw .draw-selected-toolbar button,
+    #tab-draw .preset-btn,
+    #tab-draw .draw-bottom-generate-btn,
+    #tab-mypage .mypage-inline-actions .cta,
+    #tab-mypage .mypage-inline-actions .ghost,
+    #tab-mypage .mypage-shortcut-btn,
+    #tab-store .store-shell-toolbar .ghost,
+    #tab-qr .qr-actions button,
+    #tab-qr .qr-next-actions button {
+        font-size: 13px;
+    }
+}
