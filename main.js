@@ -334,6 +334,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let firebaseDb = null;
     let currentUser = null;
     let currentUserProfile = null;
+    let authActionInFlight = false;
+    let googleRedirectResultChecked = false;
     let nicknameSaveInFlight = false;
     let qrStream = null;
     let qrScanRafId = null;
@@ -2979,16 +2981,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     loadLastWeekWinDashboard(currentWeeklyData, { force: true });
                 }
             });
-            if (firebaseAuthStatusEl) {
-                firebaseAuthStatusEl.textContent = '로그인 준비가 끝났어요. 바로 계속할 수 있어요.';
-            }
+            void handleGoogleRedirectResult();
+            setFirebaseAuthStatus('로그인 준비가 끝났어요. 바로 계속할 수 있어요.');
         } catch (error) {
             firebaseReady = false;
             authStateResolved = true;
             console.error('Firebase 초기화 실패', error);
-            if (firebaseAuthStatusEl) {
-                firebaseAuthStatusEl.textContent = '로그인 준비에 실패했어요. 설정을 다시 확인해 주세요.';
-            }
+            setFirebaseAuthStatus('로그인 준비에 실패했어요. 설정을 다시 확인해 주세요.');
         }
         updateAuthUi();
     }
@@ -3054,26 +3053,128 @@ document.addEventListener('DOMContentLoaded', () => {
         firebaseAuthStatusEl.textContent = '로그인하면 저장한 기준과 추천 이력이 바로 이어집니다.';
     }
 
+    function setFirebaseAuthStatus(message) {
+        if (!firebaseAuthStatusEl) {
+            return;
+        }
+        firebaseAuthStatusEl.textContent = message;
+    }
+
+    function setAuthButtonsBusy(isBusy) {
+        authActionInFlight = isBusy;
+        authButtons.forEach(button => {
+            button.disabled = isBusy;
+            button.setAttribute('aria-busy', isBusy ? 'true' : 'false');
+        });
+    }
+
+    function shouldPreferGoogleRedirect() {
+        const ua = navigator.userAgent || '';
+        const isMobileDevice = /android|iphone|ipad|ipod/i.test(ua);
+        const isInAppBrowser = /; wv\)|KAKAOTALK|NAVER|Instagram|FBAN|FBAV|Line\//i.test(ua);
+        const isCompactViewport = window.matchMedia && window.matchMedia('(max-width: 860px)').matches;
+        return isMobileDevice || isInAppBrowser || isCompactViewport;
+    }
+
+    function shouldFallbackGoogleRedirect(error) {
+        const code = error && error.code ? error.code : '';
+        return code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment';
+    }
+
+    function getGoogleAuthErrorMessage(error) {
+        const code = error && error.code ? error.code : '';
+        switch (code) {
+            case 'auth/unauthorized-domain':
+                return '현재 접속 주소가 Firebase Authorized domains에 등록되지 않았습니다.';
+            case 'auth/operation-not-allowed':
+                return 'Firebase Authentication에서 Google 로그인이 비활성화되어 있습니다.';
+            case 'auth/popup-blocked':
+                return '브라우저가 로그인 팝업을 차단했습니다.';
+            case 'auth/popup-closed-by-user':
+                return '로그인 창이 닫혀서 진행이 멈췄습니다.';
+            case 'auth/operation-not-supported-in-this-environment':
+                return '현재 브라우저에서는 팝업 로그인을 지원하지 않습니다.';
+            case 'auth/network-request-failed':
+                return '네트워크 연결이 불안정해 로그인에 실패했습니다.';
+            case 'auth/web-storage-unsupported':
+                return '브라우저 저장소를 사용할 수 없어 로그인에 실패했습니다.';
+            case 'auth/cancelled-popup-request':
+                return '로그인 요청이 겹쳐 취소되었습니다.';
+            default:
+                return '구글 로그인에 실패했습니다. 잠시 후 다시 시도해 주세요.';
+        }
+    }
+
+    async function handleGoogleRedirectResult() {
+        if (!firebaseReady || !firebaseAuth || googleRedirectResultChecked) {
+            return;
+        }
+        googleRedirectResultChecked = true;
+        try {
+            const result = await firebaseAuth.getRedirectResult();
+            if (!result || !result.user) {
+                return;
+            }
+            updateRulesStatus('구글 가입/로그인 성공');
+            setFirebaseAuthStatus('구글 로그인 완료. 저장한 기준과 기록을 불러오는 중입니다.');
+        } catch (error) {
+            console.error('구글 리디렉션 로그인 실패', error);
+            const message = getGoogleAuthErrorMessage(error);
+            updateRulesStatus(`구글 로그인 실패: ${message}`);
+            setFirebaseAuthStatus(`${message}${error && error.code ? ` [${error.code}]` : ''}`);
+        }
+    }
+
     async function signInWithGoogle() {
         if (!firebaseReady || !firebaseAuth) {
             updateRulesStatus('Firebase 설정이 필요합니다. firebase-config.js 값을 먼저 입력하세요.');
-            if (firebaseAuthStatusEl) {
-                firebaseAuthStatusEl.textContent = 'Firebase 설정 미완료';
-            }
+            setFirebaseAuthStatus('Firebase 설정 미완료');
+            return false;
+        }
+        if (authActionInFlight) {
+            setFirebaseAuthStatus('로그인 요청을 처리 중입니다. 잠시만 기다려 주세요.');
             return false;
         }
         const provider = new window.firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({
+            prompt: 'select_account'
+        });
+        let startedRedirect = false;
+        setAuthButtonsBusy(true);
         try {
+            if (shouldPreferGoogleRedirect()) {
+                updateRulesStatus('구글 로그인 화면으로 이동합니다.');
+                setFirebaseAuthStatus('브라우저 환경에 맞춰 구글 로그인 화면으로 이동합니다.');
+                await firebaseAuth.signInWithRedirect(provider);
+                startedRedirect = true;
+                return false;
+            }
             await firebaseAuth.signInWithPopup(provider);
             updateRulesStatus('구글 가입/로그인 성공');
+            setFirebaseAuthStatus('구글 로그인 완료. 저장한 기준과 기록을 불러오는 중입니다.');
             return true;
         } catch (error) {
             console.error('구글 로그인 실패', error);
-            updateRulesStatus('구글 로그인 실패: Authorized domains와 Provider 활성화 상태를 확인하세요.');
-            if (firebaseAuthStatusEl) {
-                firebaseAuthStatusEl.textContent = `로그인 실패: ${error.code || 'unknown_error'}`;
+            if (!startedRedirect && shouldFallbackGoogleRedirect(error)) {
+                try {
+                    updateRulesStatus('팝업 대신 구글 로그인 화면으로 이동합니다.');
+                    setFirebaseAuthStatus('팝업이 어려워 전체 페이지 로그인으로 전환합니다.');
+                    await firebaseAuth.signInWithRedirect(provider);
+                    startedRedirect = true;
+                    return false;
+                } catch (redirectError) {
+                    console.error('구글 리디렉션 로그인 전환 실패', redirectError);
+                    error = redirectError;
+                }
             }
+            const message = getGoogleAuthErrorMessage(error);
+            updateRulesStatus(`구글 로그인 실패: ${message}`);
+            setFirebaseAuthStatus(`${message}${error && error.code ? ` [${error.code}]` : ''}`);
             return false;
+        } finally {
+            if (!startedRedirect) {
+                setAuthButtonsBusy(false);
+            }
         }
     }
 
