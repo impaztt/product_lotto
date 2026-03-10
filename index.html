@@ -1972,7 +1972,7 @@
 		                <div class="draw-studio-title">
 		                    <span class="draw-studio-kicker">번호 설계</span>
 		                    <h2>직접 선택과 월정액 추천을 한 화면에서 관리하세요</h2>
-		                    <p>시나리오, 규칙, 저장, 추천 흐름을 끊기지 않게 정리했습니다.</p>
+		                    <p>빠른 난이도 선택, 규칙, 저장, 추천 흐름을 한 화면에서 이어서 관리합니다.</p>
 		                    <div class="draw-service-switch" role="tablist" aria-label="추첨 이용 방식">
 		                        <button class="draw-service-btn is-active" type="button" role="tab" aria-selected="true" data-draw-service="self">직접 선택</button>
 		                        <button class="draw-service-btn" type="button" role="tab" aria-selected="false" data-draw-service="premium">월정액 추천</button>
@@ -1993,7 +1993,7 @@
                                         <span class="draw-selection-dock-scenario" id="draw-dock-scenario">직접 선택</span>
                                     </div>
                                     <strong id="draw-dock-title">아직 필터 없음</strong>
-                                    <span class="draw-selection-dock-meta" id="draw-dock-meta">시나리오 또는 규칙을 선택하면 여기서 계속 보입니다.</span>
+	                                    <span class="draw-selection-dock-meta" id="draw-dock-meta">빠른 선택 또는 규칙을 고르면 여기서 계속 보입니다.</span>
 	                                </div>
 	                                <div class="draw-selection-dock-actions">
 	                                    <span class="draw-selection-dock-stat" id="draw-dock-stat">선택 없음</span>
@@ -2033,7 +2033,7 @@
 		                    <aside class="draw-builder" data-draw-mode-only="self">
 	                        <div class="draw-panel" id="draw-scenario-panel">
 	                            <div class="draw-panel-header">
-	                                <h3>시나리오 선택</h3>
+	                                <h3>빠른 난이도 선택</h3>
                                     <button id="toggle-scenarios" class="draw-toggle-btn" type="button" aria-expanded="true" aria-controls="draw-scenario-grid">접기</button>
 	                            </div>
                                 <div class="draw-strategy-grid scenario-cards" id="draw-scenario-grid">
@@ -2052,7 +2052,7 @@
                                             <span>홀짝</span>
                                             <span>연속수</span>
                                         </div>
-                                        <div class="scenario-impact">추천: 초보/빠른 선택</div>
+                                        <div class="scenario-impact">난이도: 가장 쉬움</div>
                                     </button>
                                     <button class="draw-strategy-btn draw-scenario-btn draw-scenario-card" type="button" data-strategy="balanced">
                                         <div class="scenario-meta">
@@ -2070,7 +2070,7 @@
                                             <span>구간</span>
                                             <span>끝자리</span>
                                         </div>
-                                        <div class="scenario-impact">추천: 기본형</div>
+                                        <div class="scenario-impact">난이도: 쉬움</div>
                                     </button>
                                     <button class="draw-strategy-btn draw-scenario-btn draw-scenario-card" type="button" data-strategy="aggressive">
                                         <div class="scenario-meta">
@@ -2088,7 +2088,7 @@
                                             <span>합계</span>
                                             <span>소수</span>
                                         </div>
-                                        <div class="scenario-impact">추천: 세밀 조정</div>
+                                        <div class="scenario-impact">난이도: 높음</div>
                                     </button>
                                     <button class="draw-strategy-btn draw-scenario-btn draw-scenario-card" type="button" data-strategy="conservative">
                                         <div class="scenario-meta">
@@ -2105,7 +2105,7 @@
                                             <span>홀짝</span>
                                             <span>구간</span>
                                         </div>
-                                        <div class="scenario-impact">추천: 매우 보수적</div>
+                                        <div class="scenario-impact">난이도: 가장 쉬움</div>
                                     </button>
                                     <button class="draw-strategy-btn draw-scenario-btn draw-scenario-card" type="button" data-strategy="expanded">
                                         <div class="scenario-meta">
@@ -2123,7 +2123,7 @@
                                             <span>끝자리</span>
                                             <span>연속수</span>
                                         </div>
-                                        <div class="scenario-impact">추천: 경험자</div>
+                                        <div class="scenario-impact">난이도: 보통</div>
                                     </button>
                                     <button class="draw-strategy-btn draw-scenario-btn draw-scenario-card" type="button" data-strategy="range_focus">
                                         <div class="scenario-meta">
@@ -2141,7 +2141,7 @@
                                             <span>구간</span>
                                             <span>분산</span>
                                         </div>
-                                        <div class="scenario-impact">추천: 구간 중심</div>
+                                        <div class="scenario-impact">난이도: 보통</div>
                                     </button>
                                     <button class="draw-strategy-btn draw-scenario-btn draw-scenario-card" type="button" data-strategy="sum_balance">
                                         <div class="scenario-meta">
@@ -2159,7 +2159,7 @@
                                             <span>완만</span>
                                             <span>기본</span>
                                         </div>
-                                        <div class="scenario-impact">추천: 합계 밸런스</div>
+                                        <div class="scenario-impact">난이도: 쉬움</div>
                                     </button>
                                     <button class="draw-strategy-btn draw-scenario-btn draw-scenario-card" type="button" data-strategy="digit_focus">
                                         <div class="scenario-meta">
@@ -2177,7 +2177,7 @@
                                             <span>반복</span>
                                             <span>편중</span>
                                         </div>
-                                        <div class="scenario-impact">추천: 패턴 제거</div>
+                                        <div class="scenario-impact">난이도: 높음</div>
                                     </button>
                                     <button class="draw-strategy-btn draw-scenario-btn draw-scenario-card" type="button" data-strategy="prime_focus">
                                         <div class="scenario-meta">
@@ -2195,7 +2195,7 @@
                                             <span>분산</span>
                                             <span>편중</span>
                                         </div>
-                                        <div class="scenario-impact">추천: 소수 밸런스</div>
+                                        <div class="scenario-impact">난이도: 높음</div>
                                     </button>
                                     <button class="draw-strategy-btn ghost draw-scenario-btn draw-scenario-card" type="button" data-strategy="clear">
                                         <div class="scenario-meta">
@@ -2211,7 +2211,7 @@
                                             <span>전체 해제</span>
                                             <span>처음부터</span>
                                         </div>
-                                        <div class="scenario-impact">추천: 다시 설계</div>
+                                        <div class="scenario-impact">선택 초기화</div>
                                     </button>
 		                                </div>
 		                        </div>
@@ -2264,7 +2264,7 @@
 		                                    <span class="draw-selected-count" id="rules-selected-count">0개</span>
 		                                </div>
 		                                <strong id="draw-selection-summary">필터를 아직 적용하지 않았습니다.</strong>
-		                                <p id="draw-filter-detail">시나리오를 고르거나 규칙을 추가해 조합을 좁혀보세요.</p>
+		                                <p id="draw-filter-detail">빠른 선택을 고르거나 규칙을 추가해 조합을 좁혀보세요.</p>
 		                            </div>
 	                                <span id="rules-status" class="rules-status" aria-live="polite"></span>
 			                                <div class="draw-selected-toolbar">
@@ -2458,7 +2458,7 @@
                                             <div class="premium-product-fit">꾸준히 관리하며 깊게 보는 사용자에게 적합</div>
                                             <ul>
                                                 <li>주 3회 · 회차당 추천번호 7세트</li>
-                                                <li>시나리오별 맞춤 추천 및 우선 업데이트</li>
+                                                <li>빠른 선택 단계별 맞춤 추천 및 우선 업데이트</li>
                                                 <li>심화 리포트 + 개인화 요약 리마인드</li>
                                             </ul>
                                             <div class="premium-product-foot">
@@ -2499,19 +2499,8 @@
                             <div class="draw-rules-header">
                                 <div>
                                     <h3>규칙 라이브러리</h3>
-                                    <p>검색하고 카테고리별로 빠르게 넣고 뺄 수 있습니다.</p>
                                 </div>
                                 <button id="close-rule-picker" class="ghost" type="button">닫기</button>
-                            </div>
-                            <div class="rule-picker-toolbar">
-                                <input id="rule-picker-search" type="search" placeholder="규칙 검색 (예: 홀수, 구간, 소수)">
-                                <select id="rule-picker-group" aria-label="규칙 카테고리">
-                                    <option value="">전체 카테고리</option>
-                                </select>
-                            </div>
-                            <div class="rules-toggle-row">
-                                <button id="toggle-rules" class="ghost" type="button">모든 규칙 펼치기</button>
-                                <span class="rules-hint">핵심 위주로 보려면 간단히 보기를 사용하세요</span>
                             </div>
                             <div class="rules-groups">
                 <div class="rule-group is-essential" data-group="홀짝 비율">

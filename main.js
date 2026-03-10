@@ -2182,7 +2182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (drawFilterDetailEl) {
             if (!selectedCount) {
-                drawFilterDetailEl.textContent = '시나리오 또는 규칙을 추가해 조합을 좁혀보세요.';
+                drawFilterDetailEl.textContent = '빠른 선택 또는 규칙을 추가해 조합을 좁혀보세요.';
                 return;
             }
             const remainPct = Number.isFinite(currentRemainingRatio)
@@ -4877,8 +4877,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (lastDrawInteraction.type === 'scenario') {
             return lastDrawInteraction.selected
-                ? `최근 시나리오: ${lastDrawInteraction.label}`
-                : `최근 해제: ${lastDrawInteraction.label}`;
+                ? `최근 빠른 선택: ${lastDrawInteraction.label}`
+                : `최근 빠른 선택 해제: ${lastDrawInteraction.label}`;
         }
         if (lastDrawInteraction.type === 'rule') {
             return `최근 ${lastDrawInteraction.selected ? '선택' : '해제'}: ${lastDrawInteraction.label}`;
@@ -4910,7 +4910,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const recentText = describeDrawInteraction();
         if (drawSelectionDockScenarioEl) {
             drawSelectionDockScenarioEl.textContent = hasScenario
-                ? `${PRESETS_LABEL[activeStrategy] || activeStrategy} 시나리오`
+                ? `${PRESETS_LABEL[activeStrategy] || activeStrategy} 빠른 선택`
                 : (items.length ? '수동 조정 중' : '직접 선택');
             drawSelectionDockScenarioEl.classList.toggle('is-active', hasScenario);
         }
@@ -4921,7 +4921,7 @@ document.addEventListener('DOMContentLoaded', () => {
             drawSelectionDockEl.classList.remove('has-selection');
             setDrawSelectionDockCollapsed(false);
             drawSelectionDockTitleEl.textContent = lastDrawInteraction?.type === 'clear' ? '필터를 모두 해제했습니다.' : '아직 필터 없음';
-            drawSelectionDockMetaEl.textContent = recentText || '시나리오 또는 규칙을 선택하면 여기서 계속 보입니다.';
+            drawSelectionDockMetaEl.textContent = recentText || '빠른 선택 또는 규칙을 고르면 여기서 계속 보입니다.';
             if (drawSelectionDockMetricsEl) {
                 drawSelectionDockMetricsEl.hidden = true;
             }
