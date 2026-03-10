@@ -8691,21 +8691,17 @@ main {
 }
 
 .reveal-item {
-    opacity: 0;
-    transform: translateY(18px) scale(0.992);
-    filter: blur(10px);
-    transition:
-        opacity 480ms cubic-bezier(0.22, 1, 0.36, 1),
-        transform 540ms cubic-bezier(0.22, 1, 0.36, 1),
-        filter 420ms ease;
-    transition-delay: var(--reveal-delay, 0ms);
-    will-change: opacity, transform, filter;
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+    will-change: auto;
 }
 
 .reveal-item.is-visible {
     opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
+    transform: none;
+    filter: none;
 }
 
 .dash-intro-head.reveal-item,

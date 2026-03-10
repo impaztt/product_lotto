@@ -410,58 +410,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setupRevealMotion() {
-        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const targets = getRevealTargets();
         if (!targets.length) {
             return;
         }
-        targets.forEach((element, index) => {
-            element.classList.add('reveal-item');
-            element.style.setProperty('--reveal-delay', `${Math.min(index * 28, 220)}ms`);
-        });
-        if (prefersReducedMotion || typeof window.IntersectionObserver !== 'function') {
-            targets.forEach(element => {
-                element.classList.add('is-visible');
-            });
-            return;
-        }
         if (revealObserver) {
             revealObserver.disconnect();
+            revealObserver = null;
         }
-        revealObserver = new window.IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) {
-                    return;
-                }
-                entry.target.classList.add('is-visible');
-                revealObserver.unobserve(entry.target);
-            });
-        }, {
-            threshold: 0.12,
-            rootMargin: '0px 0px -12% 0px'
-        });
         targets.forEach(element => {
-            if (!element.classList.contains('is-visible')) {
-                revealObserver.observe(element);
-            }
+            element.classList.add('reveal-item');
+            element.classList.add('is-visible');
+            element.style.removeProperty('--reveal-delay');
         });
     }
 
     function refreshRevealMotion(root = null) {
-        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const targetRoot = root instanceof Element ? root : document.getElementById(`tab-${getCurrentActiveTabId()}`);
         if (!targetRoot) {
             return;
         }
         const targets = getRevealTargets(targetRoot);
-        targets.forEach((element, index) => {
+        targets.forEach(element => {
             element.classList.add('reveal-item');
-            element.style.setProperty('--reveal-delay', `${Math.min(index * 34, 240)}ms`);
-            if (prefersReducedMotion) {
-                element.classList.add('is-visible');
-            } else if (revealObserver && !element.classList.contains('is-visible')) {
-                revealObserver.observe(element);
-            }
+            element.classList.add('is-visible');
+            element.style.removeProperty('--reveal-delay');
         });
     }
 
