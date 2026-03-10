@@ -132,6 +132,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const guestLimitEl = document.getElementById('guest-limit');
     const guestBannerEl = document.getElementById('guest-banner');
     const welcomeModal = document.getElementById('welcome-modal');
+    const onboardingCarouselEl = document.getElementById('onboarding-carousel');
+    const onboardingCarouselTrackEl = document.getElementById('onboarding-carousel-track');
+    const onboardingSlideEls = Array.from(document.querySelectorAll('.onboarding-slide[data-onboarding-slide]'));
+    const onboardingNavButtons = Array.from(document.querySelectorAll('[data-onboarding-nav]'));
+    const onboardingDotButtons = Array.from(document.querySelectorAll('[data-onboarding-dot]'));
     const welcomeAuthBtn = document.querySelector('[data-welcome-action="auth"]');
     const welcomeBrowseBtn = document.querySelector('[data-welcome-action="browse"]');
     const welcomeDismissButtons = Array.from(document.querySelectorAll('[data-welcome-close]'));
@@ -342,6 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let toastHideTimer = 0;
     let welcomeModalTimer = 0;
     let welcomeModalDismissedInSession = false;
+    let onboardingSlideIndex = 0;
     let revealObserver = null;
     const DRAW_ENTRY_LOCAL_KEY = 'lotto_guest_tracking_id';
     const GENERATION_STATS_KEY = 'lotto_generation_stats';
@@ -1230,6 +1236,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    onboardingNavButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const direction = button.dataset.onboardingNav === 'next' ? 1 : -1;
+            setOnboardingSlide(onboardingSlideIndex + direction);
+        });
+    });
+
+    onboardingDotButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const index = Number(button.dataset.onboardingDot);
+            if (!Number.isFinite(index)) {
+                return;
+            }
+            setOnboardingSlide(index);
+        });
+    });
+
+    if (onboardingCarouselTrackEl) {
+        let touchStartX = 0;
+        let touchStartY = 0;
+        onboardingCarouselTrackEl.addEventListener('touchstart', event => {
+            const touch = event.touches && event.touches[0];
+            if (!touch) {
+                return;
+            }
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        }, { passive: true });
+
+        onboardingCarouselTrackEl.addEventListener('touchend', event => {
+            const touch = event.changedTouches && event.changedTouches[0];
+            if (!touch) {
+                return;
+            }
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+            if (Math.abs(deltaX) < 36 || Math.abs(deltaX) <= Math.abs(deltaY)) {
+                return;
+            }
+            setOnboardingSlide(onboardingSlideIndex + (deltaX < 0 ? 1 : -1));
+        }, { passive: true });
+    }
+
     authEntryLinks.forEach(link => {
         link.addEventListener('click', event => {
             event.preventDefault();
@@ -1562,6 +1611,7 @@ document.addEventListener('DOMContentLoaded', () => {
         syncActiveTabState(getCurrentActiveTabId());
         setupRevealMotion();
         refreshRevealMotion(document.getElementById(`tab-${getCurrentActiveTabId()}`));
+        setOnboardingSlide(0);
         scheduleWelcomeModal();
         window.addEventListener('message', event => {
             if (!event || !event.data || event.data.type !== 'switch-tab') {
@@ -2581,6 +2631,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function setOnboardingSlide(index = 0) {
+        if (!onboardingSlideEls.length) {
+            return;
+        }
+        const maxIndex = onboardingSlideEls.length - 1;
+        const nextIndex = Math.max(0, Math.min(maxIndex, Number(index) || 0));
+        onboardingSlideIndex = nextIndex;
+        if (onboardingCarouselEl) {
+            onboardingCarouselEl.dataset.slide = String(nextIndex);
+        }
+        if (onboardingCarouselTrackEl) {
+            onboardingCarouselTrackEl.style.transform = `translateX(-${nextIndex * 100}%)`;
+        }
+        onboardingSlideEls.forEach((slide, slideIndex) => {
+            const active = slideIndex === nextIndex;
+            slide.classList.toggle('is-active', active);
+            slide.setAttribute('aria-hidden', String(!active));
+        });
+        onboardingDotButtons.forEach((button, buttonIndex) => {
+            const active = buttonIndex === nextIndex;
+            button.classList.toggle('is-active', active);
+            button.setAttribute('aria-pressed', String(active));
+        });
+        onboardingNavButtons.forEach(button => {
+            const direction = button.dataset.onboardingNav === 'next' ? 'next' : 'prev';
+            const disabled = (direction === 'prev' && nextIndex === 0) || (direction === 'next' && nextIndex === maxIndex);
+            button.disabled = disabled;
+        });
+    }
+
     function closeWelcomeModal(options = {}) {
         const { dismissToday = false, keepSessionClosed = true } = options;
         if (welcomeModalTimer) {
@@ -2607,6 +2687,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         closeAuthModal();
         welcomeModalDismissedInSession = false;
+        setOnboardingSlide(0);
         welcomeModal.classList.remove('hidden');
     }
 
