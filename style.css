@@ -2769,38 +2769,42 @@ body[data-theme="light"] .info-list li {
 }
 
 .modal-onboarding {
+    padding: clamp(12px, 2.8vh, 28px) clamp(10px, 3vw, 20px);
     background: rgba(15, 23, 42, 0.58);
     backdrop-filter: blur(18px);
 }
 
 .onboarding-modal-content {
     position: relative;
-    overflow: hidden;
-    width: min(760px, 92vw);
-    padding: 32px;
-    gap: 24px;
+    overflow: hidden auto;
+    width: min(680px, calc(100vw - clamp(20px, 6vw, 56px)));
+    max-height: min(88dvh, 820px);
+    padding: clamp(18px, 2.4vw, 28px);
+    gap: clamp(14px, 2vh, 22px);
     border: 1px solid rgba(148, 163, 184, 0.2);
-    border-radius: 32px;
+    border-radius: 28px;
     background:
         radial-gradient(circle at top right, rgba(59, 130, 246, 0.2), transparent 32%),
         radial-gradient(circle at left bottom, rgba(14, 165, 233, 0.12), transparent 26%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 255, 0.98) 62%, rgba(241, 245, 249, 0.98) 100%);
     box-shadow: 0 34px 70px rgba(15, 23, 42, 0.24);
     animation: onboardingRise 0.35s ease;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
 }
 
 .onboarding-close {
     position: absolute;
-    top: 18px;
-    right: 18px;
+    top: 14px;
+    right: 14px;
     z-index: 1;
     min-width: 42px;
 }
 
 .onboarding-hero {
     display: grid;
-    gap: 14px;
-    padding-right: 84px;
+    gap: 12px;
+    padding-right: 64px;
 }
 
 .onboarding-kicker {
@@ -2819,30 +2823,31 @@ body[data-theme="light"] .info-list li {
 #welcome-modal-title {
     margin: 0;
     color: #0f172a;
-    font-size: clamp(28px, 4vw, 42px);
-    line-height: 1.16;
+    font-size: clamp(24px, 3.4vw, 36px);
+    line-height: 1.14;
     letter-spacing: -0.03em;
 }
 
 .onboarding-copy {
     margin: 0;
-    max-width: 620px;
+    max-width: 560px;
     color: #516173;
-    line-height: 1.7;
+    font-size: 14px;
+    line-height: 1.62;
 }
 
 .onboarding-showcase {
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.9fr);
-    gap: 14px;
+    gap: 12px;
 }
 
 .onboarding-spotlight {
     position: relative;
     display: grid;
-    gap: 14px;
-    padding: 20px;
-    border-radius: 28px;
+    gap: 12px;
+    padding: 18px;
+    border-radius: 24px;
     background:
         linear-gradient(145deg, rgba(14, 165, 233, 0.12), rgba(37, 99, 235, 0.06)),
         rgba(255, 255, 255, 0.88);
@@ -2898,8 +2903,8 @@ body[data-theme="light"] .info-list li {
     position: relative;
     z-index: 1;
     color: #0f172a;
-    font-size: 24px;
-    line-height: 1.35;
+    font-size: 21px;
+    line-height: 1.3;
     letter-spacing: -0.03em;
 }
 
@@ -2927,14 +2932,14 @@ body[data-theme="light"] .info-list li {
 
 .onboarding-metrics {
     display: grid;
-    gap: 10px;
+    gap: 8px;
 }
 
 .onboarding-metric-card {
     display: grid;
-    gap: 8px;
-    padding: 16px 18px;
-    border-radius: 22px;
+    gap: 6px;
+    padding: 14px 15px;
+    border-radius: 18px;
     border: 1px solid rgba(148, 163, 184, 0.16);
     background: rgba(255, 255, 255, 0.84);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -2949,29 +2954,29 @@ body[data-theme="light"] .info-list li {
 
 .onboarding-metric-card strong {
     color: #0f172a;
-    font-size: 18px;
-    line-height: 1.35;
+    font-size: 16px;
+    line-height: 1.3;
 }
 
 .onboarding-metric-card p {
     margin: 0;
     color: #5b6b80;
-    font-size: 13px;
-    line-height: 1.6;
+    font-size: 12px;
+    line-height: 1.55;
 }
 
 .onboarding-benefits {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
+    gap: 10px;
 }
 
 .onboarding-benefit-card {
     display: grid;
-    gap: 10px;
-    min-height: 176px;
-    padding: 18px;
-    border-radius: 24px;
+    gap: 8px;
+    min-height: 0;
+    padding: 15px;
+    border-radius: 20px;
     border: 1px solid rgba(148, 163, 184, 0.18);
     background: rgba(255, 255, 255, 0.78);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88);
@@ -2987,15 +2992,15 @@ body[data-theme="light"] .info-list li {
 
 .onboarding-benefit-card strong {
     color: #0f172a;
-    font-size: 19px;
-    line-height: 1.35;
+    font-size: 16px;
+    line-height: 1.3;
 }
 
 .onboarding-benefit-card p {
     margin: 0;
     color: #5b6b80;
-    font-size: 13px;
-    line-height: 1.65;
+    font-size: 12px;
+    line-height: 1.55;
 }
 
 .onboarding-actions {
@@ -3009,9 +3014,9 @@ body[data-theme="light"] .info-list li {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 54px;
+    min-height: 50px;
     width: 100%;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
 }
 
@@ -3064,18 +3069,19 @@ body[data-theme="light"] .info-list li {
 
 @media (max-width: 768px) {
     .modal-onboarding {
-        align-items: flex-end;
-        padding: 12px;
+        align-items: center;
+        padding: clamp(10px, 2.4vh, 18px) 10px;
     }
 
     .onboarding-modal-content {
-        width: min(100%, 100%);
-        padding: 22px 18px calc(20px + env(safe-area-inset-bottom));
-        border-radius: 28px;
+        width: min(100%, calc(100vw - 20px));
+        max-height: min(84dvh, 720px);
+        padding: 18px 16px calc(16px + env(safe-area-inset-bottom));
+        border-radius: 24px;
     }
 
     .onboarding-hero {
-        padding-right: 56px;
+        padding-right: 52px;
     }
 
     .onboarding-showcase,
@@ -3084,9 +3090,15 @@ body[data-theme="light"] .info-list li {
         grid-template-columns: 1fr;
     }
 
+    .onboarding-showcase,
+    .onboarding-benefits {
+        gap: 8px;
+    }
+
     .onboarding-footer {
         flex-direction: column;
         align-items: stretch;
+        gap: 8px;
     }
 
     .onboarding-today-dismiss {
@@ -3095,25 +3107,43 @@ body[data-theme="light"] .info-list li {
 
     .onboarding-benefit-card {
         min-height: 0;
+        padding: 14px;
     }
 }
 
 @media (max-width: 480px) {
     #welcome-modal-title {
-        font-size: 27px;
+        font-size: clamp(21px, 6.5vw, 25px);
     }
 
     .onboarding-spotlight strong {
-        font-size: 21px;
+        font-size: 18px;
     }
 
     .onboarding-copy {
-        font-size: 13px;
+        font-size: 12px;
+    }
+
+    .onboarding-modal-content {
+        max-height: min(82dvh, 680px);
+        padding: 16px 14px calc(14px + env(safe-area-inset-bottom));
+    }
+
+    .onboarding-kicker {
+        padding: 7px 10px;
+        font-size: 10px;
+    }
+
+    .onboarding-spotlight,
+    .onboarding-metric-card,
+    .onboarding-benefit-card {
+        padding: 13px;
     }
 
     .onboarding-actions .cta,
     .onboarding-actions .ghost {
-        min-height: 50px;
+        min-height: 46px;
+        font-size: 13px;
     }
 }
 
