@@ -11330,3 +11330,484 @@ textarea {
         font-size: 9px;
     }
 }
+
+/* Mypage renewal */
+#tab-mypage {
+    --mypage-accent: #1b64da;
+    --mypage-accent-deep: #0f274d;
+    --mypage-panel-soft: #f7faff;
+    --mypage-line: rgba(15, 23, 42, 0.08);
+}
+
+#tab-mypage .mypage-shell-title {
+    gap: 12px;
+}
+
+#tab-mypage .mypage-shell-title h2 {
+    margin: 0;
+    font-size: clamp(30px, 3.1vw, 40px);
+    line-height: 1.06;
+    letter-spacing: -0.05em;
+}
+
+#tab-mypage .mypage-shell-title p {
+    max-width: 720px;
+    margin: 0;
+}
+
+#tab-mypage .mypage-overview--refined {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+#tab-mypage .mypage-hero-card {
+    padding: 28px;
+    gap: 18px;
+    border-radius: 28px !important;
+}
+
+#tab-mypage .mypage-account-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+#tab-mypage .mypage-account-identity {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    min-width: 0;
+}
+
+#tab-mypage .mypage-avatar-mark {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #0f274d 0%, #1b64da 100%);
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    box-shadow: 0 18px 32px rgba(27, 100, 218, 0.22);
+    flex: 0 0 auto;
+}
+
+#tab-mypage .mypage-account-copy {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+}
+
+#tab-mypage .mypage-account-copy .section-kicker,
+#tab-mypage .mypage-card .section-kicker,
+#tab-mypage .mypage-access-head .section-kicker {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+}
+
+#tab-mypage .mypage-account-copy h3,
+#tab-mypage .mypage-card .info-header h3,
+#tab-mypage .mypage-access-head h3 {
+    margin: 0;
+    font-size: 23px;
+    line-height: 1.16;
+    letter-spacing: -0.03em;
+    color: #191f28;
+}
+
+#tab-mypage .mypage-hero-email {
+    margin: 0;
+    font-size: clamp(28px, 2.8vw, 38px);
+    line-height: 1.08;
+    letter-spacing: -0.05em;
+    word-break: break-word;
+}
+
+#tab-mypage .mypage-account-meta,
+#tab-mypage .mypage-data-list,
+#tab-mypage .mypage-shortcut-grid,
+#tab-mypage .mypage-access-bullets {
+    display: grid;
+    gap: 12px;
+}
+
+#tab-mypage .mypage-account-meta-row,
+#tab-mypage .mypage-data-row,
+#tab-mypage .mypage-shortcut-btn,
+#tab-mypage .mypage-access-bullets span {
+    border-radius: 20px;
+    border: 1px solid var(--mypage-line);
+    background: var(--mypage-panel-soft);
+}
+
+#tab-mypage .mypage-account-meta-row,
+#tab-mypage .mypage-data-row {
+    display: grid;
+    gap: 7px;
+    padding: 16px 18px;
+}
+
+#tab-mypage .mypage-account-meta-row strong,
+#tab-mypage .mypage-data-row strong {
+    color: #191f28;
+    font-size: 17px;
+    line-height: 1.35;
+    letter-spacing: -0.03em;
+}
+
+#tab-mypage .mypage-account-meta-value {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#tab-mypage .mypage-inline-edit {
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    color: #4e5968 !important;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+#tab-mypage .mypage-account-helper {
+    margin: 0;
+}
+
+#tab-mypage .mypage-account-actions,
+#tab-mypage .mypage-slot-actions,
+#tab-mypage .mypage-inline-actions--plan {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#tab-mypage .mypage-account-actions .cta,
+#tab-mypage .mypage-account-actions .ghost,
+#tab-mypage .mypage-slot-actions .ghost,
+#tab-mypage .mypage-inline-actions--plan .ghost {
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 16px;
+}
+
+#tab-mypage .mypage-account-actions > [hidden],
+#tab-mypage .mypage-inline-actions--plan > [hidden] {
+    display: none !important;
+}
+
+#tab-mypage .mypage-plan-panel {
+    background: linear-gradient(180deg, #f3f8ff 0%, #ffffff 76%) !important;
+}
+
+#tab-mypage .mypage-plan-summary {
+    display: grid;
+    gap: 8px;
+}
+
+#tab-mypage .mypage-plan-summary strong {
+    font-size: clamp(36px, 3.4vw, 46px);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: var(--mypage-accent);
+}
+
+#tab-mypage .mypage-plan-summary p {
+    margin: 0;
+    max-width: 420px;
+}
+
+#tab-mypage .mypage-plan-badge {
+    min-height: 34px;
+    padding: 0 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+#tab-mypage .mypage-plan-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#tab-mypage .mypage-plan-pills span {
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    color: #4e5968;
+    font-size: 12px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+}
+
+#tab-mypage .mypage-status-strip--embedded {
+    margin: 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+#tab-mypage .mypage-status-strip--embedded .mypage-status-kpi {
+    min-height: 0;
+    padding: 18px 18px 20px;
+    border-radius: 20px !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: none !important;
+}
+
+#tab-mypage .mypage-status-strip--embedded .mypage-status-kpi span {
+    font-size: 12px;
+}
+
+#tab-mypage .mypage-status-strip--embedded .mypage-status-kpi strong {
+    font-size: 26px;
+}
+
+#tab-mypage .mypage-grid--details {
+    display: grid;
+    grid-template-columns: minmax(0, 1.04fr) minmax(280px, 0.96fr);
+    gap: 18px;
+}
+
+#tab-mypage .mypage-card {
+    display: grid;
+    gap: 16px;
+    padding: 24px;
+}
+
+#tab-mypage .mypage-card .info-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+#tab-mypage .mypage-card .info-header > div {
+    display: grid;
+    gap: 6px;
+}
+
+#tab-mypage .mypage-card--history {
+    grid-column: 1 / -1;
+}
+
+#tab-mypage .mypage-slot-actions .ghost {
+    min-width: 0;
+}
+
+#tab-mypage .mypage-shortcut-btn {
+    display: grid;
+    gap: 5px;
+    width: 100%;
+    padding: 18px;
+    text-align: left;
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+#tab-mypage .mypage-shortcut-btn span {
+    color: var(--mypage-accent);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+
+#tab-mypage .mypage-shortcut-btn strong {
+    color: #191f28;
+    font-size: 18px;
+    line-height: 1.32;
+    letter-spacing: -0.03em;
+}
+
+#tab-mypage .mypage-shortcut-btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(27, 100, 218, 0.2);
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+}
+
+#tab-mypage .history-list {
+    display: grid;
+    gap: 0;
+}
+
+#tab-mypage .history-list li {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+#tab-mypage .history-list li:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+#tab-mypage .history-list .info-label {
+    color: #8b95a1;
+}
+
+#tab-mypage .history-list strong {
+    color: #191f28;
+}
+
+#tab-mypage .mypage-access-section {
+    display: grid;
+    gap: 18px;
+    margin-top: 18px;
+    padding: 24px 26px;
+    border-radius: 28px !important;
+    background: linear-gradient(135deg, #f5f9ff 0%, #ffffff 78%) !important;
+}
+
+#tab-mypage .mypage-access-section[hidden] {
+    display: none !important;
+}
+
+#tab-mypage .mypage-access-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+#tab-mypage .mypage-access-head p {
+    margin: 8px 0 0;
+}
+
+#tab-mypage .mypage-access-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+    gap: 16px;
+    align-items: start;
+}
+
+#tab-mypage .mypage-access-section .auth-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+#tab-mypage .mypage-access-section .auth-btn {
+    min-height: 56px;
+    border-radius: 18px;
+}
+
+#tab-mypage .mypage-access-bullets span {
+    min-height: 46px;
+    padding: 0 14px;
+    color: #4e5968;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-avatar-mark {
+    background: linear-gradient(145deg, #14345f 0%, #2f7bf5 100%);
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-meta-row,
+body[data-theme="dark"] #tab-mypage .mypage-data-row,
+body[data-theme="dark"] #tab-mypage .mypage-shortcut-btn,
+body[data-theme="dark"] #tab-mypage .mypage-access-bullets span,
+body[data-theme="dark"] #tab-mypage .mypage-status-strip--embedded .mypage-status-kpi {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: rgba(148, 163, 184, 0.16) !important;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-inline-edit,
+body[data-theme="dark"] #tab-mypage .mypage-slot-actions .ghost,
+body[data-theme="dark"] #tab-mypage .mypage-inline-actions--plan .ghost,
+body[data-theme="dark"] #tab-mypage .mypage-account-actions .ghost {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: rgba(148, 163, 184, 0.16) !important;
+    color: #dbe6f5 !important;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-copy h3,
+body[data-theme="dark"] #tab-mypage .mypage-card .info-header h3,
+body[data-theme="dark"] #tab-mypage .mypage-access-head h3,
+body[data-theme="dark"] #tab-mypage .mypage-shortcut-btn strong,
+body[data-theme="dark"] #tab-mypage .mypage-data-row strong,
+body[data-theme="dark"] #tab-mypage .mypage-account-meta-row strong,
+body[data-theme="dark"] #tab-mypage .history-list strong {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-access-section {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.92) 100%) !important;
+}
+
+@media (max-width: 1024px) {
+    #tab-mypage .mypage-overview--refined,
+    #tab-mypage .mypage-grid--details,
+    #tab-mypage .mypage-access-body {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    #tab-mypage .mypage-shell-title,
+    #tab-mypage .mypage-hero-card,
+    #tab-mypage .mypage-card,
+    #tab-mypage .mypage-access-section {
+        padding: 22px 20px;
+        border-radius: 22px !important;
+    }
+
+    #tab-mypage .mypage-account-top {
+        flex-direction: column;
+    }
+
+    #tab-mypage .mypage-status-strip--embedded,
+    #tab-mypage .mypage-access-section .auth-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-mypage .mypage-account-actions,
+    #tab-mypage .mypage-slot-actions,
+    #tab-mypage .mypage-inline-actions--plan {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #tab-mypage .mypage-account-actions .cta,
+    #tab-mypage .mypage-account-actions .ghost,
+    #tab-mypage .mypage-slot-actions .ghost,
+    #tab-mypage .mypage-inline-actions--plan .ghost {
+        width: 100%;
+    }
+}
+
+@media (max-width: 520px) {
+    #tab-mypage .mypage-account-identity {
+        gap: 12px;
+    }
+
+    #tab-mypage .mypage-avatar-mark {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        font-size: 16px;
+    }
+
+    #tab-mypage .mypage-account-actions,
+    #tab-mypage .mypage-slot-actions,
+    #tab-mypage .mypage-inline-actions--plan {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-mypage .mypage-hero-email {
+        font-size: clamp(24px, 7vw, 30px);
+    }
+}

@@ -146,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const authLogoutButtons = Array.from(document.querySelectorAll('[data-logout]'));
     const authClose = authModal ? authModal.querySelector('.modal-close') : null;
     const firebaseAuthStatusEl = document.getElementById('firebase-auth-status');
+    const mypageAuthSectionEl = document.querySelector('#tab-mypage #auth');
     const mypageAuthBadgeEl = document.getElementById('mypage-auth-badge');
     const mypageNicknameDisplayEl = document.getElementById('mypage-nickname-display');
     const mypageHistoryListEl = document.getElementById('mypage-history-list');
@@ -2216,7 +2217,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (isMember() && currentUser) {
                 mypageProfileEmailEl.textContent = currentUser.uid;
             } else {
-                mypageProfileEmailEl.textContent = '로그인해 주세요';
+                mypageProfileEmailEl.textContent = '비회원으로 둘러보는 중';
             }
         }
         if (mypageMembershipTierEl) {
@@ -2228,14 +2229,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mypageMembershipDescEl) {
             mypageMembershipDescEl.textContent = isMember()
                 ? plan.description
-                : '로그인하면 추천 플랜과 저장한 기록을 바로 이어서 볼 수 있어요.';
+                : '로그인하면 저장한 기준과 추천 흐름을 그대로 이어서 쓸 수 있어요.';
         }
         if (mypageMembershipNextEl) {
-            mypageMembershipNextEl.textContent = isMember() ? plan.nextLabel : '로그인 후 시작';
+            mypageMembershipNextEl.textContent = isMember() ? plan.nextLabel : '추천 플랜 보기';
         }
         if (mypagePlanNoteEl) {
             if (!isMember()) {
-                mypagePlanNoteEl.textContent = '로그인하면 바로 시작';
+                mypagePlanNoteEl.textContent = '로그인하면 추천 기능 사용';
             } else if (isPremiumMember()) {
                 mypagePlanNoteEl.textContent = '추천 플랜 사용 중';
             } else {
@@ -2262,12 +2263,12 @@ document.addEventListener('DOMContentLoaded', () => {
             mypagePresetUpdatedEl.textContent = latestPresetAt ? formatRelativeTime(latestPresetAt) : '아직 저장 없음';
         }
         if (mypageSlotSummaryEl) {
-            mypageSlotSummaryEl.textContent = activeSlots ? `보관함 ${activeSlots}칸 사용 중` : '비어 있어요';
+            mypageSlotSummaryEl.textContent = activeSlots ? `보관함 ${activeSlots}칸 사용 중` : '비어 있음';
         }
         if (mypageSlotUpdatedEl) {
             mypageSlotUpdatedEl.textContent = latestSlot && latestSlot.savedAt
                 ? `최근 저장 ${formatSlotDate(latestSlot.savedAt)}`
-                : '보관함 1~3 상태가 여기에 보여요.';
+                : '보관함 1~3 상태가 이곳에 반영됩니다.';
         }
         if (mypageStatsGeneratedEl) {
             mypageStatsGeneratedEl.textContent = `${formatNumber(stats.totalSets || 0)}세트`;
@@ -3012,7 +3013,11 @@ document.addEventListener('DOMContentLoaded', () => {
         authEntryLinks.forEach(link => {
             link.hidden = member;
         });
+        if (mypageAuthSectionEl) {
+            mypageAuthSectionEl.hidden = member;
+        }
         if (nicknameOpenModalBtn) {
+            nicknameOpenModalBtn.hidden = !member;
             nicknameOpenModalBtn.disabled = !member || nicknameSaveInFlight;
         }
         if (nicknameModalInputEl) {
@@ -3046,7 +3051,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return;
         }
-        firebaseAuthStatusEl.textContent = '로그인하면 저장한 정보가 바로 이어져요.';
+        firebaseAuthStatusEl.textContent = '로그인하면 저장한 기준과 추천 이력이 바로 이어집니다.';
     }
 
     async function signInWithGoogle() {
@@ -3191,7 +3196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderNicknameUi() {
         const member = isMember();
         if (mypageAuthBadgeEl) {
-            mypageAuthBadgeEl.textContent = member ? '로그인됨' : '미로그인';
+            mypageAuthBadgeEl.textContent = member ? '로그인 완료' : '비회원';
         }
         if (mypageNicknameDisplayEl) {
             if (!member) {
@@ -3204,9 +3209,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const remaining = getNicknameRemainingChanges();
         if (nicknameStatusEl && !member) {
-            nicknameStatusEl.textContent = '첫 로그인하면 닉네임이 자동으로 만들어지고, 이후 월 2번까지 바꿀 수 있어요.';
+            nicknameStatusEl.textContent = '로그인하면 닉네임이 자동 생성되고 이후 월 2번까지 변경할 수 있어요.';
         } else if (nicknameStatusEl && member) {
-            nicknameStatusEl.textContent = `이번 달 닉네임 변경 가능 횟수는 ${remaining}회 남았어요.`;
+            nicknameStatusEl.textContent = `이번 달 닉네임 변경 가능 횟수 ${remaining}회 남음`;
         }
     }
 

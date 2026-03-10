@@ -2912,123 +2912,141 @@
         </section>
 
 		        <section id="tab-mypage" class="tab-panel app-shell" role="tabpanel" aria-labelledby="tab-mypage-btn" tabindex="0">
-		            <div class="section-title">
-		                <span class="section-kicker">계정</span>
-		                <h2>내 정보 한눈에</h2>
-		                <p>로그인 상태, 이용권, 저장한 규칙을 한 화면에서 간결하게 관리해요.</p>
-                        <div class="mypage-title-points" aria-label="마이페이지 핵심 기능">
-                            <span>계정 상태</span>
-                            <span>플랜 관리</span>
-                            <span>최근 활동</span>
-                        </div>
+		            <div class="section-title mypage-shell-title">
+		                <span class="section-kicker">MY PAGE</span>
+		                <h2>내 기준과 기록 관리</h2>
+		                <p>계정 상태, 이용 플랜, 저장한 기준과 최근 활동을 한 화면에서 정리합니다.</p>
 		            </div>
-		            <div class="mypage-overview">
+		            <div class="mypage-overview mypage-overview--refined">
 		                <article class="mypage-hero-card mypage-hero-card--account">
-		                    <div class="mypage-hero-head">
-		                        <div>
-		                            <span class="section-kicker">계정</span>
-		                            <h3>지금 계정</h3>
+		                    <div class="mypage-account-top">
+		                        <div class="mypage-account-identity">
+		                            <div class="mypage-avatar-mark" aria-hidden="true">LP</div>
+		                            <div class="mypage-account-copy">
+		                                <span class="section-kicker">ACCOUNT</span>
+		                                <h3>계정 상태</h3>
+		                                <strong class="mypage-hero-email" id="mypage-profile-email">비회원으로 둘러보는 중</strong>
+		                            </div>
 		                        </div>
-		                        <span class="badge muted" id="mypage-auth-badge">미로그인</span>
+		                        <span class="badge muted" id="mypage-auth-badge">비회원</span>
 		                    </div>
-		                    <strong class="mypage-hero-email" id="mypage-profile-email">로그인해 주세요</strong>
-		                    <div class="mypage-hero-row">
-		                        <div class="mypage-hero-block">
+		                    <div class="mypage-account-meta">
+		                        <div class="mypage-account-meta-row">
 		                            <span class="info-label">닉네임</span>
-		                            <strong id="mypage-nickname-display">첫 로그인 후 자동으로 정해져요</strong>
+		                            <div class="mypage-account-meta-value">
+		                                <strong id="mypage-nickname-display">첫 로그인 후 자동으로 정해져요</strong>
+		                                <button id="nickname-open-modal-btn" class="ghost mypage-inline-edit" type="button">변경</button>
+		                            </div>
 		                        </div>
-		                        <div class="mypage-hero-block">
-		                            <span class="info-label">이용 플랜</span>
+		                        <div class="mypage-account-meta-row">
+		                            <span class="info-label">현재 플랜</span>
 		                            <strong id="mypage-membership-tier">FREE</strong>
 		                        </div>
 		                    </div>
-		                    <p class="helper-text" id="nickname-status">닉네임은 월 2번까지 바꿀 수 있어요.</p>
-		                    <div class="mypage-inline-actions">
-		                        <button id="nickname-open-modal-btn" class="ghost" type="button">닉네임 바꾸기</button>
-		                        <button class="ghost" type="button" data-open-auth="true">로그인 / 가입</button>
+		                    <p class="helper-text mypage-account-helper" id="nickname-status">로그인하면 닉네임이 자동 생성되고 이후 월 2번까지 변경할 수 있어요.</p>
+		                    <div class="mypage-inline-actions mypage-account-actions">
+		                        <button class="cta" type="button" data-open-auth="true">간편 로그인 시작</button>
 		                        <button class="ghost" type="button" data-logout="true" hidden>로그아웃</button>
+		                        <button class="ghost" type="button" data-tab-link="draw">번호 만들기</button>
 		                    </div>
 		                </article>
-		                <article class="mypage-hero-card mypage-hero-card--plan">
+		                <article class="mypage-hero-card mypage-hero-card--plan mypage-plan-panel">
 		                    <div class="mypage-hero-head">
 		                        <div>
-		                            <span class="section-kicker">플랜</span>
-		                            <h3>지금 플랜</h3>
+		                            <span class="section-kicker">PLAN</span>
+		                            <h3>이용 현황</h3>
 		                        </div>
 		                        <span class="mypage-plan-badge" id="mypage-membership-next">추천 플랜 보기</span>
 		                    </div>
 		                    <div class="mypage-plan-summary">
 		                        <strong id="mypage-membership-tier-summary">FREE</strong>
-		                        <p id="mypage-membership-desc">필요할 때만 추천 플랜을 켜고, 평소에는 직접 선택만 써도 돼요.</p>
+		                        <p id="mypage-membership-desc">필요할 때만 추천 플랜을 켜고, 평소에는 직접 선택만 써도 됩니다.</p>
 		                    </div>
 		                    <div class="mypage-plan-pills">
 		                        <span id="mypage-plan-note">직접 선택 사용 중</span>
 		                        <span>추천 번호</span>
 		                        <span>저장 이력</span>
 		                    </div>
-		                    <div class="mypage-inline-actions">
+		                    <div class="mypage-status-strip mypage-status-strip--embedded" aria-label="이용 지표">
+		                        <article class="mypage-status-kpi">
+		                            <span>누적 생성</span>
+		                            <strong id="mypage-stats-generated">0세트</strong>
+		                        </article>
+		                        <article class="mypage-status-kpi">
+		                            <span>기준 회차</span>
+		                            <strong id="mypage-stats-round">-</strong>
+		                        </article>
+		                        <article class="mypage-status-kpi">
+		                            <span>최근 방식</span>
+		                            <strong id="mypage-stats-mode">직접선택</strong>
+		                        </article>
+		                    </div>
+		                    <div class="mypage-inline-actions mypage-inline-actions--plan">
 		                        <button id="mypage-plan-manage-btn" class="ghost" type="button">플랜 보기</button>
 		                        <button id="mypage-plan-cancel-btn" class="ghost" type="button" hidden>FREE로 전환</button>
 		                    </div>
 		                </article>
 		            </div>
-		            <div class="mypage-status-strip" aria-label="이용 지표">
-		                <article class="mypage-status-kpi">
-		                    <span>누적 생성</span>
-		                    <strong id="mypage-stats-generated">0세트</strong>
-		                </article>
-		                <article class="mypage-status-kpi">
-		                    <span>기준 회차</span>
-		                    <strong id="mypage-stats-round">-</strong>
-		                </article>
-		                <article class="mypage-status-kpi">
-		                    <span>최근 방식</span>
-		                    <strong id="mypage-stats-mode">직접선택</strong>
-		                </article>
-		            </div>
 		            <div class="mypage-grid mypage-grid--details">
-		                <div class="info-card">
+		                <article class="info-card mypage-card mypage-card--saved">
 		                    <div class="info-header">
-		                        <h3>저장한 규칙</h3>
+		                        <div>
+		                            <span class="section-kicker">SAVED</span>
+		                            <h3>저장한 기준</h3>
+		                        </div>
 		                        <span class="badge muted" id="mypage-preset-badge">0개</span>
 		                    </div>
-		                    <ul class="info-list">
-		                        <li>
-		                            <span class="info-label">프리셋</span>
+		                    <div class="mypage-data-list">
+		                        <div class="mypage-data-row">
+		                            <span class="info-label">프리셋 요약</span>
 		                            <strong id="mypage-preset-summary">아직 저장한 규칙이 없어요</strong>
-		                        </li>
-		                        <li>
+		                        </div>
+		                        <div class="mypage-data-row">
 		                            <span class="info-label">최근 저장</span>
 		                            <strong id="mypage-preset-updated">-</strong>
-		                        </li>
-		                        <li>
-		                            <span class="info-label">보관함</span>
-		                            <strong id="mypage-slot-summary">비어 있어요</strong>
-		                        </li>
-		                    </ul>
+		                        </div>
+		                        <div class="mypage-data-row">
+		                            <span class="info-label">보관함 사용</span>
+		                            <strong id="mypage-slot-summary">비어 있음</strong>
+		                        </div>
+		                    </div>
 		                    <p class="helper-text" id="mypage-slot-updated">추첨 탭에서 저장한 규칙과 보관함 상태가 여기에 반영돼요.</p>
-		                    <div class="mypage-inline-actions">
-		                        <button class="ghost" type="button" data-tab-link="draw">규칙 보러가기</button>
-		                        <button class="ghost" type="button" data-mypage-slot-apply="1">보관함 1 적용</button>
-		                        <button class="ghost" type="button" data-mypage-slot-apply="2">보관함 2 적용</button>
-		                        <button class="ghost" type="button" data-mypage-slot-apply="3">보관함 3 적용</button>
+		                    <div class="mypage-slot-actions">
+		                        <button class="ghost" type="button" data-tab-link="draw">규칙 관리</button>
+		                        <button class="ghost" type="button" data-mypage-slot-apply="1">1번 적용</button>
+		                        <button class="ghost" type="button" data-mypage-slot-apply="2">2번 적용</button>
+		                        <button class="ghost" type="button" data-mypage-slot-apply="3">3번 적용</button>
 		                    </div>
-		                </div>
-		                <div class="info-card">
+		                </article>
+		                <article class="info-card mypage-card mypage-card--shortcut">
 		                    <div class="info-header">
-		                        <h3>바로가기</h3>
-		                        <span class="badge muted">빠르게</span>
+		                        <div>
+		                            <span class="section-kicker">SHORTCUT</span>
+		                            <h3>자주 쓰는 작업</h3>
+		                        </div>
+		                        <span class="badge muted">빠른 이동</span>
 		                    </div>
-		                    <p class="helper-text">자주 쓰는 화면으로 바로 이동해요.</p>
-		                    <div class="mypage-inline-actions">
-		                        <button class="ghost" type="button" data-tab-link="draw">번호 만들기</button>
-		                        <button class="ghost" type="button" data-tab-link="qr">QR 확인</button>
-		                        <button class="ghost" type="button" data-tab-link="draw">플랜 보기</button>
+		                    <div class="mypage-shortcut-grid">
+		                        <button class="mypage-shortcut-btn" type="button" data-tab-link="draw">
+		                            <span>번호 생성</span>
+		                            <strong>필터 스튜디오 열기</strong>
+		                        </button>
+		                        <button class="mypage-shortcut-btn" type="button" data-tab-link="qr">
+		                            <span>QR 확인</span>
+		                            <strong>스캔 결과 바로 보기</strong>
+		                        </button>
+		                        <button class="mypage-shortcut-btn" type="button" data-tab-link="dashboard">
+		                            <span>회차 확인</span>
+		                            <strong>최근 결과 대시보드 보기</strong>
+		                        </button>
 		                    </div>
-		                </div>
-		                <div class="info-card info-card--wide">
+		                </article>
+		                <article class="info-card info-card--wide mypage-card mypage-card--history">
 		                    <div class="info-header">
-		                        <h3>최근 활동</h3>
+		                        <div>
+		                            <span class="section-kicker">HISTORY</span>
+		                            <h3>최근 활동</h3>
+		                        </div>
 		                        <span class="badge muted" id="mypage-history-badge">최근 20건</span>
 		                    </div>
 		                    <ul class="info-list history-list" id="mypage-history-list">
@@ -3037,47 +3055,35 @@
 		                            <strong>-</strong>
 		                        </li>
 		                    </ul>
-		                </div>
+		                </article>
 		            </div>
 
-	            <section id="auth" class="section auth">
-	                <div class="section-title">
-	                    <span class="section-kicker">로그인</span>
-	                    <h2>로그인하고 이어서 써요</h2>
-	                    <p>로그인하면 저장한 규칙, 보관함, 추천 이력이 바로 이어집니다.</p>
-	                </div>
-	                <div class="auth-grid">
-	                    <div class="auth-card">
-	                        <h3>간편하게 시작</h3>
-	                        <p>구글이나 카카오로 바로 로그인할 수 있어요.</p>
+	            <section id="auth" class="section auth mypage-access-section">
+	                <div class="mypage-access-head">
+	                    <div>
+	                        <span class="section-kicker">ACCESS</span>
+	                        <h3>로그인하면 저장한 흐름이 이어집니다</h3>
 	                        <p id="firebase-auth-status" class="helper-text">로그인 준비 중</p>
-	                        <div class="auth-buttons">
-	                            <button class="auth-btn google" data-auth="google">
-	                                <span class="auth-icon google" aria-hidden="true"></span>
-	                                구글로 계속하기
-	                            </button>
-	                            <button class="auth-btn kakao" data-auth="kakao">
-	                                <span class="auth-icon kakao" aria-hidden="true"></span>
-	                                카카오로 계속하기
-	                            </button>
-	                        </div>
-	                        <div class="auth-buttons" style="margin-top: 12px;">
-	                            <button id="mypage-login-btn" class="ghost" type="button" data-open-auth="true">로그인</button>
-	                            <button id="mypage-signup-btn" class="ghost" type="button" data-open-auth="true">가입하기</button>
-	                            <button id="firebase-logout-btn" class="ghost" type="button" data-logout="true" hidden>로그아웃</button>
-	                        </div>
-	                        <p class="helper-text">처음 로그인하면 자동으로 가입까지 완료돼요.</p>
-	                    </div>
-	                    <div class="auth-card">
-	                        <h3>미로그인 사용 안내</h3>
-	                        <p>로그인 전에도 기본 기능은 바로 써볼 수 있어요.</p>
-	                        <ul class="bullets">
-	                            <li>하루 최대 50회, 1회 1세트까지 생성</li>
-	                            <li>로그인하면 저장과 추천 기능을 이어서 사용</li>
-	                        </ul>
 	                    </div>
 	                </div>
-            </section>
+	                <div class="mypage-access-body">
+	                    <div class="auth-buttons">
+	                        <button class="auth-btn google" data-auth="google">
+	                            <span class="auth-icon google" aria-hidden="true"></span>
+	                            구글로 계속하기
+	                        </button>
+	                        <button class="auth-btn kakao" data-auth="kakao">
+	                            <span class="auth-icon kakao" aria-hidden="true"></span>
+	                            카카오로 계속하기
+	                        </button>
+	                    </div>
+	                    <div class="mypage-access-bullets">
+	                        <span>저장한 규칙과 보관함을 이어서 사용</span>
+	                        <span>추천 이력과 최근 활동을 같은 화면에서 확인</span>
+	                        <span>처음 로그인해도 바로 가입 완료 처리</span>
+	                    </div>
+	                </div>
+	            </section>
         </section>
 
         <section id="tab-store" class="tab-panel app-shell app-shell--store store-webview-tab" role="tabpanel" aria-labelledby="tab-store-btn" tabindex="0">
