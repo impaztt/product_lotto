@@ -2777,9 +2777,9 @@ body[data-theme="light"] .info-list li {
 .onboarding-modal-content {
     position: relative;
     overflow: hidden;
-    width: min(520px, calc(100vw - 18px));
-    max-height: min(86dvh, 600px);
-    padding: clamp(14px, 1.8vw, 20px);
+    width: min(560px, calc(100vw - 16px));
+    max-height: min(90dvh, 650px);
+    padding: clamp(16px, 2vw, 22px);
     gap: 10px;
     border: 1px solid rgba(148, 163, 184, 0.2);
     border-radius: 24px;
@@ -2802,7 +2802,7 @@ body[data-theme="light"] .info-list li {
 .onboarding-hero {
     display: grid;
     gap: 6px;
-    padding-right: 50px;
+    padding-right: 54px;
 }
 
 .onboarding-kicker {
@@ -2821,7 +2821,7 @@ body[data-theme="light"] .info-list li {
 #welcome-modal-title {
     margin: 0;
     color: #0f172a;
-    font-size: clamp(20px, 2.8vw, 27px);
+    font-size: clamp(21px, 3vw, 28px);
     line-height: 1.14;
     letter-spacing: -0.03em;
 }
@@ -2836,7 +2836,7 @@ body[data-theme="light"] .info-list li {
 
 .onboarding-carousel {
     overflow: hidden;
-    margin-top: 0;
+    margin-top: 2px;
     border-radius: 20px;
 }
 
@@ -2857,8 +2857,8 @@ body[data-theme="light"] .info-list li {
 .onboarding-slide-card {
     display: grid;
     gap: 8px;
-    min-height: 136px;
-    padding: 14px;
+    min-height: 146px;
+    padding: 15px;
     border-radius: 20px;
     border: 1px solid rgba(148, 163, 184, 0.16);
     background: rgba(255, 255, 255, 0.92);
@@ -2915,7 +2915,7 @@ body[data-theme="light"] .info-list li {
 .onboarding-mini-card {
     display: grid;
     gap: 4px;
-    padding: 10px 12px;
+    padding: 11px 12px;
     border-radius: 16px;
     border: 1px solid rgba(148, 163, 184, 0.14);
     background: rgba(255, 255, 255, 0.82);
@@ -2952,7 +2952,7 @@ body[data-theme="light"] .info-list li {
 .onboarding-plan-chip {
     display: grid;
     gap: 4px;
-    min-height: 68px;
+    min-height: 72px;
     padding: 10px 8px;
     border-radius: 16px;
     border: 1px solid rgba(148, 163, 184, 0.16);
@@ -3023,41 +3023,10 @@ body[data-theme="light"] .info-list li {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 42px;
+    min-height: 44px;
     width: 100%;
     font-size: 13px;
     font-weight: 700;
-}
-
-.onboarding-footer {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-}
-
-.onboarding-dismiss {
-    min-height: 36px;
-    width: 100%;
-    padding: 0 12px;
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.84);
-    color: #64748b;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.onboarding-today-dismiss {
-    min-height: 36px;
-    width: 100%;
-    padding: 0 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(37, 99, 235, 0.16);
-    background: rgba(239, 246, 255, 0.9);
-    color: #1d4ed8;
-    font-size: 12px;
-    font-weight: 800;
 }
 
 @keyframes onboardingRise {
@@ -3079,18 +3048,18 @@ body[data-theme="light"] .info-list li {
 
     .onboarding-modal-content {
         width: min(100%, calc(100vw - 12px));
-        max-height: min(86dvh, 560px);
-        padding: 13px 12px calc(12px + env(safe-area-inset-bottom));
+        max-height: min(90dvh, 610px);
+        padding: 14px 12px calc(12px + env(safe-area-inset-bottom));
         border-radius: 20px;
     }
 
     .onboarding-hero {
-        padding-right: 44px;
+        padding-right: 46px;
     }
 
     .onboarding-slide-card {
-        min-height: 126px;
-        padding: 12px;
+        min-height: 132px;
+        padding: 13px;
     }
 
     .onboarding-slide-card strong {
@@ -3110,7 +3079,7 @@ body[data-theme="light"] .info-list li {
     }
 
     .onboarding-plan-chip {
-        min-height: 62px;
+        min-height: 66px;
         padding: 8px 6px;
     }
 
@@ -3126,7 +3095,7 @@ body[data-theme="light"] .info-list li {
 
     .onboarding-actions .cta,
     .onboarding-actions .ghost {
-        min-height: 40px;
+        min-height: 42px;
         font-size: 12px;
     }
 }
@@ -3141,8 +3110,8 @@ body[data-theme="light"] .info-list li {
     }
 
     .onboarding-modal-content {
-        max-height: min(86dvh, 520px);
-        padding: 12px 10px calc(10px + env(safe-area-inset-bottom));
+        max-height: min(90dvh, 560px);
+        padding: 13px 10px calc(10px + env(safe-area-inset-bottom));
     }
 
     .onboarding-kicker {
@@ -3155,8 +3124,8 @@ body[data-theme="light"] .info-list li {
     }
 
     .onboarding-slide-card {
-        min-height: 112px;
-        padding: 10px;
+        min-height: 118px;
+        padding: 11px;
         border-radius: 18px;
     }
 
@@ -3196,15 +3165,9 @@ body[data-theme="light"] .info-list li {
 
     .onboarding-actions .cta,
     .onboarding-actions .ghost {
-        min-height: 38px;
+        min-height: 40px;
         font-size: 11px;
         padding: 0 8px;
-    }
-
-    .onboarding-dismiss,
-    .onboarding-today-dismiss {
-        min-height: 34px;
-        font-size: 11px;
     }
 }
 
