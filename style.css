@@ -14030,3 +14030,104 @@ body[data-theme="dark"] #tab-dashboard .dashboard-signal-card p {
         font-size: 13px;
     }
 }
+
+/* Mypage header removal + dashboard inline countdown */
+#tab-mypage .mypage-overview--refined {
+    margin-top: 0;
+}
+
+#tab-dashboard .dashboard-countdown {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+    margin-top: 2px;
+    padding: 12px 16px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #f8fafc 0%, #eef4fa 100%);
+    border: 1px solid rgba(2, 32, 71, 0.06);
+}
+
+#tab-dashboard .dashboard-countdown .time-circle {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent !important;
+}
+
+#tab-dashboard .dashboard-countdown .time-circle:not(:last-child)::after {
+    content: ":";
+    margin-left: 6px;
+    color: #9aa6b2;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+#tab-dashboard .dashboard-countdown .time-num {
+    min-width: 2ch;
+    color: #191f28;
+    font-size: clamp(24px, 2.2vw, 30px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.05em;
+}
+
+#tab-dashboard .dashboard-countdown .time-txt {
+    color: #6b7684;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+@media (max-width: 640px) {
+    #tab-dashboard .dashboard-countdown {
+        width: 100%;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 11px 13px;
+    }
+
+    #tab-dashboard .dashboard-countdown .time-circle:not(:last-child)::after {
+        margin-left: 4px;
+        font-size: 15px;
+    }
+
+    #tab-dashboard .dashboard-countdown .time-num {
+        font-size: 22px;
+    }
+
+    #tab-dashboard .dashboard-countdown .time-txt {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard .dashboard-countdown {
+        gap: 6px;
+        padding: 10px 11px;
+        border-radius: 16px;
+    }
+
+    #tab-dashboard .dashboard-countdown .time-circle {
+        gap: 3px;
+    }
+
+    #tab-dashboard .dashboard-countdown .time-circle:not(:last-child)::after {
+        margin-left: 3px;
+        font-size: 13px;
+    }
+
+    #tab-dashboard .dashboard-countdown .time-num {
+        font-size: 19px;
+    }
+
+    #tab-dashboard .dashboard-countdown .time-txt {
+        font-size: 10px;
+    }
+}
