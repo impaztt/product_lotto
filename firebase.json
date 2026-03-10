@@ -1,4 +1,22 @@
 {
+  "hosting": {
+    "site": "lotto-cd822",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "firestore.rules",
+      "firebase-debug.log",
+      "AGENTS.md",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
   "firestore": {
     "rules": "firestore.rules"
   }
