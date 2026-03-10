@@ -1451,17 +1451,17 @@
 </div>
 </section>
 
-        <section id="tab-dashboard" class="tab-panel is-active" role="tabpanel" aria-labelledby="tab-dashboard-btn" tabindex="0">
+        <section id="tab-dashboard" class="tab-panel app-shell app-shell--dashboard is-active" role="tabpanel" aria-labelledby="tab-dashboard-btn" tabindex="0">
             <div class="container-box">
                 <div class="dashboard-shell">
                     <section class="dashboard-hero">
                         <div class="dashboard-hero-copy">
-                            <span class="dash-intro-kicker">LOTTO 6/45</span>
-                            <h2 class="content-tit">이번 회차와 최근 흐름을 한눈에</h2>
-                            <p class="dash-intro-sub">회차 정보와 최근 결과, 내 생성 성과를 바로 확인하세요.</p>
+                            <span class="dash-intro-kicker">회차 브리핑</span>
+                            <h2 class="content-tit">이번 회차와 최근 흐름을 한 화면에서 확인하세요</h2>
+                            <p class="dash-intro-sub">회차 정보, 직전 결과, 지난주 생성 성과를 끊김 없이 이어서 봅니다.</p>
                             <div class="dash-intro-actions">
-                                <button class="cta" type="button" data-tab-link="draw">번호 바로 만들기</button>
-                                <button class="ghost" type="button" data-tab-link="mypage">내 상태 보기</button>
+                                <button class="cta" type="button" data-tab-link="draw">번호 만들러 가기</button>
+                                <button class="ghost" type="button" data-tab-link="mypage">내 기준 보러 가기</button>
                             </div>
                         </div>
                         <div class="dashboard-hero-side">
@@ -2794,9 +2794,9 @@
 
 		        <section id="tab-mypage" class="tab-panel app-shell" role="tabpanel" aria-labelledby="tab-mypage-btn" tabindex="0">
 		            <div class="section-title mypage-shell-title">
-		                <span class="section-kicker">MY PAGE</span>
-		                <h2>내 기준과 기록 관리</h2>
-		                <p>계정 상태, 이용 플랜, 저장한 기준과 최근 활동을 한 화면에서 정리합니다.</p>
+		                <span class="section-kicker">이용 관리</span>
+		                <h2>내 기준과 기록을 이어서 관리하세요</h2>
+		                <p>로그인 상태, 이용 플랜, 저장한 기준, 최근 활동을 한 화면에서 정리합니다.</p>
 		            </div>
 		            <div class="mypage-overview mypage-overview--refined">
 		                <article class="mypage-hero-card mypage-hero-card--account">
@@ -2804,8 +2804,8 @@
 		                        <div class="mypage-account-identity">
 		                            <div class="mypage-avatar-mark" aria-hidden="true">LP</div>
 		                            <div class="mypage-account-copy">
-		                                <span class="section-kicker">ACCOUNT</span>
-		                                <h3>계정 상태</h3>
+		                                <span class="section-kicker">내 계정</span>
+		                                <h3>로그인 상태</h3>
 		                                <strong class="mypage-hero-email" id="mypage-profile-email">비회원으로 둘러보는 중</strong>
 		                            </div>
 		                        </div>
@@ -2824,24 +2824,24 @@
 		                            <strong id="mypage-membership-tier">FREE</strong>
 		                        </div>
 		                    </div>
-		                    <p class="helper-text mypage-account-helper" id="nickname-status">로그인하면 닉네임이 자동 생성되고 이후 월 2번까지 변경할 수 있어요.</p>
+		                    <p class="helper-text mypage-account-helper" id="nickname-status">로그인 후 닉네임과 저장한 기준, 최근 활동을 이어서 관리할 수 있습니다.</p>
 		                    <div class="mypage-inline-actions mypage-account-actions">
-		                        <button class="cta" type="button" data-open-auth="true">간편 로그인 시작</button>
+		                        <button class="cta" type="button" data-open-auth="true">로그인하고 기준 이어보기</button>
 		                        <button class="ghost" type="button" data-logout="true" hidden>로그아웃</button>
-		                        <button class="ghost" type="button" data-tab-link="draw">번호 만들기</button>
+		                        <button class="ghost" type="button" data-tab-link="draw">추첨으로 이동</button>
 		                    </div>
 		                </article>
 		                <article class="mypage-hero-card mypage-hero-card--plan mypage-plan-panel">
 		                    <div class="mypage-hero-head">
 		                        <div>
-		                            <span class="section-kicker">PLAN</span>
-		                            <h3>이용 현황</h3>
+		                            <span class="section-kicker">이용 플랜</span>
+		                            <h3>추천 이용 현황</h3>
 		                        </div>
 		                        <span class="mypage-plan-badge" id="mypage-membership-next">추천 플랜 보기</span>
 		                    </div>
 		                    <div class="mypage-plan-summary">
 		                        <strong id="mypage-membership-tier-summary">FREE</strong>
-		                        <p id="mypage-membership-desc">필요할 때만 추천 플랜을 켜고, 평소에는 직접 선택만 써도 됩니다.</p>
+		                        <p id="mypage-membership-desc">필요한 시점에 추천을 켜고 직접 선택과 함께 이어서 관리합니다.</p>
 		                    </div>
 		                    <div class="mypage-plan-pills">
 		                        <span id="mypage-plan-note">직접 선택 사용 중</span>
@@ -2872,7 +2872,7 @@
 		                <article class="info-card mypage-card mypage-card--saved">
 		                    <div class="info-header">
 		                        <div>
-		                            <span class="section-kicker">SAVED</span>
+		                            <span class="section-kicker">저장 기준</span>
 		                            <h3>저장한 기준</h3>
 		                        </div>
 		                        <span class="badge muted" id="mypage-preset-badge">0개</span>
@@ -2902,7 +2902,7 @@
 		                <article class="info-card mypage-card mypage-card--shortcut">
 		                    <div class="info-header">
 		                        <div>
-		                            <span class="section-kicker">SHORTCUT</span>
+		                            <span class="section-kicker">빠른 이동</span>
 		                            <h3>자주 쓰는 작업</h3>
 		                        </div>
 		                        <span class="badge muted">빠른 이동</span>
@@ -2925,7 +2925,7 @@
 		                <article class="info-card info-card--wide mypage-card mypage-card--history">
 		                    <div class="info-header">
 		                        <div>
-		                            <span class="section-kicker">HISTORY</span>
+		                            <span class="section-kicker">최근 기록</span>
 		                            <h3>최근 활동</h3>
 		                        </div>
 		                        <span class="badge muted" id="mypage-history-badge">최근 20건</span>
@@ -2942,8 +2942,8 @@
 	            <section id="auth" class="section auth mypage-access-section">
 	                <div class="mypage-access-head">
 	                    <div>
-	                        <span class="section-kicker">ACCESS</span>
-	                        <h3>로그인하면 저장한 흐름이 이어집니다</h3>
+	                        <span class="section-kicker">로그인 시작</span>
+	                        <h3>로그인하면 저장한 기준과 기록이 바로 이어집니다</h3>
 	                        <p id="firebase-auth-status" class="helper-text">로그인 준비 중</p>
 	                    </div>
 	                </div>
@@ -2959,9 +2959,9 @@
 	                        </button>
 	                    </div>
 	                    <div class="mypage-access-bullets">
-	                        <span>저장한 규칙과 보관함을 이어서 사용</span>
-	                        <span>추천 이력과 최근 활동을 같은 화면에서 확인</span>
-	                        <span>처음 로그인해도 바로 가입 완료 처리</span>
+	                        <span>저장한 규칙과 보관함을 바로 이어서 사용</span>
+	                        <span>추천 이력과 최근 활동을 한 화면에서 확인</span>
+	                        <span>처음 로그인해도 바로 시작 가능</span>
 	                    </div>
 	                </div>
 	            </section>
@@ -2969,14 +2969,14 @@
 
         <section id="tab-store" class="tab-panel app-shell app-shell--store store-webview-tab" role="tabpanel" aria-labelledby="tab-store-btn" tabindex="0">
             <div class="section-title store-shell-title">
-                <span class="section-kicker">Nearby Stores</span>
+                <span class="section-kicker">공식 판매점</span>
                 <h2>판매점 찾기</h2>
-                <p>동행복권 공식 판매점 페이지를 앱 안에서 바로 확인하고, 필요하면 새 창으로 전환할 수 있습니다.</p>
+                <p>공식 판매점 페이지를 앱 안에서 바로 확인하고 필요하면 새 창으로 전환합니다.</p>
             </div>
             <div class="store-shell-card">
                 <div class="store-shell-toolbar">
-                    <span class="badge muted">공식 페이지 미러</span>
-                    <button id="store-open-official-btn" class="ghost" type="button">공식 페이지 열기</button>
+                    <span class="badge muted">공식 페이지</span>
+                    <button id="store-open-official-btn" class="ghost" type="button">새 창에서 열기</button>
                 </div>
                 <iframe
                     class="store-webview-frame"
@@ -2990,9 +2990,9 @@
 
         <section id="tab-qr" class="tab-panel app-shell" role="tabpanel" aria-labelledby="tab-qr-btn" tabindex="0">
             <div class="section-title">
-                <span class="section-kicker">Ticket Scan</span>
+                <span class="section-kicker">당첨 확인</span>
                 <h2>QR 스캔</h2>
-                <p id="qr-status">카메라 권한을 허용한 뒤 로또 QR을 비춰 당첨 여부를 확인하세요.</p>
+                <p id="qr-status">QR을 비추면 회차와 번호를 인식해 당첨 여부를 바로 확인합니다.</p>
             </div>
             <div class="qr-layout">
                 <div class="qr-camera-card">
@@ -3006,8 +3006,8 @@
                     </div>
                     <canvas id="qr-canvas" class="qr-canvas" aria-hidden="true"></canvas>
                     <div class="qr-actions">
-                        <button id="qr-start-btn" type="button">스캔 시작</button>
-                        <button id="qr-stop-btn" type="button" class="ghost">스캔 중지</button>
+                        <button id="qr-start-btn" type="button">QR 스캔 시작</button>
+                        <button id="qr-stop-btn" type="button" class="ghost">카메라 닫기</button>
                     </div>
                 </div>
                 <div class="qr-result-card">
@@ -3028,7 +3028,7 @@
                         <pre id="qr-payload" class="qr-payload">-</pre>
                     </div>
                     <div class="qr-next-actions">
-                        <button id="qr-open-round-btn" type="button">해당 회차 보기</button>
+                        <button id="qr-open-round-btn" type="button">해당 회차 열기</button>
                         <button id="qr-copy-numbers-btn" type="button" class="ghost">번호 복사</button>
                     </div>
                 </div>
