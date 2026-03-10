@@ -5418,6 +5418,17 @@ body.rule-picker-open {
     min-width: 0;
 }
 
+#tab-draw .draw-action-buttons.is-generate-hidden {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+#tab-draw .draw-generate-hint {
+    margin: -4px 0 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #64748b;
+}
+
 #draw-count {
     padding: 10px 14px;
     border-radius: 12px;
@@ -5444,6 +5455,13 @@ body.rule-picker-open {
 #tab-draw .draw-bottom-generate-shell {
     display: grid;
     gap: 10px;
+}
+
+#tab-draw .draw-bottom-generate-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 #tab-draw .draw-bottom-generate-copy {
@@ -5481,6 +5499,27 @@ body.rule-picker-open {
     font-weight: 800;
     letter-spacing: -0.02em;
     box-shadow: 0 16px 28px rgba(49, 130, 246, 0.24);
+}
+
+#tab-draw .draw-bottom-generate-toggle {
+    flex-shrink: 0;
+    min-height: 36px;
+    padding: 0 12px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 12px;
+    background: rgba(248, 250, 252, 0.96);
+    color: #355070;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+#tab-draw .draw-bottom-generate-toggle[hidden],
+#tab-draw .draw-bottom-generate-content[hidden] {
+    display: none !important;
+}
+
+#tab-draw .draw-bottom-generate-bar.is-collapsed .draw-bottom-generate-shell {
+    gap: 0;
 }
 
 #draw-copy-all-btn {
@@ -10141,6 +10180,10 @@ textarea {
         padding-bottom: calc(244px + env(safe-area-inset-bottom));
     }
 
+    #tab-draw.has-generate-cta-collapsed.app-shell {
+        padding-bottom: calc(188px + env(safe-area-inset-bottom));
+    }
+
     #tab-draw #generate-btn {
         display: none;
     }
@@ -10153,7 +10196,17 @@ textarea {
         z-index: 9998;
         display: block;
         padding: 0 14px;
+        opacity: 0;
         pointer-events: none;
+        transform: translateY(18px);
+        visibility: hidden;
+        transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+    }
+
+    #tab-draw .draw-bottom-generate-bar.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+        visibility: visible;
     }
 
     #tab-draw .draw-bottom-generate-shell {
@@ -10171,6 +10224,11 @@ textarea {
     #tab-draw .draw-bottom-generate-bar.has-selection .draw-bottom-generate-shell {
         border-color: rgba(49, 130, 246, 0.28);
         box-shadow: 0 22px 42px rgba(49, 130, 246, 0.18);
+    }
+
+    #tab-draw .draw-bottom-generate-bar.is-collapsed .draw-bottom-generate-shell {
+        padding-bottom: 12px;
+        border-radius: 20px;
     }
 
     #tab-draw .draw-bottom-generate-copy {
@@ -10193,5 +10251,11 @@ textarea {
     #tab-draw .draw-bottom-generate-btn {
         min-height: 52px;
         font-size: 16px;
+    }
+
+    #tab-draw .draw-bottom-generate-toggle {
+        min-height: 34px;
+        padding: 0 10px;
+        font-size: 11px;
     }
 }

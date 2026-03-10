@@ -2372,10 +2372,11 @@
                                             </div>
                                         </div>
                                         <div class="draw-action-buttons">
-                                            <button id="generate-btn">번호 생성</button>
-                                            <button id="draw-copy-all-btn" class="ghost" type="button" disabled>전체복사</button>
+                                            <button id="generate-btn" type="button" hidden>번호 생성</button>
+                                            <button id="draw-copy-all-btn" class="ghost" type="button" disabled hidden>전체복사</button>
                                         </div>
                                     </div>
+                                    <p class="draw-generate-hint" id="draw-generate-hint">필터를 하나 이상 선택하면 번호 생성 버튼이 나타납니다.</p>
                                     <div class="numbers-container"></div>
                                     <p class="helper-text" id="draw-copy-status" aria-live="polite"></p>
                                     <div class="notice-bar" id="guest-banner">
@@ -2889,12 +2890,24 @@
 	        </div>
                         <div class="draw-bottom-generate-bar" id="draw-bottom-generate-bar" data-draw-mode-only="self">
                             <div class="draw-bottom-generate-shell">
-                                <div class="draw-bottom-generate-copy">
-                                    <span class="draw-bottom-generate-kicker">빠른 생성</span>
-                                    <strong id="draw-bottom-generate-summary">1세트 바로 생성</strong>
-                                    <span id="draw-bottom-generate-detail">필터 없이도 바로 만들 수 있고, 시나리오를 고르면 결과를 더 좁힐 수 있습니다.</span>
+                                <div class="draw-bottom-generate-head">
+                                    <div class="draw-bottom-generate-copy">
+                                        <span class="draw-bottom-generate-kicker">빠른 생성</span>
+                                        <strong id="draw-bottom-generate-summary">필터 선택 후 생성</strong>
+                                    </div>
+                                    <button
+                                        id="draw-bottom-generate-toggle"
+                                        class="draw-bottom-generate-toggle"
+                                        type="button"
+                                        aria-expanded="true"
+                                        aria-controls="draw-bottom-generate-content"
+                                        hidden
+                                    >접기</button>
                                 </div>
-                                <button class="draw-bottom-generate-btn" type="button" data-generate-cta="true">번호 생성하기</button>
+                                <div class="draw-bottom-generate-content" id="draw-bottom-generate-content">
+                                    <span id="draw-bottom-generate-detail">필터를 고르면 여기서 바로 번호를 생성할 수 있습니다.</span>
+                                    <button class="draw-bottom-generate-btn" type="button" data-generate-cta="true">번호 생성하기</button>
+                                </div>
                             </div>
                         </div>
 	                    </div>

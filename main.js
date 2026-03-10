@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawCountChips = Array.from(document.querySelectorAll('.draw-count-chip[data-draw-count]'));
     const drawCopyAllBtn = document.getElementById('draw-copy-all-btn');
     const drawCopyStatusEl = document.getElementById('draw-copy-status');
+    const drawGenerateHintEl = document.getElementById('draw-generate-hint');
     const body = document.body;
     const siteHeaderEl = document.querySelector('.site-header');
     const ruleInputs = Array.from(document.querySelectorAll('.rules-grid input[type="checkbox"]'));
@@ -85,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const SCENARIO_CLICK_SUPPRESS_MS = 140;
     let drawWidthSyncRafId = 0;
     let isDrawSelectionDockCollapsed = false;
+    let isDrawBottomGenerateCollapsed = false;
     let activeStrategy = '';
     let lastDrawInteraction = null;
     let lastScenarioActivation = {
@@ -108,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawTabPanel = document.getElementById('tab-draw');
     const drawStudioBodyEl = drawTabPanel ? drawTabPanel.querySelector('.draw-studio-body') : null;
     const drawSelectedBoardEl = document.querySelector('#tab-draw .draw-selected-board');
+    const drawActionButtonsEl = drawTabPanel ? drawTabPanel.querySelector('.draw-action-buttons') : null;
     const drawServiceButtons = Array.from(document.querySelectorAll('.draw-service-btn[data-draw-service]'));
     const drawModeOnlyPanels = Array.from(document.querySelectorAll('[data-draw-mode-only]'));
     const toggleScenariosBtn = document.getElementById('toggle-scenarios');
@@ -305,6 +308,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawBottomGenerateBarEl = document.getElementById('draw-bottom-generate-bar');
     const drawBottomGenerateSummaryEl = document.getElementById('draw-bottom-generate-summary');
     const drawBottomGenerateDetailEl = document.getElementById('draw-bottom-generate-detail');
+    const drawBottomGenerateContentEl = document.getElementById('draw-bottom-generate-content');
+    const drawBottomGenerateToggleBtn = document.getElementById('draw-bottom-generate-toggle');
+    const drawGeneratorSectionEl = document.getElementById('generator');
     let currentWeeklyData = null;
     let latestAvailableRound = null;
     const roundMetaByNo = new Map();
@@ -706,12 +712,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (generateBtn) {
         generateBtn.addEventListener('click', () => {
-            if (!canGuestGenerate()) {
-                openAuthModal();
-                return;
-            }
-            generateAndDisplayNumbers();
-            incrementGuestCount();
+            handleDrawGenerationRequest('panel');
         });
     }
 
@@ -850,11 +851,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (generateCtaBtn) {
         generateCtaBtn.addEventListener('click', () => {
-            if (generateBtn) {
-                generateBtn.click();
-            } else if (typeof generateAndDisplayNumbers === 'function') {
-                generateAndDisplayNumbers();
-            }
+            handleDrawGenerationRequest('cta');
         });
     }
 
@@ -1395,14 +1392,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 selected: Boolean(input.checked)
             });
             if (input.value === 'exclude_number' && !input.checked && excludeNumberValues.size) {
-                excludeNumberValues.clear();
-                if (excludeNumberGrid) {
-                    excludeNumberGrid.querySelectorAll('button.is-active').forEach(button => {
-                        button.classList.remove('is-active');
-                    });
-                }
-                localStorage.removeItem('lotto_exclude_numbers');
-                updateExcludeNumberLabel();
+                clearExcludeNumberSelection({ clearStorage: true });
             }
             clearActiveStrategySelection();
             updateSelectionCount();
@@ -1466,6 +1456,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function setDrawBottomGenerateCollapsed(collapsed) {
+        const shouldCollapse = Boolean(collapsed);
+        isDrawBottomGenerateCollapsed = shouldCollapse;
+        if (drawBottomGenerateBarEl) {
+            drawBottomGenerateBarEl.classList.toggle('is-collapsed', shouldCollapse);
+        }
+        if (drawBottomGenerateContentEl) {
+            drawBottomGenerateContentEl.hidden = shouldCollapse;
+        }
+        if (drawBottomGenerateToggleBtn) {
+            drawBottomGenerateToggleBtn.textContent = shouldCollapse ? '펼치기' : '접기';
+            drawBottomGenerateToggleBtn.setAttribute('aria-expanded', String(!shouldCollapse));
+            drawBottomGenerateToggleBtn.setAttribute(
+                'aria-label',
+                shouldCollapse ? '번호 생성 바 펼치기' : '번호 생성 바 접기'
+            );
+        }
+        if (drawTabPanel) {
+            drawTabPanel.classList.toggle('has-generate-cta-collapsed', shouldCollapse);
+        }
+    }
+
     function clearSelectedRules() {
         rememberDrawInteraction({
             type: 'clear',
@@ -1496,6 +1508,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             setDrawSelectionDockCollapsed(!isDrawSelectionDockCollapsed);
+        });
+    }
+
+    if (drawBottomGenerateToggleBtn) {
+        drawBottomGenerateToggleBtn.addEventListener('click', () => {
+            if (!drawBottomGenerateBarEl || !drawBottomGenerateBarEl.classList.contains('is-visible')) {
+                return;
+            }
+            setDrawBottomGenerateCollapsed(!isDrawBottomGenerateCollapsed);
         });
     }
 
@@ -1540,7 +1561,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initFirebase();
         syncMenuState(false);
         setupExcludeNumberControl();
-        applySavedRules();
+        resetDrawSelectionsForEntry();
         injectRuleSamples();
         updateRulesStatus('');
         updateSelectionCount();
@@ -1594,15 +1615,68 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchWeeklyIntroInfo();
     }, 10000);
 
-    function generateAndDisplayNumbers() {
-        const drawCount = parseInt(drawCountSelect.value, 10);
+    function focusGeneratedNumbers() {
+        const target = numbersContainer?.querySelector('.number-row') || drawGeneratorSectionEl;
+        if (!target || typeof target.scrollIntoView !== 'function') {
+            return;
+        }
+        window.requestAnimationFrame(() => {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        });
+    }
+
+    function handleDrawGenerationRequest(source = 'panel') {
         const activeRules = getActiveRules();
+        if (!activeRules.length) {
+            updateRulesStatus('필터를 하나 이상 선택한 뒤 번호를 생성해 주세요.');
+            setDrawCopyStatus('선택된 필터가 없습니다. 필터를 먼저 선택해 주세요.', true);
+            showActionPopup('필터를 먼저 선택해 주세요.');
+            return false;
+        }
+        try {
+            if (!canGuestGenerate()) {
+                showActionPopup('로그인 후 2세트 이상 생성과 제한 해제를 사용할 수 있습니다.');
+                openAuthModal();
+                return false;
+            }
+            const generatedCount = generateAndDisplayNumbers({
+                source,
+                activeRules
+            });
+            if (!generatedCount) {
+                if (source === 'cta') {
+                    focusGeneratedNumbers();
+                    showActionPopup('조건이 너무 좁아 번호를 만들지 못했습니다. 필터를 조금 줄여 보세요.');
+                }
+                return false;
+            }
+            incrementGuestCount();
+            if (source === 'cta') {
+                focusGeneratedNumbers();
+                showActionPopup(`${generatedCount}세트 생성 완료`);
+            }
+            return true;
+        } catch (error) {
+            console.error('번호 생성 실패', error);
+            setDrawCopyStatus('번호 생성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.', true);
+            showActionPopup('번호 생성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+            return false;
+        }
+    }
+
+    function generateAndDisplayNumbers(options = {}) {
+        const drawCount = parseInt(drawCountSelect.value, 10);
+        const activeRules = Array.isArray(options.activeRules) ? options.activeRules : getActiveRules();
         const draws = [];
         for (let i = 0; i < drawCount; i += 1) {
             const numbers = generateNumbersWithRules(activeRules);
             draws.push(numbers);
         }
-        displayNumbers(draws, {
+        return displayNumbers(draws, {
+            source: options.source || 'panel',
             ruleIds: activeRules.map(rule => rule.id)
         });
     }
@@ -1674,7 +1748,11 @@ document.addEventListener('DOMContentLoaded', () => {
             numbersContainer.appendChild(row);
         });
         setDrawCopyButtonState(lastGeneratedDraws.length > 0);
-        setDrawCopyStatus('');
+        if (!lastGeneratedDraws.length) {
+            setDrawCopyStatus('유효한 조합을 찾지 못했습니다. 필터를 조금 줄여 보세요.', true);
+            return 0;
+        }
+        setDrawCopyStatus(`총 ${lastGeneratedDraws.length}세트를 생성했습니다. 아래 결과를 확인해 주세요.`);
         if (lastGeneratedDraws.length) {
             recordGenerationStats({
                 sourceMode: 'self',
@@ -1686,6 +1764,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ruleIds: options.ruleIds
             });
         }
+        return lastGeneratedDraws.length;
     }
 
     function syncDrawCountChips(shouldCenterActive = false) {
@@ -1985,21 +2064,53 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         const selectedCount = ruleInputs.filter(input => input.checked).length;
+        const hasSelection = selectedCount > 0;
         if (drawSelectionSummaryEl) {
             drawSelectionSummaryEl.textContent = selectedCount ? `${selectedCount}개 필터 선택됨` : '아직 선택된 필터가 없습니다.';
         }
+        if (generateBtn) {
+            generateBtn.hidden = !hasSelection;
+            generateBtn.disabled = !hasSelection;
+        }
+        if (drawCopyAllBtn) {
+            drawCopyAllBtn.hidden = !hasSelection && !lastGeneratedDraws.length;
+        }
+        if (drawGenerateHintEl) {
+            drawGenerateHintEl.hidden = hasSelection;
+        }
+        if (drawActionButtonsEl) {
+            drawActionButtonsEl.classList.toggle('is-generate-hidden', !hasSelection);
+        }
+        const isSelfMode = !drawTabPanel || drawTabPanel.getAttribute('data-service-mode') !== 'premium';
+        const shouldShowBottomGenerateBar = isSelfMode && hasSelection;
         if (drawBottomGenerateBarEl) {
-            drawBottomGenerateBarEl.classList.toggle('has-selection', selectedCount > 0);
+            const wasVisible = drawBottomGenerateBarEl.classList.contains('is-visible');
+            drawBottomGenerateBarEl.classList.toggle('has-selection', shouldShowBottomGenerateBar);
+            drawBottomGenerateBarEl.classList.toggle('is-visible', shouldShowBottomGenerateBar);
+            if (!shouldShowBottomGenerateBar || !wasVisible) {
+                setDrawBottomGenerateCollapsed(false);
+            } else {
+                setDrawBottomGenerateCollapsed(isDrawBottomGenerateCollapsed);
+            }
+        }
+        if (drawBottomGenerateToggleBtn) {
+            drawBottomGenerateToggleBtn.hidden = !shouldShowBottomGenerateBar;
+        }
+        if (drawTabPanel) {
+            drawTabPanel.classList.toggle('has-generate-cta', shouldShowBottomGenerateBar);
+            if (!shouldShowBottomGenerateBar) {
+                drawTabPanel.classList.remove('has-generate-cta-collapsed');
+            }
         }
         const drawCount = Math.max(1, parseInt(drawCountSelect?.value || '1', 10) || 1);
         if (drawBottomGenerateSummaryEl) {
             drawBottomGenerateSummaryEl.textContent = selectedCount
                 ? `${drawCount}세트 · ${selectedCount}개 필터 반영`
-                : `${drawCount}세트 바로 생성`;
+                : '필터 선택 후 생성';
         }
         if (drawBottomGenerateDetailEl) {
             if (!selectedCount) {
-                drawBottomGenerateDetailEl.textContent = '필터 없이도 바로 만들 수 있고, 시나리오를 고르면 결과를 더 좁힐 수 있습니다.';
+                drawBottomGenerateDetailEl.textContent = '필터를 하나 이상 고르면 여기서 바로 번호를 생성할 수 있습니다.';
             } else {
                 const remainPct = Number.isFinite(currentRemainingRatio)
                     ? Math.max(0, Math.min(100, Math.round(currentRemainingRatio * 1000) / 10))
@@ -4169,6 +4280,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function clearExcludeNumberSelection(options = {}) {
+        const { clearStorage = false } = options;
+        excludeNumberValues.clear();
+        if (excludeNumberGrid) {
+            excludeNumberGrid.querySelectorAll('button.is-active').forEach(button => {
+                button.classList.remove('is-active');
+            });
+        }
+        if (clearStorage) {
+            localStorage.removeItem('lotto_exclude_numbers');
+        }
+        updateExcludeNumberLabel();
+    }
+
     function getExcludeRangeClass(num) {
         if (num <= 10) {
             return 'range-1';
@@ -4483,6 +4608,19 @@ document.addEventListener('DOMContentLoaded', () => {
         syncStrategyButtons(preset);
         syncGroupLevelButtons();
         updateMypageSummaryUi();
+    }
+
+    function resetDrawSelectionsForEntry() {
+        clearExcludeNumberSelection();
+        rememberDrawInteraction(null);
+        activeStrategy = '';
+        setDrawSelectionDockCollapsed(false);
+        setDrawBottomGenerateCollapsed(false);
+        syncStrategyButtons('');
+        setRulesByIds([]);
+        syncGroupLevelButtons();
+        setDrawCopyButtonState(false);
+        setDrawCopyStatus('');
     }
 
     function applySavedRules(fromButton = false) {
