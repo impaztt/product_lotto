@@ -1478,6 +1478,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function collapseDrawFiltersForResults() {
+        if (!drawSelectionDockEl || !drawSelectionDockEl.classList.contains('has-selection')) {
+            return;
+        }
+        setDrawSelectionDockCollapsed(true);
+    }
+
     function clearSelectedRules() {
         rememberDrawInteraction({
             type: 'clear',
@@ -1615,17 +1622,35 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchWeeklyIntroInfo();
     }, 10000);
 
-    function focusGeneratedNumbers() {
-        const target = numbersContainer?.querySelector('.number-row') || drawGeneratorSectionEl;
-        if (!target || typeof target.scrollIntoView !== 'function') {
+    function focusGeneratedNumbers(options = {}) {
+        const { collapseFilters = false } = options;
+        const scrollToGeneratedRow = () => {
+            const target = numbersContainer?.querySelector('.number-row') || drawGeneratorSectionEl;
+            if (!target) {
+                return;
+            }
+            const headerHeight = siteHeaderEl ? Math.ceil(siteHeaderEl.getBoundingClientRect().height) : 0;
+            const selectionDockHeight = (
+                drawSelectionDockEl
+                && drawSelectionDockEl.classList.contains('has-selection')
+                && drawTabPanel
+                && drawTabPanel.classList.contains('has-selection-dock')
+            ) ? Math.ceil(drawSelectionDockEl.getBoundingClientRect().height) : 0;
+            const offset = headerHeight + selectionDockHeight + 16;
+            const top = window.scrollY + target.getBoundingClientRect().top - offset;
+            window.scrollTo({
+                top: Math.max(0, Math.round(top)),
+                behavior: 'smooth'
+            });
+        };
+        if (collapseFilters) {
+            collapseDrawFiltersForResults();
+            window.requestAnimationFrame(() => {
+                window.requestAnimationFrame(scrollToGeneratedRow);
+            });
             return;
         }
-        window.requestAnimationFrame(() => {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        });
+        window.requestAnimationFrame(scrollToGeneratedRow);
     }
 
     function handleDrawGenerationRequest(source = 'panel') {
@@ -1648,14 +1673,18 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             if (!generatedCount) {
                 if (source === 'cta') {
-                    focusGeneratedNumbers();
+                    focusGeneratedNumbers({
+                        collapseFilters: true
+                    });
                     showActionPopup('조건이 너무 좁아 번호를 만들지 못했습니다. 필터를 조금 줄여 보세요.');
                 }
                 return false;
             }
             incrementGuestCount();
             if (source === 'cta') {
-                focusGeneratedNumbers();
+                focusGeneratedNumbers({
+                    collapseFilters: true
+                });
                 showActionPopup(`${generatedCount}세트 생성 완료`);
             }
             return true;

@@ -5469,6 +5469,12 @@ body.rule-picker-open {
     gap: 4px;
 }
 
+#tab-draw .draw-bottom-generate-content {
+    display: grid;
+    gap: 12px;
+    width: 100%;
+}
+
 #tab-draw .draw-bottom-generate-kicker {
     font-size: 10px;
     font-weight: 800;
@@ -5490,6 +5496,10 @@ body.rule-picker-open {
 }
 
 #tab-draw .draw-bottom-generate-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
     min-height: 50px;
     border: 0;
     border-radius: 18px;
