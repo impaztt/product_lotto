@@ -2769,7 +2769,8 @@ body[data-theme="light"] .info-list li {
 }
 
 .modal-onboarding {
-    padding: clamp(10px, 2.4vh, 22px) 10px;
+    align-items: flex-start;
+    padding: clamp(8px, 1.6vh, 18px) 10px 14px;
     background: rgba(15, 23, 42, 0.58);
     backdrop-filter: blur(18px);
 }
@@ -2778,7 +2779,7 @@ body[data-theme="light"] .info-list li {
     position: relative;
     overflow: hidden;
     width: min(560px, calc(100vw - 16px));
-    max-height: min(90dvh, 650px);
+    max-height: min(calc(100dvh - 22px), 700px);
     padding: clamp(16px, 2vw, 22px);
     gap: 10px;
     border: 1px solid rgba(148, 163, 184, 0.2);
@@ -3042,13 +3043,13 @@ body[data-theme="light"] .info-list li {
 
 @media (max-width: 768px) {
     .modal-onboarding {
-        align-items: center;
-        padding: 8px 6px;
+        align-items: flex-start;
+        padding: 6px 6px 10px;
     }
 
     .onboarding-modal-content {
         width: min(100%, calc(100vw - 12px));
-        max-height: min(90dvh, 610px);
+        max-height: min(calc(100dvh - 12px), 640px);
         padding: 14px 12px calc(12px + env(safe-area-inset-bottom));
         border-radius: 20px;
     }
@@ -3110,7 +3111,7 @@ body[data-theme="light"] .info-list li {
     }
 
     .onboarding-modal-content {
-        max-height: min(90dvh, 560px);
+        max-height: min(calc(100dvh - 10px), 600px);
         padding: 13px 10px calc(10px + env(safe-area-inset-bottom));
     }
 
