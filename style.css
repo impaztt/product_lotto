@@ -2777,6 +2777,7 @@ body[data-theme="light"] .info-list li {
 
 .onboarding-modal-content {
     position: relative;
+    isolation: isolate;
     overflow: hidden;
     width: min(580px, calc(100vw - 18px));
     max-height: min(calc(100dvh - 64px), 792px);
@@ -2792,11 +2793,26 @@ body[data-theme="light"] .info-list li {
     animation: onboardingRise 0.35s ease;
 }
 
+.onboarding-modal-content::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 136px;
+    background: linear-gradient(180deg, rgba(231, 240, 255, 0.98) 0%, rgba(241, 246, 255, 0.92) 60%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.onboarding-modal-content > * {
+    position: relative;
+    z-index: 1;
+}
+
 .onboarding-close {
     position: absolute;
     top: 16px;
     right: 16px;
-    z-index: 1;
+    z-index: 2;
     min-width: 46px;
     min-height: 36px;
     border: 1px solid rgba(226, 232, 240, 0.9);
@@ -3073,9 +3089,9 @@ body[data-theme="light"] .info-list li {
 
 .onboarding-actions {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin-top: 6px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 4px;
 }
 
 .onboarding-actions .cta,
@@ -3178,8 +3194,8 @@ body[data-theme="light"] .info-list li {
 
     .onboarding-actions .cta,
     .onboarding-actions .ghost {
-        min-height: 50px;
-        font-size: 14px;
+        min-height: 46px;
+        font-size: 13px;
     }
 }
 
@@ -3200,6 +3216,10 @@ body[data-theme="light"] .info-list li {
         max-height: min(calc(100dvh - 142px - env(safe-area-inset-bottom)), 620px);
         padding: 18px 12px calc(18px + env(safe-area-inset-bottom));
         border-radius: 24px;
+    }
+
+    .onboarding-modal-content::before {
+        height: 124px;
     }
 
     .onboarding-kicker {
@@ -3272,9 +3292,9 @@ body[data-theme="light"] .info-list li {
 
     .onboarding-actions .cta,
     .onboarding-actions .ghost {
-        min-height: 48px;
-        font-size: 13px;
-        padding: 0 10px;
+        min-height: 44px;
+        font-size: 12px;
+        padding: 0 8px;
     }
 }
 
