@@ -369,6 +369,9 @@ document.addEventListener('DOMContentLoaded', () => {
             syncNavTabLinks(tabId);
             syncActiveTabState(tabId);
             refreshRevealMotion(targetPanel);
+            if (tabId === 'dashboard' && currentWeeklyData) {
+                loadLastWeekWinDashboard(currentWeeklyData);
+            }
             if (tabId === 'draw') {
                 scheduleDrawHorizontalWidthSync();
             }
@@ -386,6 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const { setActiveTab, syncInitialTab } = tabController;
     let guestTrackingId = '';
     let lastWinDashboardRound = null;
+    let pendingWinDashboardRound = null;
 
     function getRevealTargets(root = document) {
         return Array.from(root.querySelectorAll([
@@ -2545,10 +2549,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const roundNo = Number(roundData.drwNo);
-        if (!options.force && lastWinDashboardRound === roundNo) {
+        if (!options.force && (lastWinDashboardRound === roundNo || pendingWinDashboardRound === roundNo)) {
             return;
         }
-        lastWinDashboardRound = roundNo;
+        pendingWinDashboardRound = roundNo;
         dashWinRoundLabelEl.textContent = `지난주 ${roundNo}회`;
         dashWinStatusEl.textContent = `${roundNo}회 생성번호 당첨 집계를 계산 중입니다...`;
         try {
@@ -2598,12 +2602,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     el.textContent = formatNumber(count);
                 }
             });
+            lastWinDashboardRound = roundNo;
             dashWinStatusEl.textContent = totalGenerated
                 ? `${roundNo}회 기준 ${formatNumber(totalGenerated)}세트 중 ${formatNumber(totalWinners)}세트가 5등 이상 당첨되었습니다.`
-                : `${roundNo}회 기준 집계 대상 생성번호가 아직 없습니다.`;
+                : `${roundNo}회 기준 저장된 생성번호가 아직 없어 집계할 데이터가 없습니다.`;
         } catch (error) {
             console.warn('지난주 당첨 대시보드 집계 실패', error);
             setLastWeekDashboardFallback('집계 데이터 조회에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+        } finally {
+            if (pendingWinDashboardRound === roundNo) {
+                pendingWinDashboardRound = null;
+            }
         }
     }
 
