@@ -2770,7 +2770,7 @@ body[data-theme="light"] .info-list li {
 
 .modal-onboarding {
     align-items: flex-start;
-    padding: clamp(8px, 1.6vh, 18px) 10px 14px;
+    padding: clamp(16px, 2.6vh, 26px) 10px 12px;
     background: rgba(15, 23, 42, 0.58);
     backdrop-filter: blur(18px);
 }
@@ -2779,7 +2779,7 @@ body[data-theme="light"] .info-list li {
     position: relative;
     overflow: hidden;
     width: min(560px, calc(100vw - 16px));
-    max-height: min(calc(100dvh - 22px), 700px);
+    max-height: min(calc(100dvh - 34px), 740px);
     padding: clamp(16px, 2vw, 22px);
     gap: 10px;
     border: 1px solid rgba(148, 163, 184, 0.2);
@@ -3044,12 +3044,12 @@ body[data-theme="light"] .info-list li {
 @media (max-width: 768px) {
     .modal-onboarding {
         align-items: flex-start;
-        padding: 6px 6px 10px;
+        padding: 12px 6px 10px;
     }
 
     .onboarding-modal-content {
         width: min(100%, calc(100vw - 12px));
-        max-height: min(calc(100dvh - 12px), 640px);
+        max-height: min(calc(100dvh - 24px), 680px);
         padding: 14px 12px calc(12px + env(safe-area-inset-bottom));
         border-radius: 20px;
     }
@@ -3111,7 +3111,7 @@ body[data-theme="light"] .info-list li {
     }
 
     .onboarding-modal-content {
-        max-height: min(calc(100dvh - 10px), 600px);
+        max-height: min(calc(100dvh - 24px), 620px);
         padding: 13px 10px calc(10px + env(safe-area-inset-bottom));
     }
 
