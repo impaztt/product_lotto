@@ -2770,7 +2770,7 @@ body[data-theme="light"] .info-list li {
 
 .modal-onboarding {
     align-items: flex-start;
-    padding: clamp(22px, 4vh, 42px) 12px 18px;
+    padding: clamp(28px, 4.8vh, 52px) 12px 24px;
     background: rgba(15, 23, 42, 0.58);
     backdrop-filter: blur(20px);
 }
@@ -2779,9 +2779,9 @@ body[data-theme="light"] .info-list li {
     position: relative;
     overflow: hidden;
     width: min(580px, calc(100vw - 18px));
-    max-height: min(calc(100dvh - 52px), 780px);
-    padding: clamp(20px, 2.4vw, 26px);
-    gap: 14px;
+    max-height: min(calc(100dvh - 64px), 792px);
+    padding: clamp(24px, 2.8vw, 30px) clamp(20px, 2.4vw, 26px) clamp(28px, 3vw, 34px);
+    gap: 16px;
     border: 1px solid rgba(226, 232, 240, 0.92);
     border-radius: 30px;
     background:
@@ -2806,7 +2806,7 @@ body[data-theme="light"] .info-list li {
 
 .onboarding-hero {
     display: grid;
-    gap: 10px;
+    gap: 12px;
     padding-right: 60px;
 }
 
@@ -2862,7 +2862,7 @@ body[data-theme="light"] .info-list li {
 
 .onboarding-carousel {
     overflow: hidden;
-    margin-top: 2px;
+    margin-top: 4px;
     border-radius: 26px;
 }
 
@@ -3020,7 +3020,7 @@ body[data-theme="light"] .info-list li {
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 10px;
-    margin-top: 2px;
+    margin-top: 4px;
 }
 
 .onboarding-nav-btn {
@@ -3075,7 +3075,7 @@ body[data-theme="light"] .info-list li {
     display: grid;
     grid-template-columns: 1fr;
     gap: 10px;
-    margin-top: 2px;
+    margin-top: 6px;
 }
 
 .onboarding-actions .cta,
@@ -3104,18 +3104,18 @@ body[data-theme="light"] .info-list li {
 @media (max-width: 768px) {
     .modal-onboarding {
         align-items: flex-start;
-        padding: 18px 8px 14px;
+        padding: 22px 8px 18px;
     }
 
     .onboarding-modal-content {
         width: min(100%, calc(100vw - 16px));
-        max-height: min(calc(100dvh - 32px), 740px);
-        padding: 18px 16px calc(16px + env(safe-area-inset-bottom));
+        max-height: min(calc(100dvh - 44px), 748px);
+        padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
         border-radius: 28px;
     }
 
     .onboarding-hero {
-        gap: 8px;
+        gap: 10px;
         padding-right: 54px;
     }
 
@@ -3185,7 +3185,7 @@ body[data-theme="light"] .info-list li {
 
 @media (max-width: 480px) {
     .modal-onboarding {
-        padding: 20px 8px 14px;
+        padding: 24px 8px 18px;
     }
 
     #welcome-modal-title {
@@ -3197,8 +3197,8 @@ body[data-theme="light"] .info-list li {
     }
 
     .onboarding-modal-content {
-        max-height: min(calc(100dvh - 34px), 700px);
-        padding: 16px 12px calc(12px + env(safe-area-inset-bottom));
+        max-height: min(calc(100dvh - 46px), 712px);
+        padding: 18px 12px calc(18px + env(safe-area-inset-bottom));
         border-radius: 24px;
     }
 
