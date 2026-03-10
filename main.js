@@ -341,12 +341,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let weeklyExpectedUpdatedAt = 0;
     let toastHideTimer = 0;
     let welcomeModalTimer = 0;
+    let welcomeModalDismissedInSession = false;
     let revealObserver = null;
     const DRAW_ENTRY_LOCAL_KEY = 'lotto_guest_tracking_id';
     const GENERATION_STATS_KEY = 'lotto_generation_stats';
     const RULES_UPDATED_AT_KEY = 'lotto_rules_updated_at';
     const CUSTOM_PRESET_UPDATED_AT_KEY = 'lotto_custom_preset_updated_at';
-    const ONBOARDING_SEEN_KEY = 'lotto_onboarding_seen_at';
+    const ONBOARDING_SKIP_TODAY_KEY = 'lotto_onboarding_skip_today';
 
     const tabController = createTabController({
         tabButtons,
@@ -1227,28 +1228,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (welcomeAuthBtn) {
         welcomeAuthBtn.addEventListener('click', () => {
-            closeWelcomeModal({ remember: true });
+            closeWelcomeModal();
             openAuthModal();
         });
     }
 
     if (welcomeBrowseBtn) {
         welcomeBrowseBtn.addEventListener('click', () => {
-            closeWelcomeModal({ remember: true });
+            closeWelcomeModal();
             showActionPopup('가입 없이도 바로 이용할 수 있습니다. 필요할 때 로그인으로 전환하면 이력과 추천 기능이 이어집니다.');
         });
     }
 
     welcomeDismissButtons.forEach(button => {
         button.addEventListener('click', () => {
-            closeWelcomeModal({ remember: true });
+            const action = String(button.dataset.welcomeClose || '').trim().toLowerCase();
+            closeWelcomeModal({
+                dismissToday: action === 'today'
+            });
         });
     });
 
     if (welcomeModal) {
         welcomeModal.addEventListener('click', event => {
             if (event.target === welcomeModal) {
-                closeWelcomeModal({ remember: true });
+                closeWelcomeModal();
             }
         });
     }
@@ -2587,31 +2591,36 @@ document.addEventListener('DOMContentLoaded', () => {
         return getMembershipPlanMeta().id !== 'free';
     }
 
-    function hasSeenWelcomeModal() {
+    function hasSkippedWelcomeModalToday() {
         try {
-            return Boolean(localStorage.getItem(ONBOARDING_SEEN_KEY));
+            return localStorage.getItem(ONBOARDING_SKIP_TODAY_KEY) === getTodayKey();
         } catch (error) {
-            console.warn('온보딩 표시 상태 조회 실패', error);
+            console.warn('온보딩 오늘 숨김 상태 조회 실패', error);
             return false;
         }
     }
 
-    function rememberWelcomeModalSeen() {
+    function rememberWelcomeModalSkippedToday() {
         try {
-            localStorage.setItem(ONBOARDING_SEEN_KEY, new Date().toISOString());
+            localStorage.setItem(ONBOARDING_SKIP_TODAY_KEY, getTodayKey());
         } catch (error) {
-            console.warn('온보딩 표시 상태 저장 실패', error);
+            console.warn('온보딩 오늘 숨김 상태 저장 실패', error);
         }
     }
 
     function closeWelcomeModal(options = {}) {
-        const { remember = false } = options;
+        const { dismissToday = false, keepSessionClosed = true } = options;
         if (welcomeModalTimer) {
             window.clearTimeout(welcomeModalTimer);
             welcomeModalTimer = 0;
         }
-        if (remember) {
-            rememberWelcomeModalSeen();
+        if (dismissToday) {
+            rememberWelcomeModalSkippedToday();
+        }
+        if (keepSessionClosed) {
+            welcomeModalDismissedInSession = true;
+        } else {
+            welcomeModalDismissedInSession = false;
         }
         if (!welcomeModal) {
             return;
@@ -2620,15 +2629,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function openWelcomeModal() {
-        if (!welcomeModal || isMember() || hasSeenWelcomeModal()) {
+        if (!welcomeModal || isMember() || hasSkippedWelcomeModalToday() || welcomeModalDismissedInSession) {
             return;
         }
         closeAuthModal();
+        welcomeModalDismissedInSession = false;
         welcomeModal.classList.remove('hidden');
     }
 
     function scheduleWelcomeModal() {
-        if (!welcomeModal || isMember() || hasSeenWelcomeModal()) {
+        if (!welcomeModal || isMember() || hasSkippedWelcomeModalToday() || welcomeModalDismissedInSession) {
             return;
         }
         if (firebaseReady && !authStateResolved) {
@@ -2646,7 +2656,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         welcomeModalTimer = window.setTimeout(() => {
             welcomeModalTimer = 0;
-            if (isMember() || hasSeenWelcomeModal()) {
+            if (isMember() || hasSkippedWelcomeModalToday() || welcomeModalDismissedInSession) {
                 return;
             }
             openWelcomeModal();
@@ -2926,7 +2936,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateAuthUi() {
         const member = isMember();
         if (member) {
-            closeWelcomeModal();
+            closeWelcomeModal({
+                keepSessionClosed: false
+            });
+        } else {
+            scheduleWelcomeModal();
         }
         authLogoutButtons.forEach(button => {
             button.disabled = !member;
@@ -3002,6 +3016,8 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await firebaseAuth.signOut();
             currentUserProfile = null;
+            welcomeModalDismissedInSession = false;
+            scheduleWelcomeModal();
             updateRulesStatus('로그아웃되었습니다.');
             showActionPopup('로그아웃되었습니다.');
         } catch (error) {
@@ -3286,7 +3302,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!authModal) {
             return;
         }
-        closeWelcomeModal({ remember: true });
+        closeWelcomeModal();
         authModal.classList.remove('hidden');
     }
 
