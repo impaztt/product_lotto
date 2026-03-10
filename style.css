@@ -3125,80 +3125,86 @@ body[data-theme="light"] .info-list li {
 
     .onboarding-modal-content {
         width: min(100%, calc(100vw - 16px));
-        max-height: min(calc(100dvh - 132px - env(safe-area-inset-bottom)), 680px);
-        padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+        max-height: min(calc(100svh - 148px - env(safe-area-inset-bottom)), 612px);
+        padding: 18px 15px calc(18px + env(safe-area-inset-bottom));
         border-radius: 28px;
     }
 
     .onboarding-hero {
-        gap: 8px;
+        gap: 7px;
         padding-right: 54px;
     }
 
     #welcome-modal-title {
-        font-size: clamp(23px, 4.6vw, 28px);
+        font-size: clamp(22px, 4.2vw, 26px);
     }
 
     .onboarding-copy {
-        font-size: 12px;
-        line-height: 1.5;
+        font-size: 11px;
+        line-height: 1.42;
     }
 
     .onboarding-slide-card {
-        gap: 14px;
-        min-height: 264px;
-        padding: 16px;
+        gap: 12px;
+        min-height: 238px;
+        padding: 14px;
         border-radius: 24px;
     }
 
     .onboarding-card-head strong {
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .onboarding-card-head p {
-        font-size: 12px;
-        line-height: 1.5;
+        font-size: 11px;
+        line-height: 1.42;
     }
 
     .onboarding-feature-item {
         grid-template-columns: 48px 1fr;
-        padding: 12px 13px;
+        padding: 11px 12px;
     }
 
     .onboarding-feature-icon {
-        min-height: 48px;
-        border-radius: 14px;
+        min-height: 44px;
+        border-radius: 13px;
+        font-size: 11px;
     }
 
     .onboarding-feature-copy strong,
     .onboarding-plan-chip strong {
-        font-size: 12px;
-    }
-
-    .onboarding-feature-copy p {
         font-size: 11px;
     }
 
+    .onboarding-feature-copy p {
+        font-size: 10px;
+        line-height: 1.32;
+    }
+
     .onboarding-plan-row {
-        gap: 8px;
+        gap: 6px;
     }
 
     .onboarding-plan-chip {
-        min-height: 72px;
-        padding: 10px 9px;
-        border-radius: 18px;
+        min-height: 62px;
+        padding: 9px 8px;
+        border-radius: 16px;
+    }
+
+    .onboarding-plan-chip span {
+        font-size: 10px;
     }
 
     .onboarding-nav-btn {
-        min-height: 32px;
-        padding: 0 11px;
-        font-size: 12px;
+        min-height: 30px;
+        padding: 0 10px;
+        font-size: 11px;
     }
 
     .onboarding-actions .cta,
     .onboarding-actions .ghost {
-        min-height: 42px;
-        font-size: 12px;
+        min-height: 40px;
+        font-size: 11px;
     }
 }
 
@@ -3208,22 +3214,22 @@ body[data-theme="light"] .info-list li {
     }
 
     .onboarding-modal-content {
-        max-height: min(calc(100dvh - 142px - env(safe-area-inset-bottom)), 620px);
-        padding: 18px 12px calc(18px + env(safe-area-inset-bottom));
+        max-height: min(calc(100svh - 154px - env(safe-area-inset-bottom)), 548px);
+        padding: 16px 11px calc(16px + env(safe-area-inset-bottom));
         border-radius: 24px;
     }
 
     #welcome-modal-title {
-        font-size: clamp(20px, 5.8vw, 23px);
+        font-size: clamp(18px, 5.2vw, 21px);
     }
 
     .onboarding-copy {
-        font-size: 11px;
-        line-height: 1.45;
+        font-size: 10px;
+        line-height: 1.34;
     }
 
     .onboarding-modal-content::before {
-        height: 124px;
+        height: 112px;
     }
 
     .onboarding-kicker {
@@ -3233,74 +3239,75 @@ body[data-theme="light"] .info-list li {
     }
 
     .onboarding-summary-pill {
-        min-height: 28px;
-        font-size: 10px;
+        min-height: 26px;
+        font-size: 9px;
+        padding: 0 10px;
     }
 
     .onboarding-slide-card {
-        gap: 12px;
-        min-height: 226px;
-        padding: 14px;
+        gap: 10px;
+        min-height: 196px;
+        padding: 12px;
         border-radius: 18px;
     }
 
     .onboarding-card-head {
-        gap: 6px;
+        gap: 5px;
     }
 
     .onboarding-card-head strong {
-        font-size: 17px;
+        font-size: 15px;
     }
 
     .onboarding-card-head p {
-        font-size: 11px;
-        line-height: 1.45;
+        font-size: 10px;
+        line-height: 1.34;
     }
 
     .onboarding-feature-item {
         grid-template-columns: 44px 1fr;
-        gap: 8px;
-        padding: 10px;
-        border-radius: 18px;
+        gap: 7px;
+        padding: 9px;
+        border-radius: 16px;
     }
 
     .onboarding-feature-icon {
-        min-height: 40px;
-        border-radius: 12px;
-        font-size: 10px;
+        min-height: 36px;
+        border-radius: 11px;
+        font-size: 9px;
     }
 
     .onboarding-feature-copy strong,
     .onboarding-plan-chip strong {
-        font-size: 12px;
+        font-size: 11px;
     }
 
     .onboarding-feature-copy p {
-        font-size: 10px;
-        line-height: 1.35;
+        font-size: 9px;
+        line-height: 1.28;
     }
 
     .onboarding-plan-row {
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 6px;
+        gap: 5px;
     }
 
     .onboarding-plan-chip {
-        min-height: 64px;
-        padding: 9px 8px;
-        border-radius: 16px;
+        min-height: 56px;
+        padding: 8px 7px;
+        border-radius: 15px;
     }
 
     .onboarding-plan-chip span {
-        font-size: 9px;
+        font-size: 8px;
         letter-spacing: 0;
     }
 
     .onboarding-actions .cta,
     .onboarding-actions .ghost {
-        min-height: 40px;
-        font-size: 11px;
-        padding: 0 6px;
+        min-height: 36px;
+        font-size: 10px;
+        padding: 0 5px;
     }
 }
 
