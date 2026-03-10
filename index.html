@@ -1452,520 +1452,417 @@
 </section>
 
         <section id="tab-dashboard" class="tab-panel is-active" role="tabpanel" aria-labelledby="tab-dashboard-btn" tabindex="0">
-<div class="container-box">
-				<!-- 콘텐츠 타이틀 -->
-				<div class="content-tit-wrap">
-					<div class="center-wrap">
-						<div class="dash-intro-head">
-						<span class="dash-intro-kicker">LOTTO 6/45</span>
-						<h2 class="content-tit">로또6/45 소개</h2>
-						<p class="dash-intro-sub">한눈에 보는 구매 정보와 최근 추첨 흐름</p>
-	                        <div class="dash-intro-actions">
-                            <button class="cta" type="button" data-tab-link="draw">번호 바로 만들기</button>
-                            <button class="ghost" type="button" data-tab-link="mypage">내 상태 보기</button>
+            <div class="container-box">
+                <div class="dashboard-shell">
+                    <section class="dashboard-hero">
+                        <div class="dashboard-hero-copy">
+                            <span class="dash-intro-kicker">LOTTO 6/45</span>
+                            <h2 class="content-tit">이번 회차 판단을 끝내는 대시보드</h2>
+                            <p class="dash-intro-sub">구매 전에 필요한 회차 정보, 직전 당첨 결과, 내 생성 성과를 한 화면에 압축했습니다.</p>
+                            <div class="dashboard-hero-pills" aria-label="핵심 정보">
+                                <span>1게임 1,000원</span>
+                                <span>매주 토요일 20:35 추첨</span>
+                                <span>1등 확률 1/8,145,060</span>
+                            </div>
+                            <div class="dash-intro-actions">
+                                <button class="cta" type="button" data-tab-link="draw">번호 바로 만들기</button>
+                                <button class="ghost" type="button" data-tab-link="mypage">내 상태 보기</button>
+                            </div>
                         </div>
-					</div>
-				</div>
-			</div>
-		<div class="content-draw-wrap lt645">
-			<div class="draw-header">
-				<!-- 클래스에 따라 배경 변함 -->
-				<div class="center-wrap">
-					<div class="header-girdWrap">
-						<div class="header-box">
-							<div class="result-infoWrap upcoming-card">
-								<div class="result-txt">1,000원 / 1게임</div>
-								<div class="result-head">
-									<div class="result-round" id="dash-thsLtEpsd"></div>
-									<div class="result-date"><span class="color-lt645" id="dash-thsLtRflYmd"> </span> 추첨 예정</div>
-								</div>
-								<div class="upcoming-count-label">남은시간</div>
-								<div class="timer-box upcoming-timer">
-									<div class="time-circle">
-										<div class="time-num" id="dash-DD"></div>
-										<div class="time-txt">일</div>
-									</div>
-									<div class="time-circle">
-										<div class="time-num" id="dash-HH"></div>
-										<div class="time-txt">시</div>
-									</div>
-									<div class="time-circle">
-										<div class="time-num" id="dash-MM"></div>
-										<div class="time-txt">분</div>
-									</div>
-									<div class="time-circle">
-										<div class="time-num" id="dash-SS"></div>
-										<div class="time-txt">초</div>
-									</div>
-								</div>
-								<div class="result-prizeCard upcoming-prizeCard">
-									<div class="winnings-txt">1등 예상 총 당첨금</div>
-									<div class="winnings" id="dash-rnk1ExpcAmt"></div>
-									<div class="winnings-txt">구매한도 5천 원/1회차</div>
-								</div>
-								<button class="btn-butNow upcoming-buyBtn" type="button" id="dash-btnBuyLt645"
-									title="새창">바로구매</button>
-							</div>
-						</div>
-							<div class="header-box">
-								<div class="result-infoWrap">
-									<div class="result-txt">최근 추첨 결과</div>
-									<div class="result-head">
-										<div class="result-round" id="dash-pstLtEpsd"></div>
-										<div class="result-date" id="dash-pstLtRflYmd"></div>
-									</div>
-									<div class="result-ballWrapper">
-										<div class="result-ballBox">
-											<div class="result-ball" id="dash-tm1WnNo"></div>
-											<div class="result-ball" id="dash-tm2WnNo"></div>
-											<div class="result-ball" id="dash-tm3WnNo"></div>
-											<div class="result-ball" id="dash-tm4WnNo"></div>
-											<div class="result-ball" id="dash-tm5WnNo"></div>
-											<div class="result-ball" id="dash-tm6WnNo"></div>
-											<figure class="result-plus"> <img
-												src="/resources/img/icon/icon-result-plus.svg" alt="+"></figure>
-											<div class="result-ball" id="dash-bnsWnNo"></div>
-										</div>
-										<div class="result-txtBox">
-											<div class="main-txtWrap">
-												<div class="main-txt">당첨번호</div>
-											</div>
-											<div class="bonus-txt">보너스번호</div>
-										</div>
-									</div>
-									<div class="result-prizeCard">
-										<div class="result-winnings-txt">1등 총 당첨금</div>
-										<div class="result-winnings-num">
-											<span class="fs-g7" id="dash-pstRnk1SumWnAmt"></span>
-										</div>
-												<div class="result-detail">
-													(<span id="dash-pstRnk1WnAmt"></span>억 원 × <span id="dash-pstRnk1WnNope"></span>명)
-												</div>
-											</div>
-										</div>
-										<div class="header-goWrap">
-											<button class="btn-go" type="button" id="dash-btnWnStrc">당첨구조</button>
-											<button class="btn-go" type="button" id="dash-btnPrchsMthd">구매방법</button>
-											<button class="btn-go btn-lg01" type="button" data-tab-link="draw">번호생성</button>
-											<button class="btn-go btn-lg02" type="button" data-tab-link="qr">QR확인</button>
-										</div>
-									</div>
-								</div>
-					</div>
-			</div>
-                <section class="dash-ops-strip" aria-label="대시보드 빠른 요약">
-                    <article class="dash-ops-card dash-ops-card--primary">
-                        <span class="dash-ops-kicker">회차 동기화</span>
-                        <strong id="dash-sync-status">최신 회차를 확인하는 중입니다.</strong>
-                        <p id="dash-sync-time">공식 데이터를 불러오면 상태가 즉시 반영됩니다.</p>
-                    </article>
-                    <button class="dash-ops-card dash-ops-card--action" type="button" data-tab-link="draw">
-                        <span class="dash-ops-kicker">번호 생성</span>
-                        <strong>필터 스튜디오 열기</strong>
-                        <p>직접 선택과 프리미엄 추천을 한 곳에서 이어서 진행합니다.</p>
-                    </button>
-                    <button class="dash-ops-card dash-ops-card--action" type="button" data-tab-link="qr">
-                        <span class="dash-ops-kicker">QR 확인</span>
-                        <strong>QR 스캔으로 당첨 확인</strong>
-                        <p>모바일 카메라로 바로 인식하고 해당 회차 화면으로 이동합니다.</p>
-                    </button>
-                    <article class="dash-ops-card">
-                        <span class="dash-ops-kicker">이용 상태</span>
-                        <strong id="dash-membership-chip">FREE</strong>
-                        <p id="dash-activity-chip">아직 생성 이력이 없습니다.</p>
-                    </article>
-                </section>
-                <section class="dashboard-win-summary" aria-labelledby="dash-win-summary-title">
-                    <div class="dashboard-win-head">
-                        <div>
-                            <h3 id="dash-win-summary-title">지난주 당첨 대시보드</h3>
-                            <p>우리 사이트 생성번호의 지난 회차 당첨 결과 집계입니다.</p>
+                        <div class="dashboard-hero-side">
+                            <article class="dashboard-signal-card">
+                                <span class="dashboard-card-kicker">회차 동기화</span>
+                                <strong id="dash-sync-status">최신 회차를 확인하는 중입니다.</strong>
+                                <p id="dash-sync-time">공식 데이터를 불러오면 상태가 즉시 반영됩니다.</p>
+                            </article>
+                            <article class="dashboard-signal-card dashboard-signal-card--accent">
+                                <span class="dashboard-card-kicker">내 이용 상태</span>
+                                <strong id="dash-membership-chip">FREE</strong>
+                                <p id="dash-activity-chip">아직 생성 이력이 없습니다.</p>
+                            </article>
                         </div>
-                        <span class="badge muted" id="dash-win-round-label">집계 대기</span>
-                    </div>
-                    <p class="dashboard-win-status" id="dash-win-status">최근 회차 데이터와 생성 이력을 집계 중입니다.</p>
-                    <div class="dashboard-win-kpis">
-                        <article class="dashboard-win-kpi">
-                            <span>총 생성 세트</span>
-                            <strong id="dash-win-total-generated">-</strong>
+                    </section>
+
+                    <section class="dashboard-spotlight-grid" aria-label="핵심 회차 카드">
+                        <article class="dashboard-card dashboard-card--next">
+                            <div class="dashboard-card-head">
+                                <span class="dashboard-card-kicker">이번 회차</span>
+                                <span class="dashboard-card-meta">1,000원 / 1게임</span>
+                            </div>
+                            <div class="dashboard-round-row">
+                                <div class="result-round dashboard-round-badge" id="dash-thsLtEpsd"></div>
+                                <div class="dashboard-round-copy">
+                                    <strong><span id="dash-thsLtRflYmd"></span> 추첨 예정</strong>
+                                    <p>토요일 마감 전까지 번호를 정하고 바로 구매 흐름으로 이어갈 수 있습니다.</p>
+                                </div>
+                            </div>
+                            <div class="dashboard-countdown-head">남은 시간</div>
+                            <div class="timer-box dashboard-countdown">
+                                <div class="time-circle">
+                                    <div class="time-num" id="dash-DD"></div>
+                                    <div class="time-txt">일</div>
+                                </div>
+                                <div class="time-circle">
+                                    <div class="time-num" id="dash-HH"></div>
+                                    <div class="time-txt">시</div>
+                                </div>
+                                <div class="time-circle">
+                                    <div class="time-num" id="dash-MM"></div>
+                                    <div class="time-txt">분</div>
+                                </div>
+                                <div class="time-circle">
+                                    <div class="time-num" id="dash-SS"></div>
+                                    <div class="time-txt">초</div>
+                                </div>
+                            </div>
+                            <div class="dashboard-prize-strip">
+                                <span class="dashboard-prize-label">1등 예상 총 당첨금</span>
+                                <strong class="winnings dashboard-prize-value" id="dash-rnk1ExpcAmt"></strong>
+                                <span class="dashboard-prize-note">구매한도 5천 원 / 1회차</span>
+                            </div>
+                            <div class="dashboard-card-actions">
+                                <button class="btn-butNow dashboard-primary-btn" type="button" id="dash-btnBuyLt645">번호 만들고 구매 준비</button>
+                                <button class="dashboard-inline-btn" type="button" id="dash-btnPrchsMthd">구매 기준 보기</button>
+                            </div>
                         </article>
-                        <article class="dashboard-win-kpi">
-                            <span>당첨 세트(5등 이상)</span>
-                            <strong id="dash-win-total-winners">-</strong>
+
+                        <article class="dashboard-card dashboard-card--result">
+                            <div class="dashboard-card-head">
+                                <span class="dashboard-card-kicker">직전 회차</span>
+                                <span class="dashboard-card-meta">당첨 결과</span>
+                            </div>
+                            <div class="dashboard-round-row">
+                                <div class="result-round dashboard-round-badge" id="dash-pstLtEpsd"></div>
+                                <div class="dashboard-round-copy">
+                                    <strong id="dash-pstLtRflYmd"></strong>
+                                    <p>당첨 번호와 1등 지급 규모를 바로 확인할 수 있습니다.</p>
+                                </div>
+                            </div>
+                            <div class="result-ballWrapper dashboard-result-balls">
+                                <div class="result-ballBox">
+                                    <div class="result-ball" id="dash-tm1WnNo"></div>
+                                    <div class="result-ball" id="dash-tm2WnNo"></div>
+                                    <div class="result-ball" id="dash-tm3WnNo"></div>
+                                    <div class="result-ball" id="dash-tm4WnNo"></div>
+                                    <div class="result-ball" id="dash-tm5WnNo"></div>
+                                    <div class="result-ball" id="dash-tm6WnNo"></div>
+                                    <figure class="result-plus">
+                                        <img src="/resources/img/icon/icon-result-plus.svg" alt="+">
+                                    </figure>
+                                    <div class="result-ball" id="dash-bnsWnNo"></div>
+                                </div>
+                                <div class="result-txtBox">
+                                    <div class="main-txtWrap">
+                                        <div class="main-txt">당첨번호</div>
+                                    </div>
+                                    <div class="bonus-txt">보너스번호</div>
+                                </div>
+                            </div>
+                            <div class="dashboard-result-prize">
+                                <span class="result-winnings-txt">1등 총 당첨금</span>
+                                <div class="result-winnings-num">
+                                    <span class="fs-g7" id="dash-pstRnk1SumWnAmt"></span>
+                                </div>
+                                <div class="result-detail">
+                                    (<span id="dash-pstRnk1WnAmt"></span>억 원 × <span id="dash-pstRnk1WnNope"></span>명)
+                                </div>
+                            </div>
+                            <div class="dashboard-card-actions dashboard-card-actions--split">
+                                <button class="dashboard-inline-btn" type="button" id="dash-btnWnStrc">당첨 구조 보기</button>
+                                <button class="dashboard-inline-btn" type="button" data-tab-link="draw">번호 생성</button>
+                                <button class="dashboard-inline-btn" type="button" data-tab-link="qr">QR 확인</button>
+                            </div>
                         </article>
-                        <article class="dashboard-win-kpi">
-                            <span>당첨 비율</span>
-                            <strong id="dash-win-rate">-</strong>
+                    </section>
+
+                    <section class="dashboard-win-summary dashboard-card" aria-labelledby="dash-win-summary-title">
+                        <div class="dashboard-win-head">
+                            <div>
+                                <span class="dashboard-card-kicker">생성 성과</span>
+                                <h3 id="dash-win-summary-title">지난주 생성번호 성과</h3>
+                                <p>우리 사이트에서 만든 번호가 지난 회차에서 어느 정도 성과를 냈는지 바로 보여줍니다.</p>
+                            </div>
+                            <span class="badge muted" id="dash-win-round-label">집계 대기</span>
+                        </div>
+                        <p class="dashboard-win-status" id="dash-win-status">최근 회차 데이터와 생성 이력을 집계 중입니다.</p>
+                        <div class="dashboard-win-kpis">
+                            <article class="dashboard-win-kpi">
+                                <span>총 생성 세트</span>
+                                <strong id="dash-win-total-generated">-</strong>
+                            </article>
+                            <article class="dashboard-win-kpi">
+                                <span>당첨 세트(5등 이상)</span>
+                                <strong id="dash-win-total-winners">-</strong>
+                            </article>
+                            <article class="dashboard-win-kpi">
+                                <span>당첨 비율</span>
+                                <strong id="dash-win-rate">-</strong>
+                            </article>
+                        </div>
+                        <div class="dashboard-win-ranks">
+                            <div><span>1등</span><strong id="dash-win-rank-1">0</strong></div>
+                            <div><span>2등</span><strong id="dash-win-rank-2">0</strong></div>
+                            <div><span>3등</span><strong id="dash-win-rank-3">0</strong></div>
+                            <div><span>4등</span><strong id="dash-win-rank-4">0</strong></div>
+                            <div><span>5등</span><strong id="dash-win-rank-5">0</strong></div>
+                        </div>
+                    </section>
+
+                    <section class="dashboard-section dashboard-section--essentials" id="dash-prchsMthdDiv">
+                        <div class="dashboard-section-head">
+                            <span class="dashboard-section-kicker">구매 기준</span>
+                            <h3>처음 들어와도 바로 읽히는 핵심 정보</h3>
+                            <p>판매처, 시간, 확률, 기대 당첨금까지 구매 전에 꼭 필요한 기준만 정리했습니다.</p>
+                        </div>
+                        <div class="dashboard-method-strip" aria-label="게임 방식">
+                            <div class="dashboard-method-step">
+                                <strong>1</strong>
+                                <span>1~45 중 6개 선택</span>
+                            </div>
+                            <div class="dashboard-method-step">
+                                <strong>2</strong>
+                                <span>매주 토요일 추첨</span>
+                            </div>
+                            <div class="dashboard-method-step">
+                                <strong>3</strong>
+                                <span>일치 개수에 따라 당첨</span>
+                            </div>
+                        </div>
+                        <div class="main-info-grid dashboard-facts-grid">
+                            <article class="info-box">
+                                <div class="info-cate">판매처</div>
+                                <div class="info-flex">
+                                    <div class="info-txtWrap">
+                                        <ul class="info-ul">
+                                            <li class="info-li">
+                                                <div class="info-dot">&#8226;</div>
+                                                <div class="info-txt">전국 <span class="color-lt645">로또복권 판매점</span></div>
+                                            </li>
+                                            <li class="info-li">
+                                                <div class="info-dot">&#8226;</div>
+                                                <div class="info-txt"><span class="color-lt645">인터넷</span><span class="fs-sm"> (동행복권 홈페이지)</span></div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="info-imgWrap">
+                                        <figure class="img-bg"><img src="/resources/img/icon/icon-draw-lt01.svg" alt=""></figure>
+                                    </div>
+                                </div>
+                            </article>
+                            <article class="info-box">
+                                <div class="info-cate">판매 시간</div>
+                                <div class="info-flex">
+                                    <div class="info-txtWrap">
+                                        <ul class="info-ul">
+                                            <li class="info-li">
+                                                <div class="txt-head">일 ~ 금</div>
+                                                <div class="txt-tail">06:00 ~ 24:00</div>
+                                            </li>
+                                            <li class="info-li">
+                                                <div class="txt-head">토 <span class="fs-sm">(추첨일)</span></div>
+                                                <div class="txt-tail">06:00 ~ 20:00</div>
+                                            </li>
+                                        </ul>
+                                        <div class="info-txt fs-15">※ 인터넷 기준, 판매점 사정에 따라 상이</div>
+                                    </div>
+                                    <div class="info-imgWrap">
+                                        <figure class="img-bg"><img src="/resources/img/icon/icon-draw-lt02.svg" alt=""></figure>
+                                    </div>
+                                </div>
+                            </article>
+                            <article class="info-box">
+                                <div class="info-cate">추첨 시간</div>
+                                <div class="info-flex">
+                                    <div class="info-txtWrap">
+                                        <div class="info-txt">매주 토요일 <span class="color-lt645">20:35분 경</span></div>
+                                        <div class="info-txt fs-15">※ 방송국(MBC) 사정에 따라 변동 가능</div>
+                                    </div>
+                                    <div class="info-imgWrap">
+                                        <figure class="img-bg"><img src="/resources/img/icon/icon-draw-lt03.svg" alt=""></figure>
+                                    </div>
+                                </div>
+                            </article>
+                            <article class="info-box">
+                                <div class="info-cate">당첨금 지급률</div>
+                                <div class="info-flex">
+                                    <div class="info-txtWrap">
+                                        <div class="info-txt">판매액의 <span class="color-lt645">50%</span></div>
+                                    </div>
+                                    <div class="info-imgWrap">
+                                        <figure class="img-bg"><img src="/resources/img/icon/icon-draw-lt04.svg" alt=""></figure>
+                                    </div>
+                                </div>
+                            </article>
+                            <article class="info-box">
+                                <div class="info-cate">당첨 확률</div>
+                                <div class="info-flex">
+                                    <div class="info-txtWrap">
+                                        <ul class="info-ul">
+                                            <li class="info-li">
+                                                <div class="txt-head">1등</div>
+                                                <div class="txt-tail">1 / 8,145,060</div>
+                                            </li>
+                                            <li class="info-li">
+                                                <div class="txt-head">전체</div>
+                                                <div class="txt-tail">1 / 42</div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="info-imgWrap">
+                                        <figure class="img-bg"><img src="/resources/img/icon/icon-draw-lt05.svg" alt=""></figure>
+                                    </div>
+                                </div>
+                            </article>
+                            <article class="info-box">
+                                <div class="info-cate">확률상 1등 당첨금</div>
+                                <div class="info-flex">
+                                    <div class="info-txtWrap">
+                                        <div class="info-txt">약 <span class="color-lt645">19.5억 원</span> / 1게임</div>
+                                    </div>
+                                    <div class="info-imgWrap">
+                                        <figure class="img-bg"><img src="/resources/img/icon/icon-draw-lt06.svg" alt=""></figure>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+                    <section class="dashboard-deep-grid" aria-label="추가 정보">
+                        <article class="dashboard-visual-card dashboard-ticket-card">
+                            <div class="dashboard-section-head">
+                                <span class="dashboard-section-kicker">실물 안내</span>
+                                <h3>실물 티켓에서 꼭 봐야 할 포인트</h3>
+                                <p>QR 확인, 지급기한, 검증코드처럼 실제 확인 단계에서 필요한 핵심만 남겼습니다.</p>
+                            </div>
+                            <div class="dashboard-ticket-stage">
+                                <figure class="dashboard-ticket-image">
+                                    <img src="/resources/img/images/img-draw-lt645.png" alt="로또6/45 실물 티켓 예시">
+                                </figure>
+                                <div class="dashboard-ticket-copy">
+                                    <div class="dashboard-ticket-highlight">실물 티켓 소지자에게만 당첨금이 지급됩니다.</div>
+                                    <ul class="dashboard-ticket-list">
+                                        <li>QR 코드는 당첨 확인 편의 기능이며 지급 근거는 실물 티켓입니다.</li>
+                                        <li>당첨금은 지급 개시일부터 1년 이내에 청구해야 합니다.</li>
+                                        <li>검증용 코드는 위변조 여부와 지급 처리 확인에 사용됩니다.</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </article>
-                    </div>
-                    <div class="dashboard-win-ranks">
-                        <div><span>1등</span><strong id="dash-win-rank-1">0</strong></div>
-                        <div><span>2등</span><strong id="dash-win-rank-2">0</strong></div>
-                        <div><span>3등</span><strong id="dash-win-rank-3">0</strong></div>
-                        <div><span>4등</span><strong id="dash-win-rank-4">0</strong></div>
-                        <div><span>5등</span><strong id="dash-win-rank-5">0</strong></div>
-                    </div>
-                </section>
-				<div class="center-wrap">
-				<!-- 로또645 메인 상단 텍스트 -->
-				<div class="draw-wrapper">
-					<div class="main-txt-wrap" id="dash-prchsMthdDiv">
-							<p class="txt-center">
-								게임방법 <br>
-							</p>
-						<p class="txt-center">
-							<span class="color-lt645">1~45</span>까지 숫자 중 <span
-								class="color-lt645">내가 선택한 6개 숫자</span>와
-						</p>
-						<p class="txt-center">
-							추첨으로 결정된 숫자가 <span class="color-lt645">일치하는 개수</span>에 따라 당첨!
-						</p>
-					</div>
-					<div class="main-info-grid">
-						<div class="info-box">
-							<div class="info-cate">판매처</div>
-							<div class="info-flex">
-								<div class="info-txtWrap">
-									<ul class="info-ul">
-										<li class="info-li">
-											<div class="info-dot">&#8226;</div>
-											<div class="info-txt">
-												전국 <span class="color-lt645">로또복권 판매점</span>
-											</div>
-										</li>
-										<li class="info-li">
-											<div class="info-dot">&#8226;</div>
-											<div class="info-txt">
-												<span class="color-lt645">인터넷</span><span class="fs-sm"> (동행복권
-													홈페이지)</span>
-											</div>
-										</li>
-									</ul>
-								</div>
-								<div class="info-imgWrap">
-									<figure class="img-bg"> <img
-										src="/resources/img/icon/icon-draw-lt01.svg" alt=""></figure>
-								</div>
-							</div>
-						</div>
-						<div class="info-box">
-							<div class="info-cate">판매시간</div>
-							<div class="info-flex">
-								<div class="info-txtWrap">
-									<ul class="info-ul">
-										<li class="info-li">
-											<div class="txt-head">일 ~ 금</div>
-											<div class="txt-tail">06:00 ~ 24:00</div>
-										</li>
-										<li class="info-li">
-											<div class="txt-head">
-												토&nbsp;<span class="fs-sm">(추첨)</span>
-											</div>
-											<div class="txt-tail">06:00 ~ 20:00</div>
-										</li>
-									</ul>
-									<div class="info-txt fs-15">※ 인터넷 기준, 판매점 사정에 따라 상이</div>
-								</div>
-								<div class="info-imgWrap">
-									<figure class="img-bg"> <img
-										src="/resources/img/icon/icon-draw-lt02.svg" alt=""></figure>
-								</div>
-							</div>
-						</div>
-						<div class="info-box">
-							<div class="info-cate">추첨시간</div>
-							<div class="info-flex">
-								<div class="info-txtWrap">
-									<div class="info-txt">
-										매주 토요일 <span class="color-lt645">20 : 35분 경</span>
-									</div>
-									<div class="info-txt fs-15">※ 방송국(MBC) 사정에 따라 변동 가능</div>
-								</div>
-								<div class="info-imgWrap">
-									<figure class="img-bg"> <img
-										src="/resources/img/icon/icon-draw-lt03.svg" alt=""></figure>
-								</div>
-							</div>
-						</div>
-						<div class="info-box">
-							<div class="info-cate">
-								당첨금 지급률 <span class="fs-sm">(환급률)</span>
-							</div>
-							<div class="info-flex">
-								<div class="info-txtWrap">
-									<div class="info-txt">
-										판매액의 <span class="color-lt645">50%</span>
-									</div>
-								</div>
-								<div class="info-imgWrap">
-									<figure class="img-bg"> <img
-										src="/resources/img/icon/icon-draw-lt04.svg" alt=""></figure>
-								</div>
-							</div>
-						</div>
-						<div class="info-box">
-							<div class="info-cate">당첨확률</div>
-							<div class="info-flex">
-								<div class="info-txtWrap">
-									<ul class="info-ul">
-										<li class="info-li">
-											<div class="txt-head">1 등</div>
-											<div class="txt-tail">1/8,145,060</div>
-										</li>
-										<li class="info-li">
-											<div class="txt-head">
-												전체
-											</div>
-											<div class="txt-tail">1/42</div>
-										</li>
-									</ul>
-								</div>
-								<div class="info-imgWrap">
-									<figure class="img-bg"> <img
-										src="/resources/img/icon/icon-draw-lt05.svg" alt=""></figure>
-								</div>
-							</div>
-						</div>
-						<div class="info-box">
-							<div class="info-cate">확률상 1등 당첨금</div>
-							<div class="info-flex">
-								<div class="info-txtWrap">
-									<div class="info-txt">
-										약 <span class="color-lt645">19.5억 원</span>/1게임
-									</div>
-								</div>
-								<div class="info-imgWrap">
-									<figure class="img-bg"> <img
-										src="/resources/img/icon/icon-draw-lt06.svg" alt=""></figure>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- 로또645 메인 중간 이미지 -->
-				<div class="img-wrap draw-img-wrap">
-					<div class="img-box">
-						<figure class="main-imgWrap"> 
-							<img src="/resources/img/images/img-draw-lt645.png" alt="로또6/45" aria-describedby="lt645-detail">
-							<div class="hidden" id="lt645-detail">
-								<ul>
-									<li>당첨금 지급기한 당첨금 지급처 영업시간내 해당기한까지 당첨금 지급을 요청하지 않을 경우 해당
-										당첨금은 복권기금으로 귀속됩니다.</li>
-									<li>구매자용 당첨확인 QR코드 동행복권 앱 또는 기타 QR코드 앱을 이용하여 스캔하면 당첨여부를
-										확인할 수 있습니다. ※당첨확인 편의를 위한 기능일 뿐이며, 당첨금은 실물 티켓 소지자에게만 지급됩니다.</li>
-									<li>판매인용 당첨복권 검증코드 당첨금 지급 처리를 위해 인쇄된 검증용 코드이며, 복권 위변조 여부
-										등을 확인합니다.</li>
-								</ul>
-								<div>이 복권을 구매하시는 분들에게</div>
-								<ol>
-									<li>1. 이 복권을 구입하신 대금은 반환하지 않습니다.</li>
-									<li>2. 당첨금은 지급 장소에 해단복권을 제시하여 당첨확인절차를 거친 후 당첨된 복권 소지자에게
-										지급합니다.</li>
-									<li>3. 당첨금 지급처 :
-										<table summary="당첨금 지급처 설명">
-											<caption>당첨금 지급처 표</caption>
-											<tbody>
-												<tr>
-													<th scope="col">당첨등위(1매 최상위 기준)</th>
-													<th scope="col">1등</th>
-													<th scope="col">2등, 3등</th>
-													<th scope="col">4등(5만원), 5등(5천원)</th>
-												</tr>
-												<tr>
-													<th scope="row">지급처</th>
-													<td>NH농협은행 본점</td>
-													<td>NH농협은행 전국지점</td>
-													<td>로또복권 판매점</td>
-												</tr>
-											</tbody>
-										</table>
-									</li>
-									<li>4. 당첨금 지급기한은 지급개시일로부터 1년까지이며 지급기한 이내에 해당 지급처(영업시간 내)에
-										당첨금 지급청구를 하여야 하며 이 경우 지급기한 종료일이 은행 영업일이 아니면 다음 은행 영업일이 지급기한
-										종료일로 변경됩니다.</li>
-									<li>5. 당첨금은 복권 전면에 표시된 지급기한까지 찾아가지 않으면 「복권 및 복권기금법」에 따라
-										복권기금에 귀속되어 공익사업에 사용되게 됩니다.</li>
-									<li>6. 복권을 도난, 분실, 오염, 훼손하였을 경우에는 복권을 재교부할 수 없으며, 복권이 훼손된
-										경우 복권의 1/2이상 원형이 보존되고 컴퓨터 인식이 가능한 복권에 한하여 당첨금을 지급합니다.</li>
-									<li>7. 당첨금이 200만 원을 초과하는 경우 당첨금에 대한 제세금은 당첨자 본인이 부담하여야 하며,
-										소득세법에 따라 원천징수됩니다.</li>
-									<li>8. 200만원 초과 당첨금은 실명확인증표(주민등록증 등)를 지참하시고, 해당 당첨금 지급처에
-										방문하시어 아래란에 성명과 주민등록번호를 본인이 직접 기재하고 서명 또는 날인하여 청구하셔야 합니다.</li>
-								</ol>
-								<p>※상기 사항은 복권위원회 정책에 따라 변경될 수 있습니다.</p>
-								<p>※인터넷을 통한 복권 구매자에게는 해당 사이트의 별도 약관에 따라 당첨금을 지급합니다.</p>
-							</div>
-						</figure>
-						<button type="button" class="btn-plus-squr btn-popup">
-							<span class="ico-plus">+</span>
-						</button>
-						<!-- pop-up start -->
-						<div class="popup-wrap">
-							<div class="popup-bg"></div>
-							<div class="pop-up">
-								<div class="pop-up-wrapper w-winner">
-									<div class="pop-head">
-										<div class="pop-head-tit">로또6/45</div>
-										<button class="btn-pop-close">
-											<figure> <img
-												src="/resources/img/icon/icon-pop-close.png"></figure>
-										</button>
-									</div>
-									<div class="pop-body">
-										<img src="/resources/img/images/img-draw-lt645.png" alt="로또6/45" aria-describedby="lt645-detail">
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
 
+                        <article class="dashboard-visual-card dashboard-profit-card">
+                            <div class="dashboard-section-head">
+                                <span class="dashboard-section-kicker">판매액 구조</span>
+                                <h3>판매액이 어디로 흘러가는지 바로 보는 카드</h3>
+                                <p>당첨금, 복권기금, 판매 수수료, 운영비 비중을 빠르게 확인할 수 있습니다.</p>
+                            </div>
+                            <div class="profit-grid dashboard-profit-grid">
+                                <div class="profit-titWrap">
+                                    <div class="profit-cate">로또6/45 판매액</div>
+                                    <div class="profit-txt">이렇게 쓰여요</div>
+                                    <div class="profit-info">판매액 배분 구조</div>
+                                </div>
+                                <div class="profit-imgWrap">
+                                    <figure>
+                                        <img src="/resources/img/images/img-graph-lt645.svg" alt="판매액 배분 구조 : 당첨금 50%, 복권기금 43.6%, 판매점 수수료 5.4%, 기타 사업운영비 1.0%">
+                                        <img src="/resources/img/images/mo_bg_draw_sample_1.png" class="mo-img" alt="판매액 배분 구조 : 당첨금 50%, 복권기금 43.6%, 판매점 수수료 5.4%, 기타 사업운영비 1.0%">
+                                    </figure>
+                                </div>
+                                <div class="profit-btnWrap">
+                                    <button class="btn-viewProfit" id="dash-btnLtFdfd">복권 기금사업활동 보기</button>
+                                </div>
+                            </div>
+                        </article>
+                    </section>
 
-
-
-
-			</div>
-			<div class="draw-bg">
-				<div class="center-wrap">
-					<div class="profit-wrap">
-						<div class="profit-grid">
-							<div class="profit-titWrap">
-								<div class="profit-cate">로또6/45 판매액</div>
-								<div class="profit-txt">이렇게 쓰여요!</div>
-								<div class="profit-info">판매액 배분 구조</div>
-							</div>
-							<div class="profit-imgWrap">
-								<figure> <img
-									src="/resources/img/images/img-graph-lt645.svg"
-									alt="판매액 배분 구조 : 당첨금 50%, 복권기금 43.6%, 판매점 수수료 5.4%, 기타 사업운영비 1.0%">
-									<img src="/resources/img/images/mo_bg_draw_sample_1.png"
-									class="mo-img"
-									alt="판매액 배분 구조 : 당첨금 50%, 복권기금 43.6%, 판매점 수수료 5.4%, 기타 사업운영비 1.0%"></figure>
-							</div>
-							<div class="profit-btnWrap">
-								<button class="btn-viewProfit" id="dash-btnLtFdfd">복권 기금사업활동
-									보기</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="center-wrap">
-				<div class="draw-wrapper">
-					<div class="main-tit" id="dash-wnStrcDiv">당첨구조</div>
-					<div class="main-strctr-tbl-wrapper">
-						<div class="main-strctr-tbl" role="table" aria-label="당첨구조에 대한 설명">
-							<div class="tbl-tr thead" role="row">
-								<div class="td-rank" role="columnheader">등위</div>
-								<div class="td-condition" role="columnheader">당첨조건</div>
-								<div class="td-money" role="columnheader">당첨금</div>
-								<div class="td-probability" role="columnheader">당첨확률</div>
-							</div>
-							<div class="tbl-tr tbody" role="row">
-								<div class="td-rank" role="cell">1등</div>
-								<div class="td-condition" role="cell">
-									<div class="txt">
-										<span class="color-lt645"> 6</span>개 번호 일치
-									</div>
-									<figure> <img
-										src="/resources/img/images/img-lt645-condition01.svg" alt=""></figure>
-								</div>
-								<div class="td-money" role="cell">총 당첨금 중 4등, 5등 금액을 제외한
-									금액의 75%</div>
-								<div class="td-probability" role="cell">1/ 8,145,060</div>
-							</div>
-							<div class="tbl-tr tbody" role="row">
-								<div class="td-rank" role="cell">2등</div>
-								<div class="td-condition" role="cell">
-									<div class="txt">
-										<span class="color-lt645"> 5</span>개 번호 일치 + <span
-											class="color-lt645">보너스</span> 번호 일치
-									</div>
-									<figure> <img
-										src="/resources/img/images/img-lt645-condition02.svg" alt=""></figure>
-								</div>
-								<div class="td-money" role="cell">총 당첨금 중 4등, 5등 금액을 제외한
-									금액의 12.5%</div>
-								<div class="td-probability" role="cell">1/ 1,357,510</div>
-							</div>
-							<div class="tbl-tr tbody" role="row">
-								<div class="td-rank" role="cell">3등</div>
-								<div class="td-condition" role="cell">
-									<div class="txt">
-										<span class="color-lt645"> 5</span>개 번호 일치
-									</div>
-									<figure> <img
-										src="/resources/img/images/img-lt645-condition03.svg" alt=""></figure>
-								</div>
-								<div class="td-money" role="cell">총 당첨금 중 4등, 5등 금액을 제외한
-									금액의 12.5%</div>
-								<div class="td-probability" role="cell">1/ 35,724</div>
-							</div>
-							<div class="tbl-tr tbody" role="row">
-								<div class="td-rank" role="cell">4등</div>
-								<div class="td-condition" role="cell">
-									<div class="txt">
-										<span class="color-lt645"> 4</span>개 번호 일치
-									</div>
-									<figure> <img
-										src="/resources/img/images/img-lt645-condition04.svg" alt=""></figure>
-								</div>
-								<div class="td-money" role="cell">50,000원</div>
-								<div class="td-probability" role="cell">1/ 733</div>
-							</div>
-							<div class="tbl-tr tbody" role="row">
-								<div class="td-rank" role="cell">5등</div>
-								<div class="td-condition" role="cell">
-									<div class="txt">
-										<span class="color-lt645"> 3</span>개 번호 일치
-									</div>
-									<figure> <img
-										src="/resources/img/images/img-lt645-condition05.svg" alt=""></figure>
-								</div>
-								<div class="td-money" role="cell">5,000원</div>
-								<div class="td-probability" role="cell">1/ 45</div>
-							</div>
-						</div>
-					</div>
-					<ul class="dbchck-ul mt-40">
-						<li class="dbchck-li"><figure> <img
-								src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
-							<div class="dbchck-txt">
-								총 당첨금은 로또 <span class="color-p">전체 판매액의 50%</span>이며, <span
-									class="color-p">40% 이상은 복권기금</span>으로 활용됩니다.
-							</div></li>
-						<li class="dbchck-li"><figure> <img
-								src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
-							<div class="dbchck-txt">1등·2등·3등 당첨금은 해당 회차의 총 판매액에 의해
-								결정되며, 등위별 해당금액을 당첨자 수로 나누어 지급합니다.</div></li>
-						<li class="dbchck-li"><figure> <img
-								src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
-							<div class="dbchck-txt">
-								1등 당첨자가 발생하지 않는 경우 1등 당첨금은 이월되어 다음 회차 1등 당첨금에 더해집니다. 또한 1등뿐만 아니라
-								직하위 당첨자도 없는 경우에는 직하위 당첨금도 포함하여 다음 회차 1등 당첨금에 더해집니다. <br>
-									예를 들어 1등·2등이 모두 발생하지 않는 경우에는 1등·2등 당첨금이 모두 합해져 다음 회차 1등 당첨금에
-									더해지며, 1등·2등·3등이 모두 없는 경우에는 1등·2등·3등 당첨금이 모두 합해져 다음 회차 1등 당첨금에
-									더해지게 됩니다. 
-							</div></li>
-						<li class="dbchck-li"><figure> <img
-								src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
-							<div class="dbchck-txt">상위 당첨자가 발생한 상황에서 하위 등위에 당첨자가 없는
-								경우에는 해당 당첨금은 이월되지 않고 직상위 당첨금에 포함되어 지급됩니다. 예를 들어 2등 당첨자가 발생하지 않는
-								상황에서 1등 당첨자가 발생할 경우 1등 당첨자에게 1등·2등 당첨금을 모두 지급합니다.</div></li>
-						<li class="dbchck-li"><figure> <img
-								src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
-							<div class="dbchck-txt">당첨금 이월은 최대 연속 두 번까지 가능하며, 연속 두 번의
-								이월 후에도 1등 당첨자가 없을 경우 1등 당첨금은 직하위 당첨금에 더해집니다. 예를 들어 연속 두 번의 이월 후에도
-								1등·2등이 모두 없는 경우에는 1등·2등 당첨금이 3등 당첨금에 더해지게 되며, 1등·2등·3등이 모두 없는
-								경우에는 해당 당첨금은 국가 기금으로 귀속됩니다. 단, 최대 연속 이월 횟수는 정부정책에 의거 변경될 수 있습니다.
-							</div></li>
-					</ul>
-					
-					</div>
-				</div>
-			</div>
-		</div>
-		</section>
+                    <section class="dashboard-structure-card" id="dash-wnStrcDiv">
+                        <div class="dashboard-section-head">
+                            <span class="dashboard-section-kicker">당첨 구조</span>
+                            <h3>등수별 조건과 지급 기준을 한 번에 확인</h3>
+                            <p>실제 구매 판단에 필요한 등수별 조건, 지급 방식, 이월 규칙을 카드형 구조로 정리했습니다.</p>
+                        </div>
+                        <div class="dashboard-table-frame">
+                            <div class="main-strctr-tbl-wrapper">
+                                <div class="main-strctr-tbl" role="table" aria-label="당첨구조에 대한 설명">
+                                    <div class="tbl-tr thead" role="row">
+                                        <div class="td-rank" role="columnheader">등위</div>
+                                        <div class="td-condition" role="columnheader">당첨조건</div>
+                                        <div class="td-money" role="columnheader">당첨금</div>
+                                        <div class="td-probability" role="columnheader">당첨확률</div>
+                                    </div>
+                                    <div class="tbl-tr tbody" role="row">
+                                        <div class="td-rank" role="cell">1등</div>
+                                        <div class="td-condition" role="cell">
+                                            <div class="txt"><span class="color-lt645">6</span>개 번호 일치</div>
+                                            <figure><img src="/resources/img/images/img-lt645-condition01.svg" alt=""></figure>
+                                        </div>
+                                        <div class="td-money" role="cell">총 당첨금 중 4등, 5등 금액을 제외한 금액의 75%</div>
+                                        <div class="td-probability" role="cell">1 / 8,145,060</div>
+                                    </div>
+                                    <div class="tbl-tr tbody" role="row">
+                                        <div class="td-rank" role="cell">2등</div>
+                                        <div class="td-condition" role="cell">
+                                            <div class="txt"><span class="color-lt645">5</span>개 번호 일치 + <span class="color-lt645">보너스</span> 번호 일치</div>
+                                            <figure><img src="/resources/img/images/img-lt645-condition02.svg" alt=""></figure>
+                                        </div>
+                                        <div class="td-money" role="cell">총 당첨금 중 4등, 5등 금액을 제외한 금액의 12.5%</div>
+                                        <div class="td-probability" role="cell">1 / 1,357,510</div>
+                                    </div>
+                                    <div class="tbl-tr tbody" role="row">
+                                        <div class="td-rank" role="cell">3등</div>
+                                        <div class="td-condition" role="cell">
+                                            <div class="txt"><span class="color-lt645">5</span>개 번호 일치</div>
+                                            <figure><img src="/resources/img/images/img-lt645-condition03.svg" alt=""></figure>
+                                        </div>
+                                        <div class="td-money" role="cell">총 당첨금 중 4등, 5등 금액을 제외한 금액의 12.5%</div>
+                                        <div class="td-probability" role="cell">1 / 35,724</div>
+                                    </div>
+                                    <div class="tbl-tr tbody" role="row">
+                                        <div class="td-rank" role="cell">4등</div>
+                                        <div class="td-condition" role="cell">
+                                            <div class="txt"><span class="color-lt645">4</span>개 번호 일치</div>
+                                            <figure><img src="/resources/img/images/img-lt645-condition04.svg" alt=""></figure>
+                                        </div>
+                                        <div class="td-money" role="cell">50,000원</div>
+                                        <div class="td-probability" role="cell">1 / 733</div>
+                                    </div>
+                                    <div class="tbl-tr tbody" role="row">
+                                        <div class="td-rank" role="cell">5등</div>
+                                        <div class="td-condition" role="cell">
+                                            <div class="txt"><span class="color-lt645">3</span>개 번호 일치</div>
+                                            <figure><img src="/resources/img/images/img-lt645-condition05.svg" alt=""></figure>
+                                        </div>
+                                        <div class="td-money" role="cell">5,000원</div>
+                                        <div class="td-probability" role="cell">1 / 45</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="dbchck-ul dashboard-note-grid">
+                            <li class="dbchck-li">
+                                <figure><img src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
+                                <div class="dbchck-txt">총 당첨금은 로또 <span class="color-p">전체 판매액의 50%</span>이며, <span class="color-p">40% 이상은 복권기금</span>으로 활용됩니다.</div>
+                            </li>
+                            <li class="dbchck-li">
+                                <figure><img src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
+                                <div class="dbchck-txt">1등·2등·3등 당첨금은 해당 회차 총 판매액에 의해 결정되며 등위별 금액을 당첨자 수로 나누어 지급합니다.</div>
+                            </li>
+                            <li class="dbchck-li">
+                                <figure><img src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
+                                <div class="dbchck-txt">1등 당첨자가 없으면 1등 당첨금은 다음 회차로 이월되며, 직하위 당첨자도 없으면 해당 금액도 함께 합산됩니다.</div>
+                            </li>
+                            <li class="dbchck-li">
+                                <figure><img src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
+                                <div class="dbchck-txt">상위 당첨자가 있는 상태에서 하위 등위 당첨자가 없으면 해당 금액은 이월되지 않고 직상위 당첨금에 포함됩니다.</div>
+                            </li>
+                            <li class="dbchck-li">
+                                <figure><img src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
+                                <div class="dbchck-txt">당첨금 이월은 최대 연속 두 번까지 가능하며, 이후에도 1등이 없으면 직하위 등수로 당첨금이 넘어갑니다.</div>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+        </section>
 
 	        <section id="tab-draw" class="tab-panel app-shell app-shell--draw" role="tabpanel" aria-labelledby="tab-draw-btn" tabindex="0">
 		            <div class="draw-studio-header">
