@@ -13345,6 +13345,18 @@ body[data-theme="dark"] #tab-dashboard .dashboard-signal-card p {
         gap: 8px;
     }
 
+    #tab-dashboard .dashboard-card-head,
+    #tab-dashboard .dashboard-win-head,
+    #tab-dashboard .dashboard-section-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #tab-dashboard .dashboard-card-meta,
+    #tab-dashboard .badge.muted {
+        width: fit-content;
+    }
+
     #tab-dashboard .dashboard-card-actions,
     #tab-dashboard .dashboard-card-actions--split,
     #tab-dashboard .dashboard-method-strip,
@@ -13466,5 +13478,176 @@ body[data-theme="dark"] #tab-dashboard .dashboard-signal-card p {
         width: 44px;
         height: 44px;
         font-size: 16px;
+    }
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard .container-box {
+        padding: 10px 0 calc(126px + env(safe-area-inset-bottom));
+    }
+
+    #tab-dashboard .dashboard-shell {
+        width: calc(100% - 14px);
+        gap: 12px;
+    }
+
+    #tab-dashboard .dashboard-hero,
+    #tab-dashboard .dashboard-card,
+    #tab-dashboard .dashboard-section,
+    #tab-dashboard .dashboard-visual-card,
+    #tab-dashboard .dashboard-structure-card {
+        padding: 16px 14px;
+        border-radius: 20px !important;
+    }
+
+    #tab-dashboard .content-tit {
+        font-size: clamp(22px, 6.4vw, 25px);
+    }
+
+    #tab-dashboard .dash-intro-sub,
+    #tab-dashboard .dashboard-card-meta,
+    #tab-dashboard .dashboard-round-copy p,
+    #tab-dashboard .dashboard-prize-note,
+    #tab-dashboard .dashboard-win-status,
+    #tab-dashboard .dashboard-section-head p,
+    #tab-dashboard .dashboard-signal-card p {
+        font-size: 12px;
+    }
+
+    #tab-dashboard .dashboard-signal-card strong,
+    #tab-dashboard .dashboard-round-copy strong,
+    #tab-dashboard .dashboard-win-head h3,
+    #tab-dashboard .dashboard-section-head h3 {
+        font-size: 20px;
+    }
+
+    #tab-dashboard .dashboard-round-badge {
+        min-height: 52px;
+        padding: 0 14px;
+        font-size: 26px;
+    }
+
+    #tab-dashboard .dashboard-countdown .time-circle {
+        min-height: 70px;
+        padding: 10px 6px;
+        border-radius: 16px;
+    }
+
+    #tab-dashboard .dashboard-countdown .time-num {
+        font-size: 21px;
+    }
+
+    #tab-dashboard .dashboard-countdown .time-txt,
+    #tab-dashboard .dashboard-card-kicker,
+    #tab-dashboard .dashboard-section-kicker,
+    #tab-dashboard .badge.muted {
+        font-size: 10px;
+    }
+
+    #tab-dashboard .dashboard-card-actions,
+    #tab-dashboard .dashboard-card-actions--split,
+    #tab-dashboard .dash-intro-actions {
+        gap: 8px;
+    }
+
+    #tab-dashboard .dashboard-primary-btn,
+    #tab-dashboard .dashboard-inline-btn,
+    #tab-dashboard .dash-intro-actions .cta,
+    #tab-dashboard .dash-intro-actions .ghost,
+    #tab-dashboard .profit-btnWrap .btn-viewProfit {
+        min-height: 42px;
+        padding: 0 12px;
+        font-size: 13px;
+    }
+
+    #tab-dashboard .dashboard-result-balls {
+        padding: 14px;
+    }
+
+    #tab-dashboard .dashboard-result-balls .result-ballBox {
+        gap: 6px;
+    }
+
+    #tab-dashboard .dashboard-result-balls .result-ball {
+        width: 38px;
+        height: 38px;
+        font-size: 14px;
+    }
+
+    #tab-dashboard .dashboard-result-balls .result-plus {
+        width: 12px;
+    }
+
+    #tab-dashboard .dashboard-win-kpi,
+    #tab-dashboard .dashboard-win-ranks > div,
+    #tab-dashboard .dashboard-method-step,
+    #tab-dashboard .dbchck-li,
+    #tab-dashboard .info-box {
+        padding: 14px;
+        border-radius: 16px !important;
+    }
+
+    #tab-dashboard .dashboard-win-kpi strong,
+    #tab-dashboard .dashboard-win-ranks strong {
+        font-size: 24px;
+    }
+
+    #tab-dashboard .img-bg {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+    }
+
+    #tab-dashboard .img-bg img {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+@media (max-width: 390px) {
+    #tab-dashboard .dashboard-shell {
+        width: calc(100% - 12px);
+    }
+
+    #tab-dashboard .dashboard-hero,
+    #tab-dashboard .dashboard-card,
+    #tab-dashboard .dashboard-section,
+    #tab-dashboard .dashboard-visual-card,
+    #tab-dashboard .dashboard-structure-card {
+        padding: 14px 12px;
+    }
+
+    #tab-dashboard .content-tit {
+        font-size: 21px;
+    }
+
+    #tab-dashboard .dashboard-signal-card strong,
+    #tab-dashboard .dashboard-round-copy strong,
+    #tab-dashboard .dashboard-win-head h3,
+    #tab-dashboard .dashboard-section-head h3 {
+        font-size: 18px;
+    }
+
+    #tab-dashboard .dashboard-countdown {
+        gap: 8px;
+    }
+
+    #tab-dashboard .dashboard-countdown .time-circle {
+        min-height: 64px;
+    }
+
+    #tab-dashboard .dashboard-countdown .time-num {
+        font-size: 19px;
+    }
+
+    #tab-dashboard .dashboard-result-balls .result-ball {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+
+    #tab-dashboard .dashboard-win-kpi strong,
+    #tab-dashboard .dashboard-win-ranks strong {
+        font-size: 22px;
     }
 }
