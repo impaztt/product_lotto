@@ -3183,71 +3183,168 @@
             <button class="modal-close onboarding-close" type="button" aria-label="닫기" data-welcome-close="dismiss">닫기</button>
             <div class="onboarding-hero">
                 <span class="onboarding-kicker">LOTTO FILTER STUDIO</span>
-                <h3 id="welcome-modal-title">고민은 줄이고, 바로 써볼 번호를 받는 로또 스튜디오</h3>
+                <h3 id="welcome-modal-title">제외부터 추천까지, 로또 선택을 더 가볍게 만드는 스튜디오</h3>
                 <p class="modal-text onboarding-copy">
-                    직접 조합해도 좋고, 시간이 아까우면 유료 패키지로 엄선 추천 세트를 받아 더 빠르게 선택할 수 있습니다.
+                    직접 고를 때는 조건과 제외수로 후보를 정리하고, 빠르게 끝내고 싶을 때는 유료 패키지로 엄선 추천 세트를 바로 받아볼 수 있습니다.
                 </p>
                 <div class="onboarding-summary-row" aria-label="핵심 기능">
-                    <span class="onboarding-summary-pill">빠른 번호 선택</span>
-                    <span class="onboarding-summary-pill">프리미엄 엄선 추천</span>
+                    <span class="onboarding-summary-pill">번호 제외로 후보 압축</span>
+                    <span class="onboarding-summary-pill">직접 선택 + 엄선 추천</span>
+                    <span class="onboarding-summary-pill">복사 · 저장까지 한 번에</span>
                 </div>
             </div>
             <div class="onboarding-carousel" id="onboarding-carousel" aria-label="서비스 소개 슬라이드">
                 <div class="onboarding-carousel-track" id="onboarding-carousel-track">
                     <section class="onboarding-slide is-active" data-onboarding-slide="0" aria-hidden="false">
-                        <article class="onboarding-slide-card onboarding-slide-card--self">
+                        <article class="onboarding-slide-card onboarding-slide-card--overview">
                             <div class="onboarding-card-head">
-                                <span class="onboarding-slide-badge">직접 선택</span>
-                                <strong>원하는 기준만 고르면 번호 선택이 훨씬 빨라집니다</strong>
-                                <p>복잡한 계산 없이 필요한 조건만 반영해 여러 조합을 비교하는 시간을 줄일 수 있습니다.</p>
+                                <span class="onboarding-slide-badge">서비스 소개</span>
+                                <strong>막연한 고민 대신, 기준이 보이는 번호 선택 루틴을 만듭니다</strong>
+                                <p>원하는 조건은 남기고 부담되는 숫자는 제외해 직접 선택도, 추천 구매도 훨씬 빠르게 이어갈 수 있습니다.</p>
                             </div>
-                            <div class="onboarding-feature-list">
+                            <div class="onboarding-stat-row" aria-label="핵심 포인트">
+                                <article class="onboarding-stat-chip">
+                                    <strong>조건 필터</strong>
+                                    <span>홀짝 · 합계 · 구간 정리</span>
+                                </article>
+                                <article class="onboarding-stat-chip">
+                                    <strong>제외 설정</strong>
+                                    <span>꺼리는 수 먼저 비우기</span>
+                                </article>
+                                <article class="onboarding-stat-chip">
+                                    <strong>즉시 생성</strong>
+                                    <span>세트 비교까지 바로</span>
+                                </article>
+                            </div>
+                            <div class="onboarding-feature-list onboarding-feature-list--tight">
                                 <article class="onboarding-feature-item">
-                                    <span class="onboarding-feature-icon">필터</span>
+                                    <span class="onboarding-feature-icon">직접</span>
                                     <div class="onboarding-feature-copy">
-                                        <strong>핵심 조건만 골라 빠르게 압축</strong>
-                                        <p>홀짝, 구간, 합계, 제외수로 불필요한 조합부터 먼저 걸러냅니다.</p>
+                                        <strong>내 기준으로 빠르게 직접 선택</strong>
+                                        <p>마음에 드는 흐름만 남겨 여러 번호를 한 화면에서 정리합니다.</p>
                                     </div>
                                 </article>
                                 <article class="onboarding-feature-item">
-                                    <span class="onboarding-feature-icon">이력</span>
+                                    <span class="onboarding-feature-icon">비교</span>
                                     <div class="onboarding-feature-copy">
-                                        <strong>마음에 드는 흐름은 계속 이어서</strong>
-                                        <p>로그인하면 생성 결과와 추천 내역이 저장돼 다음 선택도 훨씬 편해집니다.</p>
+                                        <strong>선택 근거가 남아 망설임이 줄어듭니다</strong>
+                                        <p>무작정 고르는 대신, 남긴 조건과 제외 기준으로 더 또렷하게 비교할 수 있습니다.</p>
                                     </div>
                                 </article>
                             </div>
                         </article>
                     </section>
                     <section class="onboarding-slide" data-onboarding-slide="1" aria-hidden="true">
+                        <article class="onboarding-slide-card onboarding-slide-card--exclude">
+                            <div class="onboarding-card-head">
+                                <span class="onboarding-slide-badge">번호 제외</span>
+                                <strong>제외할 번호를 먼저 정하면, 남는 조합이 더 선명하게 보입니다</strong>
+                                <p>모든 숫자를 다 쥐고 고민하는 대신 꺼리는 수와 겹치는 패턴을 먼저 걷어내면 선택 부담과 비교 시간이 함께 줄어듭니다.</p>
+                            </div>
+                            <div class="onboarding-compare-grid" aria-label="번호 제외 비교">
+                                <article class="onboarding-compare-card onboarding-compare-card--crowded">
+                                    <span class="onboarding-compare-label">그냥 전체 후보만 볼 때</span>
+                                    <div class="onboarding-number-cloud">
+                                        <span class="onboarding-number-pill is-muted">03</span>
+                                        <span class="onboarding-number-pill is-muted">07</span>
+                                        <span class="onboarding-number-pill is-muted">11</span>
+                                        <span class="onboarding-number-pill is-muted">19</span>
+                                        <span class="onboarding-number-pill is-muted">28</span>
+                                        <span class="onboarding-number-pill is-muted">34</span>
+                                        <span class="onboarding-number-pill is-muted">42</span>
+                                    </div>
+                                    <p>후보가 넓어져 마지막 결정이 계속 미뤄집니다.</p>
+                                </article>
+                                <article class="onboarding-compare-card onboarding-compare-card--focused">
+                                    <span class="onboarding-compare-label">제외 후 남는 후보</span>
+                                    <div class="onboarding-number-cloud">
+                                        <span class="onboarding-number-pill is-removed">07</span>
+                                        <span class="onboarding-number-pill">11</span>
+                                        <span class="onboarding-number-pill">19</span>
+                                        <span class="onboarding-number-pill is-removed">28</span>
+                                        <span class="onboarding-number-pill">34</span>
+                                        <span class="onboarding-number-pill">42</span>
+                                    </div>
+                                    <p>남길 수가 또렷해져 비교 포인트가 분명해집니다.</p>
+                                </article>
+                            </div>
+                            <div class="onboarding-insight-banner">
+                                <strong>핵심</strong>
+                                <span>번호 제외는 당첨을 약속하는 기능이 아니라, 망설이는 시간을 줄여 더 또렷하게 고르게 만드는 도구입니다.</span>
+                            </div>
+                        </article>
+                    </section>
+                    <section class="onboarding-slide" data-onboarding-slide="2" aria-hidden="true">
                         <article class="onboarding-slide-card onboarding-slide-card--premium">
                             <div class="onboarding-card-head">
                                 <span class="onboarding-slide-badge">엄선 추천</span>
-                                <strong>시간이 아까울수록 엄선 추천 패키지가 더 편합니다</strong>
-                                <p>STARTER, STANDARD, MASTER 중 원하는 강도로 추천 세트를 받아 바로 복사하고 활용할 수 있습니다.</p>
+                                <strong>시간이 아까울수록, 유료 패키지가 가장 빠른 결정이 됩니다</strong>
+                                <p>STARTER부터 MASTER까지 원하는 강도로 엄선 추천 세트를 받아 바로 복사하고 비교하고 저장할 수 있습니다.</p>
                             </div>
                             <div class="onboarding-plan-row">
                                 <article class="onboarding-plan-chip">
                                     <strong>STARTER</strong>
-                                    <span>빠르게 체험</span>
+                                    <span>가볍게 바로 체험</span>
                                 </article>
-                                <article class="onboarding-plan-chip">
+                                <article class="onboarding-plan-chip onboarding-plan-chip--featured">
                                     <strong>STANDARD</strong>
-                                    <span>가장 많이 선택</span>
+                                    <span>가장 많이 고르는 선택</span>
                                 </article>
                                 <article class="onboarding-plan-chip">
                                     <strong>MASTER</strong>
-                                    <span>깊이 있게 추천</span>
+                                    <span>깊이 있게 받아보기</span>
                                 </article>
                             </div>
-                            <div class="onboarding-feature-list onboarding-feature-list--compact">
-                                <article class="onboarding-feature-item">
-                                    <span class="onboarding-feature-icon">추천</span>
-                                    <div class="onboarding-feature-copy">
-                                        <strong>받는 즉시 복사하고 바로 활용</strong>
-                                        <p>엄선 번호를 확인하자마자 복사하고, 저장된 이력으로 다시 꺼내볼 수 있습니다.</p>
+                            <div class="onboarding-premium-spotlight">
+                                <article class="onboarding-spotlight-item">
+                                    <span class="onboarding-spotlight-bullet">1</span>
+                                    <div class="onboarding-spotlight-copy">
+                                        <strong>엄선된 세트를 바로 받습니다</strong>
+                                        <p>직접 고를 시간을 줄이고, 비교 가능한 추천 세트를 즉시 확인합니다.</p>
                                     </div>
                                 </article>
+                                <article class="onboarding-spotlight-item">
+                                    <span class="onboarding-spotlight-bullet">2</span>
+                                    <div class="onboarding-spotlight-copy">
+                                        <strong>복사, 저장, 재확인이 한 번에 이어집니다</strong>
+                                        <p>마음에 든 세트를 바로 붙여넣고 다음 회차까지 자연스럽게 이어갈 수 있습니다.</p>
+                                    </div>
+                                </article>
+                            </div>
+                        </article>
+                    </section>
+                    <section class="onboarding-slide" data-onboarding-slide="3" aria-hidden="true">
+                        <article class="onboarding-slide-card onboarding-slide-card--flow">
+                            <div class="onboarding-card-head">
+                                <span class="onboarding-slide-badge">사용 흐름</span>
+                                <strong>오늘 고르고 끝나는 것이 아니라, 다음 선택까지 빨라집니다</strong>
+                                <p>필터 적용부터 번호 생성, 추천 확인, 저장과 재확인까지 이어져 회차가 바뀌어도 같은 흐름으로 빠르게 사용할 수 있습니다.</p>
+                            </div>
+                            <div class="onboarding-flow-grid" aria-label="서비스 이용 흐름">
+                                <article class="onboarding-flow-step">
+                                    <span class="onboarding-flow-index">1</span>
+                                    <strong>제외수와 선호 조건 설정</strong>
+                                    <p>내가 꺼리는 수부터 먼저 정리</p>
+                                </article>
+                                <article class="onboarding-flow-step">
+                                    <span class="onboarding-flow-index">2</span>
+                                    <strong>필터 적용 후 번호 생성</strong>
+                                    <p>남은 후보를 즉시 세트로 확인</p>
+                                </article>
+                                <article class="onboarding-flow-step">
+                                    <span class="onboarding-flow-index">3</span>
+                                    <strong>직접 선택 또는 추천 비교</strong>
+                                    <p>원하는 방식으로 빠르게 결정</p>
+                                </article>
+                                <article class="onboarding-flow-step">
+                                    <span class="onboarding-flow-index">4</span>
+                                    <strong>저장해 다음 회차에도 재활용</strong>
+                                    <p>로그인하면 기록이 이어집니다</p>
+                                </article>
+                            </div>
+                            <div class="onboarding-flow-note">
+                                <strong>로그인하면 더 편해집니다</strong>
+                                <span>생성 결과와 추천 이력이 쌓여, 다음 회차에 다시 고를 때도 시작이 훨씬 빠릅니다.</span>
                             </div>
                         </article>
                     </section>
@@ -3256,8 +3353,10 @@
             <div class="onboarding-controls">
                 <button class="onboarding-nav-btn" type="button" data-onboarding-nav="prev" aria-label="이전 소개 보기">이전</button>
                 <div class="onboarding-pagination" aria-label="온보딩 페이지 이동">
-                    <button class="onboarding-dot is-active" type="button" data-onboarding-dot="0" aria-pressed="true" aria-label="직접 선택 소개 보기"></button>
-                    <button class="onboarding-dot" type="button" data-onboarding-dot="1" aria-pressed="false" aria-label="엄선 추천 소개 보기"></button>
+                    <button class="onboarding-dot is-active" type="button" data-onboarding-dot="0" aria-pressed="true" aria-label="서비스 소개 보기"></button>
+                    <button class="onboarding-dot" type="button" data-onboarding-dot="1" aria-pressed="false" aria-label="번호 제외 소개 보기"></button>
+                    <button class="onboarding-dot" type="button" data-onboarding-dot="2" aria-pressed="false" aria-label="엄선 추천 소개 보기"></button>
+                    <button class="onboarding-dot" type="button" data-onboarding-dot="3" aria-pressed="false" aria-label="사용 흐름 소개 보기"></button>
                 </div>
                 <button class="onboarding-nav-btn" type="button" data-onboarding-nav="next" aria-label="다음 소개 보기">다음</button>
             </div>
