@@ -12250,6 +12250,58 @@ body[data-theme="dark"] #tab-mypage .mypage-access-section {
     margin: 0 2px;
 }
 
+#tab-dashboard .dashboard-card--result .dashboard-card-head {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-round-row {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 14px;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-round-copy {
+    justify-items: center;
+    text-align: center;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-round-copy strong,
+#tab-dashboard .dashboard-card--result .dashboard-round-copy p,
+#tab-dashboard .dashboard-card--result .result-detail {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-balls {
+    display: grid;
+    gap: 10px;
+    justify-items: center;
+    text-align: center;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-balls .result-ballBox {
+    justify-content: center;
+}
+
+#tab-dashboard .dashboard-card--result .result-txtBox {
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
+    justify-content: center;
+    gap: 20px;
+    text-align: center;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-prize {
+    justify-items: center;
+    text-align: center;
+}
+
 #tab-dashboard .dashboard-win-summary {
     display: grid;
     gap: 18px;
