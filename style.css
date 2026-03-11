@@ -10165,7 +10165,7 @@ textarea {
 }
 
 #tab-draw .draw-studio-title h2 {
-    max-width: 680px;
+    max-width: none;
     margin: 0;
     font-size: clamp(22px, 2.1vw, 28px);
     line-height: 1.14;
@@ -10188,6 +10188,12 @@ textarea {
     min-height: 38px;
     padding: 0 11px;
     font-size: 12px;
+}
+
+@media (min-width: 1024px) {
+    #tab-draw .draw-studio-title h2 {
+        white-space: nowrap;
+    }
 }
 
 #tab-draw .draw-studio {
@@ -11446,16 +11452,24 @@ textarea {
     border-radius: 28px !important;
 }
 
+#tab-mypage .mypage-hero-card--account {
+    background: linear-gradient(180deg, #ffffff 0%, #f6faff 100%) !important;
+    border: 1px solid rgba(27, 100, 218, 0.08) !important;
+    box-shadow: 0 20px 38px rgba(15, 23, 42, 0.06) !important;
+}
+
 #tab-mypage .mypage-account-top {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
 }
 
 #tab-mypage .mypage-account-identity {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 16px;
     min-width: 0;
 }
@@ -11477,7 +11491,7 @@ textarea {
 
 #tab-mypage .mypage-account-copy {
     display: grid;
-    gap: 6px;
+    gap: 4px;
     min-width: 0;
 }
 
@@ -11500,10 +11514,11 @@ textarea {
 
 #tab-mypage .mypage-hero-email {
     margin: 0;
-    font-size: clamp(28px, 2.8vw, 38px);
-    line-height: 1.08;
-    letter-spacing: -0.05em;
+    font-size: clamp(24px, 2.3vw, 30px);
+    line-height: 1.18;
+    letter-spacing: -0.04em;
     word-break: break-word;
+    max-width: 18ch;
 }
 
 #tab-mypage .mypage-account-meta,
@@ -11512,6 +11527,11 @@ textarea {
 #tab-mypage .mypage-access-bullets {
     display: grid;
     gap: 12px;
+}
+
+#tab-mypage .mypage-account-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
 }
 
 #tab-mypage .mypage-account-meta-row,
@@ -11526,39 +11546,68 @@ textarea {
 #tab-mypage .mypage-account-meta-row,
 #tab-mypage .mypage-data-row {
     display: grid;
-    gap: 7px;
-    padding: 16px 18px;
+    gap: 10px;
+    padding: 18px 20px;
+}
+
+#tab-mypage .mypage-account-meta-row {
+    align-content: start;
+    min-height: 138px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(246, 249, 253, 0.98));
+    border-color: rgba(148, 163, 184, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76);
 }
 
 #tab-mypage .mypage-account-meta-row strong,
 #tab-mypage .mypage-data-row strong {
     color: #191f28;
-    font-size: 17px;
-    line-height: 1.35;
+    font-size: 18px;
+    line-height: 1.28;
     letter-spacing: -0.03em;
 }
 
 #tab-mypage .mypage-account-meta-value {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: 12px;
 }
 
 #tab-mypage .mypage-inline-edit {
-    min-height: 32px;
-    padding: 0 12px;
+    min-height: 34px;
+    padding: 0 14px;
     border-radius: 999px;
     background: #ffffff !important;
-    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    border: 1px solid rgba(27, 100, 218, 0.12) !important;
     color: #4e5968 !important;
     font-size: 12px;
     font-weight: 800;
 }
 
+#tab-mypage .mypage-account-meta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#tab-mypage .mypage-account-meta-row--plan strong {
+    color: var(--mypage-accent);
+    font-size: clamp(28px, 2.5vw, 34px);
+    line-height: 1;
+}
+
+#tab-mypage .mypage-account-meta-note {
+    color: #6b7684;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
 #tab-mypage .mypage-account-helper {
     margin: 0;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #f4f8fc, #eef4fa);
+    border: 1px solid rgba(148, 163, 184, 0.14);
 }
 
 #tab-mypage .mypage-account-actions,
@@ -11569,6 +11618,13 @@ textarea {
     gap: 10px;
 }
 
+#tab-mypage .mypage-account-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 12px;
+}
+
 #tab-mypage .mypage-account-actions .cta,
 #tab-mypage .mypage-account-actions .ghost,
 #tab-mypage .mypage-slot-actions .ghost,
@@ -11576,6 +11632,20 @@ textarea {
     min-height: 44px;
     padding: 0 16px;
     border-radius: 16px;
+}
+
+#tab-mypage .mypage-account-actions .cta,
+#tab-mypage .mypage-account-actions .ghost {
+    width: 100%;
+}
+
+#tab-mypage .mypage-account-top .badge {
+    min-height: 36px;
+    padding: 0 14px;
+    border-radius: 999px;
+    background: rgba(27, 100, 218, 0.08);
+    border: 1px solid rgba(27, 100, 218, 0.14);
+    color: var(--mypage-accent);
 }
 
 #tab-mypage .mypage-account-actions > [hidden],
@@ -11812,6 +11882,30 @@ body[data-theme="dark"] #tab-mypage .mypage-account-actions .ghost {
     color: #dbe6f5 !important;
 }
 
+body[data-theme="dark"] #tab-mypage .mypage-hero-card--account {
+    background: linear-gradient(180deg, rgba(20, 29, 42, 0.96), rgba(15, 23, 34, 0.94)) !important;
+    border-color: rgba(96, 165, 250, 0.14) !important;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-top {
+    border-bottom-color: rgba(148, 163, 184, 0.16);
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-helper {
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.84), rgba(15, 23, 42, 0.9));
+    border-color: rgba(148, 163, 184, 0.16);
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-top .badge {
+    background: rgba(96, 165, 250, 0.14);
+    border-color: rgba(96, 165, 250, 0.2);
+    color: #bfdbfe;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-meta-note {
+    color: rgba(226, 232, 240, 0.78);
+}
+
 body[data-theme="dark"] #tab-mypage .mypage-account-copy h3,
 body[data-theme="dark"] #tab-mypage .mypage-card .info-header h3,
 body[data-theme="dark"] #tab-mypage .mypage-access-head h3,
@@ -11845,8 +11939,10 @@ body[data-theme="dark"] #tab-mypage .mypage-access-section {
 
     #tab-mypage .mypage-account-top {
         flex-direction: column;
+        align-items: stretch;
     }
 
+    #tab-mypage .mypage-account-meta,
     #tab-mypage .mypage-status-strip--embedded,
     #tab-mypage .mypage-access-section .auth-buttons {
         grid-template-columns: 1fr;
@@ -11870,6 +11966,7 @@ body[data-theme="dark"] #tab-mypage .mypage-access-section {
 @media (max-width: 520px) {
     #tab-mypage .mypage-account-identity {
         gap: 12px;
+        align-items: center;
     }
 
     #tab-mypage .mypage-avatar-mark {
@@ -11887,6 +11984,12 @@ body[data-theme="dark"] #tab-mypage .mypage-access-section {
 
     #tab-mypage .mypage-hero-email {
         font-size: clamp(24px, 7vw, 30px);
+        max-width: none;
+    }
+
+    #tab-mypage .mypage-account-meta-row {
+        min-height: 0;
+        padding: 16px;
     }
 }
 

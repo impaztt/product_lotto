@@ -1863,8 +1863,8 @@
 		            <div class="draw-studio-header">
 		                <div class="draw-studio-title">
 		                    <span class="draw-studio-kicker">번호 설계</span>
-		                    <h2>직접 선택과 월정액 추천을 한 화면에서 관리하세요</h2>
-		                    <p>빠른 난이도 선택, 규칙, 저장, 추천 흐름을 한 화면에서 이어서 관리합니다.</p>
+		                    <h2>직접 선택과 추천 플랜을 한눈에 관리합니다</h2>
+		                    <p>원하는 방식만 골라 바로 번호를 확인할 수 있습니다.</p>
 		                    <div class="draw-service-switch" role="tablist" aria-label="추첨 이용 방식">
 		                        <button class="draw-service-btn is-active" type="button" role="tab" aria-selected="true" data-draw-service="self">직접 선택</button>
 		                        <button class="draw-service-btn" type="button" role="tab" aria-selected="false" data-draw-service="premium">월정액 추천</button>
@@ -2800,30 +2800,33 @@
 		                            <div class="mypage-avatar-mark" aria-hidden="true">LP</div>
 		                            <div class="mypage-account-copy">
 		                                <span class="section-kicker">내 계정</span>
-		                                <h3>로그인 상태</h3>
+		                                <h3>계정과 이용 상태</h3>
 		                                <strong class="mypage-hero-email" id="mypage-profile-email">비회원으로 둘러보는 중</strong>
 		                            </div>
 		                        </div>
 		                        <span class="badge muted" id="mypage-auth-badge">비회원</span>
 		                    </div>
 		                    <div class="mypage-account-meta">
-		                        <div class="mypage-account-meta-row">
+		                        <article class="mypage-account-meta-row mypage-account-meta-row--nickname">
 		                            <span class="info-label">닉네임</span>
 		                            <div class="mypage-account-meta-value">
 		                                <strong id="mypage-nickname-display">첫 로그인 후 자동으로 정해져요</strong>
-		                                <button id="nickname-open-modal-btn" class="ghost mypage-inline-edit" type="button">변경</button>
+		                                <div class="mypage-account-meta-actions">
+		                                    <button id="nickname-open-modal-btn" class="ghost mypage-inline-edit" type="button">닉네임 변경</button>
+		                                </div>
 		                            </div>
-		                        </div>
-		                        <div class="mypage-account-meta-row">
+		                        </article>
+		                        <article class="mypage-account-meta-row mypage-account-meta-row--plan">
 		                            <span class="info-label">현재 플랜</span>
 		                            <strong id="mypage-membership-tier">FREE</strong>
-		                        </div>
+		                            <span class="mypage-account-meta-note">저장 기준과 추천 기록을 같은 흐름으로 정리합니다.</span>
+		                        </article>
 		                    </div>
-		                    <p class="helper-text mypage-account-helper" id="nickname-status">로그인 후 닉네임과 저장한 기준, 최근 활동을 이어서 관리할 수 있습니다.</p>
+		                    <p class="helper-text mypage-account-helper" id="nickname-status">로그인하면 저장 기준, 추천 기록, 최근 활동이 그대로 이어집니다.</p>
 		                    <div class="mypage-inline-actions mypage-account-actions">
-		                        <button class="cta" type="button" data-open-auth="true">로그인하고 기준 이어보기</button>
+		                        <button class="cta" type="button" data-open-auth="true">로그인하고 이어보기</button>
 		                        <button class="ghost" type="button" data-logout="true" hidden>로그아웃</button>
-		                        <button class="ghost" type="button" data-tab-link="draw">추첨으로 이동</button>
+		                        <button class="ghost" type="button" data-tab-link="draw">추첨 탭 열기</button>
 		                    </div>
 		                </article>
 		                <article class="mypage-hero-card mypage-hero-card--plan mypage-plan-panel">
