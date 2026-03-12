@@ -2332,7 +2332,7 @@
                                         <div class="draw-premium-plan-item"><strong>이력 저장</strong><span>마이페이지 즉시 반영</span></div>
                                     </div>
                                 </section>
-                                <section class="draw-metric-card wide draw-premium-card">
+		                            <section id="draw-premium-compare-section" class="draw-metric-card wide draw-premium-card">
                                     <div class="draw-premium-products-head">
                                         <div>
                                             <h3>추천 플랜 선택</h3>
@@ -2400,7 +2400,7 @@
 	                                        </article>
 	                                    </div>
 	                                </section>
-                                    <section class="draw-metric-card wide draw-premium-card draw-premium-results" data-draw-mode-only="premium" hidden>
+                                    <section id="draw-premium-results-section" class="draw-metric-card wide draw-premium-card draw-premium-results" data-draw-mode-only="premium" hidden>
                                         <div class="draw-premium-products-head">
                                             <div>
                                                 <h3>이번 회차 추천번호</h3>
@@ -2869,22 +2869,81 @@
 		                    </div>
 		                </article>
 		                <article class="mypage-hero-card mypage-hero-card--plan mypage-plan-panel">
-		                    <div class="mypage-hero-head">
+		                    <div class="mypage-hero-head mypage-plan-head">
 		                        <div>
 		                            <span class="section-kicker">추천 플랜</span>
-		                            <h3>현재 이용 구성</h3>
+		                            <h3>이용 플랜과 추천 구성</h3>
 		                        </div>
 		                        <span class="mypage-plan-badge" id="mypage-membership-next">내게 맞는 플랜 보기</span>
 		                    </div>
-		                    <div class="mypage-plan-summary">
-		                        <strong id="mypage-membership-tier-summary">FREE</strong>
-		                        <p id="mypage-membership-desc">직접 선택부터 추천 세트 확인까지 현재 구성 기준으로 정리합니다.</p>
+		                    <div class="mypage-plan-current">
+		                        <div class="mypage-plan-summary">
+		                            <span class="mypage-plan-current-label">현재 사용 중인 구성</span>
+		                            <strong id="mypage-membership-tier-summary">FREE</strong>
+		                            <p id="mypage-membership-desc">직접 선택부터 추천 세트 확인까지 현재 구성 기준으로 정리합니다.</p>
+		                        </div>
+		                        <div class="mypage-plan-highlight" aria-label="현재 플랜 요약">
+		                            <article class="mypage-plan-highlight-item">
+		                                <span>이번 회차 추천 세트</span>
+		                                <strong id="mypage-plan-set-count">0세트</strong>
+		                            </article>
+		                            <article class="mypage-plan-highlight-item">
+		                                <span>전체 복사</span>
+		                                <strong id="mypage-plan-copy-access">플랜 선택 후</strong>
+		                            </article>
+		                            <article class="mypage-plan-highlight-item">
+		                                <span>이용 흐름</span>
+		                                <strong id="mypage-plan-note">직접 선택 사용 중</strong>
+		                            </article>
+		                        </div>
 		                    </div>
-		                    <div class="mypage-plan-pills">
-		                        <span id="mypage-plan-note">직접 선택 사용 중</span>
-		                        <span>추천 세트</span>
-		                        <span>기록 확인</span>
-		                        <span>보관함 연동</span>
+		                    <div class="mypage-plan-callout">
+		                        <strong id="mypage-plan-guide">추천 플랜을 고르면 이번 회차 추천번호를 바로 받아볼 수 있습니다.</strong>
+		                        <span id="mypage-plan-flow">STANDARD가 세트 수와 기록 흐름이 가장 균형적인 기본 추천입니다.</span>
+		                    </div>
+		                    <div class="mypage-plan-offers" aria-label="추천 플랜 상품">
+		                        <article class="mypage-plan-offer-card" data-premium-plan-card="starter">
+		                            <div class="mypage-plan-offer-top">
+		                                <span class="mypage-plan-offer-label">입문형</span>
+		                                <strong>STARTER</strong>
+		                                <span class="mypage-plan-offer-price">월 4,900원</span>
+		                            </div>
+		                            <p>추천 흐름을 가볍게 시작하면서 바로 결과를 확인하는 구성입니다.</p>
+		                            <ul class="mypage-plan-offer-list">
+		                                <li>이번 회차 추천 세트 3개</li>
+		                                <li>전체 복사 지원</li>
+		                                <li>마이페이지 기록 저장</li>
+		                            </ul>
+		                            <button type="button" class="premium-plan-buy mypage-plan-buy" data-premium-plan="starter">STARTER 시작하기</button>
+		                        </article>
+		                        <article class="mypage-plan-offer-card is-featured" data-premium-plan-card="standard">
+		                            <div class="mypage-plan-offer-top">
+		                                <span class="mypage-plan-offer-label is-best">추천</span>
+		                                <strong>STANDARD</strong>
+		                                <span class="mypage-plan-offer-price">월 9,900원</span>
+		                            </div>
+		                            <p>추천 세트 수와 기록 흐름이 가장 균형적인 기본 플랜입니다.</p>
+		                            <ul class="mypage-plan-offer-list">
+		                                <li>이번 회차 추천 세트 5개</li>
+		                                <li>전체 복사와 기록 확인</li>
+		                                <li>추첨 탭과 마이페이지 즉시 연동</li>
+		                            </ul>
+		                            <button type="button" class="premium-plan-buy mypage-plan-buy" data-premium-plan="standard">STANDARD 시작하기</button>
+		                        </article>
+		                        <article class="mypage-plan-offer-card" data-premium-plan-card="master">
+		                            <div class="mypage-plan-offer-top">
+		                                <span class="mypage-plan-offer-label is-pro">확장형</span>
+		                                <strong>MASTER</strong>
+		                                <span class="mypage-plan-offer-price">월 19,900원</span>
+		                            </div>
+		                            <p>더 넓은 세트 범위를 한 번에 보고 싶은 사용자를 위한 상위 구성입니다.</p>
+		                            <ul class="mypage-plan-offer-list">
+		                                <li>이번 회차 추천 세트 7개</li>
+		                                <li>전체 복사와 기록 저장</li>
+		                                <li>넓은 추천 폭으로 빠른 비교</li>
+		                            </ul>
+		                            <button type="button" class="premium-plan-buy mypage-plan-buy" data-premium-plan="master">MASTER 시작하기</button>
+		                        </article>
 		                    </div>
 		                    <div class="mypage-status-strip mypage-status-strip--embedded" aria-label="이용 지표">
 		                        <article class="mypage-status-kpi">
@@ -2901,7 +2960,7 @@
 		                        </article>
 		                    </div>
 		                    <div class="mypage-inline-actions mypage-inline-actions--plan">
-		                        <button id="mypage-plan-manage-btn" class="ghost" type="button">추천 플랜 보기</button>
+		                        <button id="mypage-plan-manage-btn" class="cta" type="button">추천 플랜 비교 보기</button>
 		                        <button id="mypage-plan-cancel-btn" class="ghost" type="button" hidden>FREE로 전환</button>
 		                    </div>
 		                </article>

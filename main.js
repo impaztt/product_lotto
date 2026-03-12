@@ -130,6 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const premiumCopyAllBtn = document.getElementById('premium-copy-all-btn');
     const premiumNumbersContainer = document.getElementById('premium-numbers-container');
     const premiumCopyStatusEl = document.getElementById('premium-copy-status');
+    const drawPremiumCompareSectionEl = document.getElementById('draw-premium-compare-section');
+    const drawPremiumResultsSectionEl = document.getElementById('draw-premium-results-section');
     const openRulePickerBtn = document.getElementById('open-rule-picker');
     const closeRulePickerBtn = document.getElementById('close-rule-picker');
     const rulePickerPanel = document.getElementById('rule-picker-panel');
@@ -165,8 +167,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const mypageMembershipDescEl = document.getElementById('mypage-membership-desc');
     const mypageMembershipNextEl = document.getElementById('mypage-membership-next');
     const mypagePlanNoteEl = document.getElementById('mypage-plan-note');
+    const mypagePlanSetCountEl = document.getElementById('mypage-plan-set-count');
+    const mypagePlanCopyAccessEl = document.getElementById('mypage-plan-copy-access');
+    const mypagePlanGuideEl = document.getElementById('mypage-plan-guide');
+    const mypagePlanFlowEl = document.getElementById('mypage-plan-flow');
     const mypagePlanManageBtn = document.getElementById('mypage-plan-manage-btn');
     const mypagePlanCancelBtn = document.getElementById('mypage-plan-cancel-btn');
+    const mypagePlanOfferCards = Array.from(document.querySelectorAll('.mypage-plan-offer-card[data-premium-plan-card]'));
     const mypagePresetBadgeEl = document.getElementById('mypage-preset-badge');
     const mypagePresetSummaryEl = document.getElementById('mypage-preset-summary');
     const mypagePresetUpdatedEl = document.getElementById('mypage-preset-updated');
@@ -761,8 +768,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             event.preventDefault();
-            setActiveTab('draw', true);
-            setDrawServiceMode('premium');
+            openPremiumPlanWorkspace({
+                focusResults: false
+            });
             showActionPopup('추천 플랜을 고르면 이번 회차 추천 세트를 바로 확인할 수 있습니다.');
         });
     }
@@ -782,8 +790,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             await setMembershipTier(plan);
-            setActiveTab('draw', true);
-            setDrawServiceMode('premium');
+            openPremiumPlanWorkspace({
+                focusResults: true
+            });
             showActionPopup(`${planMeta.name} 구성을 선택했습니다. ${planMeta.price} 기준으로 추천 ${getRecommendedSetCount(plan)}세트를 바로 확인할 수 있습니다.`);
         });
     });
@@ -1317,13 +1326,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (mypagePlanManageBtn) {
         mypagePlanManageBtn.addEventListener('click', () => {
-            if (!isMember()) {
-                openAuthModal();
+            if (isAuthStatePending()) {
+                setFirebaseAuthStatus(getAuthPendingStatusMessage());
                 return;
             }
-            setActiveTab('draw', true);
-            setDrawServiceMode('premium');
-            showActionPopup('원하는 플랜을 선택하거나 현재 활성화된 플랜으로 추천번호를 생성할 수 있습니다.');
+            if (!isMember()) {
+                openPremiumPlanWorkspace({
+                    focusResults: false
+                });
+                showActionPopup('추천 플랜 구성을 먼저 비교하고, 마음에 들면 로그인 후 바로 시작할 수 있습니다.');
+                return;
+            }
+            const focusResults = isPremiumMember();
+            openPremiumPlanWorkspace({
+                focusResults
+            });
+            showActionPopup(
+                focusResults
+                    ? '현재 선택한 플랜 기준 추천번호 영역으로 이동했습니다.'
+                    : '추천 플랜 비교 영역으로 이동했습니다. 원하는 구성을 바로 선택할 수 있습니다.'
+            );
         });
     }
 
@@ -2158,6 +2180,32 @@ document.addEventListener('DOMContentLoaded', () => {
         return Math.max(0, Number(getMembershipPlanMeta(tier).recommendedSetCount) || 0);
     }
 
+    function scrollIntoViewSoon(target) {
+        if (!target || typeof target.scrollIntoView !== 'function') {
+            return;
+        }
+        window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                    inline: 'nearest'
+                });
+            });
+        });
+    }
+
+    function openPremiumPlanWorkspace(options = {}) {
+        const { focusResults = false } = options;
+        setActiveTab('draw', true);
+        setDrawServiceMode('premium');
+        const shouldFocusResults = Boolean(focusResults && isPremiumMember());
+        const target = shouldFocusResults
+            ? (drawPremiumResultsSectionEl || drawPremiumCompareSectionEl)
+            : (drawPremiumCompareSectionEl || drawPremiumResultsSectionEl);
+        scrollIntoViewSoon(target);
+    }
+
     function updateDashboardSummaryUi() {
         if (dashSyncStatusEl) {
             if (currentWeeklyData && Number(currentWeeklyData.drwNo) > 0) {
@@ -2287,6 +2335,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const plan = getMembershipPlanMeta();
         const stats = getGenerationStats();
         const authPending = isAuthStatePending();
+        const member = isMember();
+        const premiumActive = isPremiumMember();
+        const recommendedSetCount = member ? getRecommendedSetCount(plan.id) : 0;
         const savedRules = readStoredRuleIds('lotto_rules');
         const customPreset = readStoredRuleIds('lotto_custom_preset');
         const savedRulesUpdatedAt = localStorage.getItem(RULES_UPDATED_AT_KEY) || '';
@@ -2313,38 +2364,111 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         if (mypageMembershipTierEl) {
-            mypageMembershipTierEl.textContent = authPending ? '확인 중' : (isMember() ? plan.label : 'FREE');
+            mypageMembershipTierEl.textContent = authPending ? '확인 중' : (member ? plan.label : 'FREE');
         }
         if (mypageMembershipTierSummaryEl) {
-            mypageMembershipTierSummaryEl.textContent = authPending ? '확인 중' : (isMember() ? plan.label : 'FREE');
+            mypageMembershipTierSummaryEl.textContent = authPending ? '확인 중' : (member ? plan.label : 'FREE');
         }
         if (mypageMembershipDescEl) {
             mypageMembershipDescEl.textContent = authPending
                 ? '저장된 계정과 플랜 상태를 확인하고 있습니다.'
-                : isMember()
-                ? plan.description
-                : '로그인하면 저장한 기준과 최근 기록을 그대로 이어서 볼 수 있습니다.';
+                : premiumActive
+                ? `${plan.label} 구성으로 이번 회차 추천 ${recommendedSetCount}세트와 전체 복사를 바로 사용할 수 있습니다.`
+                : member
+                ? '지금은 FREE 흐름으로 직접 기준을 고르고 있습니다. STARTER 3세트, STANDARD 5세트, MASTER 7세트로 바로 확장할 수 있습니다.'
+                : '로그인하면 저장한 기준과 최근 기록을 그대로 이어서 보고, 원하는 추천 플랜도 바로 선택할 수 있습니다.';
         }
         if (mypageMembershipNextEl) {
-            mypageMembershipNextEl.textContent = authPending ? '로그인 상태 확인 중' : (isMember() ? plan.nextLabel : '추천 플랜 보기');
+            mypageMembershipNextEl.textContent = authPending
+                ? '로그인 상태 확인 중'
+                : premiumActive
+                ? `${plan.label} 사용 중`
+                : member
+                ? '지금 플랜 업그레이드 가능'
+                : '로그인 후 즉시 시작';
         }
         if (mypagePlanNoteEl) {
             if (authPending) {
-                mypagePlanNoteEl.textContent = '로그인 상태 확인 중';
-            } else if (!isMember()) {
-                mypagePlanNoteEl.textContent = '로그인 후 플랜 선택 가능';
-            } else if (isPremiumMember()) {
-                mypagePlanNoteEl.textContent = `${plan.label} 선택 중`;
+                mypagePlanNoteEl.textContent = '확인 중';
+            } else if (!member) {
+                mypagePlanNoteEl.textContent = '로그인 후 추천 시작';
+            } else if (premiumActive) {
+                mypagePlanNoteEl.textContent = `${plan.label} 추천 사용 중`;
             } else {
                 mypagePlanNoteEl.textContent = '직접 선택 사용 중';
             }
         }
+        if (mypagePlanSetCountEl) {
+            mypagePlanSetCountEl.textContent = authPending
+                ? '-'
+                : premiumActive
+                ? `${recommendedSetCount}세트`
+                : '3~7세트';
+        }
+        if (mypagePlanCopyAccessEl) {
+            mypagePlanCopyAccessEl.textContent = authPending
+                ? '확인 중'
+                : premiumActive
+                ? '바로 사용'
+                : member
+                ? '선택 시 해제'
+                : '로그인 후 해제';
+        }
+        if (mypagePlanGuideEl) {
+            mypagePlanGuideEl.textContent = authPending
+                ? '플랜 정보를 불러오는 중입니다.'
+                : premiumActive
+                ? `${plan.label}로 이번 회차 추천 ${recommendedSetCount}세트를 바로 받아볼 수 있습니다.`
+                : member
+                ? '추천 플랜을 고르면 이번 회차 추천번호와 기록 흐름을 한 번에 이어서 볼 수 있습니다.'
+                : 'STANDARD가 세트 수와 기록 흐름이 가장 균형적인 기본 추천입니다.';
+        }
+        if (mypagePlanFlowEl) {
+            mypagePlanFlowEl.textContent = authPending
+                ? '잠시만 기다려 주세요.'
+                : premiumActive
+                ? '현재 플랜으로 추천번호 생성 화면까지 바로 이어집니다.'
+                : member
+                ? 'FREE 상태에서는 직접 선택 중심으로 사용 중이며, 아래 카드에서 즉시 플랜을 고를 수 있습니다.'
+                : '플랜 카드를 눌러 구성을 비교하고, 로그인 후 바로 시작할 수 있습니다.';
+        }
         if (mypagePlanManageBtn) {
-            mypagePlanManageBtn.textContent = authPending ? '확인 중' : (isMember() ? '추천 플랜 조정' : '로그인하고 시작');
+            mypagePlanManageBtn.textContent = authPending
+                ? '확인 중'
+                : premiumActive
+                ? '추천번호 받으러 가기'
+                : member
+                ? '추천 플랜 고르기'
+                : '추천 플랜 비교 보기';
+            mypagePlanManageBtn.disabled = authPending;
         }
         if (mypagePlanCancelBtn) {
-            mypagePlanCancelBtn.hidden = !isPremiumMember();
+            mypagePlanCancelBtn.hidden = !premiumActive;
+            mypagePlanCancelBtn.disabled = authPending;
+            mypagePlanCancelBtn.textContent = premiumActive ? 'FREE로 되돌리기' : 'FREE로 전환';
         }
+        mypagePlanOfferCards.forEach(card => {
+            const tier = String(card.dataset.premiumPlanCard || '').toLowerCase();
+            const isCurrent = !authPending && member && plan.id === tier;
+            card.classList.toggle('is-active', isCurrent);
+            const actionButton = card.querySelector('.premium-plan-buy');
+            const label = card.querySelector('.mypage-plan-offer-top strong')?.textContent || tier.toUpperCase();
+            if (!actionButton) {
+                return;
+            }
+            if (authPending) {
+                actionButton.disabled = true;
+                actionButton.textContent = '확인 중';
+                return;
+            }
+            actionButton.disabled = isCurrent;
+            actionButton.textContent = isCurrent
+                ? `${label} 사용 중`
+                : member
+                ? `${label} 시작하기`
+                : `${label} 로그인 후 시작`;
+            actionButton.setAttribute('aria-pressed', String(isCurrent));
+        });
         if (mypagePresetBadgeEl) {
             mypagePresetBadgeEl.textContent = `${strongestPresetCount}개`;
         }
