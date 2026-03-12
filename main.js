@@ -316,6 +316,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const qrOpenRoundBtn = document.getElementById('qr-open-round-btn');
     const qrCopyNumbersBtn = document.getElementById('qr-copy-numbers-btn');
     const appToastEl = document.getElementById('app-toast');
+    const helpChatWidgetEl = document.getElementById('help-chat-widget');
+    const helpChatPanelEl = document.getElementById('help-chat-panel');
+    const helpChatBodyEl = document.getElementById('help-chat-body');
+    const helpChatFormEl = document.getElementById('help-chat-form');
+    const helpChatInputEl = document.getElementById('help-chat-input');
+    const helpChatSendBtn = document.getElementById('help-chat-send');
+    const helpChatCloseBtn = document.getElementById('help-chat-close');
+    const helpChatFabEl = document.getElementById('help-chat-fab');
     const dashWinRoundLabelEl = document.getElementById('dash-win-round-label');
     const dashWinStatusEl = document.getElementById('dash-win-status');
     const dashWinTotalGeneratedEl = document.getElementById('dash-win-total-generated');
@@ -378,6 +386,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let welcomeModalDismissedInSession = false;
     let onboardingSlideIndex = 0;
     let revealObserver = null;
+    let helpChatInitialized = false;
+    let helpChatReplyTimer = 0;
+    let helpChatTypingMessageEl = null;
     const DRAW_ENTRY_LOCAL_KEY = 'lotto_guest_tracking_id';
     const GENERATION_STATS_KEY = 'lotto_generation_stats';
     const RULES_UPDATED_AT_KEY = 'lotto_rules_updated_at';
@@ -386,6 +397,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const GOOGLE_REDIRECT_STATE_KEY = 'lotto_google_redirect_state';
     const GOOGLE_REDIRECT_PENDING_TTL_MS = 10 * 60 * 1000;
     const KAKAO_INAPP_NOTICE_DISMISSED_KEY = 'lotto_kakao_inapp_notice_dismissed';
+    const HELP_CHAT_PROMPTS = {
+        app: '이 앱이 뭐야?',
+        draw: '번호는 어떻게 생성해?',
+        filters: '필터는 왜 고르지?',
+        login: '로그인은 왜 필요해?',
+        plan: '플랜 차이 알려줘',
+        dashboard: '대시보드는 뭐야?',
+        qr: 'QR은 어떻게 써?'
+    };
     let googleRedirectFlowPending = readGoogleRedirectPendingState();
 
     const tabController = createTabController({
@@ -1714,6 +1734,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setOnboardingSlide(0);
         scheduleWelcomeModal();
         scheduleInAppBrowserPrompt();
+        initializeHelpChat();
         window.addEventListener('message', event => {
             if (!event || !event.data || event.data.type !== 'switch-tab') {
                 return;
@@ -3891,6 +3912,433 @@ document.addEventListener('DOMContentLoaded', () => {
             appToastEl.classList.remove('is-visible');
             appToastEl.hidden = true;
         }, 2600);
+    }
+
+    function normalizeHelpChatQuery(value) {
+        return String(value || '')
+            .toLowerCase()
+            .replace(/\s+/g, '')
+            .replace(/[?!.,/\\()[\]{}'"]/g, '');
+    }
+
+    function matchesHelpChatQuery(query, keywords = []) {
+        return keywords.some(keyword => query.includes(normalizeHelpChatQuery(keyword)));
+    }
+
+    function createHelpChatPromptAction(promptKey) {
+        const label = HELP_CHAT_PROMPTS[promptKey];
+        return label ? { kind: 'ask', label, value: label } : null;
+    }
+
+    function buildHelpChatPromptActions(keys = []) {
+        return keys
+            .map(createHelpChatPromptAction)
+            .filter(Boolean);
+    }
+
+    function formatHelpChatText(value) {
+        return escapeHtml(value).replace(/\n/g, '<br>');
+    }
+
+    function scrollHelpChatToBottom() {
+        if (!helpChatBodyEl) {
+            return;
+        }
+        window.requestAnimationFrame(() => {
+            helpChatBodyEl.scrollTop = helpChatBodyEl.scrollHeight;
+        });
+    }
+
+    function createHelpChatTypingDots() {
+        const wrapper = document.createElement('span');
+        wrapper.className = 'help-chat-typing';
+        for (let index = 0; index < 3; index += 1) {
+            wrapper.appendChild(document.createElement('span'));
+        }
+        return wrapper;
+    }
+
+    function createHelpChatMessageElement(options = {}) {
+        const {
+            sender = 'assistant',
+            text = '',
+            actions = [],
+            typing = false
+        } = options;
+        const message = document.createElement('article');
+        message.className = `help-chat-message is-${sender === 'user' ? 'user' : 'assistant'}`;
+
+        if (sender === 'assistant') {
+            const avatar = document.createElement('span');
+            avatar.className = 'help-chat-avatar';
+            avatar.setAttribute('aria-hidden', 'true');
+            avatar.textContent = '로';
+            message.appendChild(avatar);
+        }
+
+        const main = document.createElement('div');
+        main.className = 'help-chat-message-main';
+
+        if (sender === 'assistant') {
+            const name = document.createElement('span');
+            name.className = 'help-chat-name';
+            name.textContent = '로또 도우미';
+            main.appendChild(name);
+        }
+
+        const bubble = document.createElement('div');
+        bubble.className = 'help-chat-bubble';
+        if (typing) {
+            bubble.appendChild(createHelpChatTypingDots());
+        } else {
+            bubble.innerHTML = formatHelpChatText(text);
+        }
+        main.appendChild(bubble);
+
+        if (Array.isArray(actions) && actions.length) {
+            const actionRow = document.createElement('div');
+            actionRow.className = 'help-chat-actions';
+            actions.forEach(action => {
+                if (!action || !action.kind || !action.label) {
+                    return;
+                }
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'help-chat-action';
+                button.textContent = String(action.label);
+                button.dataset.actionKind = String(action.kind);
+                if (action.value != null) {
+                    button.dataset.actionValue = String(action.value);
+                }
+                if (action.toast) {
+                    button.dataset.actionToast = String(action.toast);
+                }
+                actionRow.appendChild(button);
+            });
+            if (actionRow.childElementCount) {
+                main.appendChild(actionRow);
+            }
+        }
+
+        message.appendChild(main);
+        return message;
+    }
+
+    function appendHelpChatMessage(options = {}) {
+        if (!helpChatBodyEl) {
+            return null;
+        }
+        const element = createHelpChatMessageElement(options);
+        helpChatBodyEl.appendChild(element);
+        scrollHelpChatToBottom();
+        return element;
+    }
+
+    function setHelpChatTyping(active) {
+        if (!helpChatBodyEl) {
+            return;
+        }
+        if (!active) {
+            if (helpChatTypingMessageEl && helpChatTypingMessageEl.parentNode) {
+                helpChatTypingMessageEl.parentNode.removeChild(helpChatTypingMessageEl);
+            }
+            helpChatTypingMessageEl = null;
+            return;
+        }
+        if (helpChatTypingMessageEl) {
+            return;
+        }
+        helpChatTypingMessageEl = appendHelpChatMessage({
+            sender: 'assistant',
+            typing: true
+        });
+    }
+
+    function syncHelpChatComposerState() {
+        if (!helpChatSendBtn || !helpChatInputEl) {
+            return;
+        }
+        helpChatSendBtn.disabled = !String(helpChatInputEl.value || '').trim();
+    }
+
+    function seedHelpChatConversation() {
+        if (helpChatInitialized) {
+            return;
+        }
+        appendHelpChatMessage({
+            sender: 'assistant',
+            text: '안녕하세요. 로또픽스튜디오 도우미예요.\n앱이 어떤 기능을 하는지, 번호를 어떻게 만들면 되는지, 로그인이나 플랜은 어떻게 쓰는지 바로 안내해 드릴게요.',
+            actions: buildHelpChatPromptActions(['app', 'draw', 'filters', 'login', 'plan'])
+        });
+        helpChatInitialized = true;
+        syncHelpChatComposerState();
+    }
+
+    function setHelpChatOpen(nextOpen) {
+        if (!helpChatWidgetEl || !helpChatPanelEl || !helpChatFabEl) {
+            return;
+        }
+        const isOpen = Boolean(nextOpen);
+        helpChatWidgetEl.dataset.open = String(isOpen);
+        helpChatPanelEl.hidden = !isOpen;
+        helpChatFabEl.setAttribute('aria-expanded', String(isOpen));
+        if (isOpen) {
+            seedHelpChatConversation();
+            syncHelpChatComposerState();
+            scrollHelpChatToBottom();
+            if (helpChatInputEl) {
+                window.requestAnimationFrame(() => helpChatInputEl.focus());
+            }
+        }
+    }
+
+    function maybeFoldHelpChatForMobile() {
+        if (getViewportWidth() <= 640) {
+            setHelpChatOpen(false);
+        }
+    }
+
+    function buildHelpChatResponse(question) {
+        const compact = normalizeHelpChatQuery(question);
+        const askActions = (...keys) => buildHelpChatPromptActions(keys);
+        if (!compact || matchesHelpChatQuery(compact, ['안녕', '반가워', 'hello', 'hi'])) {
+            return {
+                text: '반가워요. 궁금한 항목을 바로 눌러도 되고, 자유롭게 질문해도 괜찮아요.',
+                actions: askActions('app', 'draw', 'filters', 'login', 'plan')
+            };
+        }
+        if (
+            matchesHelpChatQuery(compact, ['이앱이뭐야', '앱이뭐야', '어떤앱', '앱소개', '서비스소개', '무슨앱'])
+            || (matchesHelpChatQuery(compact, ['앱', '서비스']) && matchesHelpChatQuery(compact, ['뭐', '소개', '설명']))
+        ) {
+            return {
+                text: '로또픽스튜디오는 회차 정보와 당첨 흐름을 보면서, 추첨 탭에서 제외할 패턴을 고른 뒤 번호를 생성하는 앱입니다.\n대시보드로 흐름을 보고, 추첨 탭에서 직접 생성하거나 추천 플랜으로 엄선 세트를 확인할 수 있어요.',
+                actions: [
+                    { kind: 'tab', label: '대시보드 보기', value: 'dashboard', toast: '대시보드 탭으로 이동했습니다.' },
+                    { kind: 'tab', label: '추첨 탭 열기', value: 'draw', toast: '추첨 탭으로 이동했습니다.' },
+                    { kind: 'premium', label: '플랜 보기', value: 'compare' }
+                ]
+            };
+        }
+        if (
+            matchesHelpChatQuery(compact, ['번호생성', '번호만들', '생성방법', '추첨방법', '번호어떻게', '세트생성'])
+            || (matchesHelpChatQuery(compact, ['번호', '추첨', '생성']) && matchesHelpChatQuery(compact, ['어떻게', '방법', '순서']))
+        ) {
+            return {
+                text: '추첨 탭에서 원하는 필터를 고르고 세트 수를 정한 뒤 번호 생성을 누르면 됩니다.\n생성된 세트 아래에는 어떤 기준을 반영했는지 짧은 설명도 같이 보여서 결과를 바로 읽을 수 있어요.',
+                actions: [
+                    { kind: 'tab', label: '추첨 탭 열기', value: 'draw', toast: '추첨 탭으로 이동했습니다.' },
+                    createHelpChatPromptAction('filters'),
+                    createHelpChatPromptAction('plan')
+                ].filter(Boolean)
+            };
+        }
+        if (
+            matchesHelpChatQuery(compact, ['번호왜', '생성이유', '조합이유', '근거', '왜이렇게나왔', '설명'])
+            && matchesHelpChatQuery(compact, ['번호', '조합', '세트', '생성'])
+        ) {
+            return {
+                text: '이제 생성 결과 카드 아래에 선택한 필터 요약과 홀짝 비율, 합계가 같이 보입니다.\n그래서 각 세트가 어떤 기준을 통과해 나온 번호인지 빠르게 읽을 수 있어요.',
+                actions: [
+                    { kind: 'tab', label: '생성 결과 보러 가기', value: 'draw', toast: '추첨 탭으로 이동했습니다.' },
+                    createHelpChatPromptAction('filters')
+                ].filter(Boolean)
+            };
+        }
+        if (matchesHelpChatQuery(compact, ['필터', '규칙', '제외', '확률', '후보', '라이브러리'])) {
+            return {
+                text: '필터는 당첨을 보장하는 기능이 아니라, 원치 않는 패턴을 덜어내서 후보군을 정리하는 기능입니다.\n상단과 하단 요약에서 남은 후보 수와 등수별 확률 변화도 같이 볼 수 있어서, 얼마나 좁혀졌는지 바로 확인할 수 있어요.',
+                actions: [
+                    { kind: 'tab', label: '규칙 라이브러리 보기', value: 'draw', toast: '추첨 탭으로 이동했습니다.' },
+                    createHelpChatPromptAction('draw'),
+                    createHelpChatPromptAction('plan')
+                ].filter(Boolean)
+            };
+        }
+        if (matchesHelpChatQuery(compact, ['로그인', '구글', '계정', '회원가입', '회원'])) {
+            return {
+                text: '로그인하면 저장한 기준, 생성 기록, 추천 플랜 흐름을 그대로 이어서 쓸 수 있습니다.\n카카오톡 안에서는 구글 로그인이 막힐 수 있어서 외부 브라우저로 다시 열기 안내가 먼저 뜰 수 있어요.',
+                actions: [
+                    { kind: 'auth', label: '로그인하기', value: 'google' },
+                    { kind: 'tab', label: '마이페이지 보기', value: 'mypage', toast: '마이페이지로 이동했습니다.' },
+                    createHelpChatPromptAction('plan')
+                ].filter(Boolean)
+            };
+        }
+        if (matchesHelpChatQuery(compact, ['카카오', '인앱', '액세스차단', '외부브라우저', '로그인안돼'])) {
+            return {
+                text: isKakaoTalkInAppBrowser()
+                    ? '지금은 카카오톡 안에서 열려 있어서 구글 로그인 전에 외부 브라우저로 다시 열어야 합니다.\n로그인하기를 누르면 외부 브라우저 안내로 바로 이어집니다.'
+                    : '카카오톡 인앱브라우저에서는 Google 정책 때문에 로그인이 막힐 수 있습니다.\n카카오톡에서 열렸다면 외부 브라우저로 다시 연 뒤 로그인하는 게 가장 안전합니다.',
+                actions: [
+                    { kind: 'auth', label: '로그인 안내 열기', value: 'google' },
+                    createHelpChatPromptAction('login')
+                ].filter(Boolean)
+            };
+        }
+        if (matchesHelpChatQuery(compact, ['플랜', '유료', '추천플랜', 'starter', 'standard', 'master', '결제', '구매'])) {
+            return {
+                text: 'STARTER는 추천 3세트, STANDARD는 5세트, MASTER는 7세트를 바로 볼 수 있습니다.\n균형은 STANDARD가 가장 좋고, 추천 세트는 전략별로 엄선해서 보여줍니다.',
+                actions: [
+                    { kind: 'premium', label: '추천 플랜 보기', value: 'compare' },
+                    { kind: 'tab', label: '마이페이지 플랜 보기', value: 'mypage', toast: '마이페이지로 이동했습니다.' },
+                    createHelpChatPromptAction('draw')
+                ].filter(Boolean)
+            };
+        }
+        if (matchesHelpChatQuery(compact, ['마이페이지', '기록', '이력', '저장한기준', '저장'])) {
+            return {
+                text: '마이페이지에서는 현재 이용 구성, 저장한 기준, 최근 생성 이력을 한 번에 확인할 수 있습니다.\n로그인 상태라면 플랜 비교와 추천 흐름도 여기서 바로 이어집니다.',
+                actions: [
+                    { kind: 'tab', label: '마이페이지 열기', value: 'mypage', toast: '마이페이지로 이동했습니다.' },
+                    createHelpChatPromptAction('login'),
+                    createHelpChatPromptAction('plan')
+                ].filter(Boolean)
+            };
+        }
+        if (matchesHelpChatQuery(compact, ['대시보드', '직전회차', '당첨번호', '보너스번호', '흐름'])) {
+            return {
+                text: '대시보드는 직전 회차 당첨번호, 보너스번호, 예상 흐름, 생성 기록 집계를 한 번에 보는 화면입니다.\n최근 당첨 흐름을 먼저 보고 추첨 탭으로 넘어가고 싶을 때 가장 편한 시작점이에요.',
+                actions: [
+                    { kind: 'tab', label: '대시보드 열기', value: 'dashboard', toast: '대시보드 탭으로 이동했습니다.' },
+                    createHelpChatPromptAction('draw')
+                ].filter(Boolean)
+            };
+        }
+        if (matchesHelpChatQuery(compact, ['qr', '큐알', '스캔', '티켓'])) {
+            return {
+                text: 'QR 탭에서는 실물 복권 QR을 읽고 회차 비교까지 바로 할 수 있습니다.\n번호를 복사해서 이번 회차와 비교하는 흐름도 연결돼 있어요.',
+                actions: [
+                    { kind: 'tab', label: 'QR 탭 열기', value: 'qr', toast: 'QR 탭으로 이동했습니다.' },
+                    createHelpChatPromptAction('dashboard')
+                ].filter(Boolean)
+            };
+        }
+        if (matchesHelpChatQuery(compact, ['스토어', '복권방', '구매처', '공식구매', '어디서사'])) {
+            return {
+                text: '스토어 탭에서는 공식 구매 페이지로 바로 이동할 수 있습니다.\n실제 구매는 공식 사이트나 오프라인 판매점에서 진행하면 됩니다.',
+                actions: [
+                    { kind: 'tab', label: '스토어 탭 열기', value: 'store', toast: '스토어 탭으로 이동했습니다.' },
+                    createHelpChatPromptAction('qr')
+                ].filter(Boolean)
+            };
+        }
+        return {
+            text: '이 질문은 이렇게 많이 물어보세요.\n앱 소개, 번호 생성, 필터 활용, 로그인, 추천 플랜, QR 사용법 중 하나를 눌러보면 바로 이어서 안내해 드릴게요.',
+            actions: buildHelpChatPromptActions(['app', 'draw', 'filters', 'login', 'plan', 'qr'])
+        };
+    }
+
+    function submitHelpChatQuestion(value) {
+        const question = String(value || '').trim();
+        if (!question) {
+            syncHelpChatComposerState();
+            return false;
+        }
+        setHelpChatOpen(true);
+        appendHelpChatMessage({
+            sender: 'user',
+            text: question
+        });
+        if (helpChatInputEl) {
+            helpChatInputEl.value = '';
+        }
+        syncHelpChatComposerState();
+        setHelpChatTyping(true);
+        if (helpChatReplyTimer) {
+            window.clearTimeout(helpChatReplyTimer);
+        }
+        helpChatReplyTimer = window.setTimeout(() => {
+            helpChatReplyTimer = 0;
+            setHelpChatTyping(false);
+            const response = buildHelpChatResponse(question);
+            appendHelpChatMessage({
+                sender: 'assistant',
+                text: response.text,
+                actions: response.actions
+            });
+        }, 260);
+        return true;
+    }
+
+    function handleHelpChatAction(button) {
+        if (!button) {
+            return;
+        }
+        const kind = String(button.dataset.actionKind || '').trim();
+        const value = String(button.dataset.actionValue || '').trim();
+        const toast = String(button.dataset.actionToast || '').trim();
+        if (kind === 'ask') {
+            submitHelpChatQuestion(value);
+            return;
+        }
+        if (kind === 'tab' && value) {
+            setActiveTab(value, true);
+            if (toast) {
+                showActionPopup(toast);
+            }
+            maybeFoldHelpChatForMobile();
+            return;
+        }
+        if (kind === 'premium') {
+            openPremiumPlanWorkspace({
+                focusResults: isPremiumMember()
+            });
+            showActionPopup(isPremiumMember() ? '추천번호 영역으로 이동했습니다.' : '추천 플랜 비교 영역으로 이동했습니다.');
+            maybeFoldHelpChatForMobile();
+            return;
+        }
+        if (kind === 'auth') {
+            setHelpChatOpen(false);
+            openAuthModal();
+            return;
+        }
+    }
+
+    function initializeHelpChat() {
+        if (!helpChatWidgetEl || !helpChatPanelEl || !helpChatFabEl || !helpChatBodyEl || !helpChatFormEl || !helpChatInputEl) {
+            return;
+        }
+        if (helpChatWidgetEl.dataset.bound === 'true') {
+            return;
+        }
+        helpChatWidgetEl.dataset.bound = 'true';
+        syncHelpChatComposerState();
+
+        helpChatFabEl.addEventListener('click', () => {
+            const isOpen = helpChatWidgetEl.dataset.open === 'true';
+            setHelpChatOpen(!isOpen);
+        });
+
+        if (helpChatCloseBtn) {
+            helpChatCloseBtn.addEventListener('click', () => {
+                setHelpChatOpen(false);
+            });
+        }
+
+        helpChatFormEl.addEventListener('submit', event => {
+            event.preventDefault();
+            submitHelpChatQuestion(helpChatInputEl.value);
+        });
+
+        helpChatInputEl.addEventListener('input', () => {
+            syncHelpChatComposerState();
+        });
+
+        helpChatInputEl.addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                setHelpChatOpen(false);
+            }
+        });
+
+        helpChatBodyEl.addEventListener('click', event => {
+            const button = event.target instanceof Element ? event.target.closest('.help-chat-action') : null;
+            if (!button) {
+                return;
+            }
+            handleHelpChatAction(button);
+        });
     }
 
     function openNicknameModal() {

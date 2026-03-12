@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/common.css?v=20260213">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/layout.css?v=20260212">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/main-layout.css?v=20260212">
-		<link rel="stylesheet" href="style.css?v=20260312_1">
+    <link rel="stylesheet" href="style.css?v=20260312_2">
 
 </head>
 <body data-theme="light">
@@ -3593,6 +3593,37 @@
 	    <footer class="site-footer">
 	        <p>로또픽스튜디오. 결과를 보장하지 않으며 선택 과정을 돕기 위한 도구입니다.</p>
 	    </footer>
+        <div id="help-chat-widget" class="help-chat-widget" data-open="false">
+            <section id="help-chat-panel" class="help-chat-panel" role="dialog" aria-modal="false" aria-labelledby="help-chat-title" hidden>
+                <div class="help-chat-shell">
+                    <div class="help-chat-header">
+                        <div class="help-chat-header-copy">
+                            <span class="help-chat-kicker">LOTTO HELP</span>
+                            <strong id="help-chat-title">물어보세요</strong>
+                            <p>앱 사용법, 로그인, 추천 플랜까지 바로 안내해 드립니다.</p>
+                        </div>
+                        <button id="help-chat-close" class="help-chat-close" type="button" aria-label="상담 채팅 접기">접기</button>
+                    </div>
+                    <div id="help-chat-body" class="help-chat-body" aria-live="polite" aria-label="도움말 대화 내용"></div>
+                    <form id="help-chat-form" class="help-chat-form" autocomplete="off">
+                        <label class="sr-only" for="help-chat-input">궁금한 점 입력</label>
+                        <input id="help-chat-input" type="text" maxlength="120" placeholder="예: 번호는 어떻게 생성해?" aria-label="궁금한 점 입력">
+                        <button id="help-chat-send" type="submit">보내기</button>
+                    </form>
+                </div>
+            </section>
+            <button id="help-chat-fab" class="help-chat-fab" type="button" aria-expanded="false" aria-controls="help-chat-panel">
+                <span class="help-chat-fab-icon" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+                <span class="help-chat-fab-copy">
+                    <strong>물어보세요</strong>
+                    <small>사용법 바로 안내</small>
+                </span>
+            </button>
+        </div>
         <div id="app-toast" class="app-toast" role="status" aria-live="polite" hidden></div>
 
 	    <div id="detail-sheet" class="detail-sheet" role="dialog" aria-modal="true">
@@ -3608,6 +3639,6 @@
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore-compat.js"></script>
     <script src="scripts/lotto-tabs.js?v=20260307_1"></script>
     <script src="scripts/lotto-rules.js?v=20260307_1"></script>
-    <script src="main.js?v=20260312_2"></script>
+    <script src="main.js?v=20260312_3"></script>
 </body>
 </html>
