@@ -1875,6 +1875,67 @@ document.addEventListener('DOMContentLoaded', () => {
         return Array.from(numbers);
     }
 
+    function getRuleDisplayName(ruleId) {
+        const targetId = String(ruleId || '').trim();
+        if (!targetId) {
+            return '';
+        }
+        const input = ruleInputs.find(item => item && item.value === targetId);
+        const card = input ? input.closest('.rule-card') : null;
+        const title = card?.dataset.title || card?.querySelector('.rule-title')?.textContent || targetId;
+        return String(title || '').trim();
+    }
+
+    function summarizeRuleDisplayNames(ruleIds = [], maxVisible = 2) {
+        const labels = Array.from(
+            new Set(
+                (Array.isArray(ruleIds) ? ruleIds : [])
+                    .map(getRuleDisplayName)
+                    .filter(Boolean)
+            )
+        );
+        if (!labels.length) {
+            return '';
+        }
+        const visible = labels.slice(0, Math.max(1, Number(maxVisible) || 2));
+        const extraCount = Math.max(0, labels.length - visible.length);
+        return extraCount ? `${visible.join(', ')} 외 ${extraCount}개` : visible.join(', ');
+    }
+
+    function buildNumberTraitSummary(numbers) {
+        if (!Array.isArray(numbers) || numbers.length !== 6) {
+            return '';
+        }
+        const oddCount = countBy(numbers, number => number % 2 === 1);
+        const evenCount = numbers.length - oddCount;
+        const total = numbers.reduce((sum, value) => sum + Number(value || 0), 0);
+        const consecutive = longestConsecutiveRun(numbers);
+        const pieces = [
+            `홀짝 ${oddCount}:${evenCount}`,
+            `합계 ${total}`
+        ];
+        if (consecutive >= 2) {
+            pieces.push(`연속 최대 ${consecutive}개`);
+        }
+        return pieces.join(' · ');
+    }
+
+    function buildGeneratedReasonText(numbers, ruleIds = []) {
+        const ruleSummary = summarizeRuleDisplayNames(ruleIds);
+        const traits = buildNumberTraitSummary(numbers);
+        const intro = ruleSummary
+            ? `${ruleSummary} 기준을 반영한 조합`
+            : '선택 기준을 반영한 조합';
+        return traits ? `${intro} · ${traits}` : intro;
+    }
+
+    function buildPremiumReasonText(item) {
+        const strategyLabel = String(item && item.strategy ? item.strategy : '').trim() || '추천 기준';
+        const traits = buildNumberTraitSummary(item && item.numbers);
+        const intro = `${strategyLabel} 기준으로 선별한 추천 조합`;
+        return traits ? `${intro} · ${traits}` : intro;
+    }
+
     function displayNumbers(draws, options = {}) {
         numbersContainer.innerHTML = '';
         lastGeneratedDraws = [];
@@ -1896,12 +1957,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            const balls = document.createElement('div');
+            balls.className = 'number-balls';
             numbers.forEach(number => {
                 const numberElement = document.createElement('div');
                 numberElement.classList.add('number');
                 numberElement.textContent = number;
-                row.appendChild(numberElement);
+                balls.appendChild(numberElement);
             });
+            row.appendChild(balls);
+
+            const reason = document.createElement('div');
+            reason.className = 'row-reason';
+            reason.textContent = buildGeneratedReasonText(numbers, options.ruleIds);
+            row.appendChild(reason);
 
             lastGeneratedDraws.push({
                 setNo: index + 1,
@@ -3395,7 +3464,12 @@ document.addEventListener('DOMContentLoaded', () => {
             row.className = 'premium-number-row';
             const meta = document.createElement('div');
             meta.className = 'premium-row-meta';
-            meta.innerHTML = `<strong>추천 ${item.setNo}</strong><span>${escapeHtml(item.strategy)}</span>`;
+            const title = document.createElement('strong');
+            title.textContent = `추천 ${item.setNo}`;
+            const strategy = document.createElement('span');
+            strategy.textContent = String(item.strategy || '').trim();
+            meta.appendChild(title);
+            meta.appendChild(strategy);
             const balls = document.createElement('div');
             balls.className = 'premium-number-balls';
             item.numbers.forEach(number => {
@@ -3406,10 +3480,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const tag = document.createElement('span');
             tag.className = 'premium-row-tag';
-            tag.textContent = 'CURATED';
+            tag.textContent = '엄선';
+            const note = document.createElement('div');
+            note.className = 'premium-row-note';
+            note.textContent = buildPremiumReasonText(item);
             row.appendChild(meta);
             row.appendChild(balls);
             row.appendChild(tag);
+            row.appendChild(note);
             premiumNumbersContainer.appendChild(row);
             lastPremiumDraws.push({
                 setNo: item.setNo,

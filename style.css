@@ -1132,7 +1132,8 @@ body[data-theme="dark"] .premium-number-row {
 body[data-theme="dark"] .draw-premium-desc,
 body[data-theme="dark"] .draw-premium-plan-item span,
 body[data-theme="dark"] .draw-premium-lock p,
-body[data-theme="dark"] .premium-row-meta span {
+body[data-theme="dark"] .premium-row-meta span,
+body[data-theme="dark"] .premium-row-note {
     color: #9aa7bd;
 }
 
@@ -1144,6 +1145,15 @@ body[data-theme="dark"] .draw-premium-badge {
 body[data-theme="dark"] .premium-number-ball {
     background: rgba(93, 160, 255, 0.2);
     color: #f8fafc;
+}
+
+body[data-theme="dark"] .number-row {
+    background: rgba(20, 26, 34, 0.9);
+    border-color: #2f3c50;
+}
+
+body[data-theme="dark"] .row-reason {
+    color: #9aa7bd;
 }
 
 body[data-theme="dark"] .premium-product-card {
@@ -5247,6 +5257,20 @@ body[data-theme="dark"] #tab-draw .scenario-pill {
     font-size: 11px;
     font-weight: 700;
     color: #1d4ed8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: rgba(30, 107, 255, 0.1);
+}
+
+.premium-row-note {
+    grid-column: 1 / -1;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #64748b;
 }
 
 .draw-dashboard-grid {
@@ -6682,18 +6706,30 @@ body[data-theme="dark"] #tab-draw .draw-selection-dock-chip {
 }
 
 .number-row {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    align-items: start;
+    gap: 8px 10px;
     width: 100%;
     max-width: 100%;
     min-width: 0;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: rgba(248, 250, 252, 0.92);
+    border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 .row-label {
-    font-weight: 600;
+    font-weight: 700;
     min-width: 64px;
+    padding-top: 12px;
+}
+
+.number-balls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
 }
 
 .number {
@@ -6707,7 +6743,15 @@ body[data-theme="dark"] #tab-draw .draw-selection-dock-chip {
     font-weight: 600;
 }
 
+.row-reason {
+    grid-column: 2;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #64748b;
+}
+
 .error-text {
+    grid-column: 2;
     color: var(--text-muted);
     font-size: 13px;
 }
