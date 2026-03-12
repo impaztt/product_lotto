@@ -6326,7 +6326,7 @@ body.rule-picker-open {
     right: 12px;
     height: 3px;
     border-radius: 0 0 999px 999px;
-    background: linear-gradient(90deg, #1b64da 0%, rgba(49, 130, 246, 0.7) 55%, rgba(14, 165, 233, 0.18) 100%);
+    background: var(--draw-overlay-accent);
     opacity: 0.95;
     pointer-events: none;
 }
@@ -6341,7 +6341,7 @@ body.rule-picker-open {
     gap: 8px;
     width: 100%;
     padding-top: 8px;
-    border-top: 1px solid rgba(148, 163, 184, 0.18);
+    border-top: 1px solid var(--draw-overlay-divider);
 }
 
 #tab-draw .draw-bottom-generate-kicker {
@@ -6393,28 +6393,24 @@ body.rule-picker-open {
 }
 
 body[data-theme="dark"] #tab-draw .draw-selection-dock {
-    border-color: rgba(96, 165, 250, 0.3);
-    background: linear-gradient(180deg, rgba(19, 27, 39, 0.97), rgba(15, 23, 34, 0.95));
-    box-shadow:
-        0 18px 38px rgba(2, 6, 23, 0.42),
-        0 0 0 1px rgba(148, 163, 184, 0.06) inset;
+    border-color: var(--draw-overlay-border);
+    background: var(--draw-overlay-bg);
+    box-shadow: var(--draw-overlay-shadow);
 }
 
 body[data-theme="dark"] #tab-draw .draw-selection-dock::before,
 body[data-theme="dark"] #tab-draw .draw-bottom-generate-shell::before {
-    background: linear-gradient(90deg, #60a5fa 0%, rgba(96, 165, 250, 0.72) 55%, rgba(45, 212, 191, 0.2) 100%);
+    background: var(--draw-overlay-accent);
 }
 
 body[data-theme="dark"] #tab-draw .draw-selection-dock.has-selection {
-    border-color: rgba(96, 165, 250, 0.46);
-    box-shadow:
-        0 22px 42px rgba(2, 6, 23, 0.48),
-        0 0 0 1px rgba(96, 165, 250, 0.12) inset;
+    border-color: var(--draw-overlay-border-active);
+    box-shadow: var(--draw-overlay-shadow-active);
 }
 
 body[data-theme="dark"] #tab-draw .draw-selection-dock-body,
 body[data-theme="dark"] #tab-draw .draw-bottom-generate-content {
-    border-top-color: rgba(148, 163, 184, 0.18);
+    border-top-color: var(--draw-overlay-divider);
 }
 
 body[data-theme="dark"] #tab-draw .draw-selection-dock-metric {
@@ -9716,9 +9712,9 @@ textarea {
     }
 
     #tab-dashboard.tab-panel.is-active {
-        width: 100vw;
-        max-width: 100vw;
-        margin-left: calc(50% - 50vw);
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
     }
 
     #tab-dashboard .content-tit-wrap .center-wrap {
@@ -10666,6 +10662,31 @@ textarea {
 /* Draw filter UX refinement */
 #tab-draw {
     --draw-dock-width: 100%;
+    --draw-overlay-border: rgba(148, 163, 184, 0.16);
+    --draw-overlay-border-active: rgba(148, 163, 184, 0.24);
+    --draw-overlay-divider: rgba(148, 163, 184, 0.14);
+    --draw-overlay-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 248, 251, 0.95));
+    --draw-overlay-shadow:
+        0 14px 30px rgba(15, 23, 42, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.72) inset;
+    --draw-overlay-shadow-active:
+        0 18px 34px rgba(15, 23, 42, 0.12),
+        0 0 0 1px rgba(255, 255, 255, 0.66) inset;
+    --draw-overlay-accent: linear-gradient(90deg, rgba(59, 130, 246, 0.28) 0%, rgba(125, 146, 174, 0.2) 58%, rgba(148, 163, 184, 0.08) 100%);
+}
+
+body[data-theme="dark"] #tab-draw {
+    --draw-overlay-border: rgba(148, 163, 184, 0.18);
+    --draw-overlay-border-active: rgba(148, 163, 184, 0.28);
+    --draw-overlay-divider: rgba(148, 163, 184, 0.16);
+    --draw-overlay-bg: linear-gradient(180deg, rgba(19, 27, 39, 0.97), rgba(15, 23, 34, 0.95));
+    --draw-overlay-shadow:
+        0 18px 38px rgba(2, 6, 23, 0.42),
+        0 0 0 1px rgba(148, 163, 184, 0.05) inset;
+    --draw-overlay-shadow-active:
+        0 22px 42px rgba(2, 6, 23, 0.48),
+        0 0 0 1px rgba(148, 163, 184, 0.08) inset;
+    --draw-overlay-accent: linear-gradient(90deg, rgba(96, 165, 250, 0.32) 0%, rgba(125, 211, 252, 0.2) 58%, rgba(148, 163, 184, 0.1) 100%);
 }
 
 #tab-draw .draw-selection-dock {
@@ -10681,11 +10702,9 @@ textarea {
     overflow: hidden;
     isolation: isolate;
     border-radius: 18px;
-    border: 1px solid rgba(49, 130, 246, 0.16);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 248, 253, 0.94));
-    box-shadow:
-        0 14px 30px rgba(15, 23, 42, 0.1),
-        0 0 0 1px rgba(255, 255, 255, 0.74) inset;
+    border: 1px solid var(--draw-overlay-border);
+    background: var(--draw-overlay-bg);
+    box-shadow: var(--draw-overlay-shadow);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
 }
@@ -10698,7 +10717,7 @@ textarea {
     right: 12px;
     height: 3px;
     border-radius: 0 0 999px 999px;
-    background: linear-gradient(90deg, #1b64da 0%, rgba(49, 130, 246, 0.58) 52%, rgba(14, 165, 233, 0.16) 100%);
+    background: var(--draw-overlay-accent);
     opacity: 0.9;
     pointer-events: none;
 }
@@ -10710,10 +10729,8 @@ textarea {
 }
 
 #tab-draw .draw-selection-dock.has-selection {
-    border-color: rgba(49, 130, 246, 0.34);
-    box-shadow:
-        0 18px 36px rgba(49, 130, 246, 0.16),
-        0 0 0 1px rgba(49, 130, 246, 0.08) inset;
+    border-color: var(--draw-overlay-border-active);
+    box-shadow: var(--draw-overlay-shadow-active);
 }
 
 #tab-draw .draw-selection-dock.is-collapsed {
@@ -10733,7 +10750,7 @@ textarea {
     gap: 8px;
     min-width: 0;
     padding-top: 8px;
-    border-top: 1px solid rgba(148, 163, 184, 0.2);
+    border-top: 1px solid var(--draw-overlay-divider);
 }
 
 #tab-draw .draw-selection-dock-copy {
@@ -11095,7 +11112,7 @@ textarea {
         border-top: 0;
         border-left: 0;
         border-right: 0;
-        box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
+        box-shadow: var(--draw-overlay-shadow);
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.18s ease, box-shadow 0.18s ease;
@@ -11257,17 +11274,17 @@ textarea {
         gap: 6px;
         padding: 11px 12px;
         border-radius: 20px;
-        border: 1px solid rgba(148, 163, 184, 0.18);
-        background: rgba(255, 255, 255, 0.96);
-        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
+        border: 1px solid var(--draw-overlay-border);
+        background: var(--draw-overlay-bg);
+        box-shadow: var(--draw-overlay-shadow);
         backdrop-filter: blur(18px);
         -webkit-backdrop-filter: blur(18px);
         pointer-events: auto;
     }
 
     #tab-draw .draw-bottom-generate-bar.has-selection .draw-bottom-generate-shell {
-        border-color: rgba(49, 130, 246, 0.28);
-        box-shadow: 0 22px 42px rgba(49, 130, 246, 0.18);
+        border-color: var(--draw-overlay-border-active);
+        box-shadow: var(--draw-overlay-shadow-active);
     }
 
     #tab-draw .draw-bottom-generate-bar.is-collapsed .draw-bottom-generate-shell {
@@ -13990,11 +14007,12 @@ body[data-theme="dark"] #tab-dashboard .dashboard-signal-card p {
 
 /* Draw tab baseline alignment */
 #tab-dashboard.app-shell {
-    width: 100vw;
-    max-width: 100vw;
+    width: 100%;
+    max-width: 100%;
     margin: -12px 0 0;
-    margin-left: calc(50% - 50vw);
+    margin-left: 0;
     padding: 14px 0 calc(156px + env(safe-area-inset-bottom));
+    overflow-x: clip;
 }
 
 #tab-dashboard.app-shell .container-box {

@@ -388,7 +388,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 scheduleDrawHorizontalWidthSync();
             }
             if (tabId === 'qr') {
-                startQrScanner();
+                if (qrStatusEl && !qrStream) {
+                    qrStatusEl.textContent = '스캔 시작을 누르면 실물 티켓 QR을 바로 읽습니다.';
+                }
             }
             if (tabId !== 'qr' && qrStream) {
                 stopQrScanner('QR 탭을 벗어나 스캔을 중지했습니다.');
@@ -728,15 +730,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (premiumGenerateBtn) {
         premiumGenerateBtn.addEventListener('click', () => {
             if (!isPremiumMember()) {
-                updatePremiumCopyStatus('월정액 이용권이 필요합니다. 먼저 가입/로그인 후 이용권을 시작해 주세요.', true);
+                updatePremiumCopyStatus('추천 플랜을 먼저 고르면 세트를 바로 확인할 수 있습니다.', true);
                 if (!isMember()) {
                     openAuthModal();
                 }
                 return;
             }
-            const recommendations = generatePremiumRecommendations(5);
+            const plan = getMembershipPlanMeta();
+            const recommendationCount = getRecommendedSetCount(plan.id);
+            const recommendations = generatePremiumRecommendations(recommendationCount);
             renderPremiumNumbers(recommendations);
-            updatePremiumCopyStatus('추천번호를 갱신했습니다.');
+            updatePremiumCopyStatus(`${plan.label} 기준 추천 ${recommendationCount}세트를 불러왔습니다.`);
         });
     }
 
@@ -756,7 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
             setActiveTab('draw', true);
             setDrawServiceMode('premium');
-            showActionPopup('플랜을 선택하면 프리미엄 추천을 바로 사용할 수 있습니다.');
+            showActionPopup('추천 플랜을 고르면 이번 회차 추천 세트를 바로 확인할 수 있습니다.');
         });
     }
 
@@ -777,7 +781,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await setMembershipTier(plan);
             setActiveTab('draw', true);
             setDrawServiceMode('premium');
-            showActionPopup(`${planMeta.name} 플랜이 활성화되었습니다. ${planMeta.price} 구성을 기준으로 프리미엄 추천을 바로 사용할 수 있습니다.`);
+            showActionPopup(`${planMeta.name} 구성을 선택했습니다. ${planMeta.price} 기준으로 추천 ${getRecommendedSetCount(plan)}세트를 바로 확인할 수 있습니다.`);
         });
     });
 
@@ -1214,9 +1218,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 return;
             }
-            updateRulesStatus('카카오 로그인은 아직 연결 전입니다. 현재는 구글 로그인만 테스트 가능합니다.');
+            updateRulesStatus('현재 연결된 로그인 수단은 구글입니다.');
             if (firebaseAuthStatusEl) {
-                firebaseAuthStatusEl.textContent = '카카오는 Firebase 기본 Provider가 아니어서 별도 OAuth 연동이 필요합니다.';
+                firebaseAuthStatusEl.textContent = '현재는 구글 로그인만 연결되어 있습니다.';
             }
         });
     });
@@ -2057,69 +2061,77 @@ document.addEventListener('DOMContentLoaded', () => {
             free: {
                 id: 'free',
                 label: 'FREE',
-                description: '직접 선택과 저장 기능을 바로 사용할 수 있어요.',
+                description: '직접 기준을 정리하고 저장한 흐름을 다시 확인할 수 있습니다.',
                 nextLabel: '추천 플랜 보기',
-                note: '직접 선택 사용 중'
+                note: '직접 선택 사용 중',
+                recommendedSetCount: 0
             },
             starter: {
                 id: 'starter',
                 label: 'STARTER',
-                description: '주 1회 추천 3세트와 최근 4주 기록을 제공해요.',
-                nextLabel: '주 1회 추천',
-                note: '입문 플랜 사용 중'
+                description: '이번 회차 추천 세트 3개와 복사, 기록 저장을 바로 확인하는 구성입니다.',
+                nextLabel: 'STARTER 구성 보기',
+                note: 'STARTER 선택',
+                recommendedSetCount: 3
             },
             standard: {
                 id: 'standard',
                 label: 'STANDARD',
-                description: '주 2회 추천 5세트와 최근 12주 기록을 제공해요.',
-                nextLabel: '주 2회 추천',
-                note: '표준 플랜 사용 중'
+                description: '이번 회차 추천 세트 5개와 기록 흐름을 가장 균형 있게 확인하는 구성입니다.',
+                nextLabel: 'STANDARD 구성 보기',
+                note: 'STANDARD 선택',
+                recommendedSetCount: 5
             },
             master: {
                 id: 'master',
                 label: 'MASTER',
-                description: '주 3회 추천과 심화 리포트를 함께 제공해요.',
-                nextLabel: '주 3회 추천',
-                note: '집중 관리 플랜 사용 중'
+                description: '이번 회차 추천 세트 7개를 넉넉하게 확인하는 확장 구성입니다.',
+                nextLabel: 'MASTER 구성 보기',
+                note: 'MASTER 선택',
+                recommendedSetCount: 7
             },
             premium: {
                 id: 'premium',
                 label: 'PREMIUM',
-                description: '추천 번호와 전체 복사 기능을 바로 사용할 수 있어요.',
-                nextLabel: '프리미엄 사용 중',
-                note: '프리미엄 기능 사용 중'
+                description: '추천 세트와 전체 복사 기능을 바로 확인할 수 있습니다.',
+                nextLabel: '추천 플랜 사용 중',
+                note: '추천 플랜 사용 중',
+                recommendedSetCount: 5
             }
         };
         return planMap[normalized] || planMap.free;
     }
 
+    function getRecommendedSetCount(tier = getMembershipTier()) {
+        return Math.max(0, Number(getMembershipPlanMeta(tier).recommendedSetCount) || 0);
+    }
+
     function updateDashboardSummaryUi() {
         if (dashSyncStatusEl) {
             if (currentWeeklyData && Number(currentWeeklyData.drwNo) > 0) {
-                const label = lastWeeklyRenderMode === 'cached' ? '캐시 반영' : '실시간 반영';
-                dashSyncStatusEl.textContent = `${currentWeeklyData.drwNo}회 ${label}`;
+                dashSyncStatusEl.textContent = `${currentWeeklyData.drwNo}회 기준 준비 완료`;
             } else {
-                dashSyncStatusEl.textContent = '최신 회차 확인 중';
+                dashSyncStatusEl.textContent = '회차 기준 불러오는 중';
             }
         }
         if (dashSyncTimeEl) {
             if (lastWeeklyRenderedAt) {
                 const sourceLabel = lastWeeklyRenderSource === 'main-info' ? '메인 정보' : '공식 데이터';
-                dashSyncTimeEl.textContent = `${formatRelativeTime(lastWeeklyRenderedAt)} · ${sourceLabel}`;
+                dashSyncTimeEl.textContent = `${formatRelativeTime(lastWeeklyRenderedAt)} · ${sourceLabel} 기준`;
             } else {
-                dashSyncTimeEl.textContent = '공식 데이터 대기 중';
+                dashSyncTimeEl.textContent = '공식 기준 정리 중';
             }
         }
         if (dashMembershipChipEl) {
-            dashMembershipChipEl.textContent = isMember() ? getMembershipPlanMeta().label : '로그인 전';
+            dashMembershipChipEl.textContent = isMember() ? getMembershipPlanMeta().label : '둘러보기';
         }
         if (dashActivityChipEl) {
             const stats = getGenerationStats();
             if (stats.totalSets > 0) {
-                const modeLabel = stats.lastSourceMode === 'premium' ? '추천' : '직접선택';
+                const modeLabel = stats.lastSourceMode === 'premium' ? '추천 플랜' : '직접 선택';
                 dashActivityChipEl.textContent = `누적 ${formatNumber(stats.totalSets)}세트 · 최근 ${modeLabel}`;
             } else {
-                dashActivityChipEl.textContent = '생성 이력 없음';
+                dashActivityChipEl.textContent = '첫 생성 전';
             }
         }
     }
@@ -2131,28 +2143,28 @@ document.addEventListener('DOMContentLoaded', () => {
             if (authPending) {
                 drawMembershipStatusEl.textContent = '로그인 확인 중';
             } else if (!isMember()) {
-                drawMembershipStatusEl.textContent = '로그인 필요';
+                drawMembershipStatusEl.textContent = '로그인 전';
             } else if (isPremiumMember()) {
-                drawMembershipStatusEl.textContent = `${plan.label} 활성화`;
+                drawMembershipStatusEl.textContent = `${plan.label} 선택`;
             } else {
-                drawMembershipStatusEl.textContent = 'FREE 이용 중';
+                drawMembershipStatusEl.textContent = 'FREE 사용 중';
             }
         }
         if (drawMembershipNoteEl) {
             if (authPending) {
                 drawMembershipNoteEl.textContent = '저장된 로그인 상태를 확인하고 있습니다.';
             } else if (!isMember()) {
-                drawMembershipNoteEl.textContent = '로그인 후 이용권을 시작하면 추천번호를 바로 받을 수 있습니다.';
+                drawMembershipNoteEl.textContent = '로그인 후 추천 플랜 구성을 고르면 세트를 바로 확인할 수 있습니다.';
             } else if (isPremiumMember()) {
-                drawMembershipNoteEl.textContent = `${plan.label} 플랜으로 추천번호와 전체복사를 바로 사용할 수 있습니다.`;
+                drawMembershipNoteEl.textContent = `${plan.label} 기준 추천 ${getRecommendedSetCount(plan.id)}세트와 전체 복사를 바로 사용할 수 있습니다.`;
             } else {
-                drawMembershipNoteEl.textContent = '현재는 직접 선택 모드입니다. 필요할 때만 월정액 추천으로 전환할 수 있습니다.';
+                drawMembershipNoteEl.textContent = '현재는 직접 선택으로 기준을 정리하는 상태입니다. 필요할 때 추천 플랜으로 넘어갈 수 있습니다.';
             }
         }
         const selectedCount = ruleInputs.filter(input => input.checked).length;
         const hasSelection = selectedCount > 0;
         if (drawSelectionSummaryEl) {
-            drawSelectionSummaryEl.textContent = selectedCount ? `${selectedCount}개 필터 선택됨` : '아직 선택된 필터가 없습니다.';
+            drawSelectionSummaryEl.textContent = selectedCount ? `필터 ${selectedCount}개 적용 중` : '아직 고른 기준이 없습니다.';
         }
         if (generateBtn) {
             generateBtn.hidden = !hasSelection;
@@ -2202,7 +2214,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ? Math.max(0, Math.min(100, Math.round(currentRemainingRatio * 1000) / 10))
                     : 100;
                 const remainingValue = Number.isFinite(currentRemainingCombos) ? formatNumber(currentRemainingCombos) : '-';
-                drawBottomGenerateDetailEl.textContent = `남은 조합 ${remainingValue}개 · 생존 비중 ${remainPct}% 기준으로 생성합니다.`;
+                drawBottomGenerateDetailEl.textContent = `남는 후보 ${remainingValue}개 · 전체의 ${remainPct}% 범위에서 생성합니다.`;
             }
         }
         if (drawFilterDetailEl) {
@@ -2215,7 +2227,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 : 100;
             const remainingValue = Number.isFinite(currentRemainingCombos) ? formatNumber(currentRemainingCombos) : '-';
             const excludedValue = Number.isFinite(currentExcludedCombos) ? formatNumber(currentExcludedCombos) : '-';
-            drawFilterDetailEl.textContent = `남은 조합 ${remainingValue}개 · 제외 ${excludedValue}개 · 생존 비중 ${remainPct}%`;
+            drawFilterDetailEl.textContent = `남는 후보 ${remainingValue}개 · 제외 ${excludedValue}개 · 남은 비중 ${remainPct}%`;
         }
     }
 
@@ -2245,7 +2257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (isMember() && currentUser) {
                 mypageProfileEmailEl.textContent = currentUser.uid;
             } else {
-                mypageProfileEmailEl.textContent = '비회원으로 둘러보는 중';
+                mypageProfileEmailEl.textContent = '로그인 전 둘러보기';
             }
         }
         if (mypageMembershipTierEl) {
@@ -2259,7 +2271,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? '저장된 계정과 플랜 상태를 확인하고 있습니다.'
                 : isMember()
                 ? plan.description
-                : '로그인하면 저장한 기준과 추천 흐름을 그대로 이어서 쓸 수 있어요.';
+                : '로그인하면 저장한 기준과 최근 기록을 그대로 이어서 볼 수 있습니다.';
         }
         if (mypageMembershipNextEl) {
             mypageMembershipNextEl.textContent = authPending ? '로그인 상태 확인 중' : (isMember() ? plan.nextLabel : '추천 플랜 보기');
@@ -2268,15 +2280,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (authPending) {
                 mypagePlanNoteEl.textContent = '로그인 상태 확인 중';
             } else if (!isMember()) {
-                mypagePlanNoteEl.textContent = '로그인하면 추천 기능 사용';
+                mypagePlanNoteEl.textContent = '로그인 후 플랜 선택 가능';
             } else if (isPremiumMember()) {
-                mypagePlanNoteEl.textContent = '추천 플랜 사용 중';
+                mypagePlanNoteEl.textContent = `${plan.label} 선택 중`;
             } else {
                 mypagePlanNoteEl.textContent = '직접 선택 사용 중';
             }
         }
         if (mypagePlanManageBtn) {
-            mypagePlanManageBtn.textContent = authPending ? '확인 중' : (isMember() ? '플랜 관리' : '로그인하고 시작');
+            mypagePlanManageBtn.textContent = authPending ? '확인 중' : (isMember() ? '추천 플랜 조정' : '로그인하고 시작');
         }
         if (mypagePlanCancelBtn) {
             mypagePlanCancelBtn.hidden = !isPremiumMember();
@@ -2288,19 +2300,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (strongestPresetCount) {
                 mypagePresetSummaryEl.textContent = `규칙 ${savedRules.length}개 · 내 프리셋 ${customPreset.length}개`;
             } else {
-                mypagePresetSummaryEl.textContent = '아직 저장한 규칙이 없어요';
+                mypagePresetSummaryEl.textContent = '아직 저장한 기준이 없습니다';
             }
         }
         if (mypagePresetUpdatedEl) {
             mypagePresetUpdatedEl.textContent = latestPresetAt ? formatRelativeTime(latestPresetAt) : '아직 저장 없음';
         }
         if (mypageSlotSummaryEl) {
-            mypageSlotSummaryEl.textContent = activeSlots ? `보관함 ${activeSlots}칸 사용 중` : '비어 있음';
+            mypageSlotSummaryEl.textContent = activeSlots ? `보관함 ${activeSlots}칸 사용 중` : '보관함 비어 있음';
         }
         if (mypageSlotUpdatedEl) {
             mypageSlotUpdatedEl.textContent = latestSlot && latestSlot.savedAt
                 ? `최근 저장 ${formatSlotDate(latestSlot.savedAt)}`
-                : '보관함 1~3 상태가 이곳에 반영됩니다.';
+                : '보관함 1~3에 기준을 저장하면 여기서 다시 불러올 수 있습니다.';
         }
         if (mypageStatsGeneratedEl) {
             mypageStatsGeneratedEl.textContent = `${formatNumber(stats.totalSets || 0)}세트`;
@@ -2310,7 +2322,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mypageStatsRoundEl.textContent = round > 0 ? `${round}회` : '-';
         }
         if (mypageStatsModeEl) {
-            mypageStatsModeEl.textContent = stats.lastSourceMode === 'premium' ? '자동 추천' : '직접 선택';
+            mypageStatsModeEl.textContent = stats.lastSourceMode === 'premium' ? '추천 플랜' : '직접 선택';
         }
     }
 
@@ -2489,8 +2501,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!rows.length) {
                 mypageHistoryListEl.innerHTML = `
                     <li>
-                        <span class="info-label">아직 활동이 없어요.</span>
-                        <strong>첫 생성 후 표시</strong>
+                        <span class="info-label">아직 쌓인 기록이 없습니다.</span>
+                        <strong>번호를 한 번 생성하면 최근 흐름이 여기에 표시됩니다.</strong>
                     </li>
                 `;
                 if (mypageHistoryBadgeEl) {
@@ -2519,8 +2531,8 @@ document.addEventListener('DOMContentLoaded', () => {
             console.warn('마이페이지 추첨 이력 로드 실패', error);
             mypageHistoryListEl.innerHTML = `
                 <li>
-                    <span class="info-label">불러오지 못했어요.</span>
-                    <strong>다시 시도해 주세요</strong>
+                    <span class="info-label">기록을 불러오지 못했습니다.</span>
+                    <strong>잠시 후 다시 확인해 주세요.</strong>
                 </li>
             `;
         }
@@ -2574,11 +2586,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (!firebaseDb) {
-            setLastWeekDashboardFallback('Firebase 연결 후 집계 가능');
+            setLastWeekDashboardFallback('생성 기록 연결 중');
             return;
         }
         if (!roundData || !Number.isFinite(Number(roundData.drwNo))) {
-            setLastWeekDashboardFallback('최근 회차 확인 중');
+            setLastWeekDashboardFallback('직전 회차 기준 정리 중');
             return;
         }
         const roundNo = Number(roundData.drwNo);
@@ -2586,8 +2598,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         pendingWinDashboardRound = roundNo;
-        dashWinRoundLabelEl.textContent = `지난주 ${roundNo}회`;
-        dashWinStatusEl.textContent = `${roundNo}회 집계 계산 중`;
+        dashWinRoundLabelEl.textContent = `직전 ${roundNo}회`;
+        dashWinStatusEl.textContent = `${roundNo}회 생성 결과 집계 중`;
         try {
             const snapshot = await firebaseDb.collection('draw_entries').where('round', '==', roundNo).get();
             const winningNumbers = [
@@ -2600,7 +2612,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ].filter(value => Number.isInteger(value) && value >= 1 && value <= 45);
             const bonusNumber = Number(roundData.bnusNo);
             if (winningNumbers.length !== 6 || !Number.isInteger(bonusNumber)) {
-                setLastWeekDashboardFallback('당첨 번호 확인 필요');
+                setLastWeekDashboardFallback('직전 회차 데이터 확인 필요');
                 return;
             }
             const rankCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
@@ -2638,10 +2650,10 @@ document.addEventListener('DOMContentLoaded', () => {
             lastWinDashboardRound = roundNo;
             dashWinStatusEl.textContent = totalGenerated
                 ? `${roundNo}회 · ${formatNumber(totalGenerated)}세트 중 ${formatNumber(totalWinners)}세트 당첨`
-                : `${roundNo}회 · 집계할 번호 없음`;
+                : `${roundNo}회 · 앱에 기록된 생성 번호가 아직 없습니다`;
         } catch (error) {
             console.warn('지난주 당첨 대시보드 집계 실패', error);
-            setLastWeekDashboardFallback('집계 조회 실패');
+            setLastWeekDashboardFallback('생성 결과를 불러오지 못했습니다');
         } finally {
             if (pendingWinDashboardRound === roundNo) {
                 pendingWinDashboardRound = null;
@@ -2798,24 +2810,24 @@ document.addEventListener('DOMContentLoaded', () => {
             if (authPending) {
                 premiumUpgradeBtn.textContent = '로그인 확인 중';
             } else if (!isMember()) {
-                premiumUpgradeBtn.textContent = '가입/로그인 후 시작하기';
+                premiumUpgradeBtn.textContent = '로그인 후 플랜 고르기';
             } else if (premium) {
-                premiumUpgradeBtn.textContent = `${plan.label} 이용중`;
+                premiumUpgradeBtn.textContent = `${plan.label} 선택됨`;
             } else {
-                premiumUpgradeBtn.textContent = '플랜 선택하기';
+                premiumUpgradeBtn.textContent = '플랜 고르기';
             }
         }
         if (!premium) {
             lastPremiumDraws = [];
             setPremiumCopyButtonState(false);
             if (premiumNumbersContainer) {
-                premiumNumbersContainer.innerHTML = '<div class="premium-empty-state">아직 추천번호가 없습니다. 플랜을 활성화한 뒤 이번 회차 추천을 받아보세요.</div>';
+                premiumNumbersContainer.innerHTML = '<div class="premium-empty-state">아직 추천 세트가 없습니다. 플랜을 고르고 이번 회차 추천을 확인해 보세요.</div>';
             }
             if (!lastPremiumDraws.length) {
-                updatePremiumCopyStatus('월정액 이용권 활성화 시 추천번호를 제공합니다.');
+                updatePremiumCopyStatus('플랜을 고르면 추천 세트가 여기에 표시됩니다.');
             }
         } else if (!lastPremiumDraws.length) {
-            updatePremiumCopyStatus(`${plan.label} 플랜 활성화 완료. 추천번호 받기로 이번 회차 세트를 생성해 보세요.`);
+            updatePremiumCopyStatus(`${plan.label} 선택 완료. 추천번호 받기로 이번 회차 ${getRecommendedSetCount(plan.id)}세트를 확인해 보세요.`);
         }
         updateDrawContextUi();
         updateDashboardSummaryUi();
@@ -5424,7 +5436,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     oddsDeltaEls[rank].dataset.trend = 'neutral';
                 } else {
                     const betterPct = Math.round((1 - clampRatio) * 100);
-                    oddsDeltaEls[rank].textContent = `유리 ${betterPct}%`;
+                    oddsDeltaEls[rank].textContent = `제외수 ${betterPct}%`;
                     oddsDeltaEls[rank].dataset.trend = 'up';
                 }
             }
