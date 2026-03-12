@@ -15771,3 +15771,650 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--result .dashboard-result
         font-size: 11px;
     }
 }
+
+/* Simplified draw experience */
+#tab-draw .draw-studio {
+    display: grid;
+    gap: 18px;
+}
+
+#tab-draw .draw-studio-header {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 24px 26px;
+    border-radius: 28px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    background:
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96));
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
+#tab-draw .draw-studio-title {
+    display: grid;
+    gap: 12px;
+}
+
+#tab-draw .draw-studio-title h2 {
+    margin: 0;
+    font-size: clamp(26px, 3vw, 38px);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+}
+
+#tab-draw .draw-studio-title > p {
+    max-width: 640px;
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+#tab-draw .draw-service-context,
+#tab-draw .draw-rule-guide {
+    border-radius: 20px;
+    padding: 14px 16px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    background: rgba(255, 255, 255, 0.82);
+}
+
+#tab-draw .draw-rule-guide {
+    display: grid;
+    gap: 8px;
+}
+
+#tab-draw .draw-rule-guide p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+#tab-draw .draw-rule-guide-badge {
+    width: fit-content;
+    min-width: 0;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(30, 107, 255, 0.1);
+    color: #1550bf;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+#tab-draw .draw-service-context {
+    display: grid;
+    gap: 4px;
+}
+
+#tab-draw .draw-service-context-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--draw-muted, #64748b);
+}
+
+#tab-draw #draw-membership-status {
+    font-size: 19px;
+    line-height: 1.15;
+}
+
+#tab-draw #draw-membership-note {
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+#tab-draw .draw-selection-dock,
+#tab-draw .draw-selection-dock-placeholder,
+#tab-draw .draw-bottom-generate-bar {
+    display: none !important;
+}
+
+#tab-draw .draw-quickstart-card {
+    display: grid;
+    gap: 20px;
+    padding: 26px;
+    border-radius: 30px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    background:
+        radial-gradient(circle at top right, rgba(30, 107, 255, 0.14), transparent 30%),
+        linear-gradient(180deg, #ffffff, #f8fbff 72%);
+    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.08);
+}
+
+#tab-draw .draw-quickstart-head {
+    display: grid;
+    gap: 8px;
+}
+
+#tab-draw .draw-quickstart-kicker {
+    width: fit-content;
+    min-width: 0;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: rgba(30, 107, 255, 0.1);
+    color: #1550bf;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+
+#tab-draw .draw-quickstart-head h3 {
+    margin: 0;
+    font-size: clamp(24px, 2.8vw, 34px);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+}
+
+#tab-draw .draw-quickstart-head p {
+    margin: 0;
+    max-width: 620px;
+    font-size: 14px;
+    color: var(--draw-muted, #64748b);
+    line-height: 1.65;
+}
+
+#tab-draw .draw-quickstart-step {
+    display: grid;
+    gap: 12px;
+}
+
+#tab-draw .draw-quickstart-step-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#tab-draw .draw-quickstart-step-head span {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #1e6bff;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 800;
+    box-shadow: 0 10px 22px rgba(30, 107, 255, 0.24);
+}
+
+#tab-draw .draw-quickstart-step-head strong {
+    font-size: 17px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+#tab-draw .draw-quickstart-options {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+#tab-draw .draw-quick-option {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    min-height: 156px;
+    padding: 18px 16px;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.94);
+    color: #0f172a;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.05);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+#tab-draw .draw-quick-option:hover {
+    transform: translateY(-2px);
+    border-color: rgba(30, 107, 255, 0.3);
+    box-shadow: 0 16px 28px rgba(15, 23, 42, 0.08);
+}
+
+#tab-draw .draw-quick-option.is-active {
+    border-color: rgba(30, 107, 255, 0.42);
+    background: linear-gradient(180deg, rgba(239, 246, 255, 0.98), rgba(219, 234, 254, 0.88));
+    box-shadow: 0 18px 34px rgba(30, 107, 255, 0.16);
+}
+
+#tab-draw .draw-quick-option.is-recommended:not(.is-active) {
+    border-color: rgba(22, 163, 74, 0.24);
+    background: linear-gradient(180deg, rgba(240, 253, 244, 0.96), rgba(248, 250, 252, 0.96));
+}
+
+#tab-draw .draw-quick-option--custom {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.94));
+}
+
+#tab-draw .draw-quick-option-badge {
+    width: fit-content;
+    min-width: 0;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.06);
+    color: #475569;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+#tab-draw .draw-quick-option.is-active .draw-quick-option-badge {
+    background: rgba(30, 107, 255, 0.14);
+    color: #1550bf;
+}
+
+#tab-draw .draw-quick-option.is-recommended .draw-quick-option-badge {
+    background: rgba(22, 163, 74, 0.12);
+    color: #15803d;
+}
+
+#tab-draw .draw-quick-option strong {
+    font-size: 19px;
+    line-height: 1.15;
+}
+
+#tab-draw .draw-quick-option p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--draw-muted, #64748b);
+    line-height: 1.55;
+}
+
+#tab-draw .draw-quickstart-summary {
+    display: grid;
+    gap: 6px;
+    padding: 18px 18px 19px;
+    border-radius: 22px;
+    background: rgba(15, 23, 42, 0.03);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+#tab-draw .draw-quickstart-summary strong {
+    font-size: 17px;
+    line-height: 1.25;
+}
+
+#tab-draw .draw-quickstart-summary p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--draw-muted, #64748b);
+    line-height: 1.6;
+}
+
+#tab-draw .draw-quickstart-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#tab-draw .draw-quick-generator-slot {
+    display: grid;
+}
+
+#tab-draw .draw-generator-card--primary {
+    border-radius: 28px;
+    border: 1px solid rgba(148, 163, 184, 0.22) !important;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96)) !important;
+    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.08) !important;
+    padding: 24px !important;
+}
+
+#tab-draw .draw-generator-card--primary .section-title.compact {
+    margin: 0;
+    display: grid;
+    gap: 6px;
+}
+
+#tab-draw .draw-generator-card--primary .section-title.compact h3 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.15;
+}
+
+#tab-draw .draw-generator-card--primary .section-title.compact p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--draw-muted, #64748b);
+    line-height: 1.6;
+}
+
+#tab-draw .draw-generator-card--primary .generator-panel {
+    gap: 18px;
+}
+
+#tab-draw .draw-generator-card--primary .controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: end;
+}
+
+#tab-draw .draw-generator-card--primary .draw-count-wrap {
+    display: grid;
+    gap: 10px;
+}
+
+#tab-draw .draw-generator-card--primary .draw-count-wrap label {
+    font-size: 13px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+#tab-draw .draw-generator-card--primary .draw-action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+#tab-draw .draw-generator-card--primary .draw-action-buttons button {
+    min-height: 46px;
+    padding: 0 18px;
+}
+
+#tab-draw .draw-generator-card--primary #generate-btn {
+    border-radius: 14px;
+    background: linear-gradient(135deg, #1e6bff, #2563eb);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 800;
+    box-shadow: 0 14px 28px rgba(30, 107, 255, 0.24);
+}
+
+#tab-draw .draw-generator-card--primary #generate-btn:hover {
+    background: linear-gradient(135deg, #1550bf, #1d4ed8);
+}
+
+#tab-draw .draw-generator-card--primary #draw-copy-all-btn {
+    border-radius: 14px;
+}
+
+#tab-draw .draw-generator-card--primary .draw-generate-hint {
+    margin: -2px 0 0;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+#tab-draw .draw-generator-card--primary .numbers-container {
+    display: grid;
+    gap: 12px;
+}
+
+#tab-draw .draw-generator-card--primary .notice-bar,
+#tab-draw .draw-generator-card--primary #guest-limit {
+    margin: 0;
+}
+
+#tab-draw .draw-advanced-shell {
+    display: grid;
+    gap: 16px;
+    padding: 18px 20px;
+    border-radius: 26px;
+    border: 1px dashed rgba(148, 163, 184, 0.34);
+    background: rgba(248, 250, 252, 0.82);
+}
+
+#tab-draw .draw-advanced-shell.is-open {
+    border-style: solid;
+    border-color: rgba(148, 163, 184, 0.24);
+    background: linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(241, 245, 249, 0.92));
+}
+
+#tab-draw .draw-advanced-shell-head {
+    display: grid;
+    gap: 6px;
+}
+
+#tab-draw .draw-advanced-shell-kicker {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--draw-muted, #64748b);
+}
+
+#tab-draw .draw-advanced-shell-head strong {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #0f172a;
+}
+
+#tab-draw .draw-advanced-content {
+    display: grid;
+    gap: 18px;
+}
+
+#tab-draw .draw-advanced-content .draw-studio-body {
+    grid-template-columns: 1fr;
+    gap: 18px;
+}
+
+#tab-draw .draw-advanced-content .draw-builder {
+    position: static;
+    top: auto;
+    gap: 16px;
+}
+
+#tab-draw .draw-advanced-content .draw-panel,
+#tab-draw .draw-advanced-content .draw-metric-card,
+#tab-draw .draw-advanced-content .draw-selected-card,
+#tab-draw .draw-advanced-content .draw-rules-panel.inline,
+#tab-draw .draw-advanced-content .draw-dashboard-unified {
+    border-radius: 24px !important;
+    border: 1px solid rgba(148, 163, 184, 0.18) !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06) !important;
+}
+
+#tab-draw .draw-advanced-content .draw-dashboard-unified {
+    padding: 18px;
+}
+
+#tab-draw .draw-advanced-content .draw-dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#tab-draw .draw-advanced-content .draw-panel,
+#tab-draw .draw-advanced-content .draw-metric-card,
+#tab-draw .draw-advanced-content .draw-rules-panel.inline {
+    padding: 18px !important;
+}
+
+#tab-draw .draw-advanced-content .draw-selected-board {
+    padding: 18px !important;
+}
+
+#tab-draw .draw-advanced-content .draw-rules-panel.inline {
+    margin-top: 0;
+}
+
+#tab-draw .draw-advanced-content .draw-rules-header h3 {
+    font-size: 17px;
+}
+
+#tab-draw .draw-advanced-content .draw-selected-list {
+    max-height: none;
+}
+
+body[data-theme="dark"] #tab-draw .draw-studio-header {
+    background:
+        radial-gradient(circle at top right, rgba(93, 160, 255, 0.18), transparent 36%),
+        linear-gradient(180deg, rgba(20, 26, 34, 0.98), rgba(15, 19, 26, 0.98));
+    border-color: rgba(93, 160, 255, 0.16);
+    box-shadow: 0 18px 40px rgba(2, 6, 23, 0.34);
+}
+
+body[data-theme="dark"] #tab-draw .draw-service-context,
+body[data-theme="dark"] #tab-draw .draw-rule-guide,
+body[data-theme="dark"] #tab-draw .draw-quickstart-card,
+body[data-theme="dark"] #tab-draw .draw-generator-card--primary,
+body[data-theme="dark"] #tab-draw .draw-advanced-shell,
+body[data-theme="dark"] #tab-draw .draw-advanced-content .draw-panel,
+body[data-theme="dark"] #tab-draw .draw-advanced-content .draw-metric-card,
+body[data-theme="dark"] #tab-draw .draw-advanced-content .draw-selected-card,
+body[data-theme="dark"] #tab-draw .draw-advanced-content .draw-rules-panel.inline,
+body[data-theme="dark"] #tab-draw .draw-advanced-content .draw-dashboard-unified {
+    background: rgba(20, 26, 34, 0.94) !important;
+    border-color: rgba(71, 85, 105, 0.46) !important;
+    box-shadow: 0 16px 36px rgba(2, 6, 23, 0.28) !important;
+}
+
+body[data-theme="dark"] #tab-draw .draw-rule-guide-badge,
+body[data-theme="dark"] #tab-draw .draw-quickstart-kicker,
+body[data-theme="dark"] #tab-draw .draw-quick-option.is-active .draw-quick-option-badge {
+    background: rgba(93, 160, 255, 0.16);
+    color: #9fcbff;
+}
+
+body[data-theme="dark"] #tab-draw .draw-quick-option {
+    background: rgba(15, 23, 42, 0.72);
+    border-color: rgba(71, 85, 105, 0.5);
+    box-shadow: none;
+}
+
+body[data-theme="dark"] #tab-draw .draw-quick-option:hover {
+    border-color: rgba(93, 160, 255, 0.38);
+    box-shadow: 0 14px 28px rgba(2, 6, 23, 0.24);
+}
+
+body[data-theme="dark"] #tab-draw .draw-quick-option.is-active {
+    background: linear-gradient(180deg, rgba(20, 41, 82, 0.94), rgba(15, 23, 42, 0.94));
+    border-color: rgba(93, 160, 255, 0.44);
+}
+
+body[data-theme="dark"] #tab-draw .draw-quick-option.is-recommended:not(.is-active) {
+    background: linear-gradient(180deg, rgba(22, 101, 52, 0.26), rgba(15, 23, 42, 0.9));
+    border-color: rgba(34, 197, 94, 0.28);
+}
+
+body[data-theme="dark"] #tab-draw .draw-quick-option-badge,
+body[data-theme="dark"] #tab-draw .draw-quickstart-summary,
+body[data-theme="dark"] #tab-draw .draw-service-context,
+body[data-theme="dark"] #tab-draw .draw-rule-guide {
+    background: rgba(15, 23, 42, 0.64);
+}
+
+body[data-theme="dark"] #tab-draw .draw-quick-option strong,
+body[data-theme="dark"] #tab-draw .draw-quickstart-step-head strong,
+body[data-theme="dark"] #tab-draw .draw-quickstart-summary strong,
+body[data-theme="dark"] #tab-draw .draw-advanced-shell-head strong,
+body[data-theme="dark"] #tab-draw .draw-generator-card--primary .draw-count-wrap label {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-draw .draw-quick-option p,
+body[data-theme="dark"] #tab-draw .draw-quickstart-head p,
+body[data-theme="dark"] #tab-draw #draw-membership-note,
+body[data-theme="dark"] #tab-draw .draw-rule-guide p,
+body[data-theme="dark"] #tab-draw .draw-quickstart-summary p {
+    color: #c0cfdd;
+}
+
+body[data-theme="dark"] #tab-draw .draw-advanced-shell {
+    background: rgba(15, 19, 26, 0.9) !important;
+}
+
+body[data-theme="dark"] #tab-draw .draw-advanced-shell.is-open {
+    background: linear-gradient(180deg, rgba(20, 26, 34, 0.96), rgba(15, 19, 26, 0.96)) !important;
+}
+
+body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
+    box-shadow: 0 14px 28px rgba(37, 99, 235, 0.28);
+}
+
+@media (max-width: 1080px) {
+    #tab-draw .draw-quickstart-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #tab-draw .draw-quick-option--custom {
+        grid-column: 1 / -1;
+        min-height: 0;
+    }
+}
+
+@media (max-width: 820px) {
+    #tab-draw .draw-advanced-content .draw-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-draw .draw-generator-card--primary .controls {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+
+    #tab-draw .draw-generator-card--primary .draw-action-buttons {
+        justify-content: stretch;
+    }
+
+    #tab-draw .draw-generator-card--primary .draw-action-buttons button {
+        flex: 1 1 180px;
+    }
+}
+
+@media (max-width: 640px) {
+    #tab-draw .draw-studio-header,
+    #tab-draw .draw-quickstart-card,
+    #tab-draw .draw-generator-card--primary,
+    #tab-draw .draw-advanced-shell {
+        border-radius: 24px;
+    }
+
+    #tab-draw .draw-studio-header {
+        padding: 18px;
+    }
+
+    #tab-draw .draw-studio-title h2,
+    #tab-draw .draw-quickstart-head h3 {
+        font-size: 28px;
+    }
+
+    #tab-draw .draw-service-context,
+    #tab-draw .draw-rule-guide,
+    #tab-draw .draw-quickstart-summary {
+        padding: 14px;
+    }
+
+    #tab-draw .draw-quickstart-card,
+    #tab-draw .draw-generator-card--primary {
+        padding: 18px !important;
+    }
+
+    #tab-draw .draw-quickstart-options {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-draw .draw-quick-option,
+    #tab-draw .draw-quick-option--custom {
+        grid-column: auto;
+        min-height: 0;
+        padding: 16px 15px;
+    }
+
+    #tab-draw .draw-quickstart-actions {
+        justify-content: stretch;
+    }
+
+    #tab-draw .draw-quickstart-actions .ghost {
+        width: 100%;
+    }
+
+    #tab-draw .draw-generator-card--primary .draw-action-buttons {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    #tab-draw .draw-generator-card--primary .draw-action-buttons button {
+        width: 100%;
+    }
+
+    #tab-draw .draw-advanced-shell {
+        padding: 16px;
+    }
+
+    #tab-draw .draw-advanced-content .draw-panel,
+    #tab-draw .draw-advanced-content .draw-metric-card,
+    #tab-draw .draw-advanced-content .draw-selected-board,
+    #tab-draw .draw-advanced-content .draw-rules-panel.inline,
+    #tab-draw .draw-advanced-content .draw-dashboard-unified {
+        border-radius: 20px !important;
+        padding: 16px !important;
+    }
+}

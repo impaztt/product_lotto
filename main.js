@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         strategy: '',
         at: 0
     };
+    let isDrawAdvancedOpen = false;
     const storeOpenOfficialBtn = document.getElementById('store-open-official-btn');
     const groupLevelButtons = Array.from(document.querySelectorAll('[data-group-level]'));
     const slotSaveButtons = Array.from(document.querySelectorAll('[data-slot-save]'));
@@ -117,10 +118,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const scenarioGrid = document.getElementById('draw-scenario-grid');
     const drawTabPanel = document.getElementById('tab-draw');
     const drawStudioBodyEl = drawTabPanel ? drawTabPanel.querySelector('.draw-studio-body') : null;
+    const drawBuilderEl = drawTabPanel ? drawTabPanel.querySelector('.draw-builder') : null;
     const drawSelectedBoardEl = document.querySelector('#tab-draw .draw-selected-board');
     const drawActionButtonsEl = drawTabPanel ? drawTabPanel.querySelector('.draw-action-buttons') : null;
     const drawServiceButtons = Array.from(document.querySelectorAll('.draw-service-btn[data-draw-service]'));
     const drawModeOnlyPanels = Array.from(document.querySelectorAll('[data-draw-mode-only]'));
+    const drawQuickStartCardEl = document.getElementById('draw-quickstart-card');
+    const drawQuickSummaryTitleEl = document.getElementById('draw-quick-summary-title');
+    const drawQuickSummaryNoteEl = document.getElementById('draw-quick-summary-note');
+    const drawQuickAdvancedBtn = document.getElementById('draw-quick-advanced-btn');
+    const drawQuickGeneratorSlotEl = document.getElementById('draw-quick-generator-slot');
+    const drawQuickOptionButtons = Array.from(document.querySelectorAll('.draw-quick-option[data-quick-strategy]'));
+    const drawQuickCustomBtn = document.querySelector('.draw-quick-option[data-quick-action="customize"]');
+    const drawAdvancedShellEl = document.getElementById('draw-advanced-shell');
+    const drawAdvancedContentEl = document.getElementById('draw-advanced-content');
     const toggleScenariosBtn = document.getElementById('toggle-scenarios');
     const premiumBadgeEl = document.getElementById('draw-premium-badge');
     const premiumLockEl = document.getElementById('draw-premium-lock');
@@ -1224,9 +1235,40 @@ document.addEventListener('DOMContentLoaded', () => {
     if (toggleScenariosBtn && scenarioPanel && scenarioGrid) {
         toggleScenariosBtn.addEventListener('click', () => {
             const collapsed = scenarioPanel.classList.toggle('is-collapsed');
-            toggleScenariosBtn.textContent = collapsed ? '더보기' : '접기';
+            toggleScenariosBtn.textContent = collapsed ? '펼치기' : '접기';
             toggleScenariosBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
             scheduleDrawHorizontalWidthSync();
+        });
+    }
+
+    drawQuickOptionButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const strategy = String(button.dataset.quickStrategy || '').trim();
+            if (!strategy) {
+                return;
+            }
+            applyStrategy(strategy);
+            updateRulesStatus(`${PRESETS_LABEL[strategy] || '추천 방식'}을 적용했습니다. 이제 바로 번호 추천을 받을 수 있습니다.`);
+            syncDrawQuickStartUi();
+        });
+    });
+
+    if (drawQuickCustomBtn) {
+        drawQuickCustomBtn.addEventListener('click', () => {
+            setDrawAdvancedOpen(true, {
+                scroll: true,
+                focusTarget: drawAdvancedShellEl
+            });
+            setRulePickerOpen(true);
+            updateRulesStatus('세부 필터를 직접 고르는 화면을 열었습니다.');
+        });
+    }
+
+    if (drawQuickAdvancedBtn) {
+        drawQuickAdvancedBtn.addEventListener('click', () => {
+            setDrawAdvancedOpen(!isDrawAdvancedOpen, {
+                scroll: !isDrawAdvancedOpen
+            });
         });
     }
 
@@ -1675,6 +1717,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (openRulePickerBtn) {
         openRulePickerBtn.addEventListener('click', () => {
+            setDrawAdvancedOpen(true, {
+                scroll: true,
+                focusTarget: rulePickerPanel
+            });
             setRulePickerOpen(true);
         });
     }
@@ -1757,6 +1803,7 @@ document.addEventListener('DOMContentLoaded', () => {
             refreshGuestLimitMessage();
         }
         updatePremiumMembershipUi();
+        setupSimplifiedDrawExperience();
         setDrawServiceMode(getStoredDrawServiceMode());
         updateDrawContextUi();
         updateDashboardSummaryUi();
@@ -2606,6 +2653,103 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollIntoViewSoon(target);
     }
 
+    function setDrawAdvancedOpen(nextOpen, options = {}) {
+        if (!drawAdvancedShellEl || !drawAdvancedContentEl || !drawQuickAdvancedBtn) {
+            return;
+        }
+        const { scroll = false, focusTarget = null } = options;
+        isDrawAdvancedOpen = Boolean(nextOpen);
+        drawAdvancedShellEl.classList.toggle('is-open', isDrawAdvancedOpen);
+        drawAdvancedContentEl.hidden = !isDrawAdvancedOpen;
+        drawQuickAdvancedBtn.setAttribute('aria-expanded', String(isDrawAdvancedOpen));
+        drawQuickAdvancedBtn.textContent = isDrawAdvancedOpen ? '고급 설정 접기' : '고급 설정 열기';
+        scheduleDrawHorizontalWidthSync();
+        if (isDrawAdvancedOpen && scroll) {
+            scrollIntoViewSoon(focusTarget || drawAdvancedShellEl);
+        }
+    }
+
+    function syncDrawQuickStartUi() {
+        const selectedCount = ruleInputs.filter(input => input.checked).length;
+        const drawCount = Math.max(1, parseInt(drawCountSelect?.value || '1', 10) || 1);
+        const activeLabel = activeStrategy ? (PRESETS_LABEL[activeStrategy] || activeStrategy) : '';
+        const isCustomSelection = !activeStrategy && selectedCount > 0;
+
+        drawQuickOptionButtons.forEach(button => {
+            const strategy = String(button.dataset.quickStrategy || '');
+            const active = strategy === activeStrategy;
+            button.classList.toggle('is-active', active);
+            button.setAttribute('aria-pressed', String(active));
+        });
+
+        if (drawQuickCustomBtn) {
+            drawQuickCustomBtn.classList.toggle('is-active', isCustomSelection);
+            drawQuickCustomBtn.setAttribute('aria-pressed', String(isCustomSelection));
+        }
+
+        if (drawQuickSummaryTitleEl) {
+            if (activeLabel && selectedCount > 0) {
+                drawQuickSummaryTitleEl.textContent = `${activeLabel} 기준으로 추천 준비 완료`;
+            } else if (isCustomSelection) {
+                drawQuickSummaryTitleEl.textContent = `직접 고른 필터 ${selectedCount}개가 적용되어 있습니다.`;
+            } else {
+                drawQuickSummaryTitleEl.textContent = '아직 추천 방식이 정해지지 않았습니다.';
+            }
+        }
+
+        if (drawQuickSummaryNoteEl) {
+            if (activeLabel && selectedCount > 0) {
+                drawQuickSummaryNoteEl.textContent = `현재 ${drawCount}세트로 설정되어 있습니다. 바로 번호 추천받기를 누르면 됩니다.`;
+            } else if (isCustomSelection) {
+                drawQuickSummaryNoteEl.textContent = `지금은 직접 고른 필터 ${selectedCount}개 기준입니다. 세트 수를 정한 뒤 바로 번호를 받을 수 있습니다.`;
+            } else {
+                drawQuickSummaryNoteEl.textContent = '처음이면 균형형을 누른 뒤 바로 번호 추천받기를 누르세요.';
+            }
+        }
+    }
+
+    function setupSimplifiedDrawExperience() {
+        if (!rulesSection || !drawQuickGeneratorSlotEl || !drawGeneratorSectionEl) {
+            return;
+        }
+
+        if (drawGeneratorSectionEl.parentNode !== drawQuickGeneratorSlotEl) {
+            drawQuickGeneratorSlotEl.appendChild(drawGeneratorSectionEl);
+            drawGeneratorSectionEl.classList.add('draw-generator-card--primary');
+        }
+
+        if (drawAdvancedContentEl && drawAdvancedContentEl.dataset.mounted !== 'true') {
+            if (drawBuilderEl && drawSelectedBoardEl && drawBuilderEl.firstElementChild !== drawSelectedBoardEl) {
+                drawBuilderEl.insertBefore(drawSelectedBoardEl, drawBuilderEl.firstChild);
+            }
+            if (scenarioPanel && toggleScenariosBtn) {
+                scenarioPanel.classList.add('is-collapsed');
+                toggleScenariosBtn.textContent = '펼치기';
+                toggleScenariosBtn.setAttribute('aria-expanded', 'false');
+            }
+            [drawStudioBodyEl, rulePickerPanel].forEach(element => {
+                if (element && element.parentNode !== drawAdvancedContentEl) {
+                    drawAdvancedContentEl.appendChild(element);
+                }
+            });
+            drawAdvancedContentEl.dataset.mounted = 'true';
+        }
+
+        if (drawSelectionDockEl) {
+            drawSelectionDockEl.hidden = true;
+        }
+        if (drawSelectionDockPlaceholderEl) {
+            drawSelectionDockPlaceholderEl.hidden = true;
+        }
+
+        setDrawAdvancedOpen(false);
+        if (!activeStrategy && !ruleInputs.some(input => input.checked)) {
+            applyStrategy('balanced');
+            updateRulesStatus('처음 쓰기 쉬운 균형형을 기본으로 준비했습니다. 바로 번호 추천받기를 누르거나 강도를 바꿔 보세요.');
+        }
+        syncDrawQuickStartUi();
+    }
+
     function updateDashboardSummaryUi() {
         if (dashSyncStatusEl) {
             if (currentWeeklyData && Number(currentWeeklyData.drwNo) > 0) {
@@ -2680,7 +2824,7 @@ document.addEventListener('DOMContentLoaded', () => {
             drawActionButtonsEl.classList.toggle('is-generate-hidden', !hasSelection);
         }
         const isSelfMode = !drawTabPanel || drawTabPanel.getAttribute('data-service-mode') !== 'premium';
-        const shouldShowBottomGenerateBar = isSelfMode && hasSelection;
+        const shouldShowBottomGenerateBar = false;
         if (drawBottomGenerateBarEl) {
             const wasVisible = drawBottomGenerateBarEl.classList.contains('is-visible');
             drawBottomGenerateBarEl.classList.toggle('has-selection', shouldShowBottomGenerateBar);
@@ -2729,6 +2873,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const excludedValue = Number.isFinite(currentExcludedCombos) ? formatNumber(currentExcludedCombos) : '-';
             drawFilterDetailEl.textContent = `남는 후보 ${remainingValue}개 · 제외 ${excludedValue}개 · 남은 비중 ${remainPct}%`;
         }
+        syncDrawQuickStartUi();
     }
 
     function updateMypageSummaryUi() {
@@ -3375,9 +3520,11 @@ document.addEventListener('DOMContentLoaded', () => {
             panel.hidden = only !== nextMode;
         });
         if (nextMode !== 'self') {
+            setDrawAdvancedOpen(false);
             setRulePickerOpen(false);
         }
         updatePremiumMembershipUi();
+        syncDrawQuickStartUi();
         scheduleDrawHorizontalWidthSync();
     }
 
@@ -6370,10 +6517,19 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (rulePickerPanel.classList.contains('inline')) {
-            rulePickerPanel.classList.add('is-open');
-            rulePickerPanel.setAttribute('aria-hidden', 'false');
+            rulePickerPanel.classList.toggle('is-open', Boolean(isOpen));
+            rulePickerPanel.setAttribute('aria-hidden', String(!isOpen));
             rulePickerBackdrop.hidden = true;
             body.classList.remove('rule-picker-open');
+            if (isOpen) {
+                setDrawAdvancedOpen(true);
+                if (rulePickerSearch) {
+                    window.setTimeout(() => {
+                        rulePickerSearch.focus();
+                    }, 40);
+                }
+                scrollIntoViewSoon(rulePickerPanel);
+            }
             return;
         }
         rulePickerPanel.classList.toggle('is-open', Boolean(isOpen));
