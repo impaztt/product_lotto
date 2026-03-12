@@ -366,6 +366,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const RULES_UPDATED_AT_KEY = 'lotto_rules_updated_at';
     const CUSTOM_PRESET_UPDATED_AT_KEY = 'lotto_custom_preset_updated_at';
     const ONBOARDING_SKIP_TODAY_KEY = 'lotto_onboarding_skip_today';
+    const GOOGLE_REDIRECT_STATE_KEY = 'lotto_google_redirect_state';
+    const GOOGLE_REDIRECT_PENDING_TTL_MS = 10 * 60 * 1000;
+    let googleRedirectFlowPending = readGoogleRedirectPendingState();
 
     const tabController = createTabController({
         tabButtons,
@@ -1923,8 +1926,57 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'self';
     }
 
+    function readGoogleRedirectPendingState() {
+        try {
+            const raw = localStorage.getItem(GOOGLE_REDIRECT_STATE_KEY);
+            if (!raw) {
+                return false;
+            }
+            const startedAt = Number(raw);
+            if (!Number.isFinite(startedAt) || startedAt <= 0) {
+                localStorage.removeItem(GOOGLE_REDIRECT_STATE_KEY);
+                return false;
+            }
+            if (Date.now() - startedAt > GOOGLE_REDIRECT_PENDING_TTL_MS) {
+                localStorage.removeItem(GOOGLE_REDIRECT_STATE_KEY);
+                return false;
+            }
+            return true;
+        } catch (error) {
+            console.warn('구글 리디렉션 상태 확인 실패', error);
+            return false;
+        }
+    }
+
+    function setGoogleRedirectPendingState(nextPending) {
+        googleRedirectFlowPending = Boolean(nextPending);
+        try {
+            if (googleRedirectFlowPending) {
+                localStorage.setItem(GOOGLE_REDIRECT_STATE_KEY, String(Date.now()));
+            } else {
+                localStorage.removeItem(GOOGLE_REDIRECT_STATE_KEY);
+            }
+        } catch (error) {
+            console.warn('구글 리디렉션 상태 저장 실패', error);
+        }
+    }
+
+    function hasGoogleRedirectPending() {
+        if (!googleRedirectFlowPending) {
+            return false;
+        }
+        googleRedirectFlowPending = readGoogleRedirectPendingState();
+        return googleRedirectFlowPending;
+    }
+
+    function getAuthPendingStatusMessage() {
+        return hasGoogleRedirectPending()
+            ? '구글 로그인 결과를 확인하는 중입니다.'
+            : '저장된 로그인 상태를 확인하는 중입니다.';
+    }
+
     function isAuthStatePending() {
-        return Boolean(firebaseReady && !authStateResolved);
+        return Boolean((firebaseReady && !authStateResolved) || hasGoogleRedirectPending());
     }
 
     function getMembershipTier() {
@@ -2736,7 +2788,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function openWelcomeModal() {
-        if (!welcomeModal || isMember() || hasSkippedWelcomeModalToday() || welcomeModalDismissedInSession) {
+        if (!welcomeModal || isMember() || isAuthStatePending() || hasSkippedWelcomeModalToday() || welcomeModalDismissedInSession) {
             return;
         }
         closeAuthModal();
@@ -2749,7 +2801,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!welcomeModal || isMember() || hasSkippedWelcomeModalToday() || welcomeModalDismissedInSession) {
             return;
         }
-        if (firebaseReady && !authStateResolved) {
+        if (isAuthStatePending()) {
             if (welcomeModalTimer) {
                 window.clearTimeout(welcomeModalTimer);
             }
@@ -3004,6 +3056,7 @@ document.addEventListener('DOMContentLoaded', () => {
             firebaseAuth = window.firebase.auth();
             firebaseDb = window.firebase.firestore();
             firebaseReady = true;
+            googleRedirectFlowPending = readGoogleRedirectPendingState();
             if (window.firebase.auth && window.firebase.auth.Auth && window.firebase.auth.Auth.Persistence) {
                 const { Persistence } = window.firebase.auth.Auth;
                 authPersistenceReady = firebaseAuth.setPersistence(Persistence.LOCAL).catch(async error => {
@@ -3023,7 +3076,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 await syncAuthState(user);
             });
             void handleGoogleRedirectResult();
-            setFirebaseAuthStatus('로그인 준비가 끝났어요. 바로 계속할 수 있어요.');
+            setFirebaseAuthStatus(
+                hasGoogleRedirectPending()
+                    ? '구글 로그인 결과를 확인하는 중입니다.'
+                    : '로그인 준비가 끝났어요. 바로 계속할 수 있어요.'
+            );
         } catch (error) {
             firebaseReady = false;
             authStateResolved = true;
@@ -3040,6 +3097,9 @@ document.addEventListener('DOMContentLoaded', () => {
     async function syncAuthState(user) {
         authStateResolved = true;
         currentUser = user || null;
+        if (currentUser) {
+            setGoogleRedirectPendingState(false);
+        }
         try {
             if (currentUser) {
                 await ensureUserProfile();
@@ -3063,7 +3123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateAuthUi() {
         const member = isMember();
         const authPending = isAuthStatePending();
-        if (member) {
+        if (member || authPending) {
             closeWelcomeModal({
                 keepSessionClosed: false
             });
@@ -3105,8 +3165,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!firebaseReady) {
             return;
         }
-        if (isAuthStatePending()) {
-            firebaseAuthStatusEl.textContent = '저장된 로그인 상태를 확인하는 중입니다.';
+        if (authPending) {
+            firebaseAuthStatusEl.textContent = getAuthPendingStatusMessage();
             return;
         }
         if (member) {
@@ -3139,9 +3199,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function shouldPreferGoogleRedirect() {
         const ua = navigator.userAgent || '';
-        const isMobileDevice = /android|iphone|ipad|ipod/i.test(ua);
         const isInAppBrowser = /; wv\)|KAKAOTALK|NAVER|Instagram|FBAN|FBAV|Line\//i.test(ua);
-        return isMobileDevice || isInAppBrowser;
+        return isInAppBrowser;
     }
 
     function shouldFallbackGoogleRedirect(error) {
@@ -3178,19 +3237,29 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         googleRedirectResultChecked = true;
+        const hadPendingRedirect = hasGoogleRedirectPending();
         try {
             const result = await firebaseAuth.getRedirectResult();
-            if (!result || !result.user) {
+            const redirectUser = (result && result.user) || firebaseAuth.currentUser || null;
+            if (!redirectUser) {
+                if (hadPendingRedirect) {
+                    setGoogleRedirectPendingState(false);
+                    updateAuthUi();
+                    setFirebaseAuthStatus('구글 로그인 연결을 확인하지 못했습니다. 다시 시도해 주세요.');
+                }
                 return;
             }
-            await syncAuthState(result.user);
+            setGoogleRedirectPendingState(false);
+            await syncAuthState(redirectUser);
             updateRulesStatus('구글 가입/로그인 성공');
             setFirebaseAuthStatus('구글 로그인 완료. 저장한 기준과 기록을 불러오는 중입니다.');
         } catch (error) {
+            setGoogleRedirectPendingState(false);
             console.error('구글 리디렉션 로그인 실패', error);
             const message = getGoogleAuthErrorMessage(error);
             updateRulesStatus(`구글 로그인 실패: ${message}`);
             setFirebaseAuthStatus(`${message}${error && error.code ? ` [${error.code}]` : ''}`);
+            updateAuthUi();
         }
     }
 
@@ -3215,6 +3284,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (shouldPreferGoogleRedirect()) {
                 updateRulesStatus('구글 로그인 화면으로 이동합니다.');
                 setFirebaseAuthStatus('브라우저 환경에 맞춰 구글 로그인 화면으로 이동합니다.');
+                setGoogleRedirectPendingState(true);
                 await firebaseAuth.signInWithRedirect(provider);
                 startedRedirect = true;
                 return false;
@@ -3232,14 +3302,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     updateRulesStatus('팝업 대신 구글 로그인 화면으로 이동합니다.');
                     setFirebaseAuthStatus('팝업이 어려워 전체 페이지 로그인으로 전환합니다.');
+                    setGoogleRedirectPendingState(true);
                     await firebaseAuth.signInWithRedirect(provider);
                     startedRedirect = true;
                     return false;
                 } catch (redirectError) {
+                    setGoogleRedirectPendingState(false);
                     console.error('구글 리디렉션 로그인 전환 실패', redirectError);
                     error = redirectError;
                 }
             }
+            setGoogleRedirectPendingState(false);
             const message = getGoogleAuthErrorMessage(error);
             updateRulesStatus(`구글 로그인 실패: ${message}`);
             setFirebaseAuthStatus(`${message}${error && error.code ? ` [${error.code}]` : ''}`);
@@ -3257,6 +3330,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         try {
             await firebaseAuth.signOut();
+            setGoogleRedirectPendingState(false);
             currentUserProfile = null;
             welcomeModalDismissedInSession = false;
             scheduleWelcomeModal();
@@ -3554,6 +3628,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openAuthModal() {
         if (!authModal) {
+            return;
+        }
+        if (isAuthStatePending()) {
+            setFirebaseAuthStatus(getAuthPendingStatusMessage());
             return;
         }
         closeWelcomeModal();
