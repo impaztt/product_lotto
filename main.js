@@ -340,6 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let authStateResolved = false;
     let firebaseAuth = null;
     let firebaseDb = null;
+    let authPersistenceReady = Promise.resolve();
     let currentUser = null;
     let currentUserProfile = null;
     let authActionInFlight = false;
@@ -1704,6 +1705,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
         try {
+            if (isAuthStatePending()) {
+                refreshGuestLimitMessage();
+                showActionPopup('로그인 상태를 확인하는 중입니다. 잠시만 기다려 주세요.');
+                return false;
+            }
             if (!canGuestGenerate()) {
                 showActionPopup('로그인 후 2세트 이상 생성과 제한 해제를 사용할 수 있습니다.');
                 openAuthModal();
@@ -1913,6 +1919,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'self';
     }
 
+    function isAuthStatePending() {
+        return Boolean(firebaseReady && !authStateResolved);
+    }
+
     function getMembershipTier() {
         if (currentUserProfile && typeof currentUserProfile.membershipTier === 'string') {
             return currentUserProfile.membershipTier.toLowerCase();
@@ -2116,8 +2126,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateDrawContextUi() {
         const plan = getMembershipPlanMeta();
+        const authPending = isAuthStatePending();
         if (drawMembershipStatusEl) {
-            if (!isMember()) {
+            if (authPending) {
+                drawMembershipStatusEl.textContent = '로그인 확인 중';
+            } else if (!isMember()) {
                 drawMembershipStatusEl.textContent = '로그인 필요';
             } else if (isPremiumMember()) {
                 drawMembershipStatusEl.textContent = `${plan.label} 활성화`;
@@ -2126,7 +2139,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         if (drawMembershipNoteEl) {
-            if (!isMember()) {
+            if (authPending) {
+                drawMembershipNoteEl.textContent = '저장된 로그인 상태를 확인하고 있습니다.';
+            } else if (!isMember()) {
                 drawMembershipNoteEl.textContent = '로그인 후 이용권을 시작하면 추천번호를 바로 받을 수 있습니다.';
             } else if (isPremiumMember()) {
                 drawMembershipNoteEl.textContent = `${plan.label} 플랜으로 추천번호와 전체복사를 바로 사용할 수 있습니다.`;
@@ -2207,6 +2222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateMypageSummaryUi() {
         const plan = getMembershipPlanMeta();
         const stats = getGenerationStats();
+        const authPending = isAuthStatePending();
         const savedRules = readStoredRuleIds('lotto_rules');
         const customPreset = readStoredRuleIds('lotto_custom_preset');
         const savedRulesUpdatedAt = localStorage.getItem(RULES_UPDATED_AT_KEY) || '';
@@ -2222,7 +2238,9 @@ document.addEventListener('DOMContentLoaded', () => {
             .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0] || '';
 
         if (mypageProfileEmailEl) {
-            if (currentUser && currentUser.email) {
+            if (authPending) {
+                mypageProfileEmailEl.textContent = '로그인 상태 확인 중';
+            } else if (currentUser && currentUser.email) {
                 mypageProfileEmailEl.textContent = currentUser.email;
             } else if (isMember() && currentUser) {
                 mypageProfileEmailEl.textContent = currentUser.uid;
@@ -2231,21 +2249,25 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         if (mypageMembershipTierEl) {
-            mypageMembershipTierEl.textContent = isMember() ? plan.label : 'FREE';
+            mypageMembershipTierEl.textContent = authPending ? '확인 중' : (isMember() ? plan.label : 'FREE');
         }
         if (mypageMembershipTierSummaryEl) {
-            mypageMembershipTierSummaryEl.textContent = isMember() ? plan.label : 'FREE';
+            mypageMembershipTierSummaryEl.textContent = authPending ? '확인 중' : (isMember() ? plan.label : 'FREE');
         }
         if (mypageMembershipDescEl) {
-            mypageMembershipDescEl.textContent = isMember()
+            mypageMembershipDescEl.textContent = authPending
+                ? '저장된 계정과 플랜 상태를 확인하고 있습니다.'
+                : isMember()
                 ? plan.description
                 : '로그인하면 저장한 기준과 추천 흐름을 그대로 이어서 쓸 수 있어요.';
         }
         if (mypageMembershipNextEl) {
-            mypageMembershipNextEl.textContent = isMember() ? plan.nextLabel : '추천 플랜 보기';
+            mypageMembershipNextEl.textContent = authPending ? '로그인 상태 확인 중' : (isMember() ? plan.nextLabel : '추천 플랜 보기');
         }
         if (mypagePlanNoteEl) {
-            if (!isMember()) {
+            if (authPending) {
+                mypagePlanNoteEl.textContent = '로그인 상태 확인 중';
+            } else if (!isMember()) {
                 mypagePlanNoteEl.textContent = '로그인하면 추천 기능 사용';
             } else if (isPremiumMember()) {
                 mypagePlanNoteEl.textContent = '추천 플랜 사용 중';
@@ -2254,7 +2276,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         if (mypagePlanManageBtn) {
-            mypagePlanManageBtn.textContent = isMember() ? '플랜 관리' : '로그인하고 시작';
+            mypagePlanManageBtn.textContent = authPending ? '확인 중' : (isMember() ? '플랜 관리' : '로그인하고 시작');
         }
         if (mypagePlanCancelBtn) {
             mypagePlanCancelBtn.hidden = !isPremiumMember();
@@ -2761,18 +2783,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function updatePremiumMembershipUi() {
         const plan = getMembershipPlanMeta();
         const premium = isPremiumMember();
+        const authPending = isAuthStatePending();
         if (premiumBadgeEl) {
-            premiumBadgeEl.textContent = premium ? plan.label : 'FREE';
-            premiumBadgeEl.classList.toggle('is-premium', premium);
+            premiumBadgeEl.textContent = authPending ? '...' : (premium ? plan.label : 'FREE');
+            premiumBadgeEl.classList.toggle('is-premium', !authPending && premium);
         }
         if (premiumLockEl) {
             premiumLockEl.classList.toggle('is-hidden', premium);
         }
         if (premiumGenerateBtn) {
-            premiumGenerateBtn.disabled = !premium;
+            premiumGenerateBtn.disabled = authPending || !premium;
         }
         if (premiumUpgradeBtn) {
-            if (!isMember()) {
+            if (authPending) {
+                premiumUpgradeBtn.textContent = '로그인 확인 중';
+            } else if (!isMember()) {
                 premiumUpgradeBtn.textContent = '가입/로그인 후 시작하기';
             } else if (premium) {
                 premiumUpgradeBtn.textContent = `${plan.label} 이용중`;
@@ -2967,27 +2992,23 @@ document.addEventListener('DOMContentLoaded', () => {
             firebaseAuth = window.firebase.auth();
             firebaseDb = window.firebase.firestore();
             firebaseReady = true;
+            if (window.firebase.auth && window.firebase.auth.Auth && window.firebase.auth.Auth.Persistence) {
+                const { Persistence } = window.firebase.auth.Auth;
+                authPersistenceReady = firebaseAuth.setPersistence(Persistence.LOCAL).catch(async error => {
+                    console.warn('Auth 로컬 세션 저장 설정 실패', error);
+                    if (Persistence.SESSION) {
+                        try {
+                            await firebaseAuth.setPersistence(Persistence.SESSION);
+                        } catch (sessionError) {
+                            console.warn('Auth 세션 저장 설정 실패', sessionError);
+                        }
+                    }
+                });
+            } else {
+                authPersistenceReady = Promise.resolve();
+            }
             firebaseAuth.onAuthStateChanged(async user => {
-                authStateResolved = true;
-                currentUser = user || null;
-                try {
-                    if (currentUser) {
-                        await ensureUserProfile();
-                    } else {
-                        currentUserProfile = null;
-                    }
-                } catch (error) {
-                    console.error('프로필 로드 실패', error);
-                    if (nicknameStatusEl) {
-                        nicknameStatusEl.textContent = '프로필을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.';
-                    }
-                }
-                updateAuthUi();
-                refreshGuestLimitMessage();
-                loadMypageDrawHistory(true);
-                if (currentWeeklyData) {
-                    loadLastWeekWinDashboard(currentWeeklyData, { force: true });
-                }
+                await syncAuthState(user);
             });
             void handleGoogleRedirectResult();
             setFirebaseAuthStatus('로그인 준비가 끝났어요. 바로 계속할 수 있어요.');
@@ -3004,8 +3025,32 @@ document.addEventListener('DOMContentLoaded', () => {
         return Boolean(currentUser);
     }
 
+    async function syncAuthState(user) {
+        authStateResolved = true;
+        currentUser = user || null;
+        try {
+            if (currentUser) {
+                await ensureUserProfile();
+            } else {
+                currentUserProfile = null;
+            }
+        } catch (error) {
+            console.error('프로필 로드 실패', error);
+            if (nicknameStatusEl) {
+                nicknameStatusEl.textContent = '프로필을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.';
+            }
+        }
+        updateAuthUi();
+        refreshGuestLimitMessage();
+        loadMypageDrawHistory(true);
+        if (currentWeeklyData) {
+            loadLastWeekWinDashboard(currentWeeklyData, { force: true });
+        }
+    }
+
     function updateAuthUi() {
         const member = isMember();
+        const authPending = isAuthStatePending();
         if (member) {
             closeWelcomeModal({
                 keepSessionClosed: false
@@ -3018,10 +3063,10 @@ document.addEventListener('DOMContentLoaded', () => {
             button.hidden = !member;
         });
         authEntryLinks.forEach(link => {
-            link.hidden = member;
+            link.hidden = member || authPending;
         });
         if (mypageAuthSectionEl) {
-            mypageAuthSectionEl.hidden = member;
+            mypageAuthSectionEl.hidden = member || authPending;
         }
         if (nicknameOpenModalBtn) {
             nicknameOpenModalBtn.hidden = !member;
@@ -3046,6 +3091,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (!firebaseReady) {
+            return;
+        }
+        if (isAuthStatePending()) {
+            firebaseAuthStatusEl.textContent = '저장된 로그인 상태를 확인하는 중입니다.';
             return;
         }
         if (member) {
@@ -3080,8 +3129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const ua = navigator.userAgent || '';
         const isMobileDevice = /android|iphone|ipad|ipod/i.test(ua);
         const isInAppBrowser = /; wv\)|KAKAOTALK|NAVER|Instagram|FBAN|FBAV|Line\//i.test(ua);
-        const isCompactViewport = window.matchMedia && window.matchMedia('(max-width: 860px)').matches;
-        return isMobileDevice || isInAppBrowser || isCompactViewport;
+        return isMobileDevice || isInAppBrowser;
     }
 
     function shouldFallbackGoogleRedirect(error) {
@@ -3123,6 +3171,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!result || !result.user) {
                 return;
             }
+            await syncAuthState(result.user);
             updateRulesStatus('구글 가입/로그인 성공');
             setFirebaseAuthStatus('구글 로그인 완료. 저장한 기준과 기록을 불러오는 중입니다.');
         } catch (error) {
@@ -3150,6 +3199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let startedRedirect = false;
         setAuthButtonsBusy(true);
         try {
+            await authPersistenceReady;
             if (shouldPreferGoogleRedirect()) {
                 updateRulesStatus('구글 로그인 화면으로 이동합니다.');
                 setFirebaseAuthStatus('브라우저 환경에 맞춰 구글 로그인 화면으로 이동합니다.');
@@ -3157,7 +3207,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 startedRedirect = true;
                 return false;
             }
-            await firebaseAuth.signInWithPopup(provider);
+            const result = await firebaseAuth.signInWithPopup(provider);
+            if (result && result.user) {
+                await syncAuthState(result.user);
+            }
             updateRulesStatus('구글 가입/로그인 성공');
             setFirebaseAuthStatus('구글 로그인 완료. 저장한 기준과 기록을 불러오는 중입니다.');
             return true;
@@ -3304,11 +3357,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderNicknameUi() {
         const member = isMember();
+        const authPending = isAuthStatePending();
         if (mypageAuthBadgeEl) {
-            mypageAuthBadgeEl.textContent = member ? '로그인 완료' : '비회원';
+            mypageAuthBadgeEl.textContent = authPending ? '확인 중' : (member ? '로그인 완료' : '비회원');
         }
         if (mypageNicknameDisplayEl) {
-            if (!member) {
+            if (authPending) {
+                mypageNicknameDisplayEl.textContent = '로그인 상태 확인 중...';
+            } else if (!member) {
                 mypageNicknameDisplayEl.textContent = '첫 로그인 후 자동으로 정해져요';
             } else if (currentUserProfile && currentUserProfile.nickname) {
                 mypageNicknameDisplayEl.textContent = currentUserProfile.nickname;
@@ -3317,7 +3373,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         const remaining = getNicknameRemainingChanges();
-        if (nicknameStatusEl && !member) {
+        if (nicknameStatusEl && authPending) {
+            nicknameStatusEl.textContent = '저장된 계정을 확인하고 있습니다.';
+        } else if (nicknameStatusEl && !member) {
             nicknameStatusEl.textContent = '로그인하면 닉네임이 자동 생성되고 이후 월 2번까지 변경할 수 있어요.';
         } else if (nicknameStatusEl && member) {
             nicknameStatusEl.textContent = `이번 달 닉네임 변경 가능 횟수 ${remaining}회 남음`;
@@ -3423,6 +3481,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function canGuestGenerate() {
         if (!guestLimitEl) {
             return true;
+        }
+        if (isAuthStatePending()) {
+            guestLimitEl.textContent = '로그인 상태 확인 중입니다. 잠시만 기다려 주세요.';
+            if (guestBannerEl) {
+                guestBannerEl.textContent = '저장된 로그인 상태를 확인하고 있습니다.';
+            }
+            return false;
         }
         const drawCount = parseInt(drawCountSelect.value, 10);
         if (isMember()) {
