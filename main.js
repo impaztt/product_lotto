@@ -3949,6 +3949,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function syncHelpChatViewportLayout() {
+        if (!helpChatWidgetEl) {
+            return;
+        }
+        const viewportWidth = getViewportWidth();
+        const isMobile = viewportWidth <= 640;
+        const visualViewport = window.visualViewport;
+        const viewportHeight = Math.max(
+            320,
+            Math.round((visualViewport && visualViewport.height) || window.innerHeight || document.documentElement.clientHeight || 0)
+        );
+        const rawBottomInset = visualViewport
+            ? Math.max(0, Math.round(window.innerHeight - (visualViewport.height + visualViewport.offsetTop)))
+            : 0;
+        const inputFocused = document.activeElement === helpChatInputEl;
+        const keyboardOpen = Boolean(isMobile && inputFocused && rawBottomInset > 120);
+
+        helpChatWidgetEl.style.setProperty('--help-chat-viewport-height', `${viewportHeight}px`);
+        helpChatWidgetEl.style.setProperty('--help-chat-keyboard-offset', isMobile && keyboardOpen ? `${rawBottomInset}px` : '0px');
+        helpChatWidgetEl.classList.toggle('is-keyboard-open', keyboardOpen);
+
+        if (keyboardOpen && helpChatWidgetEl.dataset.open === 'true') {
+            scrollHelpChatToBottom();
+        }
+    }
+
     function createHelpChatTypingDots() {
         const wrapper = document.createElement('span');
         wrapper.className = 'help-chat-typing';
@@ -4082,12 +4108,19 @@ document.addEventListener('DOMContentLoaded', () => {
         helpChatWidgetEl.dataset.open = String(isOpen);
         helpChatPanelEl.hidden = !isOpen;
         helpChatFabEl.setAttribute('aria-expanded', String(isOpen));
+        if (!isOpen && document.activeElement === helpChatInputEl) {
+            helpChatInputEl.blur();
+        }
+        syncHelpChatViewportLayout();
         if (isOpen) {
             seedHelpChatConversation();
             syncHelpChatComposerState();
             scrollHelpChatToBottom();
             if (helpChatInputEl) {
-                window.requestAnimationFrame(() => helpChatInputEl.focus());
+                window.requestAnimationFrame(() => {
+                    helpChatInputEl.focus();
+                    syncHelpChatViewportLayout();
+                });
             }
         }
     }
@@ -4304,6 +4337,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         helpChatWidgetEl.dataset.bound = 'true';
         syncHelpChatComposerState();
+        syncHelpChatViewportLayout();
 
         helpChatFabEl.addEventListener('click', () => {
             const isOpen = helpChatWidgetEl.dataset.open === 'true';
@@ -4325,6 +4359,16 @@ document.addEventListener('DOMContentLoaded', () => {
             syncHelpChatComposerState();
         });
 
+        helpChatInputEl.addEventListener('focus', () => {
+            syncHelpChatViewportLayout();
+            window.setTimeout(syncHelpChatViewportLayout, 120);
+            window.setTimeout(scrollHelpChatToBottom, 180);
+        });
+
+        helpChatInputEl.addEventListener('blur', () => {
+            window.setTimeout(syncHelpChatViewportLayout, 120);
+        });
+
         helpChatInputEl.addEventListener('keydown', event => {
             if (event.key === 'Escape') {
                 event.preventDefault();
@@ -4339,6 +4383,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             handleHelpChatAction(button);
         });
+
+        if (window.visualViewport && typeof window.visualViewport.addEventListener === 'function') {
+            window.visualViewport.addEventListener('resize', syncHelpChatViewportLayout, { passive: true });
+            window.visualViewport.addEventListener('scroll', syncHelpChatViewportLayout, { passive: true });
+        }
+
+        window.addEventListener('resize', syncHelpChatViewportLayout, { passive: true });
+        window.addEventListener('orientationchange', () => {
+            window.setTimeout(syncHelpChatViewportLayout, 140);
+        }, { passive: true });
     }
 
     function openNicknameModal() {
