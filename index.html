@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/common.css?v=20260213">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/layout.css?v=20260212">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/main-layout.css?v=20260212">
-		<link rel="stylesheet" href="style.css?v=20260309_11">
+		<link rel="stylesheet" href="style.css?v=20260312_1">
 
 </head>
 <body data-theme="light">
@@ -3554,6 +3554,27 @@
             </div>
         </div>
     </div>
+    <div id="inapp-browser-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="inapp-browser-title">
+        <div class="modal-content inapp-browser-modal-content">
+            <div class="modal-header">
+                <div>
+                    <span class="inapp-browser-kicker">카카오톡에서 열림</span>
+                    <h3 id="inapp-browser-title">로그인 전에 브라우저로 다시 열어 주세요</h3>
+                </div>
+                <button id="inapp-browser-close" class="modal-close" type="button" aria-label="닫기">닫기</button>
+            </div>
+            <p id="inapp-browser-desc" class="modal-text">카카오톡 인앱브라우저에서는 Google 로그인 정책 때문에 로그인이 차단될 수 있습니다. 아래 버튼으로 외부 브라우저에서 다시 열면 정상 로그인됩니다.</p>
+            <div class="inapp-browser-actions">
+                <button id="inapp-browser-open-external" class="cta" type="button">기본 브라우저로 열기</button>
+                <button id="inapp-browser-open-chrome" class="ghost" type="button">Chrome에서 열기</button>
+                <button id="inapp-browser-open-safari" class="ghost" type="button" hidden>Safari에서 열기</button>
+                <button id="inapp-browser-open-samsung" class="ghost" type="button" hidden>삼성 인터넷에서 열기</button>
+                <button id="inapp-browser-copy-link" class="ghost" type="button">링크 복사</button>
+            </div>
+            <p id="inapp-browser-hint" class="helper-text inapp-browser-hint">카카오톡 우측 상단 메뉴에서 브라우저로 열기를 눌러도 됩니다.</p>
+            <p id="inapp-browser-status" class="helper-text inapp-browser-status" aria-live="polite" hidden></p>
+        </div>
+    </div>
     <div id="nickname-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="nickname-modal-title">
         <div class="modal-content">
             <div class="modal-header">
@@ -3587,6 +3608,6 @@
     <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore-compat.js"></script>
     <script src="scripts/lotto-tabs.js?v=20260307_1"></script>
     <script src="scripts/lotto-rules.js?v=20260307_1"></script>
-    <script src="main.js?v=20260312_1"></script>
+    <script src="main.js?v=20260312_2"></script>
 </body>
 </html>

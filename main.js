@@ -151,6 +151,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const welcomeBrowseBtn = document.querySelector('[data-welcome-action="browse"]');
     const welcomeDismissButtons = Array.from(document.querySelectorAll('[data-welcome-close]'));
     const authModal = document.getElementById('auth-modal');
+    const inAppBrowserModal = document.getElementById('inapp-browser-modal');
+    const inAppBrowserCloseBtn = document.getElementById('inapp-browser-close');
+    const inAppBrowserDescEl = document.getElementById('inapp-browser-desc');
+    const inAppBrowserHintEl = document.getElementById('inapp-browser-hint');
+    const inAppBrowserStatusEl = document.getElementById('inapp-browser-status');
+    const inAppBrowserOpenExternalBtn = document.getElementById('inapp-browser-open-external');
+    const inAppBrowserOpenChromeBtn = document.getElementById('inapp-browser-open-chrome');
+    const inAppBrowserOpenSafariBtn = document.getElementById('inapp-browser-open-safari');
+    const inAppBrowserOpenSamsungBtn = document.getElementById('inapp-browser-open-samsung');
+    const inAppBrowserCopyBtn = document.getElementById('inapp-browser-copy-link');
     const authButtons = Array.from(document.querySelectorAll('[data-auth]'));
     const authEntryLinks = Array.from(document.querySelectorAll('[data-open-auth]'));
     const authLogoutButtons = Array.from(document.querySelectorAll('[data-logout]'));
@@ -375,6 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ONBOARDING_SKIP_TODAY_KEY = 'lotto_onboarding_skip_today';
     const GOOGLE_REDIRECT_STATE_KEY = 'lotto_google_redirect_state';
     const GOOGLE_REDIRECT_PENDING_TTL_MS = 10 * 60 * 1000;
+    const KAKAO_INAPP_NOTICE_DISMISSED_KEY = 'lotto_kakao_inapp_notice_dismissed';
     let googleRedirectFlowPending = readGoogleRedirectPendingState();
 
     const tabController = createTabController({
@@ -1419,6 +1430,50 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    if (inAppBrowserCloseBtn) {
+        inAppBrowserCloseBtn.addEventListener('click', () => {
+            closeInAppBrowserModal();
+        });
+    }
+
+    if (inAppBrowserModal) {
+        inAppBrowserModal.addEventListener('click', event => {
+            if (event.target === inAppBrowserModal) {
+                closeInAppBrowserModal();
+            }
+        });
+    }
+
+    if (inAppBrowserOpenExternalBtn) {
+        inAppBrowserOpenExternalBtn.addEventListener('click', () => {
+            openCurrentPageInExternalBrowser('external');
+        });
+    }
+
+    if (inAppBrowserOpenChromeBtn) {
+        inAppBrowserOpenChromeBtn.addEventListener('click', () => {
+            openCurrentPageInExternalBrowser('chrome');
+        });
+    }
+
+    if (inAppBrowserOpenSafariBtn) {
+        inAppBrowserOpenSafariBtn.addEventListener('click', () => {
+            openCurrentPageInExternalBrowser('safari');
+        });
+    }
+
+    if (inAppBrowserOpenSamsungBtn) {
+        inAppBrowserOpenSamsungBtn.addEventListener('click', () => {
+            openCurrentPageInExternalBrowser('samsung');
+        });
+    }
+
+    if (inAppBrowserCopyBtn) {
+        inAppBrowserCopyBtn.addEventListener('click', async () => {
+            await copyCurrentPageLink();
+        });
+    }
+
     groupSelectButtons.forEach(button => {
         button.addEventListener('click', () => {
             const group = button.dataset.group;
@@ -1658,6 +1713,7 @@ document.addEventListener('DOMContentLoaded', () => {
         refreshRevealMotion(document.getElementById(`tab-${getCurrentActiveTabId()}`));
         setOnboardingSlide(0);
         scheduleWelcomeModal();
+        scheduleInAppBrowserPrompt();
         window.addEventListener('message', event => {
             if (!event || !event.data || event.data.type !== 'switch-tab') {
                 return;
@@ -1946,6 +2002,260 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getStoredDrawServiceMode() {
         return 'self';
+    }
+
+    function getUserAgentText() {
+        return navigator.userAgent || '';
+    }
+
+    function isKakaoTalkInAppBrowser() {
+        return /KAKAOTALK/i.test(getUserAgentText());
+    }
+
+    function isIosDevice() {
+        return /iphone|ipad|ipod/i.test(getUserAgentText());
+    }
+
+    function isAndroidDevice() {
+        return /android/i.test(getUserAgentText());
+    }
+
+    function readKakaoInAppNoticeDismissed() {
+        try {
+            return sessionStorage.getItem(KAKAO_INAPP_NOTICE_DISMISSED_KEY) === '1';
+        } catch (error) {
+            console.warn('카카오 인앱브라우저 안내 상태 확인 실패', error);
+            return false;
+        }
+    }
+
+    function setKakaoInAppNoticeDismissed(dismissed) {
+        try {
+            if (dismissed) {
+                sessionStorage.setItem(KAKAO_INAPP_NOTICE_DISMISSED_KEY, '1');
+            } else {
+                sessionStorage.removeItem(KAKAO_INAPP_NOTICE_DISMISSED_KEY);
+            }
+        } catch (error) {
+            console.warn('카카오 인앱브라우저 안내 상태 저장 실패', error);
+        }
+    }
+
+    function shouldUseExternalBrowserPrompt() {
+        return isKakaoTalkInAppBrowser();
+    }
+
+    function setInAppBrowserStatus(message, isError = false) {
+        if (!inAppBrowserStatusEl) {
+            return;
+        }
+        const text = String(message || '').trim();
+        inAppBrowserStatusEl.hidden = !text;
+        inAppBrowserStatusEl.textContent = text;
+        inAppBrowserStatusEl.classList.toggle('is-error', Boolean(text) && isError);
+    }
+
+    function getCurrentAppUrl() {
+        return String(window.location.href || '').trim();
+    }
+
+    function buildKakaoExternalOpenUrl(url) {
+        return `kakaotalk://web/openExternal?url=${encodeURIComponent(url)}`;
+    }
+
+    function buildAndroidBrowserIntentUrl(url, packageName) {
+        try {
+            const target = new URL(url);
+            const path = `${target.host}${target.pathname}${target.search}${target.hash}`;
+            const scheme = target.protocol.replace(':', '') || 'https';
+            return `intent://${path}#Intent;scheme=${scheme};package=${packageName};end`;
+        } catch (error) {
+            console.warn('안드로이드 브라우저 intent 생성 실패', error);
+            return '';
+        }
+    }
+
+    function buildChromeIosUrl(url) {
+        if (!url) {
+            return '';
+        }
+        if (url.startsWith('https://')) {
+            return `googlechromes://${url.slice('https://'.length)}`;
+        }
+        if (url.startsWith('http://')) {
+            return `googlechrome://${url.slice('http://'.length)}`;
+        }
+        return '';
+    }
+
+    function buildSafariIosUrl(url) {
+        if (!url) {
+            return '';
+        }
+        if (url.startsWith('https://')) {
+            return `x-safari-https://${url.slice('https://'.length)}`;
+        }
+        if (url.startsWith('http://')) {
+            return `x-safari-http://${url.slice('http://'.length)}`;
+        }
+        return '';
+    }
+
+    function updateInAppBrowserModalUi() {
+        if (!inAppBrowserModal) {
+            return;
+        }
+        const ios = isIosDevice();
+        const android = isAndroidDevice();
+        if (inAppBrowserDescEl) {
+            inAppBrowserDescEl.textContent = ios
+                ? '카카오톡 인앱브라우저에서는 Google 로그인 정책 때문에 로그인이 차단될 수 있습니다. Safari나 Chrome으로 다시 열면 정상 로그인됩니다.'
+                : '카카오톡 인앱브라우저에서는 Google 로그인 정책 때문에 로그인이 차단될 수 있습니다. 기본 브라우저나 Chrome으로 다시 열면 정상 로그인됩니다.';
+        }
+        if (inAppBrowserHintEl) {
+            inAppBrowserHintEl.textContent = ios
+                ? '카카오톡 우측 상단 메뉴에서 Safari 또는 Chrome으로 열기를 눌러도 됩니다.'
+                : '카카오톡 우측 상단 메뉴에서 기본 브라우저, Chrome 또는 삼성 인터넷으로 열어도 됩니다.';
+        }
+        if (inAppBrowserOpenSafariBtn) {
+            inAppBrowserOpenSafariBtn.hidden = !ios;
+        }
+        if (inAppBrowserOpenSamsungBtn) {
+            inAppBrowserOpenSamsungBtn.hidden = !android;
+        }
+        if (inAppBrowserOpenChromeBtn) {
+            inAppBrowserOpenChromeBtn.hidden = !(ios || android);
+        }
+    }
+
+    function closeInAppBrowserModal(options = {}) {
+        const { remember = true } = options;
+        if (!inAppBrowserModal) {
+            return;
+        }
+        if (remember) {
+            setKakaoInAppNoticeDismissed(true);
+        }
+        inAppBrowserModal.classList.add('hidden');
+        setInAppBrowserStatus('');
+    }
+
+    function openInAppBrowserModal(options = {}) {
+        const { force = false } = options;
+        if (!inAppBrowserModal || !shouldUseExternalBrowserPrompt()) {
+            return false;
+        }
+        if (!force && readKakaoInAppNoticeDismissed()) {
+            return false;
+        }
+        updateInAppBrowserModalUi();
+        setKakaoInAppNoticeDismissed(false);
+        closeWelcomeModal({
+            keepSessionClosed: false
+        });
+        closeAuthModal();
+        inAppBrowserModal.classList.remove('hidden');
+        setInAppBrowserStatus('');
+        return true;
+    }
+
+    function attemptExternalBrowserNavigation(primaryUrl, fallbackUrl = '') {
+        const primary = String(primaryUrl || '').trim();
+        const fallback = String(fallbackUrl || '').trim();
+        if (!primary) {
+            setInAppBrowserStatus('열 브라우저 주소를 만들지 못했습니다. 링크 복사로 다시 시도해 주세요.', true);
+            return;
+        }
+        setInAppBrowserStatus('브라우저를 여는 중입니다. 전환이 안 되면 링크 복사를 눌러 주세요.');
+        let fallbackTimer = 0;
+        const cleanup = () => {
+            if (fallbackTimer) {
+                window.clearTimeout(fallbackTimer);
+                fallbackTimer = 0;
+            }
+        };
+        const handleVisibility = () => {
+            if (document.hidden) {
+                cleanup();
+            }
+        };
+        document.addEventListener('visibilitychange', handleVisibility, { once: true });
+        if (fallback && fallback !== primary) {
+            fallbackTimer = window.setTimeout(() => {
+                if (!document.hidden) {
+                    window.location.href = fallback;
+                }
+            }, 800);
+        }
+        window.location.href = primary;
+    }
+
+    function openCurrentPageInExternalBrowser(target = 'external') {
+        const currentUrl = getCurrentAppUrl();
+        const defaultUrl = buildKakaoExternalOpenUrl(currentUrl);
+        if (!currentUrl) {
+            setInAppBrowserStatus('현재 페이지 주소를 찾지 못했습니다. 링크 복사로 다시 시도해 주세요.', true);
+            return;
+        }
+        if (target === 'chrome') {
+            const chromeUrl = isIosDevice()
+                ? buildChromeIosUrl(currentUrl)
+                : buildAndroidBrowserIntentUrl(currentUrl, 'com.android.chrome');
+            attemptExternalBrowserNavigation(chromeUrl || defaultUrl, defaultUrl);
+            return;
+        }
+        if (target === 'safari') {
+            const safariUrl = buildSafariIosUrl(currentUrl);
+            attemptExternalBrowserNavigation(safariUrl || defaultUrl, defaultUrl);
+            return;
+        }
+        if (target === 'samsung') {
+            const samsungUrl = buildAndroidBrowserIntentUrl(currentUrl, 'com.sec.android.app.sbrowser');
+            attemptExternalBrowserNavigation(samsungUrl || defaultUrl, defaultUrl);
+            return;
+        }
+        attemptExternalBrowserNavigation(defaultUrl);
+    }
+
+    async function copyCurrentPageLink() {
+        const currentUrl = getCurrentAppUrl();
+        if (!currentUrl) {
+            setInAppBrowserStatus('현재 페이지 주소를 찾지 못했습니다.', true);
+            return;
+        }
+        try {
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function' && window.isSecureContext) {
+                await navigator.clipboard.writeText(currentUrl);
+                setInAppBrowserStatus('링크를 복사했습니다. 외부 브라우저에 붙여 넣어 열어 주세요.');
+                return;
+            }
+            const textarea = document.createElement('textarea');
+            textarea.value = currentUrl;
+            textarea.setAttribute('readonly', '');
+            textarea.style.position = 'fixed';
+            textarea.style.top = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            const copied = document.execCommand('copy');
+            document.body.removeChild(textarea);
+            if (!copied) {
+                throw new Error('execCommand copy failed');
+            }
+            setInAppBrowserStatus('링크를 복사했습니다. 외부 브라우저에 붙여 넣어 열어 주세요.');
+        } catch (error) {
+            console.warn('현재 페이지 링크 복사 실패', error);
+            setInAppBrowserStatus('링크 복사에 실패했습니다. 카카오톡 메뉴의 브라우저로 열기를 사용해 주세요.', true);
+        }
+    }
+
+    function scheduleInAppBrowserPrompt() {
+        if (!shouldUseExternalBrowserPrompt() || readKakaoInAppNoticeDismissed()) {
+            return;
+        }
+        window.setTimeout(() => {
+            openInAppBrowserModal();
+        }, 420);
     }
 
     function readGoogleRedirectPendingState() {
@@ -2912,7 +3222,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function openWelcomeModal() {
-        if (!welcomeModal || isMember() || isAuthStatePending() || hasSkippedWelcomeModalToday() || welcomeModalDismissedInSession) {
+        if (
+            !welcomeModal
+            || isMember()
+            || isAuthStatePending()
+            || hasSkippedWelcomeModalToday()
+            || welcomeModalDismissedInSession
+            || shouldUseExternalBrowserPrompt()
+        ) {
             return;
         }
         closeAuthModal();
@@ -2922,7 +3239,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function scheduleWelcomeModal() {
-        if (!welcomeModal || isMember() || hasSkippedWelcomeModalToday() || welcomeModalDismissedInSession) {
+        if (
+            !welcomeModal
+            || isMember()
+            || hasSkippedWelcomeModalToday()
+            || welcomeModalDismissedInSession
+            || shouldUseExternalBrowserPrompt()
+        ) {
             return;
         }
         if (isAuthStatePending()) {
@@ -3393,6 +3716,12 @@ document.addEventListener('DOMContentLoaded', () => {
             setFirebaseAuthStatus('Firebase 설정 미완료');
             return false;
         }
+        if (shouldUseExternalBrowserPrompt()) {
+            openInAppBrowserModal({ force: true });
+            updateRulesStatus('카카오톡에서는 외부 브라우저에서 로그인해 주세요.');
+            setFirebaseAuthStatus('카카오톡 인앱브라우저에서는 외부 브라우저로 다시 열어야 구글 로그인이 됩니다.');
+            return false;
+        }
         if (authActionInFlight) {
             setFirebaseAuthStatus('로그인 요청을 처리 중입니다. 잠시만 기다려 주세요.');
             return false;
@@ -3756,6 +4085,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (isAuthStatePending()) {
             setFirebaseAuthStatus(getAuthPendingStatusMessage());
+            return;
+        }
+        if (shouldUseExternalBrowserPrompt()) {
+            openInAppBrowserModal({ force: true });
             return;
         }
         closeWelcomeModal();
