@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawSelectionDockScenarioEl = document.getElementById('draw-dock-scenario');
     const drawSelectionDockStatEl = document.getElementById('draw-dock-stat');
     const drawSelectionDockBodyEl = document.getElementById('draw-selection-dock-body');
+    const drawSelectionDockOddsEl = document.getElementById('draw-selection-dock-odds');
     const drawSelectionDockMetricsEl = document.getElementById('draw-selection-dock-metrics');
     const drawSelectionDockRemainingEl = document.getElementById('draw-dock-remaining');
     const drawSelectionDockRatioEl = document.getElementById('draw-dock-ratio');
@@ -69,6 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
         3: document.getElementById('odds-delta-3'),
         4: document.getElementById('odds-delta-4'),
         5: document.getElementById('odds-delta-5')
+    };
+    const drawSelectionDockOddsValueEls = {
+        1: document.getElementById('draw-dock-odds-1'),
+        2: document.getElementById('draw-dock-odds-2'),
+        3: document.getElementById('draw-dock-odds-3'),
+        4: document.getElementById('draw-dock-odds-4'),
+        5: document.getElementById('draw-dock-odds-5')
     };
     const oddsBarEls = {
         1: document.getElementById('odds-bar-1')
@@ -4999,6 +5007,36 @@ document.addEventListener('DOMContentLoaded', () => {
         return `최근 변경: ${lastDrawInteraction.label}`;
     }
 
+    function getBaseOddsMap() {
+        const total = TOTAL_COMBOS;
+        return {
+            1: total,
+            2: Math.round(total / 6),
+            3: Math.round(total / 228),
+            4: Math.round(total / (combination(6, 4) * combination(39, 2))),
+            5: Math.round(total / (combination(6, 3) * combination(39, 3)))
+        };
+    }
+
+    function formatCompactOddsValue(value) {
+        const safeValue = Math.max(1, Math.round(Number(value) || 0));
+        const formatUnit = (divisor, suffix) => {
+            const compact = safeValue / divisor;
+            const fractionDigits = compact >= 100 ? 0 : 1;
+            return `${Number(compact.toFixed(fractionDigits)).toLocaleString('ko-KR', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: fractionDigits
+            })}${suffix}`;
+        };
+        if (safeValue >= 100000000) {
+            return formatUnit(100000000, '억');
+        }
+        if (safeValue >= 10000) {
+            return formatUnit(10000, '만');
+        }
+        return formatNumber(safeValue);
+    }
+
     function updateDrawSelectionDock(selectedCards) {
         if (!drawSelectionDockEl || !drawSelectionDockTitleEl || !drawSelectionDockMetaEl || !drawSelectionDockPreviewEl) {
             return;
@@ -5026,6 +5064,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (drawSelectionDockMetricsEl) {
                 drawSelectionDockMetricsEl.hidden = true;
             }
+            if (drawSelectionDockOddsEl) {
+                drawSelectionDockOddsEl.hidden = true;
+            }
             drawSelectionDockPreviewEl.hidden = true;
             drawSelectionDockPreviewEl.innerHTML = '';
             if (drawSelectionDockToggleBtn) {
@@ -5051,6 +5092,19 @@ document.addEventListener('DOMContentLoaded', () => {
         drawSelectionDockMetaEl.textContent = recentText || '선택 내용과 확률 변화가 여기서 계속 갱신됩니다.';
         if (drawSelectionDockMetricsEl) {
             drawSelectionDockMetricsEl.hidden = false;
+        }
+        if (drawSelectionDockOddsEl) {
+            drawSelectionDockOddsEl.hidden = false;
+            const clampRatio = Math.max(0.000001, Math.min(1, currentRemainingRatio || 1));
+            const baseOdds = getBaseOddsMap();
+            Object.entries(baseOdds).forEach(([rank, value]) => {
+                const targetEl = drawSelectionDockOddsValueEls[rank];
+                if (!targetEl) {
+                    return;
+                }
+                const adjusted = Math.max(1, Math.round(value * clampRatio));
+                targetEl.textContent = `${formatCompactOddsValue(value)} -> ${formatCompactOddsValue(adjusted)}`;
+            });
         }
         if (drawSelectionDockRemainingEl) {
             drawSelectionDockRemainingEl.textContent = `${remainingValue}개`;
@@ -5274,14 +5328,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function computeBaseOdds() {
-        const total = TOTAL_COMBOS;
-        const odds = {
-            1: total,
-            2: Math.round(total / 6),
-            3: Math.round(total / 228),
-            4: Math.round(total / (combination(6, 4) * combination(39, 2))),
-            5: Math.round(total / (combination(6, 3) * combination(39, 3)))
-        };
+        const odds = getBaseOddsMap();
         Object.entries(odds).forEach(([rank, value]) => {
             if (oddsBaseEls[rank]) {
                 oddsBaseEls[rank].textContent = `1 / ${formatNumber(Math.round(value))}`;
@@ -5292,14 +5339,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateAdjustedOdds(ratio) {
         const clampRatio = Math.min(1, Math.max(0.000001, ratio));
-        const total = TOTAL_COMBOS;
-        const baseOdds = {
-            1: total,
-            2: Math.round(total / 6),
-            3: Math.round(total / 228),
-            4: Math.round(total / (combination(6, 4) * combination(39, 2))),
-            5: Math.round(total / (combination(6, 3) * combination(39, 3)))
-        };
+        const baseOdds = getBaseOddsMap();
         if (oddsBenefitSummaryEl) {
             const benefitPct = Math.round((1 - clampRatio) * 100);
             oddsBenefitSummaryEl.textContent = benefitPct > 0 ? `유리 ${benefitPct}%` : '변화 없음';
