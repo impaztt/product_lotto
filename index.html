@@ -1873,42 +1873,38 @@
 	            <div class="draw-wizard-app">
 	                <div class="draw-funnel-shell">
 	                    <header class="draw-funnel-header">
-	                        <div class="draw-funnel-progress-row">
-	                            <span class="draw-funnel-kicker">추첨 위저드</span>
-	                            <div class="draw-funnel-progress">
-	                                <span id="draw-wizard-progress-label">소개</span>
-	                                <strong id="draw-wizard-progress-count">1 / 1</strong>
-	                            </div>
+	                        <div class="draw-funnel-brand-lockup">
+	                            <span class="draw-funnel-kicker">LOTTO STUDIO</span>
+	                            <strong>번호 생성 스튜디오</strong>
 	                        </div>
-	                        <h2 id="draw-wizard-screen-title">규칙 라이브러리를 스텝별로 고르고 마지막에 바로 추첨합니다</h2>
-	                        <p id="draw-wizard-screen-copy">한 화면에 하나의 단계만 보여줍니다. 각 단계에서 제외할 규칙을 직관적으로 고르고, 끝까지 가면 바로 번호를 생성합니다.</p>
-	                        <div class="draw-funnel-summary-box">
-	                            <strong id="draw-selection-summary">아직 선택된 규칙이 없습니다.</strong>
-	                            <p id="draw-filter-detail">규칙은 건너뛰며 진행할 수 있지만, 최종 추첨 전에는 최소 1개 이상 선택해야 합니다.</p>
-	                            <div id="draw-wizard-selection-chips" class="draw-funnel-selection-chips"></div>
+	                        <div class="draw-funnel-progress" aria-live="polite">
+	                            <span id="draw-wizard-progress-label">INTRO</span>
+	                            <strong id="draw-wizard-progress-count">START</strong>
 	                        </div>
 	                    </header>
 	                    <section class="draw-funnel-stage">
 	                        <div class="draw-funnel-panels">
 	                            <section class="draw-funnel-panel is-active" data-draw-wizard-step="start">
-	                                <div class="draw-funnel-copy">
-	                                    <span class="draw-funnel-step-kicker">시작</span>
-	                                    <h3>설명은 짧게, 선택은 단계별로</h3>
-	                                    <p>이제 추첨탭은 복잡한 설정 화면이 아닙니다. 우리가 만든 규칙 라이브러리 항목을 그룹별 스텝으로 나눠 보여주고, 사용자는 필요한 것만 고른 뒤 마지막에 바로 추첨하면 됩니다.</p>
-	                                </div>
-	                                <div class="draw-funnel-intro-list">
-	                                    <article class="draw-funnel-intro-card">
-	                                        <strong>한 번에 한 그룹씩</strong>
-	                                        <p>홀짝, 배수, 연속수, 끝자리, 구간, 합계 같은 규칙을 순서대로 고릅니다.</p>
-	                                    </article>
-	                                    <article class="draw-funnel-intro-card">
-	                                        <strong>규칙 라이브러리 그대로 사용</strong>
-	                                        <p>예전에 만들었던 규칙 항목을 빠뜨리지 않고 각 스텝에 그대로 녹였습니다.</p>
-	                                    </article>
-	                                    <article class="draw-funnel-intro-card">
-	                                        <strong>마지막에 바로 추첨</strong>
-	                                        <p>불필요한 플랜이나 보조 화면 없이, 최종 확인 후 곧바로 결과를 확인합니다.</p>
-	                                    </article>
+	                                <div class="draw-screen draw-screen--intro">
+	                                    <div class="draw-screen-intro-copy">
+	                                        <span class="draw-funnel-step-kicker">로또 스튜디오</span>
+	                                        <h2>규칙을 한 단계씩 고르며 번호를 생성합니다</h2>
+	                                        <p>복잡한 설정 화면 대신, 우리가 만든 규칙 라이브러리를 질문처럼 차례대로 보여줍니다. 각 단계에서 제외할 패턴만 고르면 내 번호 생성 조건이 완성됩니다.</p>
+	                                    </div>
+	                                    <div class="draw-screen-intro-points" aria-label="로또 스튜디오 소개">
+	                                        <span>한 단계씩 선택</span>
+	                                        <span>규칙 라이브러리 그대로 반영</span>
+	                                        <span>스크롤 없이 화면 전환</span>
+	                                    </div>
+	                                    <button id="draw-wizard-start-btn" class="draw-wizard-hero-cta" type="button">
+	                                        <span class="draw-wizard-hero-cta-copy">
+	                                            <strong>번호 생성하기</strong>
+	                                            <span>1단계 홀짝 비율 제외하기로 시작</span>
+	                                        </span>
+	                                        <span class="draw-wizard-hero-cta-orb" aria-hidden="true">
+	                                            <span></span>
+	                                        </span>
+	                                    </button>
 	                                </div>
 	                                <div class="draw-wizard-resume-card" id="draw-wizard-resume-card" hidden>
 	                                    <div>
@@ -1923,16 +1919,18 @@
 	                                </div>
 	                            </section>
 	                            <section class="draw-funnel-panel" data-draw-wizard-step="rules" hidden>
-	                                <div class="draw-funnel-copy">
-	                                    <div class="draw-funnel-step-head">
-	                                        <span class="draw-funnel-step-kicker" id="draw-wizard-rule-kicker">규칙 스텝</span>
-	                                        <strong id="draw-wizard-rule-progress">1 / 1</strong>
+	                                <div class="draw-screen draw-screen--step">
+	                                    <div class="draw-screen-step-head">
+	                                        <div class="draw-screen-step-copy">
+	                                            <span class="draw-funnel-step-kicker" id="draw-wizard-rule-kicker">1단계</span>
+	                                            <h3 id="draw-wizard-rule-title">홀짝 비율 제외하기</h3>
+	                                        </div>
+	                                        <strong class="draw-screen-step-progress" id="draw-wizard-rule-progress">1 / 7</strong>
 	                                    </div>
-	                                    <h3 id="draw-wizard-rule-title">규칙 그룹을 불러오는 중입니다</h3>
-	                                    <p id="draw-wizard-rule-copy">여러 개를 동시에 선택할 수 있습니다. 필요 없는 그룹은 그냥 다음으로 넘어가면 됩니다.</p>
+	                                    <p id="draw-wizard-rule-copy" class="draw-screen-step-note">제외하고 싶은 패턴을 모두 선택하세요. 선택하지 않고 다음 단계로 넘어가도 됩니다.</p>
+	                                    <p class="draw-funnel-inline-note" id="draw-wizard-detail-note">이 단계에서 아직 선택된 규칙이 없습니다.</p>
+	                                    <div id="draw-wizard-detail-groups" class="draw-funnel-rule-grid"></div>
 	                                </div>
-	                                <p class="draw-funnel-inline-note" id="draw-wizard-detail-note">이 그룹에서 선택된 규칙이 없습니다.</p>
-	                                <div id="draw-wizard-detail-groups" class="draw-funnel-rule-grid"></div>
 	                            </section>
 	                            <section class="draw-funnel-panel" data-draw-wizard-step="exclude" hidden>
 	                                <div class="draw-funnel-copy">
