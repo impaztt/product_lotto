@@ -154,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const guestBannerEl = document.getElementById('guest-banner');
     const drawWizardPanels = Array.from(document.querySelectorAll('[data-draw-wizard-step]'));
     const drawWizardPanelsEl = drawTabPanel ? drawTabPanel.querySelector('.draw-funnel-panels') : null;
+    const drawWizardStartPanelEl = drawTabPanel ? drawTabPanel.querySelector('[data-draw-wizard-step="start"]') : null;
     const drawWizardProgressLabelEl = document.getElementById('draw-wizard-progress-label');
     const drawWizardProgressCountEl = document.getElementById('draw-wizard-progress-count');
     const drawWizardScreenTitleEl = document.getElementById('draw-wizard-screen-title');
@@ -3568,8 +3569,15 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDrawWizardSelectionChips();
         renderDrawWizardRuleStep();
         renderDrawWizardReview();
+        const showResumeOverlay = currentStep === 'start' && Boolean(drawWizardResumeState);
         if (drawWizardResumeCardEl) {
-            drawWizardResumeCardEl.hidden = currentStep !== 'start' || !drawWizardResumeState;
+            drawWizardResumeCardEl.hidden = !showResumeOverlay;
+        }
+        if (drawWizardStartPanelEl) {
+            drawWizardStartPanelEl.classList.toggle('has-resume-overlay', showResumeOverlay);
+        }
+        if (drawWizardStartBtn) {
+            drawWizardStartBtn.disabled = showResumeOverlay;
         }
         if (drawWizardResumeTitleEl && drawWizardResumeState) {
             drawWizardResumeTitleEl.textContent = '지난번에 보던 단계가 남아 있습니다.';

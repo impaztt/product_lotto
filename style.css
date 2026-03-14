@@ -17206,6 +17206,39 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     min-height: 0;
 }
 
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="start"] {
+    position: relative;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="start"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+}
+
+#tab-draw.draw-wizard-tab .draw-screen--intro {
+    position: relative;
+    z-index: 1;
+    transition: opacity 180ms ease, transform 180ms ease, filter 180ms ease;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="start"].has-resume-overlay::before {
+    opacity: 1;
+    z-index: 2;
+    background: rgba(244, 239, 230, 0.9);
+    backdrop-filter: blur(12px);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="start"].has-resume-overlay .draw-screen--intro {
+    opacity: 0.12;
+    transform: scale(0.985);
+    filter: blur(8px);
+    pointer-events: none;
+}
+
 #tab-draw.draw-wizard-tab .draw-screen--intro {
     width: min(100%, 720px);
     min-height: 100%;
@@ -17331,7 +17364,13 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-resume-card {
-    width: min(100%, 540px);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 3;
+    width: min(calc(100% - 32px), 540px);
+    max-width: 540px;
+    transform: translate(-50%, -50%);
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: end;
@@ -17339,8 +17378,9 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     padding: 18px 20px;
     border-radius: 24px;
     border: 1px solid rgba(20, 38, 64, 0.08);
-    background: rgba(255, 255, 255, 0.76);
-    box-shadow: 0 18px 30px rgba(28, 56, 92, 0.08);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 26px 56px rgba(28, 56, 92, 0.16);
+    backdrop-filter: blur(18px);
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-resume-card p,
@@ -17727,7 +17767,9 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-resume-card {
-        width: 100%;
+        top: 50%;
+        left: 50%;
+        width: calc(100% - 24px);
         align-items: start;
         gap: 12px;
         padding: 14px 16px;
