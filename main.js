@@ -3237,9 +3237,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return '';
         }
         return `
-            <div class="draw-funnel-rule-samples" aria-hidden="true">
+            <div class="rule-sample draw-funnel-rule-samples" aria-hidden="true">
+                <span class="rule-sample-label">예시</span>
                 ${sample.map(number => `
-                    <span class="draw-funnel-rule-ball ${escapeHtml(getSampleBallClass(number))}">${escapeHtml(String(number))}</span>
+                    <span class="sample-ball draw-funnel-rule-ball ${escapeHtml(getSampleBallClass(number))}">${escapeHtml(String(number))}</span>
                 `).join('')}
             </div>
         `;
@@ -3438,6 +3439,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}" type="button" data-wizard-rule="${escapeHtml(rule.id)}" aria-pressed="${String(active)}">
                     <strong>${escapeHtml(rule.title)}</strong>
                     <p>${escapeHtml(description)}</p>
+                    ${getDrawWizardRulePreviewHtml(rule.id)}
                     <span class="draw-funnel-rule-state">${active ? '제외 선택됨' : '눌러서 제외하기'}</span>
                 </button>
             `;

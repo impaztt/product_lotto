@@ -17483,6 +17483,21 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     line-height: 1.48;
 }
 
+#tab-draw.draw-wizard-tab .draw-funnel-rule-samples {
+    margin-top: 2px;
+    gap: 6px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-samples .rule-sample-label {
+    background: rgba(19, 38, 61, 0.06);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-ball {
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
+}
+
 #tab-draw.draw-wizard-tab .draw-funnel-rule-state {
     justify-self: start;
     align-self: end;
