@@ -157,21 +157,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawWizardProgressCountEl = document.getElementById('draw-wizard-progress-count');
     const drawWizardScreenTitleEl = document.getElementById('draw-wizard-screen-title');
     const drawWizardScreenCopyEl = document.getElementById('draw-wizard-screen-copy');
-    const drawWizardModePillEl = document.getElementById('draw-wizard-mode-pill');
-    const drawWizardStrengthPillEl = document.getElementById('draw-wizard-strength-pill');
-    const drawWizardCategoryPillEl = document.getElementById('draw-wizard-category-pill');
     const drawWizardSelectionChipsEl = document.getElementById('draw-wizard-selection-chips');
-    const drawWizardSelectedCaptionEl = document.getElementById('draw-wizard-selected-caption');
+    const drawWizardRuleKickerEl = document.getElementById('draw-wizard-rule-kicker');
+    const drawWizardRuleProgressEl = document.getElementById('draw-wizard-rule-progress');
+    const drawWizardRuleTitleEl = document.getElementById('draw-wizard-rule-title');
+    const drawWizardRuleCopyEl = document.getElementById('draw-wizard-rule-copy');
     const drawWizardWarningTitleEl = document.getElementById('draw-wizard-warning-title');
     const drawWizardWarningBodyEl = document.getElementById('draw-wizard-warning-body');
-    const drawWizardSelfMetricsEl = document.getElementById('draw-wizard-self-metrics');
-    const drawWizardPlanMetricsEl = document.getElementById('draw-wizard-plan-metrics');
-    const drawWizardPlanTitleEl = document.getElementById('draw-wizard-plan-title');
-    const drawWizardPlanNoteEl = document.getElementById('draw-wizard-plan-note');
-    const drawWizardPlanCountEl = document.getElementById('draw-wizard-plan-count');
-    const drawWizardPlanFocusEl = document.getElementById('draw-wizard-plan-focus');
-    const drawWizardPlanWarningTitleEl = document.getElementById('draw-wizard-plan-warning-title');
-    const drawWizardPlanWarningBodyEl = document.getElementById('draw-wizard-plan-warning-body');
     const drawWizardNavEl = document.getElementById('draw-wizard-nav');
     const drawWizardPrevBtn = document.getElementById('draw-wizard-prev-btn');
     const drawWizardNextBtn = document.getElementById('draw-wizard-next-btn');
@@ -182,22 +174,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawWizardRestartBtn = document.getElementById('draw-wizard-restart-btn');
     const drawWizardResumeTitleEl = document.getElementById('draw-wizard-resume-title');
     const drawWizardResumeNoteEl = document.getElementById('draw-wizard-resume-note');
-    const drawWizardCategoryNoteEl = document.getElementById('draw-wizard-category-note');
     const drawWizardDetailGroupsEl = document.getElementById('draw-wizard-detail-groups');
     const drawWizardDetailNoteEl = document.getElementById('draw-wizard-detail-note');
     const drawWizardExcludeSummaryEl = document.getElementById('draw-wizard-exclude-summary');
     const drawWizardReviewSummaryEl = document.getElementById('draw-wizard-review-summary');
-    const drawWizardPlanReviewEl = document.getElementById('draw-wizard-plan-review');
-    const drawWizardSelfReviewCardEl = document.getElementById('draw-wizard-self-review-card');
-    const drawWizardPlanReviewCardEl = document.getElementById('draw-wizard-plan-review-card');
+    const drawWizardReviewGroupsEl = document.getElementById('draw-wizard-review-groups');
     const drawWizardResultTitleEl = document.getElementById('draw-wizard-result-title');
     const drawWizardResultCopyEl = document.getElementById('draw-wizard-result-copy');
     const drawWizardSelfResultShellEl = document.getElementById('draw-wizard-self-result-shell');
-    const drawWizardPremiumResultShellEl = document.getElementById('draw-wizard-premium-result-shell');
     const drawWizardRerunBtn = document.getElementById('draw-wizard-rerun-btn');
     const drawWizardEditBtn = document.getElementById('draw-wizard-edit-btn');
-    const drawWizardRerunPremiumBtn = document.getElementById('draw-wizard-rerun-premium-btn');
-    const drawWizardEditPremiumBtn = document.getElementById('draw-wizard-edit-premium-btn');
     const welcomeModal = document.getElementById('welcome-modal');
     const onboardingCarouselEl = document.getElementById('onboarding-carousel');
     const onboardingCarouselTrackEl = document.getElementById('onboarding-carousel-track');
@@ -465,133 +451,68 @@ document.addEventListener('DOMContentLoaded', () => {
         qr: 'QR은 어떻게 써?'
     };
     let googleRedirectFlowPending = readGoogleRedirectPendingState();
-    const DRAW_WIZARD_STRENGTHS = {
-        light: {
-            label: '가볍게',
-            note: '극단 조합만 걷어내고 넓은 후보를 남깁니다.',
-            preset: 'light'
+    const DRAW_WIZARD_RULE_GROUP_INFO = {
+        '홀짝 비율': {
+            kicker: '규칙 1',
+            title: '홀짝 비율에서 제외할 패턴을 골라주세요',
+            copy: '홀수와 짝수의 과한 쏠림을 빼고 싶다면 여기서 고르면 됩니다.'
         },
-        balanced: {
-            label: '균형 있게',
-            note: '처음 쓰기 가장 무난한 기본 강도입니다.',
-            preset: 'balanced'
+        '배수 분포': {
+            kicker: '규칙 2',
+            title: '배수 패턴에서 제외할 항목을 골라주세요',
+            copy: '2배수, 3배수처럼 너무 규칙적인 조합을 줄이고 싶을 때 선택합니다.'
         },
-        aggressive: {
-            label: '강하게',
-            note: '배수, 구간, 소수까지 넓게 반영해 후보를 강하게 줄입니다.',
-            preset: 'aggressive'
-        }
-    };
-    const DRAW_WIZARD_CATEGORIES = {
-        parity: {
-            label: '홀짝 비율',
-            summary: '홀짝 쏠림을 줄입니다.',
-            bundle: ['five_odd_one_even', 'five_even_one_odd'],
-            details: ['all_odd', 'all_even', 'five_odd_one_even', 'five_even_one_odd', 'four_odd_two_even', 'four_even_two_odd']
+        '연속/반복': {
+            kicker: '규칙 3',
+            title: '연속수와 반복 패턴을 정리해 보세요',
+            copy: '붙어 있는 숫자가 너무 많은 조합을 빼고 싶다면 여기서 고르면 됩니다.'
         },
-        multiples: {
-            label: '배수 분포',
-            summary: '배수 패턴을 완화합니다.',
-            bundle: ['multiples_of_2_4_plus', 'multiples_of_3_3_plus'],
-            details: ['multiples_of_2_4_plus', 'multiples_of_2_5_plus', 'multiples_of_3_3_plus', 'multiples_of_4_3_plus', 'multiples_of_5_3_plus', 'multiples_of_6_3_plus']
+        '끝자리 분포': {
+            kicker: '규칙 4',
+            title: '끝자리 패턴에서 제외할 항목을 골라주세요',
+            copy: '같은 끝자리 반복이나 특정 끝자리 편중을 줄일 수 있습니다.'
         },
-        sequence: {
-            label: '연속수',
-            summary: '이어붙은 숫자 구간을 조절합니다.',
-            bundle: ['consecutive_3_plus'],
-            details: ['consecutive_3_plus', 'consecutive_4_plus']
+        '구간 분포': {
+            kicker: '규칙 5',
+            title: '구간 분포에서 제외할 항목을 골라주세요',
+            copy: '한 구간 몰림이나 너무 좁은 범위를 제외하고 싶을 때 선택합니다.'
         },
-        endings: {
-            label: '끝자리 패턴',
-            summary: '끝자리 반복을 정리합니다.',
-            bundle: ['same_last_digit_3_plus', 'last_digit_zero_2_plus'],
-            details: ['same_last_digit_3_plus', 'same_last_digit_4_plus', 'last_digit_2_plus', 'last_digit_zero_2_plus', 'last_digit_five_2_plus']
+        '구간 세분': {
+            kicker: '규칙 6',
+            title: '저구간, 중간구간, 고구간 몰림을 정리해 보세요',
+            copy: '특정 구간으로 치우친 조합을 줄이고 싶다면 여기서 선택하면 됩니다.'
         },
-        range: {
-            label: '구간 분포',
-            summary: '좁은 범위와 한 구간 몰림을 줄입니다.',
-            bundle: ['same_decade_4_plus', 'tight_range'],
-            details: ['same_decade_4_plus', 'same_decade_5_plus', 'tight_range', 'all_low_or_high', 'low_or_high_5_plus']
-        },
-        segments: {
-            label: '구간 세분',
-            summary: '저/중/고 구간 몰림을 정리합니다.',
-            bundle: ['all_low_or_high', 'low_or_high_5_plus'],
-            details: ['low_1_15_4_plus', 'mid_16_30_4_plus', 'high_31_45_4_plus', 'all_low_or_high', 'low_or_high_5_plus']
-        },
-        sumprime: {
-            label: '합계와 소수',
-            summary: '합계와 소수 편중을 함께 조절합니다.',
-            bundle: ['extreme_sum', 'prime_4_plus'],
-            details: ['extreme_sum', 'sum_low_100', 'sum_high_180', 'prime_4_plus', 'prime_5_plus', 'prime_1_or_less', 'prime_0']
-        }
-    };
-    const DRAW_WIZARD_PLAN_META = {
-        starter: {
-            label: 'STARTER',
-            setCount: 3,
-            note: '가볍게 시작하는 추천 플랜'
-        },
-        standard: {
-            label: 'STANDARD',
-            setCount: 5,
-            note: '가장 균형적인 기본 추천 플랜'
-        },
-        master: {
-            label: 'MASTER',
-            setCount: 7,
-            note: '세트를 넉넉하게 보는 확장 플랜'
+        '합계/소수': {
+            kicker: '규칙 7',
+            title: '합계와 소수 패턴에서 제외할 항목을 골라주세요',
+            copy: '합계 극단값이나 소수 개수 편중까지 마지막으로 정리합니다.'
         }
     };
     const DRAW_WIZARD_STEP_META = {
         start: {
-            title: '질문형 추첨 위저드',
-            copy: '복잡한 규칙 대신 질문에 답하면서 내 추첨 조건을 완성합니다.',
-            navTitle: '질문형 추첨 위저드',
-            navNote: '시작하기를 누르면 첫 질문부터 차례대로 진행됩니다.',
+            title: '규칙 라이브러리를 단계별로 고르고 마지막에 바로 추첨합니다',
+            copy: '복잡한 설정 화면 대신, 규칙 라이브러리 항목을 그룹별 스텝으로 나눠서 하나씩 선택합니다.',
+            navTitle: '소개',
+            navNote: '시작하기를 누르면 첫 번째 규칙 그룹부터 바로 보여줍니다.',
             nextLabel: '시작하기'
         },
-        mode: {
-            title: '이번 회차는 어떤 방식으로 추첨할까요?',
-            copy: '직접 질문에 답하며 기준을 만드는 방식과 플랜을 고르는 방식을 준비했습니다.',
-            navTitle: '추첨 방식 선택',
-            navNote: '직접 맞춤 또는 플랜 추천 중 하나를 선택해 주세요.'
-        },
-        strength: {
-            title: '제외 규칙 강도를 정해 주세요',
-            copy: '강도는 전체 후보를 어느 정도까지 줄일지 정하는 기본값입니다.',
-            navTitle: '강도 선택',
-            navNote: '처음이면 균형 있게를 추천합니다.'
-        },
-        category: {
-            title: '어떤 유형을 먼저 정리할까요?',
-            copy: '선택한 카테고리에 맞는 상세 질문만 다음 단계에서 보여줍니다.',
-            navTitle: '카테고리 선택',
-            navNote: '최대 3개까지 고를 수 있습니다.'
-        },
-        detail: {
-            title: '세부 조건을 가볍게 더할 수 있습니다',
-            copy: '카테고리별로 필요한 것만 추가하고, 나머지는 기본 강도와 추천 묶음에 맡기면 됩니다.',
-            navTitle: '세부 조건 선택',
-            navNote: '선택하지 않고 넘어가도 기본 흐름은 유지됩니다.'
+        rules: {
+            title: '규칙 라이브러리 선택',
+            copy: '현재 그룹에서 제외할 규칙을 골라주세요. 필요 없다면 선택 없이 다음으로 넘어가도 됩니다.',
+            navTitle: '규칙 선택',
+            navNote: '규칙 라이브러리 항목을 그룹별로 순서대로 고릅니다.'
         },
         exclude: {
-            title: '직접 제외하고 싶은 숫자가 있나요?',
-            copy: '원하는 경우에만 직접 제외 숫자를 눌러 추가하면 됩니다.',
+            title: '직접 제외 숫자를 추가할 수 있습니다',
+            copy: '규칙 라이브러리 선택이 끝났다면 마지막으로 직접 제외할 숫자를 고를 수 있습니다.',
             navTitle: '직접 제외 숫자',
             navNote: '이 단계는 선택 사항입니다.'
         },
-        plan: {
-            title: '추천 플랜을 골라 주세요',
-            copy: '플랜에 따라 추천 세트 수와 기록 흐름이 달라집니다.',
-            navTitle: '플랜 선택',
-            navNote: '로그인 후 바로 추천 결과를 받을 수 있습니다.'
-        },
         review: {
-            title: '마지막으로 조건을 확인하세요',
-            copy: '선택한 방식과 필터, 세트 수를 확인한 뒤 추첨을 시작합니다.',
+            title: '선택한 규칙을 확인하고 바로 추첨하세요',
+            copy: '그룹별로 고른 규칙과 직접 제외 숫자를 확인한 뒤 생성할 세트 수를 정합니다.',
             navTitle: '최종 확인',
-            navNote: '조건이 너무 강하면 여기서 바로 조정할 수 있습니다.'
+            navNote: '최소 1개 규칙 또는 직접 제외수가 있어야 추첨할 수 있습니다.'
         },
         result: {
             title: '추첨 결과가 준비됐습니다',
@@ -3064,21 +2985,51 @@ document.addEventListener('DOMContentLoaded', () => {
     function getDrawWizardDefaultState() {
         return {
             currentStep: 'start',
-            mode: '',
-            strength: '',
-            categories: [],
-            detailRuleIds: [],
+            currentGroupIndex: 0,
+            selectedRuleIds: [],
             excludeNumbers: [],
-            plan: '',
             completed: false,
             updatedAt: Date.now()
         };
     }
 
-    function getDrawWizardStepsForMode(mode = '') {
-        return mode === 'premium'
-            ? ['start', 'mode', 'plan', 'review', 'result']
-            : ['start', 'mode', 'strength', 'category', 'detail', 'exclude', 'review', 'result'];
+    function getDrawWizardRuleSteps() {
+        return ruleGroups.map((groupEl, index) => {
+            const groupLabel = String(groupEl?.dataset.group || '').trim() || `규칙 그룹 ${index + 1}`;
+            const info = DRAW_WIZARD_RULE_GROUP_INFO[groupLabel] || {
+                kicker: `규칙 ${index + 1}`,
+                title: `${groupLabel}에서 제외할 패턴을 골라주세요`,
+                copy: '필요한 규칙만 고르고 다음으로 넘어가면 됩니다.'
+            };
+            const rules = Array.from(groupEl.querySelectorAll('.rule-card')).map(card => {
+                const input = card.querySelector('.rule-input');
+                if (!input) {
+                    return null;
+                }
+                const id = String(input.value || '').trim();
+                if (!id) {
+                    return null;
+                }
+                return {
+                    id,
+                    title: String(card.dataset.title || card.querySelector('.rule-title')?.textContent || id).trim(),
+                    desc: String(card.querySelector('.rule-desc')?.textContent || '').trim(),
+                    detail: String(RULE_DETAILS[id] || '').trim()
+                };
+            }).filter(Boolean);
+            return rules.length ? {
+                key: `wizard-group-${index + 1}`,
+                groupLabel,
+                kicker: info.kicker,
+                title: info.title,
+                copy: info.copy,
+                rules
+            } : null;
+        }).filter(Boolean);
+    }
+
+    function getDrawWizardTotalSteps() {
+        return getDrawWizardRuleSteps().length + 3;
     }
 
     function normalizeDrawWizardExcludeNumbers(values) {
@@ -3091,36 +3042,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function sanitizeDrawWizardState(raw) {
         const defaults = getDrawWizardDefaultState();
+        const ruleSteps = getDrawWizardRuleSteps();
+        const validRuleIds = new Set(ruleSteps.flatMap(step => step.rules.map(rule => rule.id)));
+        const validSteps = new Set(['start', 'rules', 'exclude', 'review']);
         if (!raw || typeof raw !== 'object') {
             return defaults;
         }
-        const nextMode = raw.mode === 'premium' ? 'premium' : (raw.mode === 'self' ? 'self' : '');
-        const nextStrength = DRAW_WIZARD_STRENGTHS[raw.strength] ? raw.strength : '';
-        const nextCategories = Array.from(new Set(
-            (Array.isArray(raw.categories) ? raw.categories : [])
-                .map(value => String(value || '').trim())
-                .filter(value => Boolean(DRAW_WIZARD_CATEGORIES[value]))
-        )).slice(0, 3);
-        const allowedDetailIds = new Set(nextCategories.flatMap(id => DRAW_WIZARD_CATEGORIES[id].details || []));
-        const nextDetailRuleIds = Array.from(new Set(
-            (Array.isArray(raw.detailRuleIds) ? raw.detailRuleIds : [])
-                .map(value => String(value || '').trim())
-                .filter(value => allowedDetailIds.has(value))
-        ));
-        const nextPlan = DRAW_WIZARD_PLAN_META[raw.plan] ? raw.plan : '';
-        const nextSteps = getDrawWizardStepsForMode(nextMode);
-        const rawStep = String(raw.currentStep || '').trim();
-        const normalizedStep = nextSteps.includes(rawStep) && rawStep !== 'result'
-            ? rawStep
+        const currentStep = validSteps.has(String(raw.currentStep || '').trim())
+            ? String(raw.currentStep || '').trim()
             : 'start';
+        const currentGroupIndex = Math.max(0, Math.min(
+            ruleSteps.length ? ruleSteps.length - 1 : 0,
+            Number(raw.currentGroupIndex || 0) || 0
+        ));
+        const selectedRuleIds = Array.from(new Set(
+            (Array.isArray(raw.selectedRuleIds) ? raw.selectedRuleIds : [])
+                .map(value => String(value || '').trim())
+                .filter(value => validRuleIds.has(value))
+        ));
         return {
-            currentStep: normalizedStep,
-            mode: nextMode,
-            strength: nextStrength,
-            categories: nextCategories,
-            detailRuleIds: nextDetailRuleIds,
+            currentStep,
+            currentGroupIndex,
+            selectedRuleIds,
             excludeNumbers: normalizeDrawWizardExcludeNumbers(raw.excludeNumbers),
-            plan: nextPlan,
             completed: false,
             updatedAt: Number(raw.updatedAt) || Date.now()
         };
@@ -3131,11 +3075,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
         return Boolean(
-            state.mode
-            || state.plan
-            || state.strength
-            || (Array.isArray(state.categories) && state.categories.length)
-            || (Array.isArray(state.detailRuleIds) && state.detailRuleIds.length)
+            state.currentStep !== 'start'
+            || Number(state.currentGroupIndex || 0) > 0
+            || (Array.isArray(state.selectedRuleIds) && state.selectedRuleIds.length)
             || (Array.isArray(state.excludeNumbers) && state.excludeNumbers.length)
         );
     }
@@ -3179,64 +3121,101 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function getDrawWizardSteps() {
-        return getDrawWizardStepsForMode(drawWizardState && drawWizardState.mode);
-    }
-
     function getDrawWizardCurrentStep() {
         if (!drawWizardState) {
             return 'start';
         }
-        const steps = getDrawWizardSteps();
-        if (!steps.includes(drawWizardState.currentStep)) {
+        const validSteps = new Set(['start', 'rules', 'exclude', 'review', 'result']);
+        if (!validSteps.has(drawWizardState.currentStep)) {
             drawWizardState.currentStep = 'start';
         }
         return drawWizardState.currentStep;
     }
 
-    function getDrawWizardModeLabel(mode = drawWizardState && drawWizardState.mode) {
-        if (mode === 'premium') {
-            return '추천 플랜';
+    function getDrawWizardCurrentRuleStep() {
+        const ruleSteps = getDrawWizardRuleSteps();
+        if (!ruleSteps.length) {
+            return null;
         }
-        if (mode === 'self') {
-            return '질문형 맞춤';
+        const index = Math.max(0, Math.min(ruleSteps.length - 1, Number(drawWizardState?.currentGroupIndex || 0) || 0));
+        if (drawWizardState) {
+            drawWizardState.currentGroupIndex = index;
         }
-        return '방식 미선택';
+        return ruleSteps[index] || null;
     }
 
-    function getDrawWizardStrengthLabel(strength = drawWizardState && drawWizardState.strength) {
-        const meta = DRAW_WIZARD_STRENGTHS[strength];
-        return meta ? meta.label : '강도 미선택';
+    function getDrawWizardViewMeta(stepKey = getDrawWizardCurrentStep()) {
+        if (stepKey === 'rules') {
+            const currentRuleStep = getDrawWizardCurrentRuleStep();
+            const ruleSteps = getDrawWizardRuleSteps();
+            return currentRuleStep ? {
+                title: currentRuleStep.title,
+                copy: currentRuleStep.copy,
+                navTitle: currentRuleStep.groupLabel,
+                navNote: `${Math.min(ruleSteps.length, drawWizardState.currentGroupIndex + 1)} / ${ruleSteps.length}번째 규칙 그룹입니다.`
+            } : DRAW_WIZARD_STEP_META.rules;
+        }
+        return DRAW_WIZARD_STEP_META[stepKey] || DRAW_WIZARD_STEP_META.start;
     }
 
-    function getDrawWizardPlanLabel(plan = drawWizardState && drawWizardState.plan) {
-        const meta = DRAW_WIZARD_PLAN_META[plan];
-        return meta ? meta.label : '플랜 미선택';
+    function getDrawWizardProgressInfo(stepKey = getDrawWizardCurrentStep()) {
+        const total = getDrawWizardTotalSteps();
+        const ruleSteps = getDrawWizardRuleSteps();
+        if (stepKey === 'result') {
+            return { label: '완료', count: '완료' };
+        }
+        if (stepKey === 'start') {
+            return { label: '소개', count: `1 / ${total}` };
+        }
+        if (stepKey === 'rules') {
+            return {
+                label: '규칙 선택',
+                count: `${Math.min(ruleSteps.length, drawWizardState.currentGroupIndex + 2)} / ${total}`
+            };
+        }
+        if (stepKey === 'exclude') {
+            return { label: '직접 제외 숫자', count: `${ruleSteps.length + 2} / ${total}` };
+        }
+        return { label: '최종 확인', count: `${ruleSteps.length + 3} / ${total}` };
     }
 
-    function getDrawWizardAllowedDetailIds(categories = drawWizardState && drawWizardState.categories) {
-        return Array.from(new Set(
-            (Array.isArray(categories) ? categories : [])
-                .flatMap(categoryId => (DRAW_WIZARD_CATEGORIES[categoryId] && DRAW_WIZARD_CATEGORIES[categoryId].details) || [])
-        ));
+    function getDrawWizardRulePreviewHtml(ruleId) {
+        const sample = Array.isArray(RULE_SAMPLE_MAP[ruleId]) ? RULE_SAMPLE_MAP[ruleId] : [];
+        if (!sample.length) {
+            return '';
+        }
+        return `
+            <div class="draw-funnel-rule-samples" aria-hidden="true">
+                ${sample.map(number => `
+                    <span class="draw-funnel-rule-ball ${escapeHtml(getSampleBallClass(number))}">${escapeHtml(String(number))}</span>
+                `).join('')}
+            </div>
+        `;
     }
 
     function getDrawWizardDerivedRuleIds() {
-        if (!drawWizardState || drawWizardState.mode !== 'self') {
+        if (!drawWizardState) {
             return [];
         }
-        const ids = [];
-        const strengthMeta = DRAW_WIZARD_STRENGTHS[drawWizardState.strength];
-        const presetIds = strengthMeta ? (PRESETS[strengthMeta.preset] || []) : [];
-        ids.push(...presetIds);
-        drawWizardState.categories.forEach(categoryId => {
-            ids.push(...(DRAW_WIZARD_CATEGORIES[categoryId]?.bundle || []));
-        });
-        ids.push(...drawWizardState.detailRuleIds);
+        const ids = Array.from(new Set(drawWizardState.selectedRuleIds));
         if (drawWizardState.excludeNumbers.length) {
             ids.push('exclude_number');
         }
-        return Array.from(new Set(ids));
+        return ids;
+    }
+
+    function getDrawWizardGroupedSelections() {
+        if (!drawWizardState) {
+            return [];
+        }
+        const selectedIds = new Set(drawWizardState.selectedRuleIds);
+        return getDrawWizardRuleSteps().map(step => {
+            const rules = step.rules.filter(rule => selectedIds.has(rule.id));
+            return rules.length ? {
+                groupLabel: step.groupLabel,
+                rules
+            } : null;
+        }).filter(Boolean);
     }
 
     function applyDrawWizardExcludeNumbers(numbers = []) {
@@ -3261,19 +3240,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!drawWizardState) {
             return;
         }
-        const mode = drawWizardState.mode === 'premium' ? 'premium' : 'self';
         if (drawTabPanel) {
-            drawTabPanel.setAttribute('data-service-mode', mode);
-            drawTabPanel.dataset.wizardMode = mode;
+            drawTabPanel.setAttribute('data-service-mode', 'self');
+            drawTabPanel.dataset.wizardMode = 'self';
         }
-        const ids = mode === 'self' ? getDrawWizardDerivedRuleIds() : [];
         clearActiveStrategySelection();
-        setRulesByIds(ids);
-        if (mode === 'self') {
-            applyDrawWizardExcludeNumbers(drawWizardState.excludeNumbers);
-        } else {
-            applyDrawWizardExcludeNumbers([]);
-        }
+        setRulesByIds(getDrawWizardDerivedRuleIds());
+        applyDrawWizardExcludeNumbers(drawWizardState.excludeNumbers);
         updateSelectionCount();
         updateCombinedEstimates();
         updateScenarioMetrics();
@@ -3295,30 +3268,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getDrawWizardRestrictionState() {
-        if (!drawWizardState || drawWizardState.mode === 'premium') {
+        const derivedRuleIds = getDrawWizardDerivedRuleIds();
+        if (!derivedRuleIds.length) {
             return {
                 kind: 'info',
-                title: '플랜 기반 추천 흐름입니다.',
-                body: isMember()
-                    ? '플랜을 고르면 세트 수와 저장 흐름이 함께 정리됩니다.'
-                    : '플랜을 둘러본 뒤 로그인하면 바로 추천 흐름을 이어서 사용할 수 있습니다.',
-                blocked: false
-            };
-        }
-        const selectedCount = getDrawWizardDerivedRuleIds().filter(id => id !== 'exclude_number').length;
-        if (!selectedCount) {
-            return {
-                kind: 'info',
-                title: '기준을 고르면 여기서 바로 상태를 보여줍니다.',
-                body: '강도와 카테고리를 고르면 남는 후보 수와 필터 영향을 즉시 확인할 수 있습니다.',
-                blocked: false
+                title: '최소 1개 규칙을 선택해 주세요.',
+                body: '규칙 라이브러리 항목이나 직접 제외수를 하나 이상 고르면 추첨을 시작할 수 있습니다.',
+                blocked: true
             };
         }
         if (currentRemainingCombos <= 20) {
             return {
                 kind: 'danger',
-                title: '조건이 너무 강해 추첨이 어려울 수 있습니다.',
-                body: '세부 조건을 줄이거나 강도를 낮춰 주세요. 후보 수가 너무 적으면 결과를 찾지 못할 수 있습니다.',
+                title: '조건이 너무 강해서 추첨이 어려울 수 있습니다.',
+                body: '선택한 규칙을 조금 줄이거나 직접 제외수를 완화한 뒤 다시 시도해 주세요.',
                 blocked: true
             };
         }
@@ -3326,14 +3289,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return {
                 kind: 'warn',
                 title: '후보가 많이 줄었습니다.',
-                body: '추첨은 가능하지만 조건을 조금 완화하면 더 안정적으로 번호를 만들 수 있습니다.',
+                body: '추첨은 가능하지만 몇 개 규칙을 덜 선택하면 더 넓은 후보에서 생성할 수 있습니다.',
                 blocked: false
             };
         }
         return {
             kind: 'good',
-            title: '추첨을 진행하기 좋은 상태입니다.',
-            body: '선택한 조건이 반영되고 있으며, 남은 후보 범위도 안정적입니다.',
+            title: '바로 추첨하기 좋은 상태입니다.',
+            body: '선택한 규칙이 반영됐고 남은 후보 수도 안정적입니다.',
             blocked: false
         };
     }
@@ -3342,321 +3305,157 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!drawWizardState) {
             return false;
         }
-        if (stepKey === 'start') {
-            return true;
-        }
-        if (stepKey === 'mode') {
-            return Boolean(drawWizardState.mode);
-        }
-        if (stepKey === 'strength') {
-            return Boolean(drawWizardState.strength);
-        }
-        if (stepKey === 'category') {
-            return drawWizardState.categories.length > 0;
-        }
-        if (stepKey === 'detail') {
-            return drawWizardState.categories.length > 0;
-        }
-        if (stepKey === 'exclude') {
-            return true;
-        }
-        if (stepKey === 'plan') {
-            return Boolean(drawWizardState.plan);
-        }
         if (stepKey === 'review') {
-            if (drawWizardState.mode === 'premium') {
-                return Boolean(drawWizardState.plan);
-            }
             const restriction = getDrawWizardRestrictionState();
-            return !restriction.blocked && getDrawWizardDerivedRuleIds().length > 0;
+            return !restriction.blocked;
         }
-        return false;
+        return stepKey !== 'result';
     }
 
     function getDrawWizardNextLabel(stepKey = getDrawWizardCurrentStep()) {
         if (!drawWizardState) {
             return '다음';
         }
+        if (stepKey === 'start') {
+            return '규칙 고르기';
+        }
+        if (stepKey === 'rules') {
+            const ruleSteps = getDrawWizardRuleSteps();
+            const lastIndex = Math.max(0, ruleSteps.length - 1);
+            return drawWizardState.currentGroupIndex >= lastIndex ? '직접 제외수로' : '다음 규칙';
+        }
+        if (stepKey === 'exclude') {
+            return '최종 확인';
+        }
         if (stepKey === 'review') {
-            if (drawWizardState.mode === 'premium') {
-                return isMember() ? '플랜 추천 받기' : '로그인하고 추천 받기';
-            }
-            const restriction = getDrawWizardRestrictionState();
-            return restriction.blocked ? '조건 완화 필요' : '추첨 시작';
+            return getDrawWizardRestrictionState().blocked ? '규칙 더 고르기' : '추첨 시작';
         }
-        const meta = DRAW_WIZARD_STEP_META[stepKey];
-        return meta?.nextLabel || '다음';
-    }
-
-    function getDrawWizardSummaryRows() {
-        if (!drawWizardState) {
-            return [];
-        }
-        if (drawWizardState.mode === 'premium') {
-            const planMeta = DRAW_WIZARD_PLAN_META[drawWizardState.plan];
-            return [
-                { label: '방식', value: getDrawWizardModeLabel() },
-                { label: '플랜', value: planMeta ? planMeta.label : '미선택' },
-                { label: '추천 세트', value: planMeta ? `${planMeta.setCount}세트` : '-' },
-                { label: '상태', value: isMember() ? '로그인 완료' : '로그인 필요' }
-            ];
-        }
-        const categoryLabels = drawWizardState.categories.map(id => DRAW_WIZARD_CATEGORIES[id]?.label).filter(Boolean);
-        const detailSummary = summarizeRuleDisplayNames(drawWizardState.detailRuleIds, 3) || '기본 추천만 사용';
-        const excludeSummary = drawWizardState.excludeNumbers.length
-            ? `${drawWizardState.excludeNumbers.length}개 직접 제외`
-            : '직접 제외 없음';
-        return [
-            { label: '방식', value: getDrawWizardModeLabel() },
-            { label: '강도', value: getDrawWizardStrengthLabel() },
-            { label: '카테고리', value: categoryLabels.length ? categoryLabels.join(', ') : '미선택' },
-            { label: '세부 조건', value: detailSummary },
-            { label: '직접 제외', value: excludeSummary }
-        ];
+        return '다음';
     }
 
     function renderDrawWizardSelectionChips() {
-        if (!drawWizardSelectionChipsEl || !drawWizardSelectedCaptionEl || !drawWizardState) {
+        if (!drawWizardSelectionChipsEl || !drawWizardState) {
             return;
         }
-        const chips = [];
-        if (drawWizardState.mode) {
-            chips.push({ tone: 'mode', label: getDrawWizardModeLabel() });
-        }
-        if (drawWizardState.mode === 'self') {
-            if (drawWizardState.strength) {
-                chips.push({ tone: 'strength', label: `${getDrawWizardStrengthLabel()} 강도` });
-            }
-            drawWizardState.categories.forEach(categoryId => {
-                const label = DRAW_WIZARD_CATEGORIES[categoryId]?.label;
-                if (label) {
-                    chips.push({ tone: 'category', label });
-                }
+        const chips = getDrawWizardGroupedSelections().map(group => ({
+            tone: 'group',
+            label: `${group.groupLabel} ${group.rules.length}개`
+        }));
+        if (drawWizardState.excludeNumbers.length) {
+            chips.push({
+                tone: 'exclude',
+                label: `직접 제외 ${drawWizardState.excludeNumbers.length}개`
             });
-            drawWizardState.detailRuleIds.slice(0, 4).forEach(ruleId => {
-                chips.push({ tone: 'detail', label: getRuleDisplayName(ruleId) });
-            });
-            if (drawWizardState.detailRuleIds.length > 4) {
-                chips.push({ tone: 'detail', label: `세부 조건 +${drawWizardState.detailRuleIds.length - 4}` });
-            }
-            if (drawWizardState.excludeNumbers.length) {
-                chips.push({ tone: 'exclude', label: `직접 제외 ${drawWizardState.excludeNumbers.length}개` });
-            }
-        }
-        if (drawWizardState.mode === 'premium' && drawWizardState.plan) {
-            chips.push({ tone: 'plan', label: getDrawWizardPlanLabel() });
-            chips.push({ tone: 'plan', label: `${DRAW_WIZARD_PLAN_META[drawWizardState.plan].setCount}세트 추천` });
         }
         drawWizardSelectionChipsEl.innerHTML = chips.length
-            ? chips.map(item => `<span class="draw-wizard-selection-chip tone-${escapeHtml(item.tone)}">${escapeHtml(item.label)}</span>`).join('')
-            : '<span class="draw-wizard-selection-chip is-empty">선택된 항목 없음</span>';
-        drawWizardSelectedCaptionEl.textContent = chips.length
-            ? `지금까지 ${chips.length}개 선택이 반영되어 있습니다.`
-            : '질문에 답하면 여기에 선택 내용이 쌓입니다.';
+            ? chips.map(item => `<span class="draw-funnel-chip tone-${escapeHtml(item.tone)}">${escapeHtml(item.label)}</span>`).join('')
+            : '<span class="draw-funnel-chip is-empty">아직 선택 없음</span>';
     }
 
-    function renderDrawWizardDetailStep() {
+    function renderDrawWizardRuleStep() {
         if (!drawWizardDetailGroupsEl || !drawWizardDetailNoteEl || !drawWizardState) {
             return;
         }
-        const categories = drawWizardState.categories.filter(categoryId => DRAW_WIZARD_CATEGORIES[categoryId]);
-        if (!categories.length) {
-            drawWizardDetailGroupsEl.innerHTML = '<div class="draw-wizard-empty-state">먼저 카테고리를 선택하면 여기에 관련 세부 조건이 나타납니다.</div>';
-            drawWizardDetailNoteEl.textContent = '카테고리를 고른 뒤 다음 단계로 진행해 주세요.';
+        const currentRuleStep = getDrawWizardCurrentRuleStep();
+        const ruleSteps = getDrawWizardRuleSteps();
+        if (!currentRuleStep) {
+            drawWizardDetailGroupsEl.innerHTML = '<div class="draw-funnel-empty-state">표시할 규칙 그룹이 없습니다.</div>';
+            drawWizardDetailNoteEl.textContent = '규칙 라이브러리를 불러오지 못했습니다.';
             return;
         }
-        drawWizardDetailGroupsEl.innerHTML = categories.map(categoryId => {
-            const category = DRAW_WIZARD_CATEGORIES[categoryId];
-            const detailButtons = category.details.map(ruleId => {
-                const active = drawWizardState.detailRuleIds.includes(ruleId);
-                return `
-                    <button class="draw-wizard-choice-card draw-wizard-choice-card--detail${active ? ' is-selected' : ''}" type="button" data-wizard-detail="${escapeHtml(ruleId)}">
-                        <span class="draw-wizard-choice-badge">${escapeHtml(category.label)}</span>
-                        <strong>${escapeHtml(getRuleDisplayName(ruleId))}</strong>
-                        <p>${escapeHtml(RULE_DETAILS[ruleId] || '세부 조건')}</p>
-                        <span class="draw-wizard-choice-foot">${active ? '선택됨' : '눌러서 반영'}</span>
-                    </button>
-                `;
-            }).join('');
+        const selectedIds = new Set(drawWizardState.selectedRuleIds);
+        const selectedCount = currentRuleStep.rules.filter(rule => selectedIds.has(rule.id)).length;
+        if (drawWizardRuleKickerEl) {
+            drawWizardRuleKickerEl.textContent = currentRuleStep.kicker;
+        }
+        if (drawWizardRuleProgressEl) {
+            drawWizardRuleProgressEl.textContent = `${drawWizardState.currentGroupIndex + 1} / ${ruleSteps.length}`;
+        }
+        if (drawWizardRuleTitleEl) {
+            drawWizardRuleTitleEl.textContent = currentRuleStep.title;
+        }
+        if (drawWizardRuleCopyEl) {
+            drawWizardRuleCopyEl.textContent = currentRuleStep.copy;
+        }
+        drawWizardDetailGroupsEl.innerHTML = currentRuleStep.rules.map(rule => {
+            const active = selectedIds.has(rule.id);
+            const description = rule.detail || rule.desc || '선택 시 이 패턴을 제외합니다.';
             return `
-                <section class="draw-wizard-detail-group">
-                    <div class="draw-wizard-detail-group-head">
-                        <strong>${escapeHtml(category.label)}</strong>
-                        <span>${escapeHtml(category.summary)}</span>
-                    </div>
-                    <div class="draw-wizard-choice-grid draw-wizard-choice-grid--detail-list">${detailButtons}</div>
-                </section>
+                <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}" type="button" data-wizard-rule="${escapeHtml(rule.id)}" aria-pressed="${String(active)}">
+                    <span class="draw-funnel-rule-meta">${escapeHtml(currentRuleStep.groupLabel)}</span>
+                    <strong>${escapeHtml(rule.title)}</strong>
+                    <p>${escapeHtml(description)}</p>
+                    ${getDrawWizardRulePreviewHtml(rule.id)}
+                    <span class="draw-funnel-rule-state">${active ? '선택됨' : '눌러서 제외 규칙 추가'}</span>
+                </button>
             `;
         }).join('');
-        drawWizardDetailNoteEl.textContent = drawWizardState.detailRuleIds.length
-            ? `세부 조건 ${drawWizardState.detailRuleIds.length}개가 추가되었습니다.`
-            : '세부 조건은 아직 선택되지 않았습니다.';
+        drawWizardDetailNoteEl.textContent = selectedCount
+            ? `${currentRuleStep.groupLabel}에서 ${selectedCount}개 선택됨`
+            : '이 그룹에서 선택된 규칙이 없습니다.';
     }
 
     function renderDrawWizardReview() {
-        if (!drawWizardReviewSummaryEl || !drawWizardState) {
+        if (!drawWizardReviewSummaryEl || !drawWizardReviewGroupsEl || !drawWizardState) {
             return;
         }
-        const rows = getDrawWizardSummaryRows();
-        drawWizardReviewSummaryEl.innerHTML = rows.map(row => `
-            <div class="draw-wizard-review-row">
+        const remainPct = Math.max(0, Math.min(100, Math.round((Number(currentRemainingRatio) || 0) * 1000) / 10));
+        const summaryRows = [
+            { label: '선택한 규칙', value: `${drawWizardState.selectedRuleIds.length}개` },
+            { label: '직접 제외수', value: drawWizardState.excludeNumbers.length ? `${drawWizardState.excludeNumbers.length}개` : '없음' },
+            { label: '남은 후보', value: `${formatNumber(currentRemainingCombos || TOTAL_COMBOS)}개` },
+            { label: '남은 비중', value: `${remainPct}%` }
+        ];
+        drawWizardReviewSummaryEl.innerHTML = summaryRows.map(row => `
+            <div class="draw-funnel-review-row">
                 <span>${escapeHtml(row.label)}</span>
                 <strong>${escapeHtml(row.value)}</strong>
             </div>
         `).join('');
-        if (drawWizardSelfReviewCardEl) {
-            drawWizardSelfReviewCardEl.hidden = drawWizardState.mode === 'premium';
-        }
-        if (drawWizardPlanReviewCardEl) {
-            drawWizardPlanReviewCardEl.hidden = drawWizardState.mode !== 'premium';
-        }
-        if (drawWizardPlanReviewEl && drawWizardState.mode === 'premium') {
-            const planMeta = DRAW_WIZARD_PLAN_META[drawWizardState.plan];
-            drawWizardPlanReviewEl.innerHTML = planMeta ? `
-                <div class="draw-wizard-review-row">
-                    <span>플랜</span>
-                    <strong>${escapeHtml(planMeta.label)}</strong>
+        const groupedSelections = getDrawWizardGroupedSelections();
+        drawWizardReviewGroupsEl.innerHTML = groupedSelections.length
+            ? groupedSelections.map(group => `
+                <div class="draw-funnel-review-group">
+                    <strong>${escapeHtml(group.groupLabel)}</strong>
+                    <span>${escapeHtml(group.rules.map(rule => rule.title).join(', '))}</span>
                 </div>
-                <div class="draw-wizard-review-row">
-                    <span>추천 세트</span>
-                    <strong>${escapeHtml(String(planMeta.setCount))}세트</strong>
-                </div>
-                <div class="draw-wizard-review-row">
-                    <span>안내</span>
-                    <strong>${escapeHtml(planMeta.note)}</strong>
-                </div>
-            ` : '<div class="draw-wizard-empty-state">플랜을 선택하면 여기에서 최종 확인 내용을 보여줍니다.</div>';
-        }
-    }
-
-    function renderDrawWizardDashboard() {
-        if (!drawWizardState) {
-            return;
-        }
-        const mode = drawWizardState.mode || '';
-        const restriction = getDrawWizardRestrictionState();
-        if (drawWizardModePillEl) {
-            drawWizardModePillEl.textContent = getDrawWizardModeLabel(mode);
-        }
-        if (drawWizardStrengthPillEl) {
-            drawWizardStrengthPillEl.textContent = mode === 'premium'
-                ? getDrawWizardPlanLabel(drawWizardState.plan)
-                : getDrawWizardStrengthLabel(drawWizardState.strength);
-        }
-        if (drawWizardCategoryPillEl) {
-            drawWizardCategoryPillEl.textContent = mode === 'premium'
-                ? (drawWizardState.plan ? `${DRAW_WIZARD_PLAN_META[drawWizardState.plan].setCount}세트 추천` : '플랜 미선택')
-                : `카테고리 ${drawWizardState.categories.length}개`;
-        }
-        if (drawWizardSelfMetricsEl) {
-            drawWizardSelfMetricsEl.hidden = mode === 'premium';
-        }
-        if (drawWizardPlanMetricsEl) {
-            drawWizardPlanMetricsEl.hidden = mode !== 'premium';
-        }
-        if (drawWizardPlanTitleEl) {
-            drawWizardPlanTitleEl.textContent = getDrawWizardPlanLabel(drawWizardState.plan);
-        }
-        if (drawWizardPlanNoteEl) {
-            drawWizardPlanNoteEl.textContent = drawWizardState.plan
-                ? DRAW_WIZARD_PLAN_META[drawWizardState.plan].note
-                : '플랜을 고르면 추천 세트와 저장 흐름이 바로 정해집니다.';
-        }
-        if (drawWizardPlanCountEl) {
-            drawWizardPlanCountEl.textContent = drawWizardState.plan
-                ? `${DRAW_WIZARD_PLAN_META[drawWizardState.plan].setCount}세트`
-                : '-';
-        }
-        if (drawWizardPlanFocusEl) {
-            drawWizardPlanFocusEl.textContent = drawWizardState.plan
-                ? `${getDrawWizardPlanLabel(drawWizardState.plan)} 기준으로 서로 다른 추천 조합을 순차 생성합니다.`
-                : '플랜을 선택해 주세요.';
-        }
-        if (drawWizardPlanWarningTitleEl) {
-            drawWizardPlanWarningTitleEl.textContent = isMember() ? '바로 추천 가능' : '로그인 후 진행 가능';
-        }
-        if (drawWizardPlanWarningBodyEl) {
-            drawWizardPlanWarningBodyEl.textContent = isMember()
-                ? '플랜을 선택한 뒤 바로 추천 세트를 생성할 수 있습니다.'
-                : '비회원은 플랜을 둘러본 뒤 로그인하면 바로 이어서 진행할 수 있습니다.';
-        }
-        if (drawWizardWarningTitleEl) {
-            drawWizardWarningTitleEl.textContent = restriction.title;
-        }
-        if (drawWizardWarningBodyEl) {
-            drawWizardWarningBodyEl.textContent = restriction.body;
-        }
-        if (drawWizardCategoryNoteEl && mode !== 'premium') {
-            drawWizardCategoryNoteEl.textContent = `선택한 카테고리는 ${drawWizardState.categories.length}개입니다. 최대 3개까지 고를 수 있습니다.`;
-        }
-        if (drawWizardExcludeSummaryEl && mode !== 'premium') {
-            const count = drawWizardState.excludeNumbers.length;
-            drawWizardExcludeSummaryEl.textContent = count
-                ? `${count}개 직접 제외: ${drawWizardState.excludeNumbers.slice(0, 6).join(', ')}${count > 6 ? '...' : ''}`
-                : '아직 직접 제외한 숫자가 없습니다.';
-        }
-        if (drawSelectionSummaryEl) {
-            if (!mode) {
-                drawSelectionSummaryEl.textContent = '아직 고른 기준이 없습니다.';
-            } else if (mode === 'premium') {
-                drawSelectionSummaryEl.textContent = drawWizardState.plan
-                    ? `${getDrawWizardPlanLabel(drawWizardState.plan)} 플랜을 선택했습니다.`
-                    : '아직 고른 플랜이 없습니다.';
-            } else {
-                const selectedCount = getDrawWizardDerivedRuleIds().filter(id => id !== 'exclude_number').length;
-                drawSelectionSummaryEl.textContent = selectedCount
-                    ? `필터 ${selectedCount}개가 준비됐습니다.`
-                    : '강도와 카테고리를 고르면 필터가 자동으로 구성됩니다.';
-            }
-        }
-        if (drawFilterDetailEl) {
-            if (!mode) {
-                drawFilterDetailEl.textContent = '질문에 답하면 남는 후보 수와 제외 비중을 여기서 바로 확인할 수 있습니다.';
-            } else if (mode === 'premium') {
-                drawFilterDetailEl.textContent = drawWizardState.plan
-                    ? `${getDrawWizardPlanLabel(drawWizardState.plan)} 기준 추천 ${DRAW_WIZARD_PLAN_META[drawWizardState.plan].setCount}세트 흐름으로 진행합니다.`
-                    : '플랜을 고르면 추천 세트 수와 흐름이 여기서 바로 정리됩니다.';
-            }
-        }
-        renderDrawWizardSelectionChips();
-        renderDrawWizardReview();
+            `).join('')
+            : '<div class="draw-funnel-empty-state">아직 선택된 규칙이 없습니다.</div>';
     }
 
     function renderDrawWizard() {
         if (!drawWizardState || !drawWizardPanels.length) {
             return;
         }
-        const steps = getDrawWizardSteps();
         const currentStep = getDrawWizardCurrentStep();
-        const currentIndex = steps.indexOf(currentStep);
-        const meta = DRAW_WIZARD_STEP_META[currentStep] || DRAW_WIZARD_STEP_META.start;
+        const progressInfo = getDrawWizardProgressInfo(currentStep);
+        const viewMeta = getDrawWizardViewMeta(currentStep);
+        const restriction = getDrawWizardRestrictionState();
+        const selectedCount = drawWizardState.selectedRuleIds.length;
+        const excludeCount = drawWizardState.excludeNumbers.length;
+
         drawWizardPanels.forEach(panel => {
             const active = panel.dataset.drawWizardStep === currentStep;
             panel.hidden = !active;
             panel.classList.toggle('is-active', active);
         });
         if (drawWizardProgressLabelEl) {
-            drawWizardProgressLabelEl.textContent = meta.navTitle;
+            drawWizardProgressLabelEl.textContent = progressInfo.label;
         }
         if (drawWizardProgressCountEl) {
-            if (currentStep === 'result') {
-                drawWizardProgressCountEl.textContent = '완료';
-            } else {
-                const progressTotal = Math.max(1, steps.length - 1);
-                drawWizardProgressCountEl.textContent = `${Math.max(1, currentIndex + 1)} / ${progressTotal}`;
-            }
+            drawWizardProgressCountEl.textContent = progressInfo.count;
         }
         if (drawWizardScreenTitleEl) {
-            drawWizardScreenTitleEl.textContent = meta.title;
+            drawWizardScreenTitleEl.textContent = viewMeta.title;
         }
         if (drawWizardScreenCopyEl) {
-            drawWizardScreenCopyEl.textContent = meta.copy;
+            drawWizardScreenCopyEl.textContent = viewMeta.copy;
         }
         if (drawWizardNavTitleEl) {
-            drawWizardNavTitleEl.textContent = meta.navTitle;
+            drawWizardNavTitleEl.textContent = viewMeta.navTitle;
         }
         if (drawWizardNavNoteEl) {
-            drawWizardNavNoteEl.textContent = meta.navNote;
+            drawWizardNavNoteEl.textContent = viewMeta.navNote;
         }
         if (drawWizardNavEl) {
             drawWizardNavEl.hidden = currentStep === 'result';
@@ -3670,28 +3469,30 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardNextBtn.textContent = getDrawWizardNextLabel(currentStep);
             drawWizardNextBtn.disabled = !getDrawWizardCanProceed(currentStep);
         }
-        document.querySelectorAll('[data-wizard-mode]').forEach(button => {
-            const active = button.dataset.wizardMode === drawWizardState.mode;
-            button.classList.toggle('is-selected', active);
-            button.setAttribute('aria-pressed', String(active));
-        });
-        document.querySelectorAll('[data-wizard-strength]').forEach(button => {
-            const active = button.dataset.wizardStrength === drawWizardState.strength;
-            button.classList.toggle('is-selected', active);
-            button.setAttribute('aria-pressed', String(active));
-        });
-        document.querySelectorAll('[data-wizard-category]').forEach(button => {
-            const active = drawWizardState.categories.includes(button.dataset.wizardCategory);
-            button.classList.toggle('is-selected', active);
-            button.setAttribute('aria-pressed', String(active));
-        });
-        document.querySelectorAll('[data-wizard-plan]').forEach(button => {
-            const active = button.dataset.wizardPlan === drawWizardState.plan;
-            button.classList.toggle('is-selected', active);
-            button.setAttribute('aria-pressed', String(active));
-        });
-        renderDrawWizardDetailStep();
-        renderDrawWizardDashboard();
+        if (drawSelectionSummaryEl) {
+            drawSelectionSummaryEl.textContent = selectedCount || excludeCount
+                ? `선택된 규칙 ${selectedCount}개 · 직접 제외 ${excludeCount}개`
+                : '아직 선택된 규칙이 없습니다.';
+        }
+        if (drawFilterDetailEl) {
+            drawFilterDetailEl.textContent = selectedCount || excludeCount
+                ? `남은 후보 ${formatNumber(currentRemainingCombos || TOTAL_COMBOS)}개 · 제외 ${formatNumber(currentExcludedCombos || 0)}개`
+                : '규칙 라이브러리 항목을 그룹별로 고르고 마지막에 바로 추첨합니다.';
+        }
+        if (drawWizardWarningTitleEl) {
+            drawWizardWarningTitleEl.textContent = restriction.title;
+        }
+        if (drawWizardWarningBodyEl) {
+            drawWizardWarningBodyEl.textContent = restriction.body;
+        }
+        if (drawWizardExcludeSummaryEl) {
+            drawWizardExcludeSummaryEl.textContent = excludeCount
+                ? `${excludeCount}개 직접 제외: ${drawWizardState.excludeNumbers.join(', ')}`
+                : '아직 직접 제외한 숫자가 없습니다.';
+        }
+        renderDrawWizardSelectionChips();
+        renderDrawWizardRuleStep();
+        renderDrawWizardReview();
         if (drawWizardResumeCardEl) {
             drawWizardResumeCardEl.hidden = currentStep !== 'start' || !drawWizardResumeState;
         }
@@ -3699,24 +3500,18 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardResumeTitleEl.textContent = '지난번에 보던 단계가 남아 있습니다.';
         }
         if (drawWizardResumeNoteEl && drawWizardResumeState) {
-            const resumeStep = drawWizardResumeState.currentStep || 'review';
-            drawWizardResumeNoteEl.textContent = `${DRAW_WIZARD_STEP_META[resumeStep]?.navTitle || '이전 단계'}부터 그대로 이어서 진행할 수 있습니다.`;
+            drawWizardResumeNoteEl.textContent = drawWizardResumeState.currentStep === 'rules'
+                ? `규칙 그룹 ${Number(drawWizardResumeState.currentGroupIndex || 0) + 1}부터 그대로 이어서 진행할 수 있습니다.`
+                : '이전 선택을 그대로 불러올 수 있습니다.';
         }
         if (drawWizardResultTitleEl) {
-            drawWizardResultTitleEl.textContent = drawWizardState.mode === 'premium'
-                ? '플랜 기준 추천 세트가 준비됐습니다'
-                : '선택한 조건에 맞는 추천 조합이 준비됐습니다';
+            drawWizardResultTitleEl.textContent = '선택한 조건에 맞는 추천 조합이 준비됐습니다';
         }
         if (drawWizardResultCopyEl) {
-            drawWizardResultCopyEl.textContent = drawWizardState.mode === 'premium'
-                ? '같은 플랜으로 다시 추천하거나 플랜을 바꿔 다시 시도할 수 있습니다.'
-                : '같은 조건으로 다시 추첨하거나 이전 단계로 돌아가 조건을 바꿀 수 있습니다.';
+            drawWizardResultCopyEl.textContent = '같은 조건으로 다시 추첨하거나 이전 단계로 돌아가 규칙을 다시 고를 수 있습니다.';
         }
         if (drawWizardSelfResultShellEl) {
-            drawWizardSelfResultShellEl.hidden = drawWizardState.mode === 'premium';
-        }
-        if (drawWizardPremiumResultShellEl) {
-            drawWizardPremiumResultShellEl.hidden = drawWizardState.mode !== 'premium';
+            drawWizardSelfResultShellEl.hidden = false;
         }
     }
 
@@ -3724,50 +3519,59 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!drawWizardState) {
             return;
         }
-        const steps = getDrawWizardSteps();
+        const ruleSteps = getDrawWizardRuleSteps();
+        const lastRuleIndex = Math.max(0, ruleSteps.length - 1);
         const currentStep = getDrawWizardCurrentStep();
-        const index = steps.indexOf(currentStep);
-        const nextStep = steps[index + direction];
-        if (!nextStep) {
+
+        if (currentStep === 'start') {
+            if (direction > 0) {
+                drawWizardState.currentStep = ruleSteps.length ? 'rules' : 'exclude';
+                drawWizardState.currentGroupIndex = 0;
+            }
+            commitDrawWizardState({ syncRules: false });
             return;
         }
-        drawWizardState.currentStep = nextStep;
-        drawWizardState.completed = false;
-        commitDrawWizardState({
-            syncRules: false
-        });
+
+        if (currentStep === 'rules') {
+            if (direction > 0) {
+                if (drawWizardState.currentGroupIndex < lastRuleIndex) {
+                    drawWizardState.currentGroupIndex += 1;
+                } else {
+                    drawWizardState.currentStep = 'exclude';
+                }
+            } else if (drawWizardState.currentGroupIndex > 0) {
+                drawWizardState.currentGroupIndex -= 1;
+            } else {
+                drawWizardState.currentStep = 'start';
+            }
+            commitDrawWizardState({ syncRules: false });
+            return;
+        }
+
+        if (currentStep === 'exclude') {
+            if (direction > 0) {
+                drawWizardState.currentStep = 'review';
+            } else {
+                drawWizardState.currentStep = ruleSteps.length ? 'rules' : 'start';
+                drawWizardState.currentGroupIndex = lastRuleIndex;
+            }
+            commitDrawWizardState({ syncRules: false });
+            return;
+        }
+
+        if (currentStep === 'review' && direction < 0) {
+            drawWizardState.currentStep = 'exclude';
+            commitDrawWizardState({ syncRules: false });
+        }
     }
 
     async function runDrawWizardGeneration() {
         if (!drawWizardState) {
             return false;
         }
-        if (drawWizardState.mode === 'premium') {
-            const plan = drawWizardState.plan;
-            if (!DRAW_WIZARD_PLAN_META[plan]) {
-                showActionPopup('플랜을 먼저 선택해 주세요.');
-                return false;
-            }
-            if (!isMember()) {
-                openAuthModal();
-                updatePremiumCopyStatus('로그인 후 플랜 추천을 이어서 받을 수 있습니다.', true);
-                return false;
-            }
-            await setMembershipTier(plan);
-            const recommendationCount = getRecommendedSetCount(plan);
-            const recommendations = generatePremiumRecommendations(recommendationCount);
-            renderPremiumNumbers(recommendations);
-            updatePremiumCopyStatus(`${getDrawWizardPlanLabel(plan)} 기준 추천 ${recommendationCount}세트를 불러왔습니다.`);
-            drawWizardState.currentStep = 'result';
-            drawWizardState.completed = true;
-            commitDrawWizardState({
-                syncRules: false
-            });
-            return true;
-        }
         const restriction = getDrawWizardRestrictionState();
         if (restriction.blocked) {
-            showActionPopup('조건이 너무 강합니다. 세부 조건을 줄이거나 강도를 낮춰 주세요.');
+            showActionPopup('규칙을 최소 1개 고르거나 조건을 조금 완화해 주세요.');
             renderDrawWizard();
             return false;
         }
@@ -3791,7 +3595,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const currentStep = getDrawWizardCurrentStep();
         if (!getDrawWizardCanProceed(currentStep)) {
-            showActionPopup('현재 단계의 선택을 먼저 완료해 주세요.');
+            showActionPopup('추첨을 시작하려면 최소 1개 규칙을 선택해 주세요.');
             return;
         }
         if (currentStep === 'review') {
@@ -3828,103 +3632,46 @@ document.addEventListener('DOMContentLoaded', () => {
         drawWizardState = getDrawWizardDefaultState();
         syncDrawWizardSelections();
         renderDrawWizard();
-        document.querySelectorAll('[data-wizard-mode]').forEach(button => {
-            button.addEventListener('click', () => {
-                const mode = button.dataset.wizardMode === 'premium' ? 'premium' : 'self';
-                drawWizardState = {
-                    ...getDrawWizardDefaultState(),
-                    mode,
-                    currentStep: 'mode'
-                };
-                drawWizardResumeState = null;
-                commitDrawWizardState();
-            });
-        });
-        document.querySelectorAll('[data-wizard-strength]').forEach(button => {
-            button.addEventListener('click', () => {
-                const strength = String(button.dataset.wizardStrength || '').trim();
-                if (!DRAW_WIZARD_STRENGTHS[strength]) {
-                    return;
-                }
-                drawWizardState.strength = strength;
-                commitDrawWizardState();
-            });
-        });
-        document.querySelectorAll('[data-wizard-category]').forEach(button => {
-            button.addEventListener('click', () => {
-                const categoryId = String(button.dataset.wizardCategory || '').trim();
-                if (!DRAW_WIZARD_CATEGORIES[categoryId]) {
-                    return;
-                }
-                const selected = new Set(drawWizardState.categories);
-                if (selected.has(categoryId)) {
-                    selected.delete(categoryId);
-                } else if (selected.size >= 3) {
-                    showActionPopup('카테고리는 최대 3개까지 선택할 수 있습니다.');
-                    return;
-                } else {
-                    selected.add(categoryId);
-                }
-                drawWizardState.categories = Array.from(selected);
-                const allowedDetailIds = new Set(getDrawWizardAllowedDetailIds(drawWizardState.categories));
-                drawWizardState.detailRuleIds = drawWizardState.detailRuleIds.filter(ruleId => allowedDetailIds.has(ruleId));
-                commitDrawWizardState();
-            });
-        });
+
         if (drawWizardDetailGroupsEl) {
             drawWizardDetailGroupsEl.addEventListener('click', event => {
-                const button = event.target.closest('[data-wizard-detail]');
-                if (!button) {
+                const button = event.target instanceof Element ? event.target.closest('[data-wizard-rule]') : null;
+                if (!button || !drawWizardState) {
                     return;
                 }
-                const ruleId = String(button.dataset.wizardDetail || '').trim();
+                const ruleId = String(button.dataset.wizardRule || '').trim();
                 if (!ruleId) {
                     return;
                 }
-                const next = new Set(drawWizardState.detailRuleIds);
+                const next = new Set(drawWizardState.selectedRuleIds);
                 if (next.has(ruleId)) {
                     next.delete(ruleId);
                 } else {
                     next.add(ruleId);
                 }
-                drawWizardState.detailRuleIds = Array.from(next);
+                drawWizardState.selectedRuleIds = Array.from(next);
                 commitDrawWizardState();
             });
         }
         if (excludeNumberGrid) {
             excludeNumberGrid.addEventListener('click', () => {
-                if (!drawWizardState || drawWizardState.mode !== 'self') {
+                if (!drawWizardState) {
                     return;
                 }
                 window.requestAnimationFrame(() => {
                     drawWizardState.excludeNumbers = Array.from(excludeNumberValues).sort((left, right) => left - right);
                     commitDrawWizardState({
-                        syncRules: false
+                        syncRules: true
                     });
                 });
             });
         }
-        document.querySelectorAll('[data-wizard-plan]').forEach(button => {
-            button.addEventListener('click', () => {
-                const plan = String(button.dataset.wizardPlan || '').trim().toLowerCase();
-                if (!DRAW_WIZARD_PLAN_META[plan]) {
-                    return;
-                }
-                drawWizardState.plan = plan;
-                commitDrawWizardState({
-                    syncRules: false
-                });
-            });
-        });
         if (drawWizardResumeBtn) {
             drawWizardResumeBtn.addEventListener('click', () => {
                 if (!drawWizardResumeState) {
                     return;
                 }
-                drawWizardState = {
-                    ...sanitizeDrawWizardState(drawWizardResumeState),
-                    currentStep: drawWizardResumeState.currentStep || 'review'
-                };
+                drawWizardState = sanitizeDrawWizardState(drawWizardResumeState);
                 drawWizardResumeState = null;
                 commitDrawWizardState();
             });
@@ -3952,23 +3699,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 runDrawWizardGeneration();
             });
         }
-        if (drawWizardRerunPremiumBtn) {
-            drawWizardRerunPremiumBtn.addEventListener('click', () => {
-                runDrawWizardGeneration();
-            });
-        }
         if (drawWizardEditBtn) {
             drawWizardEditBtn.addEventListener('click', () => {
                 drawWizardState.currentStep = 'review';
-                drawWizardState.completed = false;
-                commitDrawWizardState({
-                    syncRules: false
-                });
-            });
-        }
-        if (drawWizardEditPremiumBtn) {
-            drawWizardEditPremiumBtn.addEventListener('click', () => {
-                drawWizardState.currentStep = 'plan';
                 drawWizardState.completed = false;
                 commitDrawWizardState({
                     syncRules: false
@@ -7328,14 +7061,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateSelectionCount() {
-        if (!rulesSelectedCount || !rulesVisibleCount) {
-            return;
-        }
         const selectedCount = ruleInputs.filter(input => input.checked).length;
         const totalCount = ruleCards.length;
         const visibleCount = ruleCards.filter(card => isCardVisibleInPicker(card)).length;
-        rulesSelectedCount.textContent = `${selectedCount}개`;
-        rulesVisibleCount.textContent = `표시: ${visibleCount}/${totalCount}`;
+        if (rulesSelectedCount) {
+            rulesSelectedCount.textContent = `${selectedCount}개`;
+        }
+        if (rulesVisibleCount) {
+            rulesVisibleCount.textContent = `표시: ${visibleCount}/${totalCount}`;
+        }
         ruleCards.forEach(card => {
             const input = card.querySelector('.rule-input');
             card.classList.toggle('is-checked', input && input.checked);
@@ -7762,9 +7496,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateCombinedEstimates() {
-        if (!remainingCombosEl || !excludedCombosEl) {
-            return;
-        }
         const activeRules = getActiveRules();
         const remainingRatio = getEstimatedRemainingRatio(activeRules);
         const remainingCombos = Math.max(1, Math.round(TOTAL_COMBOS * remainingRatio));
@@ -7772,8 +7503,12 @@ document.addEventListener('DOMContentLoaded', () => {
         currentRemainingRatio = remainingRatio;
         currentRemainingCombos = remainingCombos;
         currentExcludedCombos = excludedCombos;
-        remainingCombosEl.textContent = `${formatNumber(remainingCombos)}개`;
-        excludedCombosEl.textContent = `제외: ${formatNumber(excludedCombos)}개`;
+        if (remainingCombosEl) {
+            remainingCombosEl.textContent = `${formatNumber(remainingCombos)}개`;
+        }
+        if (excludedCombosEl) {
+            excludedCombosEl.textContent = `제외: ${formatNumber(excludedCombos)}개`;
+        }
         if (remainingMeterFill) {
             const pct = Math.max(0, Math.min(100, Math.round(remainingRatio * 1000) / 10));
             remainingMeterFill.style.width = `${pct}%`;

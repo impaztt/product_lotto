@@ -17015,3 +17015,435 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
+
+/* Draw funnel reset */
+#tab-draw.draw-wizard-tab {
+    padding: clamp(16px, 2vw, 28px);
+    background:
+        radial-gradient(circle at top left, rgba(255, 220, 191, 0.65), transparent 28%),
+        radial-gradient(circle at top right, rgba(173, 216, 255, 0.5), transparent 22%),
+        linear-gradient(180deg, #f6f2ea 0%, #f8fbff 48%, #fffdf8 100%);
+    font-family: "IBM Plex Sans KR", "Noto Sans KR", sans-serif;
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-app {
+    min-height: calc(100vh - var(--site-header-height, 0px) - 28px);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-shell {
+    min-height: inherit;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 18px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-header,
+#tab-draw.draw-wizard-tab .draw-funnel-stage {
+    border: 1px solid rgba(20, 38, 64, 0.08);
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 26px 64px rgba(28, 56, 92, 0.12);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-header {
+    padding: clamp(20px, 2.5vw, 30px);
+    border-radius: 32px;
+    display: grid;
+    gap: 14px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-progress-row,
+#tab-draw.draw-wizard-tab .draw-funnel-step-head,
+#tab-draw.draw-wizard-tab .draw-funnel-nav,
+#tab-draw.draw-wizard-tab .draw-wizard-resume-actions,
+#tab-draw.draw-wizard-tab .draw-wizard-result-actions {
+    display: flex;
+    align-items: center;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-progress-row {
+    justify-content: space-between;
+    gap: 16px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-kicker,
+#tab-draw.draw-wizard-tab .draw-funnel-step-kicker,
+#tab-draw.draw-wizard-tab .draw-funnel-review-label,
+#tab-draw.draw-wizard-tab .draw-funnel-rule-meta {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5c6e82;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-progress {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 40px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: #13263d;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+#tab-draw.draw-wizard-tab #draw-wizard-screen-title,
+#tab-draw.draw-wizard-tab .draw-funnel-copy h3,
+#tab-draw.draw-wizard-tab #draw-wizard-result-title {
+    margin: 0;
+    color: #0d1d32;
+    line-height: 1.12;
+}
+
+#tab-draw.draw-wizard-tab #draw-wizard-screen-title {
+    font-size: clamp(28px, 3.6vw, 46px);
+    max-width: 980px;
+}
+
+#tab-draw.draw-wizard-tab #draw-wizard-screen-copy,
+#tab-draw.draw-wizard-tab .draw-funnel-copy p,
+#tab-draw.draw-wizard-tab .draw-funnel-inline-note,
+#tab-draw.draw-wizard-tab .draw-funnel-rule-card p,
+#tab-draw.draw-wizard-tab .draw-funnel-review-list,
+#tab-draw.draw-wizard-tab .draw-funnel-review-group span {
+    margin: 0;
+    color: #56697f;
+    line-height: 1.65;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-summary-box,
+#tab-draw.draw-wizard-tab .draw-funnel-intro-card,
+#tab-draw.draw-wizard-tab .draw-wizard-resume-card,
+#tab-draw.draw-wizard-tab .draw-funnel-rule-card,
+#tab-draw.draw-wizard-tab .draw-funnel-review-card,
+#tab-draw.draw-wizard-tab .draw-funnel-result-shell,
+#tab-draw.draw-wizard-tab .draw-funnel-exclude-shell {
+    border: 1px solid rgba(20, 38, 64, 0.08);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 18px 38px rgba(28, 56, 92, 0.08);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-summary-box {
+    padding: 18px 20px;
+    border-radius: 24px;
+    display: grid;
+    gap: 10px;
+}
+
+#tab-draw.draw-wizard-tab #draw-selection-summary {
+    font-size: 18px;
+    color: #10233a;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-selection-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 14px;
+    border-radius: 999px;
+    background: rgba(19, 38, 61, 0.08);
+    color: #15314f;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-chip.tone-exclude {
+    background: rgba(227, 76, 102, 0.14);
+    color: #9c1e40;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-chip.is-empty {
+    color: #72869c;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-stage {
+    min-height: 0;
+    border-radius: 32px;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    overflow: hidden;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel {
+    height: 100%;
+    padding: clamp(22px, 3vw, 34px);
+    overflow: auto;
+    display: grid;
+    align-content: start;
+    gap: 20px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-copy {
+    display: grid;
+    gap: 8px;
+    max-width: 860px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-copy h3,
+#tab-draw.draw-wizard-tab #draw-wizard-result-title {
+    font-size: clamp(24px, 3vw, 36px);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-intro-list,
+#tab-draw.draw-wizard-tab .draw-funnel-review-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-intro-card,
+#tab-draw.draw-wizard-tab .draw-funnel-review-card {
+    padding: 22px;
+    border-radius: 28px;
+    display: grid;
+    gap: 10px;
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-resume-card {
+    padding: 22px;
+    border-radius: 28px;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-resume-actions,
+#tab-draw.draw-wizard-tab .draw-wizard-result-actions {
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-step-head {
+    justify-content: space-between;
+    gap: 14px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-inline-note {
+    font-size: 14px;
+    color: #36516a;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-card {
+    width: 100%;
+    min-height: 0;
+    padding: 20px;
+    border-radius: 28px;
+    display: grid;
+    gap: 10px;
+    text-align: left;
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-card:hover {
+    transform: translateY(-2px);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-selected {
+    border-color: rgba(233, 93, 53, 0.5);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 241, 233, 0.94));
+    box-shadow: 0 22px 40px rgba(233, 93, 53, 0.12);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-card strong,
+#tab-draw.draw-wizard-tab .draw-funnel-review-card strong,
+#tab-draw.draw-wizard-tab .draw-funnel-intro-card strong {
+    color: #0f2137;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-samples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-ball {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-ball.range-1 { background: #fbc400; }
+#tab-draw.draw-wizard-tab .draw-funnel-rule-ball.range-2 { background: #69c8f2; }
+#tab-draw.draw-wizard-tab .draw-funnel-rule-ball.range-3 { background: #ff7272; }
+#tab-draw.draw-wizard-tab .draw-funnel-rule-ball.range-4 { background: #aaaaaa; }
+#tab-draw.draw-wizard-tab .draw-funnel-rule-ball.range-5 { background: #b0d840; }
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-state {
+    font-size: 12px;
+    font-weight: 700;
+    color: #38546d;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-exclude-shell,
+#tab-draw.draw-wizard-tab .draw-funnel-result-shell {
+    padding: 22px;
+    border-radius: 28px;
+    display: grid;
+    gap: 16px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-exclude-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-exclude-card {
+    margin: 0;
+    padding: 18px;
+    border-radius: 24px;
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-exclude-card .rule-control {
+    display: grid;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-exclude-card .exclude-number-ball {
+    min-height: 44px;
+    border-radius: 14px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-card--warning {
+    background: linear-gradient(180deg, rgba(255, 248, 231, 0.96), rgba(255, 255, 255, 0.92));
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-row,
+#tab-draw.draw-wizard-tab .draw-funnel-review-group {
+    display: grid;
+    gap: 4px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(20, 38, 64, 0.08);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-row:last-child,
+#tab-draw.draw-wizard-tab .draw-funnel-review-group:last-child {
+    border-bottom: 0;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-empty-state {
+    padding: 18px 20px;
+    border-radius: 20px;
+    background: rgba(19, 38, 61, 0.05);
+    color: #6e8095;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-nav {
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 24px;
+    border-top: 1px solid rgba(20, 38, 64, 0.08);
+    background: rgba(255, 255, 255, 0.94);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-nav-copy {
+    min-width: 0;
+    display: grid;
+    gap: 4px;
+    text-align: center;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-nav-copy strong {
+    color: #0d1d32;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-nav-copy span {
+    color: #62758a;
+    font-size: 13px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-nav .ghost,
+#tab-draw.draw-wizard-tab .draw-funnel-nav .cta,
+#tab-draw.draw-wizard-tab .draw-wizard-result-actions .ghost,
+#tab-draw.draw-wizard-tab .draw-wizard-result-actions .cta,
+#tab-draw.draw-wizard-tab .draw-wizard-resume-actions .ghost,
+#tab-draw.draw-wizard-tab .draw-wizard-resume-actions .cta {
+    min-height: 46px;
+    padding: 0 18px;
+    border-radius: 999px;
+}
+
+@media (max-width: 1100px) {
+    #tab-draw.draw-wizard-tab .draw-funnel-intro-list {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-rule-grid,
+    #tab-draw.draw-wizard-tab .draw-funnel-review-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    #tab-draw.draw-wizard-tab {
+        padding: 12px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-header,
+    #tab-draw.draw-wizard-tab .draw-funnel-stage {
+        border-radius: 24px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-panel,
+    #tab-draw.draw-wizard-tab .draw-funnel-header {
+        padding: 18px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-progress-row,
+    #tab-draw.draw-wizard-tab .draw-funnel-exclude-head,
+    #tab-draw.draw-wizard-tab .draw-wizard-resume-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-nav {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-nav-copy {
+        text-align: left;
+    }
+}
+
+@media (max-width: 560px) {
+    #tab-draw.draw-wizard-tab #draw-wizard-screen-title {
+        font-size: 30px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-copy h3,
+    #tab-draw.draw-wizard-tab #draw-wizard-result-title {
+        font-size: 26px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-wizard-exclude-card .rule-control {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
