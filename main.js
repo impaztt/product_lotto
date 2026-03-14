@@ -542,6 +542,16 @@ document.addEventListener('DOMContentLoaded', () => {
             desc: '짝수가 더 많은 조합 제외'
         }
     };
+    const DRAW_WIZARD_STATIC_GROUP_RULES = {
+        '홀짝 비율': [
+            { id: 'all_odd', title: '6개 모두 홀수', desc: '홀수만 6개로 구성된 조합 제외' },
+            { id: 'all_even', title: '6개 모두 짝수', desc: '짝수만 6개로 구성된 조합 제외' },
+            { id: 'five_odd_one_even', title: '5개 홀수 + 1개 짝수', desc: '홀수 편중 조합 제외' },
+            { id: 'five_even_one_odd', title: '5개 짝수 + 1개 홀수', desc: '짝수 편중 조합 제외' },
+            { id: 'four_odd_two_even', title: '4개 홀수 + 2개 짝수', desc: '홀수가 더 많은 조합 제외' },
+            { id: 'four_even_two_odd', title: '4개 짝수 + 2개 홀수', desc: '짝수가 더 많은 조합 제외' }
+        ]
+    };
     let drawWizardState = null;
     let drawWizardResumeState = null;
     let drawWizardLastViewKey = '';
@@ -3023,7 +3033,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: `${groupLabel} 제외하기`,
                 copy: '이 단계에서 제외하고 싶은 패턴을 고른 뒤 다음으로 넘어가면 됩니다.'
             };
-            const rules = Array.from(groupEl.querySelectorAll('.rule-card')).map(card => {
+            const staticRules = Array.isArray(DRAW_WIZARD_STATIC_GROUP_RULES[groupLabel])
+                ? DRAW_WIZARD_STATIC_GROUP_RULES[groupLabel].map(rule => ({
+                    id: String(rule.id || '').trim(),
+                    title: String(rule.title || rule.id || '').trim(),
+                    desc: String(rule.desc || '').trim(),
+                    detail: String(RULE_DETAILS[rule.id] || '').trim()
+                })).filter(rule => rule.id)
+                : null;
+            const domRules = Array.from(groupEl.querySelectorAll('.rule-card')).map(card => {
                 const input = card.querySelector('.rule-input');
                 if (!input) {
                     return null;
@@ -3049,6 +3067,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     detail: String(RULE_DETAILS[id] || '').trim()
                 };
             }).filter(Boolean);
+            const rules = staticRules && staticRules.length ? staticRules : domRules;
             return rules.length ? {
                 key: `wizard-group-${index + 1}`,
                 stepNumber: index + 1,

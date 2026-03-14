@@ -17418,6 +17418,11 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     grid-auto-rows: minmax(0, 1fr);
     gap: 12px;
     min-height: 0;
+    overflow: auto;
+    align-content: start;
+    padding-right: 2px;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card {
