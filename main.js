@@ -456,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const DRAW_WIZARD_RULE_GROUP_INFO = {
         '홀짝 비율': {
             title: '홀짝 비율 제외하기',
-            copy: '6개 모두 홀수, 6개 모두 짝수처럼 제외하고 싶은 홀짝 패턴을 선택하세요.'
+            copy: '기존 규칙라이브러리의 홀짝 비율 6개 패턴을 그대로 가져왔습니다. 제외할 패턴을 선택하세요.'
         },
         '배수 분포': {
             title: '배수 패턴 제외하기',
@@ -514,6 +514,32 @@ document.addEventListener('DOMContentLoaded', () => {
             copy: '같은 조건으로 다시 추첨하거나 이전 단계로 돌아가 선택을 바꿀 수 있습니다.',
             navTitle: '결과 확인',
             navNote: '복사 또는 다시 추첨으로 바로 이어갈 수 있습니다.'
+        }
+    };
+    const DRAW_WIZARD_RULE_OVERRIDES = {
+        all_odd: {
+            title: '6개 모두 홀수',
+            desc: '홀수만 6개로 구성된 조합 제외'
+        },
+        all_even: {
+            title: '6개 모두 짝수',
+            desc: '짝수만 6개로 구성된 조합 제외'
+        },
+        five_odd_one_even: {
+            title: '5개 홀수 + 1개 짝수',
+            desc: '홀수 편중 조합 제외'
+        },
+        five_even_one_odd: {
+            title: '5개 짝수 + 1개 홀수',
+            desc: '짝수 편중 조합 제외'
+        },
+        four_odd_two_even: {
+            title: '4개 홀수 + 2개 짝수',
+            desc: '홀수가 더 많은 조합 제외'
+        },
+        four_even_two_odd: {
+            title: '4개 짝수 + 2개 홀수',
+            desc: '짝수가 더 많은 조합 제외'
         }
     };
     let drawWizardState = null;
@@ -3006,10 +3032,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!id) {
                     return null;
                 }
+                const override = DRAW_WIZARD_RULE_OVERRIDES[id] || null;
                 return {
                     id,
-                    title: String(card.dataset.title || card.querySelector('.rule-title')?.textContent || id).trim(),
-                    desc: String(card.querySelector('.rule-desc')?.textContent || '').trim(),
+                    title: String(
+                        override?.title
+                        || card.dataset.title
+                        || card.querySelector('.rule-title')?.textContent
+                        || id
+                    ).trim(),
+                    desc: String(
+                        override?.desc
+                        || card.querySelector('.rule-desc')?.textContent
+                        || ''
+                    ).trim(),
                     detail: String(RULE_DETAILS[id] || '').trim()
                 };
             }).filter(Boolean);
@@ -3378,7 +3414,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         drawWizardDetailGroupsEl.innerHTML = currentRuleStep.rules.map(rule => {
             const active = selectedIds.has(rule.id);
-            const description = rule.detail || rule.desc || '선택 시 이 패턴을 제외합니다.';
+            const description = rule.desc || rule.detail || '선택 시 이 패턴을 제외합니다.';
             return `
                 <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}" type="button" data-wizard-rule="${escapeHtml(rule.id)}" aria-pressed="${String(active)}">
                     <strong>${escapeHtml(rule.title)}</strong>
