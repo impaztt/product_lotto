@@ -3521,6 +3521,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (drawWizardProgressCountEl) {
             drawWizardProgressCountEl.textContent = progressInfo.count;
         }
+        if (drawTabPanel) {
+            drawTabPanel.classList.toggle('is-draw-intro-view', currentStep === 'start');
+        }
         if (drawWizardScreenTitleEl) {
             drawWizardScreenTitleEl.textContent = viewMeta.title;
         }
