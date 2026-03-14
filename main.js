@@ -3509,6 +3509,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const active = panel.dataset.drawWizardStep === currentStep;
             panel.hidden = !active;
             panel.classList.toggle('is-active', active);
+            panel.setAttribute('aria-hidden', String(!active));
+            panel.style.display = active ? 'grid' : 'none';
         });
         if (drawWizardProgressLabelEl) {
             drawWizardProgressLabelEl.textContent = progressInfo.label;
