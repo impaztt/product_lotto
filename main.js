@@ -3128,9 +3128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
         return Boolean(
-            state.currentStep !== 'start'
-            || Number(state.currentGroupIndex || 0) > 0
-            || (Array.isArray(state.selectedRuleIds) && state.selectedRuleIds.length)
+            (Array.isArray(state.selectedRuleIds) && state.selectedRuleIds.length)
             || (Array.isArray(state.excludeNumbers) && state.excludeNumbers.length)
         );
     }
@@ -3143,7 +3141,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const parsed = JSON.parse(raw);
             const sanitized = sanitizeDrawWizardState(parsed);
-            return hasMeaningfulDrawWizardState(sanitized) ? sanitized : null;
+            if (hasMeaningfulDrawWizardState(sanitized)) {
+                return sanitized;
+            }
+            localStorage.removeItem(DRAW_WIZARD_DRAFT_KEY);
+            return null;
         } catch (error) {
             console.warn('추첨 위저드 초안 복원 실패', error);
             localStorage.removeItem(DRAW_WIZARD_DRAFT_KEY);
@@ -3156,6 +3158,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         try {
+            if (!hasMeaningfulDrawWizardState(drawWizardState)) {
+                localStorage.removeItem(DRAW_WIZARD_DRAFT_KEY);
+                return;
+            }
             localStorage.setItem(DRAW_WIZARD_DRAFT_KEY, JSON.stringify({
                 ...drawWizardState,
                 currentStep: drawWizardState.currentStep === 'result' ? 'review' : drawWizardState.currentStep,
