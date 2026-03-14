@@ -3133,22 +3133,54 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     }
 
-    function loadDrawWizardDraft() {
+    function getDrawWizardDraftStorageKey(user = currentUser) {
+        const uid = user && typeof user.uid === 'string' ? user.uid.trim() : '';
+        return uid ? `${DRAW_WIZARD_DRAFT_KEY}:${uid}` : '';
+    }
+
+    function clearLegacyDrawWizardDraft() {
         try {
-            const raw = localStorage.getItem(DRAW_WIZARD_DRAFT_KEY);
+            localStorage.removeItem(DRAW_WIZARD_DRAFT_KEY);
+        } catch (error) {
+            console.warn('추첨 위저드 레거시 초안 삭제 실패', error);
+        }
+    }
+
+    function loadDrawWizardDraft() {
+        if (!isMember()) {
+            clearLegacyDrawWizardDraft();
+            return null;
+        }
+        try {
+            const storageKey = getDrawWizardDraftStorageKey();
+            if (!storageKey) {
+                clearLegacyDrawWizardDraft();
+                return null;
+            }
+            const raw = localStorage.getItem(storageKey) || localStorage.getItem(DRAW_WIZARD_DRAFT_KEY);
             if (!raw) {
                 return null;
             }
             const parsed = JSON.parse(raw);
             const sanitized = sanitizeDrawWizardState(parsed);
             if (hasMeaningfulDrawWizardState(sanitized)) {
+                localStorage.setItem(storageKey, JSON.stringify({
+                    ...sanitized,
+                    updatedAt: Date.now()
+                }));
+                clearLegacyDrawWizardDraft();
                 return sanitized;
             }
-            localStorage.removeItem(DRAW_WIZARD_DRAFT_KEY);
+            localStorage.removeItem(storageKey);
+            clearLegacyDrawWizardDraft();
             return null;
         } catch (error) {
             console.warn('추첨 위저드 초안 복원 실패', error);
-            localStorage.removeItem(DRAW_WIZARD_DRAFT_KEY);
+            const storageKey = getDrawWizardDraftStorageKey();
+            if (storageKey) {
+                localStorage.removeItem(storageKey);
+            }
+            clearLegacyDrawWizardDraft();
             return null;
         }
     }
@@ -3158,11 +3190,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         try {
-            if (!hasMeaningfulDrawWizardState(drawWizardState)) {
-                localStorage.removeItem(DRAW_WIZARD_DRAFT_KEY);
+            clearLegacyDrawWizardDraft();
+            const storageKey = getDrawWizardDraftStorageKey();
+            if (!storageKey) {
                 return;
             }
-            localStorage.setItem(DRAW_WIZARD_DRAFT_KEY, JSON.stringify({
+            if (!hasMeaningfulDrawWizardState(drawWizardState)) {
+                localStorage.removeItem(storageKey);
+                return;
+            }
+            localStorage.setItem(storageKey, JSON.stringify({
                 ...drawWizardState,
                 currentStep: drawWizardState.currentStep === 'result' ? 'review' : drawWizardState.currentStep,
                 updatedAt: Date.now()
@@ -3174,10 +3211,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function clearDrawWizardDraft() {
         try {
-            localStorage.removeItem(DRAW_WIZARD_DRAFT_KEY);
+            const storageKey = getDrawWizardDraftStorageKey();
+            if (storageKey) {
+                localStorage.removeItem(storageKey);
+            }
+            clearLegacyDrawWizardDraft();
         } catch (error) {
             console.warn('추첨 위저드 초안 삭제 실패', error);
         }
+    }
+
+    function syncDrawWizardResumeStateFromAuth() {
+        if (!drawWizardState) {
+            return;
+        }
+        if (!isMember()) {
+            drawWizardResumeState = null;
+            if (getDrawWizardCurrentStep() === 'start') {
+                renderDrawWizard();
+            }
+            return;
+        }
+        if (getDrawWizardCurrentStep() !== 'start' || hasMeaningfulDrawWizardState(drawWizardState)) {
+            return;
+        }
+        const draft = loadDrawWizardDraft();
+        drawWizardResumeState = draft ? { ...draft } : null;
+        renderDrawWizard();
     }
 
     function getDrawWizardCurrentStep() {
@@ -4756,6 +4816,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         updateAuthUi();
+        syncDrawWizardResumeStateFromAuth();
         refreshGuestLimitMessage();
         loadMypageDrawHistory(true);
         if (currentWeeklyData) {
