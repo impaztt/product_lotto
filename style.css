@@ -6814,7 +6814,7 @@ body[data-theme="dark"] #tab-draw .draw-selection-dock-chip {
     z-index: 10005;
     display: grid;
     justify-items: end;
-    gap: 12px;
+    gap: 8px;
     pointer-events: none;
 }
 
@@ -7069,59 +7069,76 @@ body[data-theme="dark"] #tab-draw .draw-selection-dock-chip {
 .help-chat-fab {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    min-height: 64px;
+    gap: 9px;
+    min-height: 44px;
     border: 0;
     border-radius: 999px;
-    padding: 10px 18px 10px 12px;
+    padding: 7px 14px 7px 9px;
     background: linear-gradient(135deg, #fee500, #ffd43b);
     color: #111827;
-    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.22);
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.2);
     cursor: grab;
     touch-action: none;
+    position: relative;
 }
 
 .help-chat-fab:hover {
     transform: translateY(-1px);
-    box-shadow: 0 22px 40px rgba(15, 23, 42, 0.24);
+    box-shadow: 0 18px 32px rgba(15, 23, 42, 0.22);
 }
 
 .help-chat-fab-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 16px;
+    width: 30px;
+    height: 30px;
+    border-radius: 12px;
     background: rgba(17, 24, 39, 0.1);
     display: inline-flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 3px;
 }
 
 .help-chat-fab-icon span {
     display: block;
-    width: 18px;
-    height: 3px;
+    width: 13px;
+    height: 2px;
     border-radius: 999px;
     background: #111827;
 }
 
 .help-chat-fab-copy {
     display: grid;
-    gap: 2px;
+    gap: 0;
     text-align: left;
+    line-height: 1.08;
 }
 
 .help-chat-fab-copy strong {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 900;
     letter-spacing: -0.03em;
 }
 
 .help-chat-fab-copy small {
-    font-size: 12px;
+    font-size: 9px;
     font-weight: 700;
     color: rgba(17, 24, 39, 0.74);
+}
+
+.help-chat-fab-move {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    min-height: 20px;
+    padding: 0 8px;
+    border-radius: 999px;
+    background: rgba(17, 24, 39, 0.1);
+    color: rgba(17, 24, 39, 0.8);
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
 }
 
 .help-chat-typing {
@@ -7225,10 +7242,15 @@ body[data-theme="dark"] .help-chat-form input {
     }
 
     .help-chat-fab {
-        padding-right: 14px;
+        padding-right: 10px;
     }
 
     .help-chat-fab-copy small {
+        display: block;
+        font-size: 8px;
+    }
+
+    .help-chat-fab-move {
         display: none;
     }
 
@@ -17169,18 +17191,18 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-stage.has-dashboard {
-    grid-template-rows: minmax(164px, 24%) minmax(0, 1fr) auto;
+    grid-template-rows: minmax(106px, 13%) minmax(0, 1fr) auto;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard {
     min-height: 0;
-    padding: 18px 22px 14px;
+    padding: 10px 14px 9px;
     display: grid;
-    gap: 12px;
+    gap: 8px;
     border-bottom: 1px solid rgba(19, 38, 61, 0.08);
     background:
-        radial-gradient(circle at top right, rgba(236, 159, 51, 0.16), transparent 32%),
-        linear-gradient(180deg, rgba(21, 39, 61, 0.04), rgba(21, 39, 61, 0));
+        radial-gradient(circle at top right, rgba(236, 159, 51, 0.14), transparent 34%),
+        linear-gradient(180deg, rgba(21, 39, 61, 0.03), rgba(21, 39, 61, 0));
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard[hidden] {
@@ -17189,12 +17211,19 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-head {
     display: grid;
-    gap: 6px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
     min-width: 0;
 }
 
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard-step,
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard-label {
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-copy {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-step {
     font-size: 10px;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -17210,76 +17239,218 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     border: 1px solid rgba(19, 38, 61, 0.08);
 }
 
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard-head strong {
-    font-size: clamp(18px, 2vw, 24px);
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-copy strong {
+    font-size: clamp(16px, 1.8vw, 20px);
     line-height: 1.1;
+    color: #13263d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-copy p {
+    margin: 0;
+    color: rgba(19, 38, 61, 0.72);
+    font-size: 11px;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip {
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 18px;
+    display: grid;
+    gap: 2px;
+    justify-items: end;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(19, 38, 61, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip span,
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-copy p {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: rgba(19, 38, 61, 0.62);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip strong {
+    font-size: 15px;
+    line-height: 1;
+    letter-spacing: -0.03em;
     color: #13263d;
 }
 
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard-head p,
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard-card p {
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip p {
     margin: 0;
-    color: rgba(19, 38, 61, 0.72);
-    font-size: 12px;
-    line-height: 1.45;
+    font-size: 10px;
+    line-height: 1.1;
+    color: rgba(19, 38, 61, 0.6);
 }
 
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard-metrics {
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-visuals {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
+    gap: 8px;
     min-width: 0;
 }
 
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard-card {
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat {
     min-width: 0;
-    padding: 12px 14px;
-    border-radius: 20px;
+    padding: 9px 10px;
+    border-radius: 18px;
     display: grid;
-    gap: 6px;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
     background: rgba(255, 255, 255, 0.78);
     border: 1px solid rgba(19, 38, 61, 0.08);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard-card strong {
-    font-size: clamp(16px, 1.75vw, 22px);
-    line-height: 1.05;
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-copy {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-copy strong {
+    font-size: 14px;
+    line-height: 1;
     letter-spacing: -0.03em;
     color: #13263d;
-    word-break: keep-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-copy p {
+    margin: 0;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-gauge {
+    --draw-dashboard-gauge-angle: 0deg;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: conic-gradient(#ec9f33 var(--draw-dashboard-gauge-angle), rgba(19, 38, 61, 0.1) 0deg);
+    position: relative;
+    box-shadow: inset 0 0 0 1px rgba(19, 38, 61, 0.04);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-gauge::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border-radius: 50%;
+    background: #f9fbfd;
+    box-shadow: inset 0 0 0 1px rgba(19, 38, 61, 0.06);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-meter {
+    width: 40px;
+    height: 8px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(19, 38, 61, 0.1);
+    box-shadow: inset 0 1px 2px rgba(19, 38, 61, 0.08);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-meter span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #13263d 0%, #2d5b8a 54%, #ec9f33 100%);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-selection-visual {
+    width: 42px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-selection-visual span {
+    height: 9px;
+    border-radius: 999px;
+    background: rgba(19, 38, 61, 0.1);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-selection-visual span.is-active {
+    background: #13263d;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-selection-visual span.is-active.is-exclude {
+    background: #ec9f33;
 }
 
 @media (max-width: 768px) {
     #tab-draw.draw-wizard-tab .draw-funnel-stage.has-dashboard {
-        grid-template-rows: minmax(184px, 27%) minmax(0, 1fr) auto;
+        grid-template-rows: minmax(112px, 15%) minmax(0, 1fr) auto;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard {
-        padding: 16px 16px 12px;
-        gap: 10px;
+        padding: 10px 12px 8px;
+        gap: 7px;
     }
 
-    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-head strong {
-        font-size: 18px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-head p,
-    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-card p {
-        font-size: 11px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-metrics {
-        gap: 8px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-card {
-        padding: 10px 11px;
-        border-radius: 18px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-card strong {
+    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-copy strong {
         font-size: 15px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-copy p,
+    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip p {
+        display: none;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip {
+        padding: 7px 9px;
+        border-radius: 16px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip strong {
+        font-size: 13px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-visuals {
+        gap: 6px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat {
+        padding: 8px 8px;
+        gap: 6px;
+        border-radius: 16px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-copy strong {
+        font-size: 12px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-copy p {
+        font-size: 9px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-gauge {
+        width: 28px;
+        height: 28px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-gauge::after {
+        inset: 4px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-meter,
+    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-selection-visual {
+        width: 32px;
     }
 }
 
@@ -17573,20 +17744,21 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     min-height: 100%;
     display: grid;
     grid-template-rows: auto auto auto minmax(0, 1fr);
-    gap: 14px;
+    gap: 10px;
     overflow: hidden;
+    position: relative;
 }
 
 #tab-draw.draw-wizard-tab .draw-screen-step-head {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 12px;
 }
 
 #tab-draw.draw-wizard-tab .draw-screen-step-copy {
     display: grid;
-    gap: 10px;
+    gap: 6px;
 }
 
 #tab-draw.draw-wizard-tab .draw-screen-step-copy h3,
@@ -17598,7 +17770,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-screen-step-copy h3 {
-    font-size: clamp(30px, 4vw, 44px);
+    font-size: clamp(24px, 3.2vw, 32px);
 }
 
 #tab-draw.draw-wizard-tab .draw-screen-step-progress {
@@ -17635,9 +17807,17 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-inline-note {
-    font-size: 14px;
+    font-size: 13px;
     color: #2c4963;
     font-weight: 600;
+}
+
+#tab-draw.draw-wizard-tab .draw-screen-step-note {
+    font-size: 13px;
+    line-height: 1.45;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-grid {
@@ -17650,8 +17830,79 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     overflow: auto;
     align-content: start;
     padding-right: 2px;
+    padding-bottom: 54px;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-scroll-guide {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(15, 34, 56, 0.92);
+    color: #ffffff;
+    box-shadow: 0 16px 32px rgba(19, 38, 61, 0.24);
+    transform: translate(-50%, 12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms ease, transform 220ms ease;
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-scroll-guide.is-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-scroll-guide-label {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-scroll-guide-orb {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ffd43b;
+    box-shadow: 0 0 0 0 rgba(255, 212, 59, 0.5);
+    animation: draw-wizard-scroll-pulse 1.8s ease-out infinite;
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-scroll-guide-arrow {
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    transform: rotate(45deg);
+    animation: draw-wizard-scroll-bounce 1.2s ease-in-out infinite;
+}
+
+@keyframes draw-wizard-scroll-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 212, 59, 0.45);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 212, 59, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 212, 59, 0);
+    }
+}
+
+@keyframes draw-wizard-scroll-bounce {
+    0%, 100% {
+        transform: rotate(45deg) translate(0, 0);
+    }
+    50% {
+        transform: rotate(45deg) translate(3px, 3px);
+    }
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card {

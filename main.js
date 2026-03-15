@@ -165,10 +165,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawWizardDashboardCopyEl = document.getElementById('draw-wizard-dashboard-copy');
     const drawWizardDashboardOddsEl = document.getElementById('draw-wizard-dashboard-odds');
     const drawWizardDashboardOddsNoteEl = document.getElementById('draw-wizard-dashboard-odds-note');
+    const drawWizardDashboardGaugeEl = document.getElementById('draw-wizard-dashboard-gauge');
     const drawWizardDashboardImpactEl = document.getElementById('draw-wizard-dashboard-impact');
     const drawWizardDashboardImpactNoteEl = document.getElementById('draw-wizard-dashboard-impact-note');
+    const drawWizardDashboardMeterFillEl = document.getElementById('draw-wizard-dashboard-meter-fill');
     const drawWizardDashboardSelectionEl = document.getElementById('draw-wizard-dashboard-selection');
     const drawWizardDashboardSelectionNoteEl = document.getElementById('draw-wizard-dashboard-selection-note');
+    const drawWizardDashboardSelectionVisualEl = document.getElementById('draw-wizard-dashboard-selection-visual');
+    const drawWizardDashboardVisualLabelEl = document.getElementById('draw-wizard-dashboard-visual-label');
+    const drawWizardDashboardVisualNoteEl = document.getElementById('draw-wizard-dashboard-visual-note');
     const drawWizardScreenTitleEl = document.getElementById('draw-wizard-screen-title');
     const drawWizardScreenCopyEl = document.getElementById('draw-wizard-screen-copy');
     const drawWizardSelectionChipsEl = document.getElementById('draw-wizard-selection-chips');
@@ -191,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawWizardResumeNoteEl = document.getElementById('draw-wizard-resume-note');
     const drawWizardDetailGroupsEl = document.getElementById('draw-wizard-detail-groups');
     const drawWizardDetailNoteEl = document.getElementById('draw-wizard-detail-note');
+    const drawWizardScrollGuideEl = document.getElementById('draw-wizard-scroll-guide');
     const drawWizardExcludeSummaryEl = document.getElementById('draw-wizard-exclude-summary');
     const drawWizardReviewSummaryEl = document.getElementById('draw-wizard-review-summary');
     const drawWizardReviewGroupsEl = document.getElementById('draw-wizard-review-groups');
@@ -451,12 +457,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let helpChatDragState = null;
     let helpChatCustomPosition = null;
     let helpChatSuppressFabClickUntil = 0;
+    let drawWizardScrollGuideTimer = 0;
+    let drawWizardScrollGuideRafId = 0;
     const DRAW_ENTRY_LOCAL_KEY = 'lotto_guest_tracking_id';
     const GENERATION_STATS_KEY = 'lotto_generation_stats';
     const RULES_UPDATED_AT_KEY = 'lotto_rules_updated_at';
     const CUSTOM_PRESET_UPDATED_AT_KEY = 'lotto_custom_preset_updated_at';
     const DRAW_WIZARD_DRAFT_KEY = 'lotto_draw_wizard_draft';
     const DRAW_WIZARD_RESUME_ENABLED = false;
+    const DRAW_WIZARD_SCROLL_HINT_KEY = 'lotto_draw_scroll_hint_seen_v1';
     const HELP_CHAT_POSITION_KEY = 'lotto_help_chat_position_v1';
     const ONBOARDING_SKIP_TODAY_KEY = 'lotto_onboarding_skip_today';
     const GOOGLE_REDIRECT_STATE_KEY = 'lotto_google_redirect_state';
@@ -472,34 +481,35 @@ document.addEventListener('DOMContentLoaded', () => {
         qr: 'QR은 어떻게 써?'
     };
     let googleRedirectFlowPending = readGoogleRedirectPendingState();
+    let drawWizardScrollHintSeen = readDrawWizardScrollHintSeen();
     const DRAW_WIZARD_RULE_GROUP_INFO = {
         '홀짝 비율': {
             title: '홀짝 비율 제외하기',
-            copy: '기존 규칙라이브러리의 홀짝 비율 6개 패턴을 그대로 가져왔습니다. 제외할 패턴을 선택하세요.'
+            copy: '빼고 싶은 홀짝 패턴만 눌러보세요.'
         },
         '배수 분포': {
             title: '배수 패턴 제외하기',
-            copy: '2의 배수, 3의 배수처럼 규칙적인 배수 패턴을 제외할 수 있습니다.'
+            copy: '빼고 싶은 배수 패턴만 고르면 됩니다.'
         },
         '연속/반복': {
             title: '연속수 패턴 제외하기',
-            copy: '연속수나 반복 패턴이 강한 조합을 여기서 제외합니다.'
+            copy: '연속수나 반복 패턴만 간단히 덜어내세요.'
         },
         '끝자리 분포': {
             title: '끝자리 패턴 제외하기',
-            copy: '끝자리가 겹치거나 특정 끝자리가 몰린 패턴을 제외합니다.'
+            copy: '끝자리 몰림 패턴만 골라서 제외하세요.'
         },
         '구간 분포': {
             title: '구간 분포 제외하기',
-            copy: '한 구간에 몰린 조합이나 범위가 너무 좁은 조합을 제외합니다.'
+            copy: '특정 구간에 몰린 조합만 정리해 보세요.'
         },
         '구간 세분': {
             title: '세부 구간 제외하기',
-            copy: '저구간, 중간구간, 고구간 중 과하게 몰린 패턴을 제외합니다.'
+            copy: '저중고 구간 쏠림만 빠르게 걸러내세요.'
         },
         '합계/소수': {
             title: '합계와 소수 제외하기',
-            copy: '합계가 너무 낮거나 높은 경우와 소수 편중 패턴을 제외합니다.'
+            copy: '합계와 소수 쏠림만 마지막으로 조정하세요.'
         }
     };
     const DRAW_WIZARD_STEP_META = {
@@ -3575,8 +3585,8 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }).join('');
         drawWizardDetailNoteEl.textContent = selectedCount
-            ? `${currentRuleStep.kicker}에서 ${selectedCount}개 선택됨`
-            : '이 단계에서 아직 선택된 규칙이 없습니다.';
+            ? `현재 그룹에서 ${selectedCount}개 선택됨`
+            : '현재 그룹 선택 없음';
     }
 
     function renderDrawWizardReview() {
@@ -3609,6 +3619,105 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function formatDrawWizardOddsLabel(value) {
         return `1 / ${formatNumber(Math.max(1, Math.round(Number(value) || 1)))}`;
+    }
+
+    function formatDrawWizardCompactOddsLabel(value) {
+        return `1 / ${formatCompactOddsValue(Math.max(1, Math.round(Number(value) || 1)))}`;
+    }
+
+    function formatDrawWizardCompactCount(value) {
+        const safeValue = Math.max(0, Math.round(Number(value) || 0));
+        const formatUnit = (divisor, suffix) => {
+            const compact = safeValue / divisor;
+            const fractionDigits = compact >= 100 ? 0 : 1;
+            return `${Number(compact.toFixed(fractionDigits)).toLocaleString('ko-KR', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: fractionDigits
+            })}${suffix}`;
+        };
+        if (safeValue >= 100000000) {
+            return `${formatUnit(100000000, '억')}개`;
+        }
+        if (safeValue >= 10000) {
+            return `${formatUnit(10000, '만')}개`;
+        }
+        return `${formatNumber(safeValue)}개`;
+    }
+
+    function readDrawWizardScrollHintSeen() {
+        try {
+            return localStorage.getItem(DRAW_WIZARD_SCROLL_HINT_KEY) === '1';
+        } catch (error) {
+            console.warn('추첨 스크롤 가이드 상태 조회 실패', error);
+            return false;
+        }
+    }
+
+    function rememberDrawWizardScrollHintSeen() {
+        drawWizardScrollHintSeen = true;
+        try {
+            localStorage.setItem(DRAW_WIZARD_SCROLL_HINT_KEY, '1');
+        } catch (error) {
+            console.warn('추첨 스크롤 가이드 상태 저장 실패', error);
+        }
+    }
+
+    function setDrawWizardScrollGuideVisible(visible) {
+        if (!drawWizardScrollGuideEl) {
+            return;
+        }
+        if (drawWizardScrollGuideTimer) {
+            window.clearTimeout(drawWizardScrollGuideTimer);
+            drawWizardScrollGuideTimer = 0;
+        }
+        drawWizardScrollGuideEl.hidden = !visible;
+        drawWizardScrollGuideEl.classList.toggle('is-visible', Boolean(visible));
+    }
+
+    function hideDrawWizardScrollGuide(options = {}) {
+        const { persist = false } = options;
+        if (persist && !drawWizardScrollHintSeen) {
+            rememberDrawWizardScrollHintSeen();
+        }
+        setDrawWizardScrollGuideVisible(false);
+    }
+
+    function syncDrawWizardScrollGuide(stepKey = getDrawWizardCurrentStep()) {
+        if (drawWizardScrollGuideRafId) {
+            window.cancelAnimationFrame(drawWizardScrollGuideRafId);
+            drawWizardScrollGuideRafId = 0;
+        }
+        if (!drawWizardScrollGuideEl || !drawWizardDetailGroupsEl) {
+            return;
+        }
+        if (stepKey !== 'rules' || drawWizardScrollHintSeen || Number(drawWizardState?.currentGroupIndex || 0) !== 0) {
+            hideDrawWizardScrollGuide();
+            return;
+        }
+        drawWizardScrollGuideRafId = window.requestAnimationFrame(() => {
+            drawWizardScrollGuideRafId = 0;
+            const canScroll = drawWizardDetailGroupsEl.scrollHeight - drawWizardDetailGroupsEl.clientHeight > 24;
+            if (!canScroll || drawWizardDetailGroupsEl.scrollTop > 8) {
+                hideDrawWizardScrollGuide();
+                return;
+            }
+            rememberDrawWizardScrollHintSeen();
+            setDrawWizardScrollGuideVisible(true);
+            drawWizardScrollGuideTimer = window.setTimeout(() => {
+                setDrawWizardScrollGuideVisible(false);
+            }, 4200);
+        });
+    }
+
+    function getDrawWizardSelectionVisualMarkup(activeCount = 0, excludeCount = 0) {
+        const totalSlots = 6;
+        const safeCount = Math.max(0, Math.min(totalSlots, Math.round(Number(activeCount) || 0)));
+        const excludeSlots = Math.max(0, Math.min(safeCount, Math.round(Number(excludeCount) || 0)));
+        return Array.from({ length: totalSlots }, (_, index) => {
+            const active = index < safeCount;
+            const exclude = active && index >= safeCount - excludeSlots;
+            return `<span class="${active ? `is-active${exclude ? ' is-exclude' : ''}` : ''}"></span>`;
+        }).join('');
     }
 
     function getDrawWizardDashboardSelectionState(stepKey = getDrawWizardCurrentStep(), selectedCount = 0, excludeCount = 0) {
@@ -3689,46 +3798,70 @@ document.addEventListener('DOMContentLoaded', () => {
         const stepBenefitPct = selectionState.stepRuleIds.size && baselineRatio > 0
             ? Math.max(0, Math.round((1 - (remainingRatio / baselineRatio)) * 100))
             : 0;
+        const selectionTotalCount = currentStep === 'rules'
+            ? selectionState.stepSelectionCount
+            : currentStep === 'exclude'
+                ? selectionState.stepSelectionCount
+                : selectedCount + excludeCount;
+        const selectionExcludeVisualCount = currentStep === 'exclude'
+            ? selectionState.stepSelectionCount
+            : excludeCount;
+        const gaugePct = currentStep === 'rules' || currentStep === 'exclude' ? stepBenefitPct : totalBenefitPct;
+        const compactViewTitle = String(viewMeta.title || '')
+            .replace(/\s*제외하기$/, '')
+            .replace(/\s*제외할 수 있습니다$/, '')
+            .replace(/\s*선택$/, '')
+            .trim() || '선택 변화';
 
-        let dashboardTitle = viewMeta.title;
-        let dashboardCopy = '';
-        let impactValue = '변화 대기';
-        let impactNote = '선택하면 이번 단계 영향이 따로 계산됩니다.';
+        let dashboardTitle = compactViewTitle;
+        let dashboardCopy = '빼고 싶은 항목만 눌러 조합 범위를 좁혀보세요.';
+        let impactValue = gaugePct ? `+${gaugePct}%` : '0%';
+        let impactNote = gaugePct ? `${formatDrawWizardCompactCount(stepReducedCombos)} 감소` : '이번 단계 영향 대기';
+        let selectionValue = selectionState.stepSelectionLabel;
+        let selectionNote = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)} · ${remainingPct}%`;
+        let visualLabel = selectionTotalCount ? `${selectionTotalCount}개 반영` : '선택 없음';
+        let visualNote = '지금 고른 항목 수';
 
         if (currentStep === 'rules') {
-            dashboardTitle = `${viewMeta.title} 선택 영향`;
             dashboardCopy = selectionState.stepSelectionCount
-                ? `${selectionState.stepSelectionLabel}이 1등 기준과 남은 후보 수를 즉시 다시 계산합니다.`
-                : '이 단계에서 규칙을 고르면 얼마나 더 좁혀지는지 바로 확인할 수 있습니다.';
-            impactValue = stepReducedCombos ? `-${formatNumber(stepReducedCombos)}개` : '변화 없음';
-            impactNote = selectionState.stepSelectionCount
-                ? stepBenefitPct
-                    ? `${selectionState.stepSelectionLabel} · 추가 유리 ${stepBenefitPct}%`
-                    : `${selectionState.stepSelectionLabel} · 추가 변화 없음`
-                : '규칙을 선택하면 이번 단계 영향이 따로 보입니다.';
+                ? '방금 고른 패턴이 1등 기준과 후보 수에 바로 반영됩니다.'
+                : '빼고 싶은 패턴만 눌러보세요.';
+            selectionValue = selectionState.stepSelectionCount
+                ? selectionState.stepSelectionLabel
+                : '이번 단계 선택 없음';
+            selectionNote = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)} · ${remainingPct}%`;
+            visualLabel = selectionState.stepSelectionCount ? `${selectionState.stepSelectionCount}개 선택` : '선택 없음';
+            visualNote = '이번 단계 반영 수';
         } else if (currentStep === 'exclude') {
-            dashboardTitle = '직접 제외수 반영 변화';
+            dashboardTitle = '직접 제외수';
             dashboardCopy = selectionState.stepSelectionCount
-                ? `직접 제외한 숫자가 마지막 후보 범위와 1등 기준에 바로 반영됩니다.`
-                : '원치 않는 숫자를 제외하면 마지막 변화 폭이 여기에서 갱신됩니다.';
-            impactValue = stepReducedCombos ? `-${formatNumber(stepReducedCombos)}개` : '변화 없음';
-            impactNote = selectionState.stepSelectionCount
-                ? stepBenefitPct
-                    ? `${selectionState.stepSelectionLabel} · 추가 유리 ${stepBenefitPct}%`
-                    : `${selectionState.stepSelectionLabel} · 추가 변화 없음`
-                : '직접 제외수를 고르면 마지막 영향이 따로 보입니다.';
+                ? '원치 않는 숫자가 마지막 범위를 바로 더 줄여줍니다.'
+                : '빼고 싶은 숫자만 마지막으로 선택하세요.';
+            impactNote = gaugePct ? `${formatDrawWizardCompactCount(stepReducedCombos)} 추가 감소` : '추가 영향 대기';
+            selectionValue = selectionState.stepSelectionCount ? selectionState.stepSelectionLabel : '직접 제외 없음';
+            selectionNote = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)} · ${remainingPct}%`;
+            visualLabel = selectionState.stepSelectionCount ? `${selectionState.stepSelectionCount}개 제외` : '선택 없음';
+            visualNote = '직접 제외 수';
         } else if (currentStep === 'review') {
-            dashboardTitle = '지금까지 고른 조건의 누적 변화';
-            dashboardCopy = restriction.body;
-            impactValue = totalBenefitPct ? `${totalBenefitPct}% 유리` : '변화 없음';
-            impactNote = '전체 선택을 합친 누적 변화입니다.';
+            dashboardTitle = '최종 확인';
+            dashboardCopy = restriction.blocked ? '조건을 조금만 풀면 더 넓은 범위에서 생성할 수 있습니다.' : '지금 범위에서 바로 번호를 만들 수 있습니다.';
+            impactValue = totalBenefitPct ? `+${totalBenefitPct}%` : '0%';
+            impactNote = totalBenefitPct ? `기본 대비 ${totalBenefitPct}% 유리` : '기본과 동일';
+            selectionValue = selectedCount || excludeCount ? `규칙 ${selectedCount} · 제외 ${excludeCount}` : '선택 없음';
+            selectionNote = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)} · ${remainingPct}%`;
+            visualLabel = selectedCount || excludeCount ? `${selectedCount + excludeCount}개 반영` : '선택 없음';
+            visualNote = '전체 반영 수';
         } else if (currentStep === 'result') {
-            dashboardTitle = '최종 반영 결과';
+            dashboardTitle = '최종 반영';
             dashboardCopy = totalBenefitPct
-                ? `선택한 조건으로 기본보다 ${totalBenefitPct}% 유리한 범위에서 번호를 만들었습니다.`
-                : '기본 범위와 거의 같은 수준으로 번호가 만들어졌습니다.';
-            impactValue = totalBenefitPct ? `${totalBenefitPct}% 유리` : '변화 없음';
-            impactNote = '결과에 반영된 최종 누적 변화입니다.';
+                ? '압축된 후보 범위에서 번호 생성을 마쳤습니다.'
+                : '기본 범위에 가까운 상태로 번호를 만들었습니다.';
+            impactValue = totalBenefitPct ? `+${totalBenefitPct}%` : '0%';
+            impactNote = totalBenefitPct ? `최종 ${formatDrawWizardCompactCount(currentExcludedCombos)} 제외` : '변화 없음';
+            selectionValue = selectedCount || excludeCount ? `규칙 ${selectedCount} · 제외 ${excludeCount}` : '선택 없음';
+            selectionNote = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)} · ${remainingPct}%`;
+            visualLabel = selectedCount || excludeCount ? `${selectedCount + excludeCount}개 반영` : '선택 없음';
+            visualNote = '최종 반영 수';
         }
 
         if (drawWizardDashboardStepEl) {
@@ -3741,12 +3874,16 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardDashboardCopyEl.textContent = dashboardCopy;
         }
         if (drawWizardDashboardOddsEl) {
-            drawWizardDashboardOddsEl.textContent = formatDrawWizardOddsLabel(currentFirstOdds);
+            drawWizardDashboardOddsEl.textContent = formatDrawWizardCompactOddsLabel(currentFirstOdds);
         }
         if (drawWizardDashboardOddsNoteEl) {
             drawWizardDashboardOddsNoteEl.textContent = totalBenefitPct
-                ? `기본 ${formatDrawWizardOddsLabel(baseFirstOdds)} 대비 ${totalBenefitPct}% 유리`
-                : `기본 ${formatDrawWizardOddsLabel(baseFirstOdds)}와 동일`;
+                ? `기본 대비 +${totalBenefitPct}%`
+                : '기본과 동일';
+        }
+        if (drawWizardDashboardGaugeEl) {
+            const gaugeAngle = Math.max(0, Math.min(360, Math.round(gaugePct * 3.6)));
+            drawWizardDashboardGaugeEl.style.setProperty('--draw-dashboard-gauge-angle', `${gaugeAngle}deg`);
         }
         if (drawWizardDashboardImpactEl) {
             drawWizardDashboardImpactEl.textContent = impactValue;
@@ -3754,13 +3891,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (drawWizardDashboardImpactNoteEl) {
             drawWizardDashboardImpactNoteEl.textContent = impactNote;
         }
+        if (drawWizardDashboardMeterFillEl) {
+            drawWizardDashboardMeterFillEl.style.width = `${Math.max(8, remainingPct)}%`;
+        }
         if (drawWizardDashboardSelectionEl) {
-            drawWizardDashboardSelectionEl.textContent = selectedCount || excludeCount
-                ? `규칙 ${selectedCount}개 · 제외 ${excludeCount}개`
-                : '아직 선택 없음';
+            drawWizardDashboardSelectionEl.textContent = selectionValue;
         }
         if (drawWizardDashboardSelectionNoteEl) {
-            drawWizardDashboardSelectionNoteEl.textContent = `남은 후보 ${formatNumber(remainingCombos)}개 · 전체의 ${remainingPct}%`;
+            drawWizardDashboardSelectionNoteEl.textContent = selectionNote;
+        }
+        if (drawWizardDashboardSelectionVisualEl) {
+            drawWizardDashboardSelectionVisualEl.innerHTML = getDrawWizardSelectionVisualMarkup(selectionTotalCount, selectionExcludeVisualCount);
+        }
+        if (drawWizardDashboardVisualLabelEl) {
+            drawWizardDashboardVisualLabelEl.textContent = visualLabel;
+        }
+        if (drawWizardDashboardVisualNoteEl) {
+            drawWizardDashboardVisualNoteEl.textContent = visualNote;
         }
     }
 
@@ -3865,6 +4012,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         renderDrawWizardSelectionChips();
         renderDrawWizardRuleStep();
+        if (currentStep === 'rules' && drawWizardDetailGroupsEl && drawWizardLastViewKey !== currentViewKey) {
+            drawWizardDetailGroupsEl.scrollTop = 0;
+        }
+        syncDrawWizardScrollGuide(currentStep);
         renderDrawWizardReview();
         const showResumeOverlay = DRAW_WIZARD_RESUME_ENABLED
             && currentStep === 'start'
@@ -8076,6 +8227,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         detailSheet.classList.remove('is-open');
+    }
+
+    if (drawWizardDetailGroupsEl) {
+        drawWizardDetailGroupsEl.addEventListener('scroll', () => {
+            if (drawWizardDetailGroupsEl.scrollTop > 8) {
+                hideDrawWizardScrollGuide({ persist: true });
+            }
+        }, { passive: true });
     }
 
     function setupRuleDetails() {
