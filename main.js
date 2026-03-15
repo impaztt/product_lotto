@@ -365,6 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const appToastEl = document.getElementById('app-toast');
     const helpChatWidgetEl = document.getElementById('help-chat-widget');
     const helpChatPanelEl = document.getElementById('help-chat-panel');
+    const helpChatHeaderEl = helpChatPanelEl ? helpChatPanelEl.querySelector('.help-chat-header') : null;
     const helpChatBodyEl = document.getElementById('help-chat-body');
     const helpChatFormEl = document.getElementById('help-chat-form');
     const helpChatInputEl = document.getElementById('help-chat-input');
@@ -436,12 +437,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let helpChatInitialized = false;
     let helpChatReplyTimer = 0;
     let helpChatTypingMessageEl = null;
+    let helpChatDragState = null;
+    let helpChatCustomPosition = null;
+    let helpChatSuppressFabClickUntil = 0;
     const DRAW_ENTRY_LOCAL_KEY = 'lotto_guest_tracking_id';
     const GENERATION_STATS_KEY = 'lotto_generation_stats';
     const RULES_UPDATED_AT_KEY = 'lotto_rules_updated_at';
     const CUSTOM_PRESET_UPDATED_AT_KEY = 'lotto_custom_preset_updated_at';
     const DRAW_WIZARD_DRAFT_KEY = 'lotto_draw_wizard_draft';
     const DRAW_WIZARD_RESUME_ENABLED = false;
+    const HELP_CHAT_POSITION_KEY = 'lotto_help_chat_position_v1';
     const ONBOARDING_SKIP_TODAY_KEY = 'lotto_onboarding_skip_today';
     const GOOGLE_REDIRECT_STATE_KEY = 'lotto_google_redirect_state';
     const GOOGLE_REDIRECT_PENDING_TTL_MS = 10 * 60 * 1000;
@@ -5165,6 +5170,170 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function clampNumber(value, min, max) {
+        return Math.min(Math.max(value, min), max);
+    }
+
+    function readHelpChatStoredPosition() {
+        try {
+            const raw = localStorage.getItem(HELP_CHAT_POSITION_KEY);
+            if (!raw) {
+                return null;
+            }
+            const parsed = JSON.parse(raw);
+            const x = Number(parsed && parsed.x);
+            const y = Number(parsed && parsed.y);
+            if (!Number.isFinite(x) || !Number.isFinite(y)) {
+                localStorage.removeItem(HELP_CHAT_POSITION_KEY);
+                return null;
+            }
+            return {
+                x: Math.round(x),
+                y: Math.round(y)
+            };
+        } catch (error) {
+            console.warn('도움말 위치 복원 실패', error);
+            try {
+                localStorage.removeItem(HELP_CHAT_POSITION_KEY);
+            } catch {
+                // ignore storage cleanup errors
+            }
+            return null;
+        }
+    }
+
+    function saveHelpChatStoredPosition(position) {
+        if (!position) {
+            return;
+        }
+        try {
+            localStorage.setItem(HELP_CHAT_POSITION_KEY, JSON.stringify({
+                x: Math.round(position.x),
+                y: Math.round(position.y)
+            }));
+        } catch (error) {
+            console.warn('도움말 위치 저장 실패', error);
+        }
+    }
+
+    function isHelpChatMobileFullWidth() {
+        return Boolean(helpChatWidgetEl && helpChatWidgetEl.dataset.open === 'true' && getViewportWidth() <= 640);
+    }
+
+    function normalizeHelpChatPosition(position) {
+        if (!helpChatWidgetEl || !position) {
+            return null;
+        }
+        const rect = helpChatWidgetEl.getBoundingClientRect();
+        const viewportWidth = Math.max(320, Math.round(getViewportWidth()));
+        const viewportHeight = Math.max(
+            320,
+            Math.round((window.visualViewport && window.visualViewport.height) || window.innerHeight || document.documentElement.clientHeight || 0)
+        );
+        const widgetWidth = Math.max(72, Math.round(rect.width || 0));
+        const widgetHeight = Math.max(64, Math.round(rect.height || 0));
+        const inset = getViewportWidth() <= 640 ? 8 : 12;
+        const minX = inset;
+        const minY = 12;
+        const maxX = Math.max(minX, viewportWidth - widgetWidth - inset);
+        const maxY = Math.max(minY, viewportHeight - widgetHeight - inset);
+        return {
+            x: Math.round(clampNumber(Number(position.x) || 0, minX, maxX)),
+            y: Math.round(clampNumber(Number(position.y) || 0, minY, maxY))
+        };
+    }
+
+    function applyHelpChatCustomPosition() {
+        if (!helpChatWidgetEl) {
+            return;
+        }
+        if (!helpChatCustomPosition || isHelpChatMobileFullWidth()) {
+            helpChatWidgetEl.classList.remove('is-user-positioned');
+            helpChatWidgetEl.style.removeProperty('--help-chat-left');
+            helpChatWidgetEl.style.removeProperty('--help-chat-top');
+            return;
+        }
+        const normalized = normalizeHelpChatPosition(helpChatCustomPosition);
+        if (!normalized) {
+            return;
+        }
+        helpChatCustomPosition = normalized;
+        helpChatWidgetEl.classList.add('is-user-positioned');
+        helpChatWidgetEl.style.setProperty('--help-chat-left', `${normalized.x}px`);
+        helpChatWidgetEl.style.setProperty('--help-chat-top', `${normalized.y}px`);
+    }
+
+    function startHelpChatDrag(event) {
+        if (!helpChatWidgetEl || !event.isPrimary) {
+            return;
+        }
+        if (typeof event.button === 'number' && event.button !== 0) {
+            return;
+        }
+        if (isHelpChatMobileFullWidth()) {
+            return;
+        }
+        const target = event.target instanceof Element ? event.target : null;
+        if (target && target.closest('button, input, textarea, a, .help-chat-form, .help-chat-action')) {
+            return;
+        }
+        const rect = helpChatWidgetEl.getBoundingClientRect();
+        helpChatDragState = {
+            pointerId: event.pointerId,
+            pointerStartX: event.clientX,
+            pointerStartY: event.clientY,
+            offsetX: event.clientX - rect.left,
+            offsetY: event.clientY - rect.top,
+            moved: false
+        };
+        helpChatCustomPosition = {
+            x: rect.left,
+            y: rect.top
+        };
+        helpChatWidgetEl.classList.add('is-dragging');
+        if (event.currentTarget && typeof event.currentTarget.setPointerCapture === 'function') {
+            event.currentTarget.setPointerCapture(event.pointerId);
+        }
+        event.preventDefault();
+    }
+
+    function updateHelpChatDrag(event) {
+        if (!helpChatDragState || event.pointerId !== helpChatDragState.pointerId) {
+            return;
+        }
+        const nextPosition = normalizeHelpChatPosition({
+            x: event.clientX - helpChatDragState.offsetX,
+            y: event.clientY - helpChatDragState.offsetY
+        });
+        if (!nextPosition) {
+            return;
+        }
+        helpChatDragState.moved = helpChatDragState.moved
+            || Math.abs(event.clientX - helpChatDragState.pointerStartX) > 6
+            || Math.abs(event.clientY - helpChatDragState.pointerStartY) > 6;
+        helpChatCustomPosition = nextPosition;
+        applyHelpChatCustomPosition();
+        event.preventDefault();
+    }
+
+    function endHelpChatDrag(event) {
+        if (!helpChatDragState || event.pointerId !== helpChatDragState.pointerId) {
+            return;
+        }
+        const moved = helpChatDragState.moved;
+        helpChatDragState = null;
+        if (helpChatWidgetEl) {
+            helpChatWidgetEl.classList.remove('is-dragging');
+        }
+        if (moved) {
+            helpChatSuppressFabClickUntil = Date.now() + 320;
+            if (helpChatCustomPosition) {
+                saveHelpChatStoredPosition(helpChatCustomPosition);
+            }
+        }
+        event.preventDefault();
+    }
+
     function syncHelpChatViewportLayout() {
         if (!helpChatWidgetEl) {
             return;
@@ -5185,6 +5354,7 @@ document.addEventListener('DOMContentLoaded', () => {
         helpChatWidgetEl.style.setProperty('--help-chat-viewport-height', `${viewportHeight}px`);
         helpChatWidgetEl.style.setProperty('--help-chat-keyboard-offset', isMobile && keyboardOpen ? `${rawBottomInset}px` : '0px');
         helpChatWidgetEl.classList.toggle('is-keyboard-open', keyboardOpen);
+        applyHelpChatCustomPosition();
 
         if (keyboardOpen && helpChatWidgetEl.dataset.open === 'true') {
             scrollHelpChatToBottom();
@@ -5552,13 +5722,23 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         helpChatWidgetEl.dataset.bound = 'true';
+        helpChatCustomPosition = readHelpChatStoredPosition();
         syncHelpChatComposerState();
         syncHelpChatViewportLayout();
 
-        helpChatFabEl.addEventListener('click', () => {
+        helpChatFabEl.addEventListener('click', event => {
+            if (Date.now() < helpChatSuppressFabClickUntil) {
+                event.preventDefault();
+                return;
+            }
             const isOpen = helpChatWidgetEl.dataset.open === 'true';
             setHelpChatOpen(!isOpen);
         });
+
+        helpChatFabEl.addEventListener('pointerdown', startHelpChatDrag);
+        if (helpChatHeaderEl) {
+            helpChatHeaderEl.addEventListener('pointerdown', startHelpChatDrag);
+        }
 
         if (helpChatCloseBtn) {
             helpChatCloseBtn.addEventListener('click', () => {
@@ -5606,6 +5786,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         window.addEventListener('resize', syncHelpChatViewportLayout, { passive: true });
+        window.addEventListener('pointermove', updateHelpChatDrag, { passive: false });
+        window.addEventListener('pointerup', endHelpChatDrag);
+        window.addEventListener('pointercancel', endHelpChatDrag);
         window.addEventListener('orientationchange', () => {
             window.setTimeout(syncHelpChatViewportLayout, 140);
         }, { passive: true });
