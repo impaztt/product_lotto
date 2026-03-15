@@ -1507,11 +1507,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (welcomeModal) {
+        syncWelcomeModalViewportLayout();
         welcomeModal.addEventListener('click', event => {
             if (event.target === welcomeModal) {
                 closeWelcomeModal();
             }
         });
+        if (window.visualViewport && typeof window.visualViewport.addEventListener === 'function') {
+            window.visualViewport.addEventListener('resize', syncWelcomeModalViewportLayout, { passive: true });
+            window.visualViewport.addEventListener('scroll', syncWelcomeModalViewportLayout, { passive: true });
+        }
+        window.addEventListener('resize', syncWelcomeModalViewportLayout, { passive: true });
+        window.addEventListener('orientationchange', () => {
+            window.setTimeout(syncWelcomeModalViewportLayout, 140);
+        }, { passive: true });
     }
 
     onboardingNavButtons.forEach(button => {
@@ -4778,6 +4787,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         closeAuthModal();
         welcomeModalDismissedInSession = false;
+        syncWelcomeModalViewportLayout();
         setOnboardingSlide(0);
         welcomeModal.classList.remove('hidden');
     }
@@ -6356,6 +6366,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return innerHeight;
         }
         return Number(document.documentElement && document.documentElement.clientHeight) || 0;
+    }
+
+    function syncWelcomeModalViewportLayout() {
+        if (!welcomeModal) {
+            return;
+        }
+        const viewportWidth = Math.max(320, Math.round(getViewportWidth()));
+        const viewportHeight = Math.max(480, Math.round(getViewportHeight()));
+        welcomeModal.style.setProperty('--welcome-modal-viewport-width', `${viewportWidth}px`);
+        welcomeModal.style.setProperty('--welcome-modal-viewport-height', `${viewportHeight}px`);
     }
 
     function syncDrawViewportLayout(forcedViewportWidth) {

@@ -12047,13 +12047,29 @@ body[data-theme="dark"] #tab-draw {
 }
 
 /* Welcome modal visual refresh */
+#welcome-modal.modal-onboarding {
+    --welcome-modal-viewport-width: 100vw;
+    --welcome-modal-viewport-height: 100dvh;
+    --welcome-modal-top-gap: clamp(20px, 4vh, 36px);
+    --welcome-modal-bottom-gap: calc(18px + env(safe-area-inset-bottom));
+    padding: var(--welcome-modal-top-gap) 8px var(--welcome-modal-bottom-gap);
+}
+
 #welcome-modal .onboarding-modal-content {
-    width: min(660px, calc(100vw - 18px));
+    width: min(660px, calc(var(--welcome-modal-viewport-width, 100vw) - 18px));
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr) auto auto;
     gap: 12px;
     padding: clamp(20px, 2.5vw, 26px) clamp(18px, 2.2vw, 24px) clamp(22px, 2.6vw, 26px);
     overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-y: auto;
     overscroll-behavior: contain;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+#welcome-modal .onboarding-modal-content::-webkit-scrollbar {
+    display: none;
 }
 
 #welcome-modal .onboarding-hero {
@@ -12069,9 +12085,11 @@ body[data-theme="dark"] #tab-draw {
 
 #welcome-modal .onboarding-slide-card--visual {
     gap: 10px;
-    min-height: 0;
+    min-height: 100%;
     padding: 18px;
     border-radius: 24px;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    align-content: stretch;
 }
 
 #welcome-modal .onboarding-card-head--compact {
@@ -12091,6 +12109,8 @@ body[data-theme="dark"] #tab-draw {
 
 #welcome-modal .onboarding-visual-shell {
     display: grid;
+    min-height: 0;
+    align-content: center;
     gap: 10px;
     padding: 10px;
     border-radius: 22px;
@@ -12133,6 +12153,17 @@ body[data-theme="dark"] #tab-draw {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+}
+
+#welcome-modal .onboarding-carousel {
+    display: grid;
+    min-height: 0;
+    height: 100%;
+}
+
+#welcome-modal .onboarding-carousel-track,
+#welcome-modal .onboarding-slide {
+    min-height: 100%;
 }
 
 #welcome-modal .onboarding-visual-tag {
@@ -12181,8 +12212,16 @@ body[data-theme="dark"] #tab-draw {
 }
 
 @media (max-width: 768px) {
+    #welcome-modal.modal-onboarding {
+        --welcome-modal-top-gap: max(10px, calc(env(safe-area-inset-top) + 6px));
+        --welcome-modal-bottom-gap: calc(12px + env(safe-area-inset-bottom));
+        padding: var(--welcome-modal-top-gap) 7px var(--welcome-modal-bottom-gap);
+    }
+
     #welcome-modal .onboarding-modal-content {
-        width: min(100%, calc(100vw - 16px));
+        width: min(100%, calc(var(--welcome-modal-viewport-width, 100vw) - 14px));
+        min-height: calc(var(--welcome-modal-viewport-height, 100dvh) - var(--welcome-modal-top-gap, 16px) - var(--welcome-modal-bottom-gap, 16px));
+        max-height: calc(var(--welcome-modal-viewport-height, 100dvh) - var(--welcome-modal-top-gap, 16px) - var(--welcome-modal-bottom-gap, 16px));
         gap: 10px;
         padding: 18px 14px calc(18px + env(safe-area-inset-bottom));
     }
@@ -12197,6 +12236,7 @@ body[data-theme="dark"] #tab-draw {
 
     #welcome-modal .onboarding-slide-card--visual {
         gap: 9px;
+        min-height: clamp(360px, calc(var(--welcome-modal-viewport-height, 100dvh) * 0.5), 560px);
         padding: 14px;
         border-radius: 22px;
     }
@@ -12235,11 +12275,24 @@ body[data-theme="dark"] #tab-draw {
 }
 
 @media (max-width: 480px) {
+    #welcome-modal.modal-onboarding {
+        --welcome-modal-top-gap: max(8px, calc(env(safe-area-inset-top) + 4px));
+        --welcome-modal-bottom-gap: calc(10px + env(safe-area-inset-bottom));
+    }
+
+    #welcome-modal .onboarding-modal-content {
+        width: min(100%, calc(var(--welcome-modal-viewport-width, 100vw) - 12px));
+        min-height: calc(var(--welcome-modal-viewport-height, 100dvh) - var(--welcome-modal-top-gap, 12px) - var(--welcome-modal-bottom-gap, 12px));
+        max-height: calc(var(--welcome-modal-viewport-height, 100dvh) - var(--welcome-modal-top-gap, 12px) - var(--welcome-modal-bottom-gap, 12px));
+        padding: 16px 11px calc(16px + env(safe-area-inset-bottom));
+    }
+
     #welcome-modal #welcome-modal-title {
         font-size: clamp(18px, 5.2vw, 21px);
     }
 
     #welcome-modal .onboarding-slide-card--visual {
+        min-height: clamp(320px, calc(var(--welcome-modal-viewport-height, 100dvh) * 0.48), 500px);
         padding: 12px;
         border-radius: 20px;
     }
