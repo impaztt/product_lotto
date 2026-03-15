@@ -12127,6 +12127,7 @@ body[data-theme="dark"] #tab-draw {
     height: 100%;
     min-height: 0;
     align-content: stretch;
+    overflow: hidden;
     gap: 12px;
     padding: 12px;
     border-radius: 22px;
@@ -12159,6 +12160,8 @@ body[data-theme="dark"] #tab-draw {
     height: 100%;
     min-height: 0;
     border-radius: 20px;
+    transform: scale(1.08);
+    transform-origin: center center;
 }
 
 #welcome-modal .onboarding-visual-svg text {
@@ -12315,6 +12318,10 @@ body[data-theme="dark"] #tab-draw {
         border-radius: 18px;
     }
 
+    #welcome-modal .onboarding-visual-svg {
+        transform: scale(1.12);
+    }
+
     #welcome-modal .onboarding-visual-legend {
         gap: 7px;
     }
@@ -12392,6 +12399,10 @@ body[data-theme="dark"] #tab-draw {
         gap: 9px;
         padding: 9px;
         border-radius: 16px;
+    }
+
+    #welcome-modal .onboarding-visual-svg {
+        transform: scale(1.16);
     }
 
     #welcome-modal .onboarding-visual-legend {
