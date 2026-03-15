@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawGenerateHintEl = document.getElementById('draw-generate-hint');
     const body = document.body;
     const siteHeaderEl = document.querySelector('.site-header');
+    const bottomTabBarEl = document.querySelector('.bottom-tab-bar');
     const ruleInputs = Array.from(document.querySelectorAll('.rules-grid input[type="checkbox"]'));
     const excludeNumberGrid = document.getElementById('exclude-number-grid');
     const excludeNumberCard = document.getElementById('exclude-number-card');
@@ -566,6 +567,12 @@ document.addEventListener('DOMContentLoaded', () => {
         onWillChange(tabId) {
             if (tabId !== 'draw') {
                 setRulePickerOpen(false);
+                if (getCurrentActiveTabId() === 'draw' && !isMember()) {
+                    resetDrawWizardSessionState({
+                        clearDraft: true,
+                        render: true
+                    });
+                }
             }
         },
         onDidChange({ tabId, targetPanel }) {
@@ -1610,6 +1617,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (window.visualViewport && typeof window.visualViewport.addEventListener === 'function') {
         window.visualViewport.addEventListener('resize', scheduleDrawHorizontalWidthSync, { passive: true });
+        window.visualViewport.addEventListener('scroll', scheduleDrawHorizontalWidthSync, { passive: true });
     }
     window.addEventListener('resize', scheduleDrawHorizontalWidthSync, { passive: true });
     window.addEventListener('scroll', scheduleDrawHorizontalWidthSync, { passive: true });
@@ -3221,8 +3229,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function resetDrawWizardSessionState({ clearDraft = false, render = true } = {}) {
+        if (!drawWizardState) {
+            return;
+        }
+        drawWizardTransitionDirection = 'backward';
+        drawWizardResumeState = null;
+        drawWizardState = getDrawWizardDefaultState();
+        syncDrawWizardSelections();
+        if (clearDraft) {
+            clearDrawWizardDraft();
+        }
+        if (render) {
+            renderDrawWizard();
+        }
+    }
+
     function syncDrawWizardResumeStateFromAuth() {
         if (!drawWizardState) {
+            return;
+        }
+        if (!authStateResolved) {
+            drawWizardResumeState = null;
+            if (getDrawWizardCurrentStep() === 'start') {
+                renderDrawWizard();
+            }
             return;
         }
         if (!isMember()) {
@@ -3235,7 +3266,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (getDrawWizardCurrentStep() !== 'start' || hasMeaningfulDrawWizardState(drawWizardState)) {
             return;
         }
-        const draft = loadDrawWizardDraft();
+        const draft = authStateResolved && isMember() ? loadDrawWizardDraft() : null;
         drawWizardResumeState = draft ? { ...draft } : null;
         renderDrawWizard();
     }
@@ -3638,7 +3669,10 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDrawWizardSelectionChips();
         renderDrawWizardRuleStep();
         renderDrawWizardReview();
-        const showResumeOverlay = currentStep === 'start' && Boolean(drawWizardResumeState);
+        const showResumeOverlay = currentStep === 'start'
+            && authStateResolved
+            && isMember()
+            && Boolean(drawWizardResumeState);
         if (drawWizardResumeCardEl) {
             drawWizardResumeCardEl.hidden = !showResumeOverlay;
         }
@@ -3785,7 +3819,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (drawTabPanel && drawTabPanel.dataset.wizardInitialized === 'true') {
             return;
         }
-        const draft = loadDrawWizardDraft();
+        const draft = authStateResolved && isMember() ? loadDrawWizardDraft() : null;
         drawWizardResumeState = draft ? { ...draft } : null;
         drawWizardState = getDrawWizardDefaultState();
         syncDrawWizardSelections();
@@ -4798,6 +4832,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function syncAuthState(user) {
+        const wasMember = Boolean(currentUser);
         authStateResolved = true;
         currentUser = user || null;
         if (currentUser) {
@@ -4816,6 +4851,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         updateAuthUi();
+        if (wasMember && !currentUser) {
+            resetDrawWizardSessionState({
+                clearDraft: true,
+                render: getCurrentActiveTabId() === 'draw'
+            });
+        }
         syncDrawWizardResumeStateFromAuth();
         refreshGuestLimitMessage();
         loadMypageDrawHistory(true);
@@ -5860,6 +5901,36 @@ document.addEventListener('DOMContentLoaded', () => {
         return Number(document.documentElement && document.documentElement.clientWidth) || 0;
     }
 
+    function getViewportHeight() {
+        const visualHeight = Number(window.visualViewport && window.visualViewport.height);
+        if (Number.isFinite(visualHeight) && visualHeight > 0) {
+            return visualHeight;
+        }
+        const innerHeight = Number(window.innerHeight);
+        if (Number.isFinite(innerHeight) && innerHeight > 0) {
+            return innerHeight;
+        }
+        return Number(document.documentElement && document.documentElement.clientHeight) || 0;
+    }
+
+    function syncDrawViewportLayout(forcedViewportWidth) {
+        if (!drawTabPanel) {
+            return;
+        }
+        const viewportWidth = Number.isFinite(forcedViewportWidth) && forcedViewportWidth > 0
+            ? forcedViewportWidth
+            : Math.floor(getViewportWidth());
+        const viewportHeight = Math.max(320, Math.round(getViewportHeight()));
+        const headerHeight = siteHeaderEl ? Math.ceil(siteHeaderEl.getBoundingClientRect().height || 0) : 0;
+        const bottomTabHeight = viewportWidth <= 768 && bottomTabBarEl
+            ? Math.ceil(bottomTabBarEl.getBoundingClientRect().height || 0)
+            : 0;
+
+        drawTabPanel.style.setProperty('--draw-tab-viewport-height', `${viewportHeight}px`);
+        drawTabPanel.style.setProperty('--site-header-height', `${headerHeight}px`);
+        drawTabPanel.style.setProperty('--draw-tab-bottom-offset', `${bottomTabHeight}px`);
+    }
+
     function scheduleDrawHorizontalWidthSync() {
         if (drawWidthSyncRafId) {
             window.cancelAnimationFrame(drawWidthSyncRafId);
@@ -5867,6 +5938,7 @@ document.addEventListener('DOMContentLoaded', () => {
         drawWidthSyncRafId = window.requestAnimationFrame(() => {
             drawWidthSyncRafId = 0;
             const viewportWidth = Math.floor(getViewportWidth());
+            syncDrawViewportLayout(viewportWidth);
             syncDrawFlowLayout(viewportWidth);
             syncDrawHorizontalCardWidths(viewportWidth);
             syncDrawSelectionDockLayout(viewportWidth);

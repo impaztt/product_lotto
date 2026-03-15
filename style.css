@@ -17019,10 +17019,11 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 /* Draw funnel reset */
 #tab-draw.draw-wizard-tab {
     --draw-tab-bottom-offset: 0px;
+    --draw-tab-viewport-height: 100vh;
     margin: 0;
     box-sizing: border-box;
-    height: calc(100vh - var(--site-header-height, 0px) - var(--draw-tab-bottom-offset));
-    min-height: calc(100vh - var(--site-header-height, 0px) - var(--draw-tab-bottom-offset));
+    height: calc(var(--draw-tab-viewport-height) - var(--site-header-height, 0px) - var(--draw-tab-bottom-offset));
+    min-height: calc(var(--draw-tab-viewport-height) - var(--site-header-height, 0px) - var(--draw-tab-bottom-offset));
     padding: max(12px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom));
     overflow: hidden;
     background:
@@ -17034,8 +17035,14 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 @supports (height: 100dvh) {
     #tab-draw.draw-wizard-tab {
-        height: calc(100dvh - var(--site-header-height, 0px) - var(--draw-tab-bottom-offset));
-        min-height: calc(100dvh - var(--site-header-height, 0px) - var(--draw-tab-bottom-offset));
+        --draw-tab-viewport-height: 100dvh;
+    }
+}
+
+@media (max-width: 768px) {
+    body[data-active-tab="draw"] main {
+        padding: 0;
+        gap: 0;
     }
 }
 
