@@ -441,6 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const RULES_UPDATED_AT_KEY = 'lotto_rules_updated_at';
     const CUSTOM_PRESET_UPDATED_AT_KEY = 'lotto_custom_preset_updated_at';
     const DRAW_WIZARD_DRAFT_KEY = 'lotto_draw_wizard_draft';
+    const DRAW_WIZARD_RESUME_ENABLED = false;
     const ONBOARDING_SKIP_TODAY_KEY = 'lotto_onboarding_skip_today';
     const GOOGLE_REDIRECT_STATE_KEY = 'lotto_google_redirect_state';
     const GOOGLE_REDIRECT_PENDING_TTL_MS = 10 * 60 * 1000;
@@ -3155,6 +3156,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function loadDrawWizardDraft() {
+        if (!DRAW_WIZARD_RESUME_ENABLED) {
+            clearDrawWizardDraft();
+            return null;
+        }
         if (!isMember()) {
             clearLegacyDrawWizardDraft();
             return null;
@@ -3195,6 +3200,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function persistDrawWizardDraft() {
         if (!drawWizardState) {
+            return;
+        }
+        if (!DRAW_WIZARD_RESUME_ENABLED) {
+            clearDrawWizardDraft();
             return;
         }
         try {
@@ -3247,6 +3256,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function syncDrawWizardResumeStateFromAuth() {
         if (!drawWizardState) {
+            return;
+        }
+        if (!DRAW_WIZARD_RESUME_ENABLED) {
+            drawWizardResumeState = null;
+            if (getDrawWizardCurrentStep() === 'start') {
+                renderDrawWizard();
+            }
             return;
         }
         if (!authStateResolved) {
@@ -3669,7 +3685,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDrawWizardSelectionChips();
         renderDrawWizardRuleStep();
         renderDrawWizardReview();
-        const showResumeOverlay = currentStep === 'start'
+        const showResumeOverlay = DRAW_WIZARD_RESUME_ENABLED
+            && currentStep === 'start'
             && authStateResolved
             && isMember()
             && Boolean(drawWizardResumeState);

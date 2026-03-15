@@ -17263,14 +17263,14 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-screen--intro {
     width: min(100%, 720px);
-    max-width: 560px;
+    max-width: 620px;
     min-height: 100%;
     margin: 0 auto;
     grid-template-rows: minmax(0, 1fr) auto auto;
     align-content: stretch;
     justify-items: stretch;
     text-align: center;
-    gap: 16px;
+    gap: 18px;
 }
 
 #tab-draw.draw-wizard-tab .draw-screen-intro-copy {
@@ -17283,16 +17283,16 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 #tab-draw.draw-wizard-tab .draw-screen-intro-copy h2 {
     margin: 0;
     color: #101f34;
-    font-size: clamp(30px, 4.6vw, 48px);
+    font-size: clamp(34px, 5vw, 52px);
     line-height: 1.08;
     letter-spacing: -0.03em;
 }
 
 #tab-draw.draw-wizard-tab .draw-screen-intro-copy p {
     margin: 0;
-    max-width: 31ch;
+    max-width: 34ch;
     color: #52667d;
-    font-size: clamp(14px, 1.8vw, 16px);
+    font-size: clamp(15px, 1.9vw, 17px);
     line-height: 1.6;
 }
 
@@ -17320,22 +17320,23 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-hero-cta {
-    width: min(100%, 360px);
+    width: min(100%, 430px);
     margin: 0 auto;
-    padding: 18px 20px 18px 22px;
+    min-height: 104px;
+    padding: 22px 24px;
     border: 0;
-    border-radius: 26px;
+    border-radius: 30px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 18px;
     position: relative;
     overflow: hidden;
     color: #ffffff;
     text-align: left;
     background:
-        linear-gradient(135deg, #13263d 0%, #27476d 48%, #d2ad67 128%);
-    box-shadow: 0 22px 46px rgba(19, 38, 61, 0.24);
+        linear-gradient(135deg, #0f2238 0%, #1f4f85 55%, #ec9f33 128%);
+    box-shadow: 0 26px 56px rgba(19, 38, 61, 0.28);
     transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
@@ -17350,32 +17351,32 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-wizard-hero-cta:hover {
     transform: translateY(-1px);
-    box-shadow: 0 28px 54px rgba(19, 38, 61, 0.28);
+    box-shadow: 0 32px 62px rgba(19, 38, 61, 0.32);
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-hero-cta-copy {
     position: relative;
     z-index: 1;
     display: grid;
-    gap: 4px;
+    gap: 6px;
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-hero-cta-copy strong {
-    font-size: 20px;
+    font-size: 24px;
     line-height: 1.1;
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-hero-cta-copy span {
-    color: rgba(255, 255, 255, 0.76);
-    font-size: 12px;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 13px;
     font-weight: 600;
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-hero-cta-orb {
     position: relative;
     z-index: 1;
-    width: 52px;
-    height: 52px;
+    width: 58px;
+    height: 58px;
     border-radius: 50%;
     flex: 0 0 auto;
     display: inline-flex;
@@ -17411,6 +17412,10 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     background: rgba(255, 255, 255, 0.95);
     box-shadow: 0 26px 56px rgba(28, 56, 92, 0.16);
     backdrop-filter: blur(18px);
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-resume-card[hidden] {
+    display: none !important;
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-resume-card p,
@@ -17765,23 +17770,24 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-hero-cta {
-        width: min(100%, 320px);
-        padding: 15px 16px;
-        border-radius: 22px;
+        width: min(100%, 360px);
+        min-height: 92px;
+        padding: 18px 18px;
+        border-radius: 24px;
         gap: 12px;
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-hero-cta-copy strong {
-        font-size: 18px;
+        font-size: 20px;
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-hero-cta-copy span {
-        font-size: 11px;
+        font-size: 12px;
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-hero-cta-orb {
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-resume-card,
@@ -17917,7 +17923,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-screen-intro-copy p {
-        font-size: 12px;
+        font-size: 13px;
     }
 
     #tab-draw.draw-wizard-tab .draw-screen-intro-points {
@@ -17948,17 +17954,18 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-hero-cta {
-        width: min(100%, 280px);
-        padding: 14px 15px;
+        width: min(100%, 320px);
+        min-height: 88px;
+        padding: 16px;
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-hero-cta-copy strong {
-        font-size: 16px;
+        font-size: 18px;
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-hero-cta-orb {
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-ball {
