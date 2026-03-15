@@ -17191,14 +17191,14 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-stage.has-dashboard {
-    grid-template-rows: minmax(106px, 13%) minmax(0, 1fr) auto;
+    grid-template-rows: minmax(94px, 11%) minmax(0, 1fr) auto;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard {
     min-height: 0;
-    padding: 10px 14px 9px;
+    padding: 8px 12px 7px;
     display: grid;
-    gap: 8px;
+    gap: 6px;
     border-bottom: 1px solid rgba(19, 38, 61, 0.08);
     background:
         radial-gradient(circle at top right, rgba(236, 159, 51, 0.14), transparent 34%),
@@ -17213,13 +17213,13 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     min-width: 0;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-copy {
     display: grid;
-    gap: 3px;
+    gap: 2px;
     min-width: 0;
 }
 
@@ -17233,14 +17233,14 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-step {
     width: fit-content;
-    padding: 6px 10px;
+    padding: 5px 9px;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.74);
     border: 1px solid rgba(19, 38, 61, 0.08);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-copy strong {
-    font-size: clamp(16px, 1.8vw, 20px);
+    font-size: clamp(15px, 1.6vw, 18px);
     line-height: 1.1;
     color: #13263d;
     white-space: nowrap;
@@ -17251,8 +17251,8 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-copy p {
     margin: 0;
     color: rgba(19, 38, 61, 0.72);
-    font-size: 11px;
-    line-height: 1.3;
+    font-size: 10px;
+    line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -17260,8 +17260,8 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip {
     min-width: 0;
-    padding: 8px 10px;
-    border-radius: 18px;
+    padding: 7px 9px;
+    border-radius: 16px;
     display: grid;
     gap: 2px;
     justify-items: end;
@@ -17279,7 +17279,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip strong {
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1;
     letter-spacing: -0.03em;
     color: #13263d;
@@ -17295,17 +17295,17 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-visuals {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
+    gap: 6px;
     min-width: 0;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat {
     min-width: 0;
-    padding: 9px 10px;
-    border-radius: 18px;
+    padding: 7px 8px;
+    border-radius: 16px;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
-    gap: 8px;
+    gap: 6px;
     align-items: center;
     background: rgba(255, 255, 255, 0.78);
     border: 1px solid rgba(19, 38, 61, 0.08);
@@ -17319,7 +17319,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-copy strong {
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1;
     letter-spacing: -0.03em;
     color: #13263d;
@@ -17338,8 +17338,8 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-gauge {
     --draw-dashboard-gauge-angle: 0deg;
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background: conic-gradient(#ec9f33 var(--draw-dashboard-gauge-angle), rgba(19, 38, 61, 0.1) 0deg);
     position: relative;
@@ -17349,15 +17349,15 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-gauge::after {
     content: "";
     position: absolute;
-    inset: 5px;
+    inset: 4px;
     border-radius: 50%;
     background: #f9fbfd;
     box-shadow: inset 0 0 0 1px rgba(19, 38, 61, 0.06);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-meter {
-    width: 40px;
-    height: 8px;
+    width: 34px;
+    height: 7px;
     border-radius: 999px;
     overflow: hidden;
     background: rgba(19, 38, 61, 0.1);
@@ -17373,14 +17373,14 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-selection-visual {
-    width: 42px;
+    width: 36px;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 4px;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-selection-visual span {
-    height: 9px;
+    height: 8px;
     border-radius: 999px;
     background: rgba(19, 38, 61, 0.1);
 }
@@ -17395,12 +17395,12 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 @media (max-width: 768px) {
     #tab-draw.draw-wizard-tab .draw-funnel-stage.has-dashboard {
-        grid-template-rows: minmax(112px, 15%) minmax(0, 1fr) auto;
+        grid-template-rows: minmax(96px, 12%) minmax(0, 1fr) auto;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard {
-        padding: 10px 12px 8px;
-        gap: 7px;
+        padding: 8px 10px 7px;
+        gap: 6px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-copy strong {
@@ -17413,8 +17413,8 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip {
-        padding: 7px 9px;
-        border-radius: 16px;
+        padding: 6px 8px;
+        border-radius: 14px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip strong {
@@ -17422,13 +17422,13 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-visuals {
-        gap: 6px;
+        gap: 5px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat {
-        padding: 8px 8px;
-        gap: 6px;
-        border-radius: 16px;
+        padding: 6px 7px;
+        gap: 5px;
+        border-radius: 14px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-copy strong {
@@ -17440,17 +17440,17 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-gauge {
-        width: 28px;
-        height: 28px;
+        width: 24px;
+        height: 24px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-gauge::after {
-        inset: 4px;
+        inset: 3px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-meter,
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-selection-visual {
-        width: 32px;
+        width: 28px;
     }
 }
 
@@ -17464,7 +17464,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     inset: auto;
     height: 100%;
     min-height: 0;
-    padding: clamp(20px, 3vw, 30px);
+    padding: clamp(14px, 2vw, 22px);
     display: none;
     align-content: stretch;
     overflow: hidden;
@@ -17743,25 +17743,25 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     height: 100%;
     min-height: 100%;
     display: grid;
-    grid-template-rows: auto auto auto minmax(0, 1fr);
-    gap: 10px;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    gap: 8px;
     overflow: hidden;
     position: relative;
 }
 
 #tab-draw.draw-wizard-tab .draw-screen-step-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-#tab-draw.draw-wizard-tab .draw-screen-step-copy {
     display: grid;
-    gap: 6px;
+    gap: 4px;
 }
 
-#tab-draw.draw-wizard-tab .draw-screen-step-copy h3,
+#tab-draw.draw-wizard-tab .draw-screen-step-title-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+}
+
+#tab-draw.draw-wizard-tab .draw-screen-step-title-row h3,
 #tab-draw.draw-wizard-tab .draw-funnel-copy h3,
 #tab-draw.draw-wizard-tab #draw-wizard-result-title {
     margin: 0;
@@ -17769,13 +17769,16 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     line-height: 1.08;
 }
 
-#tab-draw.draw-wizard-tab .draw-screen-step-copy h3 {
-    font-size: clamp(24px, 3.2vw, 32px);
+#tab-draw.draw-wizard-tab .draw-screen-step-title-row h3 {
+    font-size: clamp(22px, 2.8vw, 29px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #tab-draw.draw-wizard-tab .draw-screen-step-progress {
-    min-height: 44px;
-    padding: 0 16px;
+    min-height: 34px;
+    padding: 0 12px;
     border-radius: 999px;
     display: inline-flex;
     align-items: center;
@@ -17784,6 +17787,13 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     color: #ffffff;
     font-size: 13px;
     font-weight: 700;
+}
+
+#tab-draw.draw-wizard-tab .draw-screen-step-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card,
@@ -17807,14 +17817,22 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-inline-note {
-    font-size: 13px;
+    flex: 0 0 auto;
+    font-size: 11px;
     color: #2c4963;
-    font-weight: 600;
+    font-weight: 700;
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(19, 38, 61, 0.06);
 }
 
 #tab-draw.draw-wizard-tab .draw-screen-step-note {
-    font-size: 13px;
-    line-height: 1.45;
+    flex: 1 1 auto;
+    font-size: 12px;
+    line-height: 1.35;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -17823,8 +17841,8 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 #tab-draw.draw-wizard-tab .draw-funnel-rule-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-rows: minmax(132px, auto);
-    gap: 12px;
+    grid-auto-rows: minmax(120px, auto);
+    gap: 10px;
     height: 100%;
     min-height: 0;
     overflow: auto;
@@ -17908,11 +17926,11 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card {
     width: 100%;
     min-height: 0;
-    padding: 16px;
-    border-radius: 24px;
+    padding: 14px;
+    border-radius: 20px;
     display: grid;
     grid-template-rows: auto auto 1fr auto;
-    gap: 8px;
+    gap: 7px;
     text-align: left;
     transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
@@ -17930,15 +17948,15 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card strong,
  #tab-draw.draw-wizard-tab .draw-funnel-review-card strong {
     color: #0f2137;
-    font-size: 16px;
-    line-height: 1.26;
+    font-size: 15px;
+    line-height: 1.22;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card p {
     margin: 0;
-    font-size: 13px;
+    font-size: 12px;
     color: #61758d;
-    line-height: 1.48;
+    line-height: 1.36;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-samples {
@@ -18118,7 +18136,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-panel {
-        padding: 12px;
+        padding: 10px;
     }
 
     #tab-draw.draw-wizard-tab .draw-screen--intro {
@@ -18173,7 +18191,6 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-resume-card,
-    #tab-draw.draw-wizard-tab .draw-screen-step-head,
     #tab-draw.draw-wizard-tab .draw-funnel-exclude-head,
     #tab-draw.draw-wizard-tab .draw-funnel-nav {
         grid-template-columns: 1fr;
@@ -18223,43 +18240,53 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-screen--step {
-        gap: 10px;
+        gap: 8px;
     }
 
-    #tab-draw.draw-wizard-tab .draw-screen-step-copy {
-        gap: 6px;
+    #tab-draw.draw-wizard-tab .draw-screen-step-title-row {
+        gap: 8px;
     }
 
-    #tab-draw.draw-wizard-tab .draw-screen-step-copy h3 {
-        font-size: clamp(24px, 6vw, 30px);
+    #tab-draw.draw-wizard-tab .draw-screen-step-title-row h3 {
+        font-size: clamp(20px, 5.5vw, 25px);
         line-height: 1.14;
     }
 
+    #tab-draw.draw-wizard-tab .draw-screen-step-meta {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 7px;
+    }
+
     #tab-draw.draw-wizard-tab .draw-screen-step-note,
-    #tab-draw.draw-wizard-tab .draw-funnel-inline-note,
     #tab-draw.draw-wizard-tab .draw-funnel-copy p {
-        font-size: 13px;
-        line-height: 1.54;
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-inline-note {
+        font-size: 10px;
+        min-height: 24px;
+        padding: 0 8px;
     }
 
     #tab-draw.draw-wizard-tab .draw-screen-step-progress {
-        align-self: flex-start;
-        min-height: 38px;
-        padding: 0 12px;
-        font-size: 12px;
+        min-height: 30px;
+        padding: 0 10px;
+        font-size: 11px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-grid {
         grid-template-columns: 1fr;
-        grid-auto-rows: minmax(116px, auto);
-        gap: 9px;
+        grid-auto-rows: minmax(108px, auto);
+        gap: 8px;
         padding-right: 0;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-card {
-        padding: 14px;
+        padding: 13px;
         border-radius: 18px;
-        gap: 7px;
+        gap: 6px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-samples {
@@ -18321,8 +18348,8 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-screen-intro-copy h2,
-    #tab-draw.draw-wizard-tab .draw-screen-step-copy h3 {
-        font-size: 24px;
+    #tab-draw.draw-wizard-tab .draw-screen-step-title-row h3 {
+        font-size: 22px;
     }
 
     #tab-draw.draw-wizard-tab .draw-screen-intro-copy p {

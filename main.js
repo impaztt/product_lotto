@@ -3720,40 +3720,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join('');
     }
 
-    function getDrawWizardDashboardSelectionState(stepKey = getDrawWizardCurrentStep(), selectedCount = 0, excludeCount = 0) {
-        if (!drawWizardState) {
-            return {
-                stepRuleIds: new Set(),
-                stepSelectionCount: 0,
-                stepSelectionLabel: '아직 선택 없음'
-            };
-        }
-        if (stepKey === 'rules') {
-            const currentRuleStep = getDrawWizardCurrentRuleStep();
-            const selectedIds = new Set(drawWizardState.selectedRuleIds);
-            const selectedRules = currentRuleStep ? currentRuleStep.rules.filter(rule => selectedIds.has(rule.id)) : [];
-            return {
-                stepRuleIds: new Set(selectedRules.map(rule => rule.id)),
-                stepSelectionCount: selectedRules.length,
-                stepSelectionLabel: selectedRules.length ? `${selectedRules.length}개 규칙 선택` : '이번 단계 선택 없음'
-            };
-        }
-        if (stepKey === 'exclude') {
-            const count = drawWizardState.excludeNumbers.length;
-            return {
-                stepRuleIds: count ? new Set(['exclude_number']) : new Set(),
-                stepSelectionCount: count,
-                stepSelectionLabel: count ? `${count}개 숫자 제외` : '직접 제외 없음'
-            };
-        }
-        const totalCount = selectedCount + excludeCount;
-        return {
-            stepRuleIds: new Set(),
-            stepSelectionCount: totalCount,
-            stepSelectionLabel: totalCount ? `규칙 ${selectedCount}개 · 제외 ${excludeCount}개` : '아직 선택 없음'
-        };
-    }
-
     function renderDrawWizardDashboard({
         currentStep,
         progressInfo,
@@ -3783,89 +3749,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const baseFirstOdds = Number(baseOddsMap?.[1]) || TOTAL_COMBOS;
         const currentFirstOdds = Math.max(1, Math.round(baseFirstOdds * remainingRatio));
         const totalBenefitPct = Math.max(0, Math.round((1 - remainingRatio) * 100));
-        const selectionState = getDrawWizardDashboardSelectionState(currentStep, selectedCount, excludeCount);
-        const activeRules = getActiveRules();
-        const baselineRules = selectionState.stepRuleIds.size
-            ? activeRules.filter(rule => !selectionState.stepRuleIds.has(rule.id))
-            : activeRules;
-        const baselineRatio = selectionState.stepRuleIds.size
-            ? getEstimatedRemainingRatio(baselineRules)
-            : remainingRatio;
-        const baselineCombos = Math.max(1, Math.round(TOTAL_COMBOS * baselineRatio));
-        const stepReducedCombos = selectionState.stepRuleIds.size
-            ? Math.max(0, baselineCombos - remainingCombos)
-            : 0;
-        const stepBenefitPct = selectionState.stepRuleIds.size && baselineRatio > 0
-            ? Math.max(0, Math.round((1 - (remainingRatio / baselineRatio)) * 100))
-            : 0;
-        const selectionTotalCount = currentStep === 'rules'
-            ? selectionState.stepSelectionCount
-            : currentStep === 'exclude'
-                ? selectionState.stepSelectionCount
-                : selectedCount + excludeCount;
-        const selectionExcludeVisualCount = currentStep === 'exclude'
-            ? selectionState.stepSelectionCount
-            : excludeCount;
-        const gaugePct = currentStep === 'rules' || currentStep === 'exclude' ? stepBenefitPct : totalBenefitPct;
-        const compactViewTitle = String(viewMeta.title || '')
-            .replace(/\s*제외하기$/, '')
-            .replace(/\s*제외할 수 있습니다$/, '')
-            .replace(/\s*선택$/, '')
-            .trim() || '선택 변화';
+        const selectionTotalCount = selectedCount + excludeCount;
+        const selectionExcludeVisualCount = excludeCount;
+        const cumulativeReducedCombos = Number.isFinite(currentExcludedCombos) ? currentExcludedCombos : 0;
 
-        let dashboardTitle = compactViewTitle;
-        let dashboardCopy = '빼고 싶은 항목만 눌러 조합 범위를 좁혀보세요.';
-        let impactValue = gaugePct ? `+${gaugePct}%` : '0%';
-        let impactNote = gaugePct ? `${formatDrawWizardCompactCount(stepReducedCombos)} 감소` : '이번 단계 영향 대기';
-        let selectionValue = selectionState.stepSelectionLabel;
+        let dashboardTitle = '현재까지 누적 변화';
+        let dashboardCopy = '지금까지 고른 기준이 누적으로 반영되고 있습니다.';
+        let impactValue = totalBenefitPct ? `+${totalBenefitPct}%` : '0%';
+        let impactNote = cumulativeReducedCombos
+            ? `총 ${formatDrawWizardCompactCount(cumulativeReducedCombos)} 제외`
+            : '누적 변화 없음';
+        let selectionValue = selectionTotalCount
+            ? `규칙 ${selectedCount}개 · 제외 ${excludeCount}개`
+            : '아직 선택 없음';
         let selectionNote = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)} · ${remainingPct}%`;
         let visualLabel = selectionTotalCount ? `${selectionTotalCount}개 반영` : '선택 없음';
-        let visualNote = '지금 고른 항목 수';
+        let visualNote = '누적 반영 수';
 
-        if (currentStep === 'rules') {
-            dashboardCopy = selectionState.stepSelectionCount
-                ? '방금 고른 패턴이 1등 기준과 후보 수에 바로 반영됩니다.'
-                : '빼고 싶은 패턴만 눌러보세요.';
-            selectionValue = selectionState.stepSelectionCount
-                ? selectionState.stepSelectionLabel
-                : '이번 단계 선택 없음';
-            selectionNote = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)} · ${remainingPct}%`;
-            visualLabel = selectionState.stepSelectionCount ? `${selectionState.stepSelectionCount}개 선택` : '선택 없음';
-            visualNote = '이번 단계 반영 수';
-        } else if (currentStep === 'exclude') {
-            dashboardTitle = '직접 제외수';
-            dashboardCopy = selectionState.stepSelectionCount
-                ? '원치 않는 숫자가 마지막 범위를 바로 더 줄여줍니다.'
-                : '빼고 싶은 숫자만 마지막으로 선택하세요.';
-            impactNote = gaugePct ? `${formatDrawWizardCompactCount(stepReducedCombos)} 추가 감소` : '추가 영향 대기';
-            selectionValue = selectionState.stepSelectionCount ? selectionState.stepSelectionLabel : '직접 제외 없음';
-            selectionNote = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)} · ${remainingPct}%`;
-            visualLabel = selectionState.stepSelectionCount ? `${selectionState.stepSelectionCount}개 제외` : '선택 없음';
-            visualNote = '직접 제외 수';
+        if (currentStep === 'exclude') {
+            dashboardCopy = '직접 제외 숫자까지 포함한 누적 기준입니다.';
         } else if (currentStep === 'review') {
-            dashboardTitle = '최종 확인';
-            dashboardCopy = restriction.blocked ? '조건을 조금만 풀면 더 넓은 범위에서 생성할 수 있습니다.' : '지금 범위에서 바로 번호를 만들 수 있습니다.';
-            impactValue = totalBenefitPct ? `+${totalBenefitPct}%` : '0%';
-            impactNote = totalBenefitPct ? `기본 대비 ${totalBenefitPct}% 유리` : '기본과 동일';
-            selectionValue = selectedCount || excludeCount ? `규칙 ${selectedCount} · 제외 ${excludeCount}` : '선택 없음';
-            selectionNote = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)} · ${remainingPct}%`;
-            visualLabel = selectedCount || excludeCount ? `${selectedCount + excludeCount}개 반영` : '선택 없음';
-            visualNote = '전체 반영 수';
+            dashboardTitle = '최종 전 누적 현황';
+            dashboardCopy = restriction.blocked
+                ? '조건을 조금만 줄이면 더 넓은 범위에서 생성할 수 있습니다.'
+                : '이 누적 기준으로 바로 번호를 만들 수 있습니다.';
         } else if (currentStep === 'result') {
-            dashboardTitle = '최종 반영';
+            dashboardTitle = '최종 누적 결과';
             dashboardCopy = totalBenefitPct
-                ? '압축된 후보 범위에서 번호 생성을 마쳤습니다.'
+                ? '누적 기준이 반영된 범위에서 번호 생성을 마쳤습니다.'
                 : '기본 범위에 가까운 상태로 번호를 만들었습니다.';
-            impactValue = totalBenefitPct ? `+${totalBenefitPct}%` : '0%';
-            impactNote = totalBenefitPct ? `최종 ${formatDrawWizardCompactCount(currentExcludedCombos)} 제외` : '변화 없음';
-            selectionValue = selectedCount || excludeCount ? `규칙 ${selectedCount} · 제외 ${excludeCount}` : '선택 없음';
-            selectionNote = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)} · ${remainingPct}%`;
-            visualLabel = selectedCount || excludeCount ? `${selectedCount + excludeCount}개 반영` : '선택 없음';
-            visualNote = '최종 반영 수';
         }
 
         if (drawWizardDashboardStepEl) {
-            drawWizardDashboardStepEl.textContent = `${progressInfo.label} · ${progressInfo.count}`;
+            drawWizardDashboardStepEl.textContent = '누적 현황';
         }
         if (drawWizardDashboardTitleEl) {
             drawWizardDashboardTitleEl.textContent = dashboardTitle;
@@ -3882,7 +3798,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 : '기본과 동일';
         }
         if (drawWizardDashboardGaugeEl) {
-            const gaugeAngle = Math.max(0, Math.min(360, Math.round(gaugePct * 3.6)));
+            const gaugeAngle = Math.max(0, Math.min(360, Math.round(totalBenefitPct * 3.6)));
             drawWizardDashboardGaugeEl.style.setProperty('--draw-dashboard-gauge-angle', `${gaugeAngle}deg`);
         }
         if (drawWizardDashboardImpactEl) {
