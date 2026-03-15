@@ -3893,7 +3893,7 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardPrevBtn.disabled = currentStep === 'start';
         }
         if (drawWizardNextBtn) {
-            drawWizardNextBtn.hidden = currentStep === 'result';
+            drawWizardNextBtn.hidden = currentStep === 'result' || currentStep === 'start';
             drawWizardNextBtn.textContent = getDrawWizardNextLabel(currentStep);
             drawWizardNextBtn.disabled = !getDrawWizardCanProceed(currentStep);
         }
