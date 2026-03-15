@@ -17298,6 +17298,11 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     grid-template-rows: minmax(0, 1fr);
 }
 
+#tab-draw.draw-wizard-tab:not(.is-draw-intro-view) .draw-funnel-shell {
+    grid-template-rows: minmax(0, 1fr);
+    gap: 0;
+}
+
 #tab-draw.draw-wizard-tab .draw-funnel-header {
     position: relative;
     display: flex;
@@ -17308,6 +17313,10 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab.is-draw-intro-view .draw-funnel-header {
+    display: none;
+}
+
+#tab-draw.draw-wizard-tab:not(.is-draw-intro-view) .draw-funnel-header {
     display: none;
 }
 
@@ -17640,6 +17649,40 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-meter,
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-selection-visual {
         width: 28px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-screen--step {
+        gap: 9px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-screen-step-title-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-screen-step-title-row h3 {
+        font-size: 19px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-screen-step-progress {
+        min-height: 28px;
+        padding: 0 10px;
+        font-size: 11px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-screen-step-meta {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 10px 11px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-screen-step-note {
+        font-size: 11px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-funnel-inline-note {
+        justify-content: flex-start;
+        font-size: 10px;
     }
 }
 
@@ -17984,6 +18027,64 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-screen--step {
+    grid-template-rows: auto auto minmax(0, 1fr);
+    gap: 10px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-screen-step-head {
+    gap: 6px;
+    padding: 2px 2px 0;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-funnel-step-kicker {
+    display: none;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-screen-step-title-row {
+    align-items: start;
+    gap: 12px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-screen-step-title-row h3 {
+    font-size: clamp(20px, 2.4vw, 26px);
+    line-height: 1.14;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-screen-step-progress {
+    min-height: 30px;
+    padding: 0 11px;
+    background: rgba(19, 38, 61, 0.08);
+    color: #13263d;
+    font-size: 12px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-screen-step-meta {
+    padding: 10px 12px;
+    border-radius: 18px;
+    align-items: center;
+    background: rgba(19, 38, 61, 0.045);
+    border: 1px solid rgba(19, 38, 61, 0.06);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-screen-step-note {
+    font-size: 12px;
+    color: #43566d;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-funnel-inline-note {
+    min-height: 30px;
+    padding: 0 12px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(19, 38, 61, 0.08);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card,
