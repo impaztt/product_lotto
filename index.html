@@ -1882,8 +1882,32 @@
 	                            <strong id="draw-wizard-progress-count">START</strong>
 	                        </div>
 	                    </header>
-	                    <section class="draw-funnel-stage">
-	                        <div class="draw-funnel-panels">
+		                    <section class="draw-funnel-stage">
+		                        <section class="draw-funnel-dashboard" id="draw-wizard-dashboard" hidden aria-live="polite">
+		                            <div class="draw-funnel-dashboard-head">
+		                                <span class="draw-funnel-dashboard-step" id="draw-wizard-dashboard-step">1단계 · 1 / 7</span>
+		                                <strong id="draw-wizard-dashboard-title">선택한 조건 변화</strong>
+		                                <p id="draw-wizard-dashboard-copy">규칙을 고를 때마다 1등 기준과 남은 후보가 바로 갱신됩니다.</p>
+		                            </div>
+		                            <div class="draw-funnel-dashboard-metrics">
+		                                <article class="draw-funnel-dashboard-card">
+		                                    <span class="draw-funnel-dashboard-label">현재 1등 기준</span>
+		                                    <strong id="draw-wizard-dashboard-odds">1 / 8,145,060</strong>
+		                                    <p id="draw-wizard-dashboard-odds-note">기본과 동일</p>
+		                                </article>
+		                                <article class="draw-funnel-dashboard-card">
+		                                    <span class="draw-funnel-dashboard-label">이번 단계 변화</span>
+		                                    <strong id="draw-wizard-dashboard-impact">변화 대기</strong>
+		                                    <p id="draw-wizard-dashboard-impact-note">선택하면 이번 단계 영향이 따로 표시됩니다.</p>
+		                                </article>
+		                                <article class="draw-funnel-dashboard-card">
+		                                    <span class="draw-funnel-dashboard-label">현재 선택 상태</span>
+		                                    <strong id="draw-wizard-dashboard-selection">아직 선택 없음</strong>
+		                                    <p id="draw-wizard-dashboard-selection-note">남은 후보 8,145,060개 · 전체의 100%</p>
+		                                </article>
+		                            </div>
+		                        </section>
+		                        <div class="draw-funnel-panels">
 	                            <section class="draw-funnel-panel is-active" data-draw-wizard-step="start">
 	                                <div class="draw-screen draw-screen--intro">
 	                                    <div class="draw-screen-intro-copy">

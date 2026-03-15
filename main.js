@@ -155,9 +155,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const guestBannerEl = document.getElementById('guest-banner');
     const drawWizardPanels = Array.from(document.querySelectorAll('[data-draw-wizard-step]'));
     const drawWizardPanelsEl = drawTabPanel ? drawTabPanel.querySelector('.draw-funnel-panels') : null;
+    const drawWizardStageEl = drawTabPanel ? drawTabPanel.querySelector('.draw-funnel-stage') : null;
     const drawWizardStartPanelEl = drawTabPanel ? drawTabPanel.querySelector('[data-draw-wizard-step="start"]') : null;
     const drawWizardProgressLabelEl = document.getElementById('draw-wizard-progress-label');
     const drawWizardProgressCountEl = document.getElementById('draw-wizard-progress-count');
+    const drawWizardDashboardEl = document.getElementById('draw-wizard-dashboard');
+    const drawWizardDashboardStepEl = document.getElementById('draw-wizard-dashboard-step');
+    const drawWizardDashboardTitleEl = document.getElementById('draw-wizard-dashboard-title');
+    const drawWizardDashboardCopyEl = document.getElementById('draw-wizard-dashboard-copy');
+    const drawWizardDashboardOddsEl = document.getElementById('draw-wizard-dashboard-odds');
+    const drawWizardDashboardOddsNoteEl = document.getElementById('draw-wizard-dashboard-odds-note');
+    const drawWizardDashboardImpactEl = document.getElementById('draw-wizard-dashboard-impact');
+    const drawWizardDashboardImpactNoteEl = document.getElementById('draw-wizard-dashboard-impact-note');
+    const drawWizardDashboardSelectionEl = document.getElementById('draw-wizard-dashboard-selection');
+    const drawWizardDashboardSelectionNoteEl = document.getElementById('draw-wizard-dashboard-selection-note');
     const drawWizardScreenTitleEl = document.getElementById('draw-wizard-screen-title');
     const drawWizardScreenCopyEl = document.getElementById('draw-wizard-screen-copy');
     const drawWizardSelectionChipsEl = document.getElementById('draw-wizard-selection-chips');
@@ -3596,6 +3607,163 @@ document.addEventListener('DOMContentLoaded', () => {
             : '<div class="draw-funnel-empty-state">아직 선택된 규칙이 없습니다.</div>';
     }
 
+    function formatDrawWizardOddsLabel(value) {
+        return `1 / ${formatNumber(Math.max(1, Math.round(Number(value) || 1)))}`;
+    }
+
+    function getDrawWizardDashboardSelectionState(stepKey = getDrawWizardCurrentStep(), selectedCount = 0, excludeCount = 0) {
+        if (!drawWizardState) {
+            return {
+                stepRuleIds: new Set(),
+                stepSelectionCount: 0,
+                stepSelectionLabel: '아직 선택 없음'
+            };
+        }
+        if (stepKey === 'rules') {
+            const currentRuleStep = getDrawWizardCurrentRuleStep();
+            const selectedIds = new Set(drawWizardState.selectedRuleIds);
+            const selectedRules = currentRuleStep ? currentRuleStep.rules.filter(rule => selectedIds.has(rule.id)) : [];
+            return {
+                stepRuleIds: new Set(selectedRules.map(rule => rule.id)),
+                stepSelectionCount: selectedRules.length,
+                stepSelectionLabel: selectedRules.length ? `${selectedRules.length}개 규칙 선택` : '이번 단계 선택 없음'
+            };
+        }
+        if (stepKey === 'exclude') {
+            const count = drawWizardState.excludeNumbers.length;
+            return {
+                stepRuleIds: count ? new Set(['exclude_number']) : new Set(),
+                stepSelectionCount: count,
+                stepSelectionLabel: count ? `${count}개 숫자 제외` : '직접 제외 없음'
+            };
+        }
+        const totalCount = selectedCount + excludeCount;
+        return {
+            stepRuleIds: new Set(),
+            stepSelectionCount: totalCount,
+            stepSelectionLabel: totalCount ? `규칙 ${selectedCount}개 · 제외 ${excludeCount}개` : '아직 선택 없음'
+        };
+    }
+
+    function renderDrawWizardDashboard({
+        currentStep,
+        progressInfo,
+        viewMeta,
+        restriction,
+        selectedCount,
+        excludeCount
+    }) {
+        const showDashboard = Boolean(drawWizardDashboardEl && currentStep !== 'start');
+        if (drawWizardStageEl) {
+            drawWizardStageEl.classList.toggle('has-dashboard', showDashboard);
+        }
+        if (!drawWizardDashboardEl) {
+            return;
+        }
+        drawWizardDashboardEl.hidden = !showDashboard;
+        if (!showDashboard) {
+            return;
+        }
+
+        const remainingRatio = Number.isFinite(currentRemainingRatio) && currentRemainingRatio > 0
+            ? currentRemainingRatio
+            : 1;
+        const remainingCombos = Number.isFinite(currentRemainingCombos) ? currentRemainingCombos : TOTAL_COMBOS;
+        const remainingPct = Math.max(0, Math.min(100, Math.round(remainingRatio * 1000) / 10));
+        const baseOddsMap = getBaseOddsMap();
+        const baseFirstOdds = Number(baseOddsMap?.[1]) || TOTAL_COMBOS;
+        const currentFirstOdds = Math.max(1, Math.round(baseFirstOdds * remainingRatio));
+        const totalBenefitPct = Math.max(0, Math.round((1 - remainingRatio) * 100));
+        const selectionState = getDrawWizardDashboardSelectionState(currentStep, selectedCount, excludeCount);
+        const activeRules = getActiveRules();
+        const baselineRules = selectionState.stepRuleIds.size
+            ? activeRules.filter(rule => !selectionState.stepRuleIds.has(rule.id))
+            : activeRules;
+        const baselineRatio = selectionState.stepRuleIds.size
+            ? getEstimatedRemainingRatio(baselineRules)
+            : remainingRatio;
+        const baselineCombos = Math.max(1, Math.round(TOTAL_COMBOS * baselineRatio));
+        const stepReducedCombos = selectionState.stepRuleIds.size
+            ? Math.max(0, baselineCombos - remainingCombos)
+            : 0;
+        const stepBenefitPct = selectionState.stepRuleIds.size && baselineRatio > 0
+            ? Math.max(0, Math.round((1 - (remainingRatio / baselineRatio)) * 100))
+            : 0;
+
+        let dashboardTitle = viewMeta.title;
+        let dashboardCopy = '';
+        let impactValue = '변화 대기';
+        let impactNote = '선택하면 이번 단계 영향이 따로 계산됩니다.';
+
+        if (currentStep === 'rules') {
+            dashboardTitle = `${viewMeta.title} 선택 영향`;
+            dashboardCopy = selectionState.stepSelectionCount
+                ? `${selectionState.stepSelectionLabel}이 1등 기준과 남은 후보 수를 즉시 다시 계산합니다.`
+                : '이 단계에서 규칙을 고르면 얼마나 더 좁혀지는지 바로 확인할 수 있습니다.';
+            impactValue = stepReducedCombos ? `-${formatNumber(stepReducedCombos)}개` : '변화 없음';
+            impactNote = selectionState.stepSelectionCount
+                ? stepBenefitPct
+                    ? `${selectionState.stepSelectionLabel} · 추가 유리 ${stepBenefitPct}%`
+                    : `${selectionState.stepSelectionLabel} · 추가 변화 없음`
+                : '규칙을 선택하면 이번 단계 영향이 따로 보입니다.';
+        } else if (currentStep === 'exclude') {
+            dashboardTitle = '직접 제외수 반영 변화';
+            dashboardCopy = selectionState.stepSelectionCount
+                ? `직접 제외한 숫자가 마지막 후보 범위와 1등 기준에 바로 반영됩니다.`
+                : '원치 않는 숫자를 제외하면 마지막 변화 폭이 여기에서 갱신됩니다.';
+            impactValue = stepReducedCombos ? `-${formatNumber(stepReducedCombos)}개` : '변화 없음';
+            impactNote = selectionState.stepSelectionCount
+                ? stepBenefitPct
+                    ? `${selectionState.stepSelectionLabel} · 추가 유리 ${stepBenefitPct}%`
+                    : `${selectionState.stepSelectionLabel} · 추가 변화 없음`
+                : '직접 제외수를 고르면 마지막 영향이 따로 보입니다.';
+        } else if (currentStep === 'review') {
+            dashboardTitle = '지금까지 고른 조건의 누적 변화';
+            dashboardCopy = restriction.body;
+            impactValue = totalBenefitPct ? `${totalBenefitPct}% 유리` : '변화 없음';
+            impactNote = '전체 선택을 합친 누적 변화입니다.';
+        } else if (currentStep === 'result') {
+            dashboardTitle = '최종 반영 결과';
+            dashboardCopy = totalBenefitPct
+                ? `선택한 조건으로 기본보다 ${totalBenefitPct}% 유리한 범위에서 번호를 만들었습니다.`
+                : '기본 범위와 거의 같은 수준으로 번호가 만들어졌습니다.';
+            impactValue = totalBenefitPct ? `${totalBenefitPct}% 유리` : '변화 없음';
+            impactNote = '결과에 반영된 최종 누적 변화입니다.';
+        }
+
+        if (drawWizardDashboardStepEl) {
+            drawWizardDashboardStepEl.textContent = `${progressInfo.label} · ${progressInfo.count}`;
+        }
+        if (drawWizardDashboardTitleEl) {
+            drawWizardDashboardTitleEl.textContent = dashboardTitle;
+        }
+        if (drawWizardDashboardCopyEl) {
+            drawWizardDashboardCopyEl.textContent = dashboardCopy;
+        }
+        if (drawWizardDashboardOddsEl) {
+            drawWizardDashboardOddsEl.textContent = formatDrawWizardOddsLabel(currentFirstOdds);
+        }
+        if (drawWizardDashboardOddsNoteEl) {
+            drawWizardDashboardOddsNoteEl.textContent = totalBenefitPct
+                ? `기본 ${formatDrawWizardOddsLabel(baseFirstOdds)} 대비 ${totalBenefitPct}% 유리`
+                : `기본 ${formatDrawWizardOddsLabel(baseFirstOdds)}와 동일`;
+        }
+        if (drawWizardDashboardImpactEl) {
+            drawWizardDashboardImpactEl.textContent = impactValue;
+        }
+        if (drawWizardDashboardImpactNoteEl) {
+            drawWizardDashboardImpactNoteEl.textContent = impactNote;
+        }
+        if (drawWizardDashboardSelectionEl) {
+            drawWizardDashboardSelectionEl.textContent = selectedCount || excludeCount
+                ? `규칙 ${selectedCount}개 · 제외 ${excludeCount}개`
+                : '아직 선택 없음';
+        }
+        if (drawWizardDashboardSelectionNoteEl) {
+            drawWizardDashboardSelectionNoteEl.textContent = `남은 후보 ${formatNumber(remainingCombos)}개 · 전체의 ${remainingPct}%`;
+        }
+    }
+
     function triggerDrawWizardTransition() {
         if (!drawWizardPanelsEl) {
             return;
@@ -3682,6 +3850,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (drawWizardWarningBodyEl) {
             drawWizardWarningBodyEl.textContent = restriction.body;
         }
+        renderDrawWizardDashboard({
+            currentStep,
+            progressInfo,
+            viewMeta,
+            restriction,
+            selectedCount,
+            excludeCount
+        });
         if (drawWizardExcludeSummaryEl) {
             drawWizardExcludeSummaryEl.textContent = excludeCount
                 ? `${excludeCount}개 직접 제외: ${drawWizardState.excludeNumbers.join(', ')}`
@@ -5274,7 +5450,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const target = event.target instanceof Element ? event.target : null;
-        if (target && target.closest('button, input, textarea, a, .help-chat-form, .help-chat-action')) {
+        const currentTarget = event.currentTarget instanceof Element ? event.currentTarget : null;
+        const blockedTarget = target ? target.closest('button, input, textarea, a, .help-chat-form, .help-chat-action') : null;
+        if (blockedTarget && blockedTarget !== currentTarget) {
             return;
         }
         const rect = helpChatWidgetEl.getBoundingClientRect();
