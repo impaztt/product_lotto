@@ -12058,7 +12058,8 @@ body[data-theme="dark"] #tab-draw {
 #welcome-modal .onboarding-modal-content {
     width: min(660px, calc(var(--welcome-modal-viewport-width, 100vw) - 18px));
     display: grid;
-    grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    align-content: stretch;
     gap: 14px;
     padding: clamp(22px, 2.8vw, 30px) clamp(18px, 2.4vw, 26px) clamp(24px, 3vw, 30px);
     overflow-x: hidden;
@@ -12092,6 +12093,7 @@ body[data-theme="dark"] #tab-draw {
 #welcome-modal .onboarding-slide-card--visual {
     gap: 14px;
     min-height: 100%;
+    height: 100%;
     padding: 20px;
     border-radius: 24px;
     grid-template-rows: auto minmax(0, 1fr) auto;
@@ -12122,8 +12124,9 @@ body[data-theme="dark"] #tab-draw {
 
 #welcome-modal .onboarding-visual-shell {
     display: grid;
+    height: 100%;
     min-height: 0;
-    align-content: center;
+    align-content: stretch;
     gap: 12px;
     padding: 12px;
     border-radius: 22px;
@@ -12153,7 +12156,8 @@ body[data-theme="dark"] #tab-draw {
 #welcome-modal .onboarding-visual-svg {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
+    min-height: 0;
     border-radius: 20px;
 }
 
@@ -12172,11 +12176,13 @@ body[data-theme="dark"] #tab-draw {
     display: grid;
     min-height: 0;
     height: 100%;
+    align-self: stretch;
 }
 
 #welcome-modal .onboarding-carousel-track,
 #welcome-modal .onboarding-slide {
     min-height: 100%;
+    height: 100%;
 }
 
 #welcome-modal .onboarding-visual-tag {
@@ -12217,13 +12223,15 @@ body[data-theme="dark"] #tab-draw {
 }
 
 #welcome-modal .onboarding-controls {
-    margin-top: 2px;
+    margin-top: 0;
     gap: 12px;
+    align-self: end;
 }
 
 #welcome-modal .onboarding-actions {
-    margin-top: 4px;
+    margin-top: 0;
     gap: 10px;
+    align-self: end;
 }
 
 #welcome-modal .onboarding-nav-btn {
@@ -12257,10 +12265,12 @@ body[data-theme="dark"] #tab-draw {
 
     #welcome-modal .onboarding-modal-content {
         width: min(100%, calc(var(--welcome-modal-viewport-width, 100vw) - 14px));
+        height: calc(var(--welcome-modal-viewport-height, 100dvh) - var(--welcome-modal-top-gap, 16px) - var(--welcome-modal-bottom-gap, 16px));
         min-height: calc(var(--welcome-modal-viewport-height, 100dvh) - var(--welcome-modal-top-gap, 16px) - var(--welcome-modal-bottom-gap, 16px));
         max-height: calc(var(--welcome-modal-viewport-height, 100dvh) - var(--welcome-modal-top-gap, 16px) - var(--welcome-modal-bottom-gap, 16px));
         gap: 12px;
         padding: 20px 15px calc(20px + env(safe-area-inset-bottom));
+        overflow-y: hidden;
     }
 
     #welcome-modal .onboarding-hero {
@@ -12279,7 +12289,7 @@ body[data-theme="dark"] #tab-draw {
 
     #welcome-modal .onboarding-slide-card--visual {
         gap: 12px;
-        min-height: clamp(360px, calc(var(--welcome-modal-viewport-height, 100dvh) * 0.5), 560px);
+        min-height: 100%;
         padding: 16px;
         border-radius: 22px;
     }
@@ -12324,6 +12334,7 @@ body[data-theme="dark"] #tab-draw {
 
     #welcome-modal .onboarding-controls {
         gap: 10px;
+        padding-top: 2px;
     }
 
     #welcome-modal .onboarding-nav-btn {
@@ -12350,6 +12361,7 @@ body[data-theme="dark"] #tab-draw {
 
     #welcome-modal .onboarding-modal-content {
         width: min(100%, calc(var(--welcome-modal-viewport-width, 100vw) - 12px));
+        height: calc(var(--welcome-modal-viewport-height, 100dvh) - var(--welcome-modal-top-gap, 12px) - var(--welcome-modal-bottom-gap, 12px));
         min-height: calc(var(--welcome-modal-viewport-height, 100dvh) - var(--welcome-modal-top-gap, 12px) - var(--welcome-modal-bottom-gap, 12px));
         max-height: calc(var(--welcome-modal-viewport-height, 100dvh) - var(--welcome-modal-top-gap, 12px) - var(--welcome-modal-bottom-gap, 12px));
         gap: 11px;
@@ -12361,7 +12373,7 @@ body[data-theme="dark"] #tab-draw {
     }
 
     #welcome-modal .onboarding-slide-card--visual {
-        min-height: clamp(320px, calc(var(--welcome-modal-viewport-height, 100dvh) * 0.48), 500px);
+        min-height: 100%;
         gap: 11px;
         padding: 14px;
         border-radius: 20px;
