@@ -12160,8 +12160,16 @@ body[data-theme="dark"] #tab-draw {
     height: 100%;
     min-height: 0;
     border-radius: 20px;
-    transform: scale(1.08);
     transform-origin: center center;
+}
+
+#welcome-modal .onboarding-visual-svg--desktop {
+    transform: scale(1.08);
+}
+
+#welcome-modal .onboarding-visual-svg--mobile {
+    display: none;
+    transform: none;
 }
 
 #welcome-modal .onboarding-visual-svg text {
@@ -12318,8 +12326,12 @@ body[data-theme="dark"] #tab-draw {
         border-radius: 18px;
     }
 
-    #welcome-modal .onboarding-visual-svg {
-        transform: scale(1.12);
+    #welcome-modal .onboarding-visual-svg--desktop {
+        display: none;
+    }
+
+    #welcome-modal .onboarding-visual-svg--mobile {
+        display: block;
     }
 
     #welcome-modal .onboarding-visual-legend {
@@ -12401,8 +12413,8 @@ body[data-theme="dark"] #tab-draw {
         border-radius: 16px;
     }
 
-    #welcome-modal .onboarding-visual-svg {
-        transform: scale(1.16);
+    #welcome-modal .onboarding-visual-svg--mobile {
+        display: block;
     }
 
     #welcome-modal .onboarding-visual-legend {
