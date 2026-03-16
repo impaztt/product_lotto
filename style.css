@@ -18220,8 +18220,8 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     padding: 14px;
     border-radius: 20px;
     display: grid;
-    grid-template-rows: auto auto 1fr auto;
-    gap: 7px;
+    grid-template-rows: auto 1fr;
+    gap: 10px;
     text-align: left;
     transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
@@ -18243,11 +18243,73 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     line-height: 1.22;
 }
 
+#tab-draw.draw-wizard-tab .draw-funnel-rule-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 116px;
+    gap: 12px;
+    align-items: start;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-copy {
+    min-width: 0;
+    display: grid;
+    gap: 6px;
+}
+
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card p {
     margin: 0;
     font-size: 12px;
     color: #61758d;
     line-height: 1.36;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-impact {
+    min-width: 0;
+    padding: 10px;
+    border-radius: 16px;
+    display: grid;
+    gap: 6px;
+    align-content: start;
+    background: linear-gradient(180deg, rgba(244, 248, 252, 0.98), rgba(237, 244, 250, 0.92));
+    border: 1px solid rgba(19, 38, 61, 0.08);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-impact-label {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(19, 38, 61, 0.56);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-impact-value {
+    color: #10233a;
+    font-size: 19px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-impact-meter {
+    width: 100%;
+    height: 7px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(19, 38, 61, 0.1);
+    box-shadow: inset 0 1px 2px rgba(19, 38, 61, 0.08);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-impact-meter span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #13263d 0%, #2f6df6 58%, #ec9f33 100%);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-impact-note {
+    margin: 0;
+    font-size: 10px;
+    line-height: 1.35;
+    color: #5f738a;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-samples {
@@ -18266,19 +18328,33 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-state {
-    justify-self: start;
-    align-self: end;
+    justify-self: stretch;
     display: inline-flex;
     align-items: center;
-    min-height: 30px;
-    padding: 0 12px;
+    justify-content: center;
+    min-height: 28px;
+    padding: 0 10px;
     border-radius: 999px;
     background: rgba(19, 38, 61, 0.07);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.02em;
     text-transform: uppercase;
     color: #38546d;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-selected .draw-funnel-rule-impact {
+    background: linear-gradient(180deg, rgba(255, 243, 232, 0.98), rgba(255, 235, 216, 0.92));
+    border-color: rgba(233, 93, 53, 0.18);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-selected .draw-funnel-rule-impact-meter span {
+    background: linear-gradient(90deg, #ec9f33 0%, #eb6b3f 100%);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-selected .draw-funnel-rule-state {
+    background: rgba(233, 93, 53, 0.12);
+    color: #bf4f1e;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-exclude-shell,
@@ -18563,7 +18639,31 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     #tab-draw.draw-wizard-tab .draw-funnel-rule-card {
         padding: 13px;
         border-radius: 18px;
-        gap: 6px;
+        gap: 8px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-rule-main {
+        grid-template-columns: minmax(0, 1fr) 108px;
+        gap: 10px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-rule-impact {
+        padding: 9px;
+        border-radius: 14px;
+        gap: 5px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-value {
+        font-size: 17px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-note {
+        font-size: 9px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-rule-state {
+        min-height: 26px;
+        font-size: 9px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-samples {
@@ -18650,6 +18750,19 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     #tab-draw.draw-wizard-tab .draw-funnel-rule-card {
         padding: 12px;
         border-radius: 16px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-rule-main {
+        grid-template-columns: minmax(0, 1fr) 100px;
+        gap: 8px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-rule-impact {
+        padding: 8px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-value {
+        font-size: 16px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-card strong {

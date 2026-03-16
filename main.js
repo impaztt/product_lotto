@@ -3556,6 +3556,34 @@ document.addEventListener('DOMContentLoaded', () => {
             : '<span class="draw-funnel-chip is-empty">아직 선택 없음</span>';
     }
 
+    function getDrawWizardRuleImpactMeta(ruleId, { active = false } = {}) {
+        const stat = RULE_STATS?.[ruleId];
+        const ratio = Math.max(0, Math.min(0.95, Number(stat?.ratio) || 0));
+        if (!ratio) {
+            return {
+                label: active ? '적용 중' : '선택 시',
+                value: '기본',
+                note: active ? '현재 반영됨' : '추가 반영',
+                meterPct: 12,
+                stateLabel: active ? '제외 선택됨' : '눌러서 제외'
+            };
+        }
+        const gainPct = ((1 / (1 - ratio)) - 1) * 100;
+        const currentCombos = Math.max(1, Math.round(Number(currentRemainingCombos) || TOTAL_COMBOS));
+        const affectedCombos = active
+            ? Math.round(currentCombos * (ratio / (1 - ratio)))
+            : Math.round(currentCombos * ratio);
+        return {
+            label: active ? '적용 중' : '선택 시',
+            value: `+${Math.max(1, Math.round(gainPct))}%`,
+            note: active
+                ? `${formatDrawWizardCompactCount(affectedCombos)} 줄인 상태`
+                : `${formatDrawWizardCompactCount(affectedCombos)} 더 제외`,
+            meterPct: Math.max(14, Math.min(100, Math.round(gainPct))),
+            stateLabel: active ? '제외 선택됨' : '눌러서 제외'
+        };
+    }
+
     function renderDrawWizardRuleStep() {
         if (!drawWizardDetailGroupsEl || !drawWizardDetailNoteEl || !drawWizardState) {
             return;
@@ -3584,12 +3612,25 @@ document.addEventListener('DOMContentLoaded', () => {
         drawWizardDetailGroupsEl.innerHTML = currentRuleStep.rules.map(rule => {
             const active = selectedIds.has(rule.id);
             const description = rule.desc || rule.detail || '선택 시 이 패턴을 제외합니다.';
+            const impact = getDrawWizardRuleImpactMeta(rule.id, { active });
             return `
                 <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}" type="button" data-wizard-rule="${escapeHtml(rule.id)}" aria-pressed="${String(active)}">
-                    <strong>${escapeHtml(rule.title)}</strong>
-                    <p>${escapeHtml(description)}</p>
+                    <div class="draw-funnel-rule-main">
+                        <div class="draw-funnel-rule-copy">
+                            <strong>${escapeHtml(rule.title)}</strong>
+                            <p>${escapeHtml(description)}</p>
+                        </div>
+                        <div class="draw-funnel-rule-impact">
+                            <span class="draw-funnel-rule-impact-label">${escapeHtml(impact.label)}</span>
+                            <strong class="draw-funnel-rule-impact-value">${escapeHtml(impact.value)}</strong>
+                            <span class="draw-funnel-rule-impact-meter" aria-hidden="true">
+                                <span style="width:${escapeHtml(String(impact.meterPct))}%"></span>
+                            </span>
+                            <p class="draw-funnel-rule-impact-note">${escapeHtml(impact.note)}</p>
+                            <span class="draw-funnel-rule-state">${escapeHtml(impact.stateLabel)}</span>
+                        </div>
+                    </div>
                     ${getDrawWizardRulePreviewHtml(rule.id)}
-                    <span class="draw-funnel-rule-state">${active ? '제외 선택됨' : '눌러서 제외하기'}</span>
                 </button>
             `;
         }).join('');
