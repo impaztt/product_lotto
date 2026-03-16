@@ -22,7 +22,7 @@
 
 #tab-mypage .mypage-simple-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: 16px;
 }
 
@@ -119,6 +119,14 @@
     margin-bottom: 4px;
 }
 
+#tab-mypage .mypage-account-helper--subtle {
+    margin-top: -2px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    color: #667085;
+}
+
 #tab-store .locker-layout {
     gap: 16px;
 }
@@ -129,6 +137,44 @@
 
 #tab-store .locker-panel--history {
     gap: 16px;
+}
+
+#tab-store .locker-saved-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+#tab-store .locker-saved-row {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(248, 250, 252, 0.92);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+#tab-store .locker-saved-row span {
+    color: #667085;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+
+#tab-store .locker-saved-row strong {
+    min-width: 0;
+    color: #111827;
+    font-size: 17px;
+    line-height: 1.25;
+    letter-spacing: -0.03em;
+}
+
+#tab-store .locker-saved-row em {
+    color: #4b5563;
+    font-size: 12px;
+    line-height: 1.45;
+    font-style: normal;
 }
 
 #tab-store .locker-history-list {
@@ -284,6 +330,11 @@ body[data-theme="dark"] #tab-store .locker-history-ball {
     background: linear-gradient(180deg, rgba(36, 75, 147, 0.9) 0%, rgba(27, 100, 218, 0.82) 100%);
 }
 
+body[data-theme="dark"] #tab-store .locker-saved-row {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(137, 180, 255, 0.1);
+}
+
 body[data-theme="dark"] #tab-mypage .mypage-plan-copy-compact span,
 body[data-theme="dark"] #tab-mypage .mypage-mini-kpi span,
 body[data-theme="dark"] #tab-store .locker-history-meta,
@@ -291,9 +342,21 @@ body[data-theme="dark"] #tab-store .locker-history-empty p {
     color: #b7c5d8;
 }
 
+body[data-theme="dark"] #tab-store .locker-saved-row strong {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-store .locker-saved-row em {
+    color: #b7c5d8;
+}
+
 @media (max-width: 960px) {
     #tab-mypage .mypage-simple-grid,
     #tab-store .locker-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-store .locker-saved-grid {
         grid-template-columns: 1fr;
     }
 }

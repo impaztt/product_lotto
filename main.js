@@ -4692,17 +4692,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const member = isMember();
         const premiumActive = isPremiumMember();
         const recommendedSetCount = member ? getRecommendedSetCount(plan.id) : 0;
-        const savedRules = readStoredRuleIds('lotto_rules');
-        const customPreset = readStoredRuleIds('lotto_custom_preset');
-        const savedRulesUpdatedAt = localStorage.getItem(RULES_UPDATED_AT_KEY) || '';
-        const customPresetUpdatedAt = localStorage.getItem(CUSTOM_PRESET_UPDATED_AT_KEY) || '';
-        const generatedSessions = getGeneratedHistoryForCurrentOwner();
-        const latestSession = generatedSessions[0] || null;
-        const generatedSetCount = generatedSessions.reduce((sum, item) => sum + Math.max(0, Number(item && item.setCount) || 0), 0);
-        const totalPresetCount = savedRules.length + customPreset.length;
-        const latestPresetAt = [savedRulesUpdatedAt, customPresetUpdatedAt]
-            .filter(Boolean)
-            .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0] || '';
 
         if (mypageProfileEmailEl) {
             if (authPending) {
@@ -4819,29 +4808,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 : `${label} 로그인 후 시작`;
             actionButton.setAttribute('aria-pressed', String(isCurrent));
         });
-        if (mypagePresetBadgeEl) {
-            mypagePresetBadgeEl.textContent = `${totalPresetCount}개`;
-        }
-        if (mypagePresetSummaryEl) {
-            if (totalPresetCount) {
-                mypagePresetSummaryEl.textContent = `기본 ${savedRules.length}개 · 내 기준 ${customPreset.length}개`;
-            } else {
-                mypagePresetSummaryEl.textContent = '저장한 규칙 없음';
-            }
-        }
-        if (mypagePresetUpdatedEl) {
-            mypagePresetUpdatedEl.textContent = latestPresetAt ? formatRelativeTime(latestPresetAt) : '아직 저장 없음';
-        }
-        if (mypageSlotSummaryEl) {
-            mypageSlotSummaryEl.textContent = generatedSessions.length
-                ? `${generatedSessions.length}회 · ${formatNumber(generatedSetCount)}세트`
-                : '자동 저장 대기';
-        }
-        if (mypageSlotUpdatedEl) {
-            mypageSlotUpdatedEl.textContent = latestSession
-                ? `${Number(latestSession.round || 0) > 0 ? `${Number(latestSession.round)}회` : '회차 없음'} · ${formatRelativeTime(latestSession.createdAt)}`
-                : '생성 번호는 보관함에 자동 저장됩니다.';
-        }
         if (mypageStatsGeneratedEl) {
             mypageStatsGeneratedEl.textContent = `${formatNumber(stats.totalSets || 0)}세트`;
         }
@@ -4863,6 +4829,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalSets = sessions.reduce((sum, item) => sum + Math.max(0, Number(item.setCount || 0)), 0);
         const latest = sessions[0] || null;
         const lastRound = Number(latest?.round || stats.lastRound || 0);
+        const savedRules = readStoredRuleIds('lotto_rules');
+        const customPreset = readStoredRuleIds('lotto_custom_preset');
+        const savedRulesUpdatedAt = localStorage.getItem(RULES_UPDATED_AT_KEY) || '';
+        const customPresetUpdatedAt = localStorage.getItem(CUSTOM_PRESET_UPDATED_AT_KEY) || '';
+        const totalPresetCount = savedRules.length + customPreset.length;
+        const latestPresetAt = [savedRulesUpdatedAt, customPresetUpdatedAt]
+            .filter(Boolean)
+            .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0] || '';
 
         if (lockerSessionCountEl) {
             lockerSessionCountEl.textContent = `${sessions.length}회`;
@@ -4889,6 +4863,27 @@ document.addEventListener('DOMContentLoaded', () => {
             lockerLastNoteTextEl.textContent = latest
                 ? `${Number(latest.setCount || 0)}세트 저장`
                 : '최근 생성 내역이 없습니다.';
+        }
+        if (mypagePresetBadgeEl) {
+            mypagePresetBadgeEl.textContent = `${totalPresetCount}개`;
+        }
+        if (mypagePresetSummaryEl) {
+            mypagePresetSummaryEl.textContent = totalPresetCount
+                ? `기본 ${savedRules.length}개 · 내 기준 ${customPreset.length}개`
+                : '저장한 규칙 없음';
+        }
+        if (mypagePresetUpdatedEl) {
+            mypagePresetUpdatedEl.textContent = latestPresetAt ? formatRelativeTime(latestPresetAt) : '아직 저장 없음';
+        }
+        if (mypageSlotSummaryEl) {
+            mypageSlotSummaryEl.textContent = sessions.length
+                ? `${sessions.length}회 · ${formatNumber(totalSets)}세트`
+                : '자동 저장 대기';
+        }
+        if (mypageSlotUpdatedEl) {
+            mypageSlotUpdatedEl.textContent = latest
+                ? `${lastRound > 0 ? `${lastRound}회` : '회차 없음'} · ${formatRelativeTime(latest.createdAt)}`
+                : '생성 번호는 보관함에 자동 저장됩니다.';
         }
         renderLockerHistoryUi();
     }
@@ -5959,7 +5954,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return;
         }
-        firebaseAuthStatusEl.textContent = '로그인하면 저장한 기준과 추천 이력이 바로 이어집니다.';
+        firebaseAuthStatusEl.textContent = '로그인하면 계정과 사용 기록이 이어집니다.';
     }
 
     function setFirebaseAuthStatus(message) {
@@ -6032,7 +6027,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setGoogleRedirectPendingState(false);
             await syncAuthState(redirectUser);
             updateRulesStatus('구글 가입/로그인 성공');
-            setFirebaseAuthStatus('구글 로그인 완료. 저장한 기준과 기록을 불러오는 중입니다.');
+            setFirebaseAuthStatus('구글 로그인 완료. 계정 정보를 불러오는 중입니다.');
         } catch (error) {
             setGoogleRedirectPendingState(false);
             console.error('구글 리디렉션 로그인 실패', error);
@@ -6080,7 +6075,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 await syncAuthState(result.user);
             }
             updateRulesStatus('구글 가입/로그인 성공');
-            setFirebaseAuthStatus('구글 로그인 완료. 저장한 기준과 기록을 불러오는 중입니다.');
+            setFirebaseAuthStatus('구글 로그인 완료. 계정 정보를 불러오는 중입니다.');
             return true;
         } catch (error) {
             console.error('구글 로그인 실패', error);
