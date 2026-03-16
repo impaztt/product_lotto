@@ -170,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawWizardDashboardImpactNoteEl = document.getElementById('draw-wizard-dashboard-impact-note');
     const drawWizardDashboardMeterFillEl = document.getElementById('draw-wizard-dashboard-meter-fill');
     const drawWizardDashboardSelectionEl = document.getElementById('draw-wizard-dashboard-selection');
+    const drawWizardDashboardSelectionMetaEl = document.getElementById('draw-wizard-dashboard-selection-meta');
     const drawWizardDashboardSelectionNoteEl = document.getElementById('draw-wizard-dashboard-selection-note');
     const drawWizardDashboardSelectionVisualEl = document.getElementById('draw-wizard-dashboard-selection-visual');
     const drawWizardDashboardVisualLabelEl = document.getElementById('draw-wizard-dashboard-visual-label');
@@ -3932,41 +3933,92 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalBenefitPct = Math.max(0, Math.round((1 - remainingRatio) * 100));
         const selectionTotalCount = selectedCount + excludeCount;
         const selectionExcludeVisualCount = excludeCount;
-        const cumulativeReducedCombos = Number.isFinite(currentExcludedCombos) ? currentExcludedCombos : 0;
+        const dashboardStepLabel = viewMeta?.navTitle || progressInfo?.label || '현재';
+        const hasSelection = selectionTotalCount > 0;
+        const dashboardState = currentStep === 'result'
+            ? 'result'
+            : restriction.blocked && (hasSelection || currentStep === 'review')
+                ? 'warning'
+                : hasSelection
+                    ? 'active'
+                    : 'idle';
 
-        let dashboardStep = '누적 현황';
-        let dashboardTitle = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)}`;
-        let dashboardCopy = selectionTotalCount
-            ? `규칙 ${selectedCount}개 · 제외수 ${excludeCount}개 반영`
-            : '아직 선택 전 · 기본 범위 유지';
-        let oddsNote = totalBenefitPct
-            ? `1등 기대 +${totalBenefitPct}%`
-            : '1등 기준 기본';
+        let dashboardStep = `${dashboardStepLabel} · 진행 현황`;
+        let dashboardTitle = '핵심 수치만 보면서 과하게 줄지 않는지 확인하세요';
+        let dashboardCopy = hasSelection
+            ? '남은 후보와 기대 변화만 빠르게 확인하면서 필요한 조건만 남길 수 있습니다.'
+            : '규칙이나 직접 제외수를 고르면 여기 수치가 바로 갱신됩니다.';
+        let statusValue = hasSelection ? '조건 반영 중' : '기본 범위';
+        let statusNote = hasSelection
+            ? excludeCount
+                ? `규칙 ${selectedCount}개 · 직접 제외 ${excludeCount}개`
+                : `규칙 ${selectedCount}개 선택`
+            : '아직 선택 전';
+        let selectionValue = formatDrawWizardCompactCount(remainingCombos);
+        let selectionMeta = `1등 기준 ${formatDrawWizardCompactOddsLabel(currentFirstOdds)}`;
+        let selectionNote = hasSelection
+            ? `전체의 ${remainingPct}% 범위가 추첨 대상입니다.`
+            : '전체 조합이 그대로 추첨 대상입니다.';
         let impactValue = totalBenefitPct ? `+${totalBenefitPct}%` : '기본';
-        let impactNote = '1등 기대';
-        let selectionValue = `${remainingPct}%`;
-        let selectionNote = '남은 범위';
-        let visualLabel = cumulativeReducedCombos ? formatDrawWizardCompactCount(cumulativeReducedCombos) : '0개';
-        let visualNote = selectionTotalCount ? '누적 제외' : '선택 없음';
+        let impactNote = totalBenefitPct ? '1등 기대 변화' : '기대 변화 없음';
+        let visualLabel = `${selectionTotalCount}개 적용`;
+        let visualNote = hasSelection
+            ? excludeCount
+                ? `규칙 ${selectedCount}개 · 직접 제외 ${excludeCount}개`
+                : `규칙 ${selectedCount}개 선택`
+            : '규칙과 직접 제외수가 여기서 요약됩니다.';
 
-        if (progressInfo?.label) {
-            dashboardStep = `${progressInfo.label} · 누적 현황`;
-        }
-        if (currentStep === 'exclude') {
-            dashboardCopy = selectionTotalCount
-                ? `규칙 ${selectedCount}개 · 제외수 ${excludeCount}개 반영`
-                : '직접 제외수까지 더해 범위를 줄여보세요';
+        if (currentStep === 'rules') {
+            dashboardTitle = '패턴을 덜어낼수록 남은 후보가 바로 줄어듭니다';
+            dashboardCopy = hasSelection
+                ? '과하게 줄지 않는지만 보고 필요한 패턴만 제외해 두면 됩니다.'
+                : '빼고 싶은 패턴만 누르면 후보 수와 기대 변화가 즉시 반영됩니다.';
+            statusValue = hasSelection ? '규칙 반영 중' : '기본 범위';
+            statusNote = hasSelection ? `규칙 ${selectedCount}개 선택` : '아직 규칙 선택 전';
+        } else if (currentStep === 'exclude') {
+            dashboardTitle = '직접 제외수는 마지막 미세 조정 단계입니다';
+            dashboardCopy = excludeCount
+                ? '선택한 숫자가 포함된 조합만 추가로 걸러내고 바로 최종 확인으로 넘어갈 수 있습니다.'
+                : '필요한 숫자만 직접 제외하고, 없으면 그대로 최종 확인으로 넘어가면 됩니다.';
+            statusValue = excludeCount ? '직접 제외 반영 중' : '마지막 조정 단계';
+            statusNote = excludeCount ? `직접 제외 ${excludeCount}개 적용` : '이 단계는 건너뛰어도 됩니다';
         } else if (currentStep === 'review') {
+            dashboardStep = '최종 확인 · 진행 현황';
+            dashboardTitle = restriction.blocked
+                ? hasSelection
+                    ? '후보가 너무 적지 않은지 마지막으로 확인하세요'
+                    : '아직 조건을 고르지 않았습니다'
+                : '지금 조건이면 바로 추첨해도 됩니다';
             dashboardCopy = restriction.blocked
-                ? '조건이 조금 강합니다 · 몇 개만 덜어내도 됩니다'
-                : '이 누적 기준으로 바로 번호를 만들 수 있습니다';
+                ? hasSelection
+                    ? '남은 후보가 너무 적으면 생성이 어려울 수 있습니다. 꼭 필요한 조건만 남겨 주세요.'
+                    : '규칙이나 직접 제외수를 하나 이상 고르면 바로 추첨을 시작할 수 있습니다.'
+                : '핵심 수치만 남겼습니다. 이 상태면 바로 번호를 만들 수 있습니다.';
+            statusValue = restriction.blocked ? (hasSelection ? '조건 점검 필요' : '조건 선택 필요') : '바로 추첨 가능';
+            statusNote = restriction.blocked
+                ? hasSelection
+                    ? '몇 개 조건만 덜어내면 안정적입니다'
+                    : '규칙 또는 직접 제외수를 먼저 골라 주세요'
+                : `${selectionTotalCount}개 조건이 생성에 반영됩니다`;
         } else if (currentStep === 'result') {
-            dashboardStep = '최종 결과 · 누적 현황';
-            dashboardCopy = totalBenefitPct
-                ? '누적 기준이 반영된 범위에서 생성 완료'
-                : '기본 범위에 가깝게 생성 완료';
+            dashboardStep = '추첨 결과 · 진행 현황';
+            dashboardTitle = '이번 생성에 반영된 기준입니다';
+            dashboardCopy = '같은 조건으로 다시 추첨하거나 이전 단계로 돌아가 바로 조정할 수 있습니다.';
+            statusValue = '생성 완료';
+            statusNote = hasSelection ? `${selectionTotalCount}개 조건 반영` : '기본 범위로 생성';
         }
 
+        if (restriction.blocked && hasSelection) {
+            selectionNote = currentRemainingCombos <= 20
+                ? '남은 후보가 너무 적어 생성이 어려울 수 있습니다.'
+                : `전체의 ${remainingPct}%만 남아 있습니다.`;
+            if (currentStep !== 'review' && currentStep !== 'result') {
+                statusValue = '조건이 강함';
+                statusNote = '남은 후보가 빠르게 줄고 있습니다';
+            }
+        }
+
+        drawWizardDashboardEl.dataset.state = dashboardState;
         if (drawWizardDashboardStepEl) {
             drawWizardDashboardStepEl.textContent = dashboardStep;
         }
@@ -3977,10 +4029,10 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardDashboardCopyEl.textContent = dashboardCopy;
         }
         if (drawWizardDashboardOddsEl) {
-            drawWizardDashboardOddsEl.textContent = formatDrawWizardCompactOddsLabel(currentFirstOdds);
+            drawWizardDashboardOddsEl.textContent = statusValue;
         }
         if (drawWizardDashboardOddsNoteEl) {
-            drawWizardDashboardOddsNoteEl.textContent = oddsNote;
+            drawWizardDashboardOddsNoteEl.textContent = statusNote;
         }
         if (drawWizardDashboardGaugeEl) {
             const gaugeAngle = Math.max(0, Math.min(360, Math.round(totalBenefitPct * 3.6)));
@@ -3997,6 +4049,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (drawWizardDashboardSelectionEl) {
             drawWizardDashboardSelectionEl.textContent = selectionValue;
+        }
+        if (drawWizardDashboardSelectionMetaEl) {
+            drawWizardDashboardSelectionMetaEl.textContent = selectionMeta;
         }
         if (drawWizardDashboardSelectionNoteEl) {
             drawWizardDashboardSelectionNoteEl.textContent = selectionNote;
