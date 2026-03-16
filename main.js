@@ -104,14 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     let isDrawAdvancedOpen = false;
     const storeOpenOfficialBtn = document.getElementById('store-open-official-btn');
-    const lockerSessionCountEl = document.getElementById('locker-session-count');
-    const lockerSessionNoteEl = document.getElementById('locker-session-note');
-    const lockerTotalSetsEl = document.getElementById('locker-total-sets');
-    const lockerTotalNoteEl = document.getElementById('locker-total-note');
-    const lockerLastRoundEl = document.getElementById('locker-last-round');
-    const lockerLastNoteEl = document.getElementById('locker-last-note');
-    const lockerLastUpdatedEl = document.getElementById('locker-last-updated');
-    const lockerLastNoteTextEl = document.getElementById('locker-last-note-text');
+    const lockerHistoryChipEl = document.getElementById('locker-history-chip');
     const lockerHistoryListEl = document.getElementById('locker-history-list');
     const groupLevelButtons = Array.from(document.querySelectorAll('[data-group-level]'));
     const slotSaveButtons = Array.from(document.querySelectorAll('[data-slot-save]'));
@@ -268,11 +261,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const mypagePlanCancelBtn = document.getElementById('mypage-plan-cancel-btn');
     const mypageShellFooterEl = document.querySelector('#tab-mypage .mypage-shell-footer');
     const mypagePlanOfferCards = Array.from(document.querySelectorAll('.mypage-plan-offer-card[data-premium-plan-card]'));
-    const mypagePresetBadgeEl = document.getElementById('mypage-preset-badge');
-    const mypagePresetSummaryEl = document.getElementById('mypage-preset-summary');
-    const mypagePresetUpdatedEl = document.getElementById('mypage-preset-updated');
-    const mypageSlotSummaryEl = document.getElementById('mypage-slot-summary');
-    const mypageSlotUpdatedEl = document.getElementById('mypage-slot-updated');
     const mypageStatsGeneratedEl = document.getElementById('mypage-stats-generated');
     const mypageStatsRoundEl = document.getElementById('mypage-stats-round');
     const mypageStatsModeEl = document.getElementById('mypage-stats-mode');
@@ -4836,66 +4824,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateLockerTabUi() {
-        const stats = getGenerationStats();
         const sessions = getGeneratedHistoryForCurrentOwner();
-        const totalSets = sessions.reduce((sum, item) => sum + Math.max(0, Number(item.setCount || 0)), 0);
-        const latest = sessions[0] || null;
-        const lastRound = Number(latest?.round || stats.lastRound || 0);
-        const savedRules = readStoredRuleIds('lotto_rules');
-        const customPreset = readStoredRuleIds('lotto_custom_preset');
-        const savedRulesUpdatedAt = localStorage.getItem(RULES_UPDATED_AT_KEY) || '';
-        const customPresetUpdatedAt = localStorage.getItem(CUSTOM_PRESET_UPDATED_AT_KEY) || '';
-        const totalPresetCount = savedRules.length + customPreset.length;
-        const latestPresetAt = [savedRulesUpdatedAt, customPresetUpdatedAt]
-            .filter(Boolean)
-            .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0] || '';
-
-        if (lockerSessionCountEl) {
-            lockerSessionCountEl.textContent = `${sessions.length}개`;
-        }
-        if (lockerSessionNoteEl) {
-            lockerSessionNoteEl.textContent = latest ? formatRelativeTime(latest.createdAt) : '없음';
-        }
-        if (lockerTotalSetsEl) {
-            lockerTotalSetsEl.textContent = `${formatNumber(totalSets)}세트`;
-        }
-        if (lockerTotalNoteEl) {
-            lockerTotalNoteEl.textContent = totalSets ? '자동 저장' : '대기';
-        }
-        if (lockerLastRoundEl) {
-            lockerLastRoundEl.textContent = lastRound > 0 ? `${lastRound}회` : '-';
-        }
-        if (lockerLastNoteEl) {
-            lockerLastNoteEl.textContent = latest ? (latest.sourceMode === 'premium' ? '추천' : '직접') : '없음';
-        }
-        if (lockerLastUpdatedEl) {
-            lockerLastUpdatedEl.textContent = latest ? formatSlotDate(latest.createdAt) : '-';
-        }
-        if (lockerLastNoteTextEl) {
-            lockerLastNoteTextEl.textContent = latest
-                ? `${Number(latest.setCount || 0)}세트`
-                : '최근 없음';
-        }
-        if (mypagePresetBadgeEl) {
-            mypagePresetBadgeEl.textContent = `${totalPresetCount}개`;
-        }
-        if (mypagePresetSummaryEl) {
-            mypagePresetSummaryEl.textContent = totalPresetCount
-                ? `기본 ${savedRules.length} · 내 ${customPreset.length}`
-                : '없음';
-        }
-        if (mypagePresetUpdatedEl) {
-            mypagePresetUpdatedEl.textContent = latestPresetAt ? formatSlotDate(latestPresetAt) : '-';
-        }
-        if (mypageSlotSummaryEl) {
-            mypageSlotSummaryEl.textContent = sessions.length
-                ? `${sessions.length}개 카드`
-                : '대기';
-        }
-        if (mypageSlotUpdatedEl) {
-            mypageSlotUpdatedEl.textContent = latest
-                ? `${lastRound > 0 ? `${lastRound}회` : '없음'} · ${formatRelativeTime(latest.createdAt)}`
-                : '자동 저장';
+        if (lockerHistoryChipEl) {
+            const visibleCount = Math.min(4, sessions.length);
+            lockerHistoryChipEl.textContent = sessions.length ? `최근 ${visibleCount}개` : '최근 없음';
         }
         renderLockerHistoryUi();
     }
@@ -5203,7 +5135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!sessions.length) {
             lockerHistoryListEl.innerHTML = `
                 <article class="locker-history-empty">
-                    <strong>아직 없음</strong>
+                    <strong>최근 번호 없음</strong>
                     <p>추첨 후 자동 저장</p>
                 </article>
             `;
@@ -5212,45 +5144,49 @@ document.addEventListener('DOMContentLoaded', () => {
         const hiddenCount = Math.max(0, allSessions.length - sessions.length);
         lockerHistoryListEl.innerHTML = sessions.map(session => {
             const when = formatSlotDate(session.createdAt);
-            const roundText = Number(session.round || 0) > 0 ? `${Number(session.round)}회` : '회차 없음';
+            const roundText = Number(session.round || 0) > 0 ? `${Number(session.round)}회` : '회차 미정';
             const modeText = session.sourceMode === 'premium' ? '추천' : '직접';
-            const ruleText = Number(session.ruleCount || 0) > 0 ? `규칙 ${Number(session.ruleCount)}개` : '기본';
             const entries = Array.isArray(session.entries) ? session.entries : [];
             const previewEntries = entries.slice(0, 2);
             const hiddenSets = Math.max(0, entries.length - previewEntries.length);
             const setsHtml = previewEntries
                 .map(entry => `
                     <div class="locker-history-set">
-                        <span class="locker-history-set-label">${entry.setNo}세트</span>
+                        <span class="locker-history-set-label">S${entry.setNo}</span>
                         <div class="locker-history-balls">
                             ${(Array.isArray(entry.numbers) ? entry.numbers : []).map(number => `<span class="locker-history-ball">${escapeHtml(number)}</span>`).join('')}
                         </div>
                     </div>
                 `).join('');
+            const summaryItems = [
+                `${Number(session.setCount || 0)}세트`,
+                modeText
+            ];
+            if (Number(session.ruleCount || 0) > 0) {
+                summaryItems.push(`${Number(session.ruleCount)}규칙`);
+            }
             return `
                 <article class="locker-history-card">
                     <div class="locker-history-head">
                         <div class="locker-history-title">
-                            <span class="locker-history-meta">${roundText}</span>
-                            <strong>${when}</strong>
+                            <strong>${roundText}</strong>
+                            <span class="locker-history-meta">${when}</span>
                         </div>
                         <button type="button" class="ghost locker-copy-btn" data-locker-copy="${escapeHtml(session.generationId)}">복사</button>
                     </div>
                     <div class="locker-history-summary">
-                        <span>${Number(session.setCount || 0)}세트</span>
-                        <span>${modeText}</span>
-                        <span>${ruleText}</span>
+                        ${summaryItems.map(item => `<span>${escapeHtml(item)}</span>`).join('')}
                     </div>
                     <div class="locker-history-sets">
                         ${setsHtml}
                     </div>
-                    ${hiddenSets ? `<div class="locker-history-more-sets">+${hiddenSets}세트</div>` : ''}
+                    ${hiddenSets ? `<div class="locker-history-more-sets">+${hiddenSets}</div>` : ''}
                 </article>
             `;
         }).join('') + (hiddenCount
             ? `
                 <article class="locker-history-more">
-                    <strong>+${hiddenCount}개 더 있음</strong>
+                    <strong>+${hiddenCount}</strong>
                     <p>최근 4개만 표시</p>
                 </article>
             `

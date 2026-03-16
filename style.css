@@ -21578,3 +21578,197 @@ body[data-theme="dark"] #tab-mypage .mypage-account-list-row strong {
         width: 100%;
     }
 }
+
+/* Final override v3: compact locker recent */
+#tab-store .store-shell-title--recent {
+    margin-bottom: 10px !important;
+}
+
+#tab-store .store-shell-title--recent .section-kicker {
+    display: none !important;
+}
+
+#tab-store .store-shell-title--recent h2 {
+    margin: 0 !important;
+}
+
+#tab-store .locker-layout--recent {
+    gap: 0 !important;
+}
+
+#tab-store .locker-panel--history-only {
+    padding: 14px !important;
+    border-radius: 22px !important;
+}
+
+#tab-store .locker-panel-head--compact {
+    justify-content: flex-end !important;
+    margin-bottom: 10px !important;
+}
+
+#tab-store .locker-panel--history-only .locker-history-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+#tab-store .locker-history-empty {
+    min-height: 160px;
+    padding: 20px 16px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    gap: 4px;
+    text-align: center;
+    border: 1px dashed rgba(15, 23, 42, 0.12);
+    background: rgba(255, 255, 255, 0.72);
+}
+
+#tab-store .locker-history-empty strong {
+    color: #111827;
+    font-size: 16px;
+    line-height: 1.15;
+}
+
+#tab-store .locker-history-empty p {
+    margin: 0;
+    color: #667085;
+    font-size: 12px;
+}
+
+#tab-store .locker-history-card {
+    padding: 12px !important;
+    border-radius: 16px !important;
+    display: grid !important;
+    gap: 8px !important;
+}
+
+#tab-store .locker-history-head {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+}
+
+#tab-store .locker-history-title {
+    display: grid !important;
+    gap: 3px !important;
+    min-width: 0;
+}
+
+#tab-store .locker-history-title strong {
+    font-size: 16px !important;
+    line-height: 1.1 !important;
+    letter-spacing: -0.03em !important;
+}
+
+#tab-store .locker-history-meta {
+    font-size: 11px !important;
+    letter-spacing: 0 !important;
+    color: #7a8594 !important;
+}
+
+#tab-store .locker-copy-btn {
+    min-height: 28px !important;
+    padding: 0 10px !important;
+    border-radius: 999px !important;
+    font-size: 11px !important;
+}
+
+#tab-store .locker-history-summary {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 5px !important;
+}
+
+#tab-store .locker-history-summary span {
+    min-height: 22px !important;
+    padding: 0 8px !important;
+    border-radius: 999px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    background: #f3f6fa !important;
+    border: 1px solid rgba(15, 23, 42, 0.06) !important;
+    color: #59697d !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+}
+
+#tab-store .locker-history-sets {
+    gap: 6px !important;
+}
+
+#tab-store .locker-history-set {
+    display: grid !important;
+    grid-template-columns: 30px minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 9px !important;
+    border-radius: 14px !important;
+}
+
+#tab-store .locker-history-set-label {
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.01em !important;
+    color: #607489 !important;
+}
+
+#tab-store .locker-history-balls {
+    gap: 4px !important;
+}
+
+#tab-store .locker-history-ball {
+    min-width: 24px !important;
+    height: 24px !important;
+    padding: 0 4px !important;
+    font-size: 10px !important;
+}
+
+#tab-store .locker-history-more-sets {
+    font-size: 10px !important;
+    text-align: right;
+}
+
+#tab-store .locker-history-more {
+    padding: 16px 12px !important;
+    border-radius: 16px !important;
+}
+
+#tab-store .locker-history-more strong {
+    font-size: 18px !important;
+    line-height: 1 !important;
+}
+
+#tab-store .locker-history-more p {
+    font-size: 11px !important;
+}
+
+body[data-theme="dark"] #tab-store .locker-history-empty {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-color: rgba(137, 180, 255, 0.14) !important;
+}
+
+body[data-theme="dark"] #tab-store .locker-history-empty strong {
+    color: #f8fafc !important;
+}
+
+body[data-theme="dark"] #tab-store .locker-history-empty p,
+body[data-theme="dark"] #tab-store .locker-history-meta {
+    color: #b7c5d8 !important;
+}
+
+body[data-theme="dark"] #tab-store .locker-history-summary span {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: rgba(137, 180, 255, 0.1) !important;
+    color: #d8e2ef !important;
+}
+
+@media (max-width: 760px) {
+    #tab-store .locker-panel--history-only {
+        padding: 12px !important;
+    }
+
+    #tab-store .locker-panel--history-only .locker-history-list {
+        grid-template-columns: 1fr !important;
+    }
+}

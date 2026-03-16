@@ -2297,80 +2297,24 @@
 	        </section>
 
         <section id="tab-store" class="tab-panel app-shell app-shell--store" role="tabpanel" aria-labelledby="tab-store-btn" tabindex="0">
-            <div class="section-title store-shell-title">
+            <div class="section-title store-shell-title store-shell-title--recent">
                 <div>
-                    <span class="section-kicker">보관함</span>
-                    <h2>내 번호</h2>
+                    <h2>최근 번호</h2>
                 </div>
                 <button type="button" class="ghost" data-tab-link="draw">추첨</button>
             </div>
-            <div class="locker-layout">
-                <section class="locker-summary-grid" aria-label="보관함 요약">
-                    <article class="locker-stat-card locker-stat-card--accent">
-                        <span class="locker-stat-label">카드</span>
-                        <strong id="locker-session-count">0개</strong>
-                        <p id="locker-session-note">없음</p>
-                    </article>
-                    <article class="locker-stat-card">
-                        <span class="locker-stat-label">세트</span>
-                        <strong id="locker-total-sets">0세트</strong>
-                        <p id="locker-total-note">대기</p>
-                    </article>
-                    <article class="locker-stat-card">
-                        <span class="locker-stat-label">최근 회차</span>
-                        <strong id="locker-last-round">-</strong>
-                        <p id="locker-last-note">없음</p>
-                    </article>
-                    <article class="locker-stat-card">
-                        <span class="locker-stat-label">마지막</span>
-                        <strong id="locker-last-updated">-</strong>
-                        <p id="locker-last-note-text">최근 없음</p>
-                    </article>
+            <div class="locker-layout locker-layout--recent">
+                <section class="locker-panel locker-panel--history locker-panel--history-only" aria-label="최근 번호">
+                    <div class="locker-panel-head locker-panel-head--compact">
+                        <span class="locker-panel-chip" id="locker-history-chip">최근 없음</span>
+                    </div>
+                    <div id="locker-history-list" class="locker-history-list">
+                        <article class="locker-history-empty">
+                            <strong>최근 번호 없음</strong>
+                            <p>추첨 후 자동 저장</p>
+                        </article>
+                    </div>
                 </section>
-
-                <div class="locker-board">
-                    <section class="locker-panel locker-panel--history" aria-labelledby="locker-history-title">
-                        <div class="locker-panel-head">
-                            <div>
-                                <span class="locker-panel-kicker">최근 번호</span>
-                                <h3 id="locker-history-title">번호 카드</h3>
-                            </div>
-                            <span class="locker-panel-chip">최근 4개</span>
-                        </div>
-                        <div id="locker-history-list" class="locker-history-list">
-                            <article class="locker-history-empty">
-                                <strong>아직 없음</strong>
-                                <p>추첨 후 자동 저장</p>
-                            </article>
-                        </div>
-                    </section>
-
-                    <section class="locker-panel locker-panel--saved" aria-labelledby="locker-saved-title">
-                        <div class="locker-panel-head">
-                            <div>
-                                <span class="locker-panel-kicker">저장 기준</span>
-                                <h3 id="locker-saved-title">규칙 요약</h3>
-                            </div>
-                        </div>
-                        <div class="locker-saved-grid">
-                            <div class="locker-saved-row">
-                                <span>규칙</span>
-                                <strong id="mypage-preset-summary">저장한 규칙 없음</strong>
-                                <em id="mypage-preset-badge">0개</em>
-                            </div>
-                            <div class="locker-saved-row">
-                                <span>최근 저장</span>
-                                <strong id="mypage-preset-updated">-</strong>
-                                <em>기본 기준</em>
-                            </div>
-                            <div class="locker-saved-row">
-                                <span>번호 카드</span>
-                                <strong id="mypage-slot-summary">자동 저장 대기</strong>
-                                <em id="mypage-slot-updated">자동 저장</em>
-                            </div>
-                        </div>
-                    </section>
-                </div>
             </div>
         </section>
 
