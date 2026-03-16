@@ -376,8 +376,8 @@ body[data-theme="dark"] #tab-store .locker-saved-row em {
 }
 
 /* Analysis + locker tabs */
-#tab-store.app-shell,
-#tab-qr.app-shell {
+#tab-store.tab-panel.is-active.app-shell,
+#tab-qr.tab-panel.is-active.app-shell {
     display: grid;
     gap: 18px;
 }

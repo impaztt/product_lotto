@@ -37,7 +37,9 @@
             });
 
             tabPanels.forEach(panel => {
-                panel.classList.toggle('is-active', panel.id === targetPanelId);
+                const isActive = panel.id === targetPanelId;
+                panel.classList.toggle('is-active', isActive);
+                panel.hidden = !isActive;
             });
 
             tabLinks.forEach(link => {
