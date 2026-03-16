@@ -17395,9 +17395,9 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard {
     min-height: 0;
-    padding: 10px 12px 12px;
+    padding: 8px 12px;
     display: grid;
-    gap: 10px;
+    gap: 7px;
     border-bottom: 1px solid rgba(19, 38, 61, 0.08);
     background:
         radial-gradient(circle at top right, rgba(236, 159, 51, 0.16), transparent 32%),
@@ -17412,103 +17412,73 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-head {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    align-items: start;
-    gap: 12px;
+    align-items: end;
+    gap: 10px;
     min-width: 0;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-copy {
     display: grid;
-    gap: 4px;
+    gap: 3px;
     min-width: 0;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-step {
-    width: fit-content;
-    min-height: 30px;
-    padding: 0 12px 0 10px;
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 800;
-    letter-spacing: 0.04em;
-    color: #10233a;
-    background: linear-gradient(180deg, rgba(255, 244, 225, 0.96), rgba(255, 255, 255, 0.92));
-    border: 1px solid rgba(236, 159, 51, 0.26);
-    box-shadow: 0 8px 18px rgba(236, 159, 51, 0.14);
+    letter-spacing: 0.01em;
+    color: rgba(19, 38, 61, 0.64);
 }
 
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard-step::before {
-    content: "";
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex: 0 0 auto;
-    background: linear-gradient(135deg, #ec9f33 0%, #eb6b3f 100%);
-    box-shadow: 0 0 0 4px rgba(236, 159, 51, 0.16);
-}
-
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard[data-state="warning"] .draw-funnel-dashboard-step {
-    background: linear-gradient(180deg, rgba(255, 239, 233, 0.98), rgba(255, 255, 255, 0.92));
-    border-color: rgba(235, 107, 63, 0.24);
-    box-shadow: 0 8px 18px rgba(235, 107, 63, 0.12);
-}
-
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard[data-state="warning"] .draw-funnel-dashboard-step::before {
-    background: linear-gradient(135deg, #eb6b3f 0%, #d9485f 100%);
-    box-shadow: 0 0 0 4px rgba(235, 107, 63, 0.14);
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-step {
+    width: fit-content;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(19, 38, 61, 0.08);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-copy strong {
-    font-size: clamp(17px, 1.9vw, 20px);
-    line-height: 1.14;
+    font-size: clamp(16px, 1.7vw, 19px);
+    line-height: 1.1;
     color: #13263d;
-    letter-spacing: -0.03em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-copy p {
     margin: 0;
     color: rgba(19, 38, 61, 0.72);
     font-size: 11px;
-    line-height: 1.45;
-    max-width: 68ch;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip {
-    min-width: 174px;
-    padding: 9px 11px;
-    border-radius: 16px;
+    min-width: 0;
+    padding: 8px 10px;
+    border-radius: 15px;
     display: grid;
-    gap: 4px;
+    gap: 3px;
     justify-items: start;
     background: rgba(255, 255, 255, 0.78);
     border: 1px solid rgba(19, 38, 61, 0.08);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
 }
 
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard[data-state="active"] .draw-funnel-dashboard-chip {
-    background: linear-gradient(180deg, rgba(241, 247, 255, 0.98), rgba(255, 255, 255, 0.92));
-}
-
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard[data-state="warning"] .draw-funnel-dashboard-chip {
-    background: linear-gradient(180deg, rgba(255, 247, 238, 0.98), rgba(255, 255, 255, 0.92));
-}
-
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard[data-state="result"] .draw-funnel-dashboard-chip {
-    background: linear-gradient(180deg, rgba(252, 247, 236, 0.98), rgba(255, 255, 255, 0.92));
-}
-
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip span {
-    font-size: 10px;
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip span,
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-copy p {
+    font-size: 9px;
     font-weight: 800;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.01em;
     color: rgba(19, 38, 61, 0.62);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip strong {
-    font-size: 17px;
+    font-size: 15px;
     line-height: 1;
     letter-spacing: -0.03em;
     color: #13263d;
@@ -17516,26 +17486,25 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip p {
     margin: 0;
-    font-size: 10px;
-    line-height: 1.35;
+    font-size: 9px;
+    line-height: 1.1;
     color: rgba(19, 38, 61, 0.6);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-visuals {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
     min-width: 0;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat {
     min-width: 0;
-    min-height: 92px;
-    padding: 10px 11px;
-    border-radius: 16px;
+    padding: 8px 9px;
+    border-radius: 15px;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
-    gap: 9px;
+    gap: 7px;
     align-items: center;
     background: rgba(255, 255, 255, 0.78);
     border: 1px solid rgba(19, 38, 61, 0.08);
@@ -17547,7 +17516,6 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat--range {
-    grid-column: 1 / -1;
     background: linear-gradient(180deg, rgba(241, 247, 255, 0.96), rgba(255, 255, 255, 0.88));
 }
 
@@ -17557,20 +17525,12 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-copy {
     display: grid;
-    gap: 4px;
+    gap: 2px;
     min-width: 0;
 }
 
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-label {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: rgba(19, 38, 61, 0.58);
-}
-
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-copy strong {
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1;
     letter-spacing: -0.03em;
     color: #13263d;
@@ -17579,45 +17539,18 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     text-overflow: ellipsis;
 }
 
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat--range .draw-funnel-dashboard-stat-copy strong {
-    font-size: 23px;
-    letter-spacing: -0.05em;
-}
-
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard-range-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-#tab-draw.draw-wizard-tab .draw-funnel-dashboard-inline-chip {
-    min-height: 24px;
-    padding: 0 9px;
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: center;
-    background: rgba(19, 38, 61, 0.08);
-    color: #28415f;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-}
-
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-copy p {
     margin: 0;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: rgba(19, 38, 61, 0.68);
-    line-height: 1.35;
-    white-space: normal;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-gauge {
     --draw-dashboard-gauge-angle: 0deg;
-    width: 34px;
-    height: 34px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: conic-gradient(#ec9f33 var(--draw-dashboard-gauge-angle), rgba(19, 38, 61, 0.1) 0deg);
     position: relative;
@@ -17627,15 +17560,15 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-gauge::after {
     content: "";
     position: absolute;
-    inset: 5px;
+    inset: 4px;
     border-radius: 50%;
     background: #f9fbfd;
     box-shadow: inset 0 0 0 1px rgba(19, 38, 61, 0.06);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-meter {
-    width: 66px;
-    height: 11px;
+    width: 36px;
+    height: 8px;
     border-radius: 999px;
     overflow: hidden;
     background: rgba(19, 38, 61, 0.1);
@@ -17651,7 +17584,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-dashboard-selection-visual {
-    width: 52px;
+    width: 42px;
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 3px;
@@ -17678,78 +17611,60 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard {
         padding: 10px 10px 12px;
-        gap: 8px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-head {
-        grid-template-columns: 1fr;
+        gap: 7px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-copy strong {
-        font-size: 15px;
+        font-size: 14px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-copy p {
         font-size: 10px;
     }
 
+    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip p {
+        display: none;
+    }
+
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip {
-        min-width: 0;
-        width: 100%;
-        padding: 8px 10px;
-        border-radius: 14px;
+        padding: 7px 8px;
+        border-radius: 13px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-chip strong {
-        font-size: 15px;
+        font-size: 13px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-visuals {
-        grid-template-columns: 1fr;
-        gap: 6px;
+        gap: 5px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat {
-        min-height: 0;
-        padding: 9px 10px;
-        gap: 7px;
-        border-radius: 14px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat--range {
-        grid-column: auto;
+        padding: 7px;
+        gap: 6px;
+        border-radius: 13px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-copy strong {
-        font-size: 14px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat--range .draw-funnel-dashboard-stat-copy strong {
-        font-size: 19px;
+        font-size: 12px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-stat-copy p {
         font-size: 9px;
     }
 
-    #tab-draw.draw-wizard-tab .draw-funnel-dashboard-inline-chip {
-        min-height: 22px;
-        padding: 0 8px;
-        font-size: 10px;
-    }
-
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-gauge {
-        width: 28px;
-        height: 28px;
+        width: 22px;
+        height: 22px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-gauge::after {
-        inset: 4px;
+        inset: 3px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-meter,
     #tab-draw.draw-wizard-tab .draw-funnel-dashboard-selection-visual {
-        width: 44px;
+        width: 32px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="rules"] .draw-screen--step {
