@@ -625,11 +625,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (tabId === 'qr') {
                 if (qrStatusEl && !qrStream) {
-                    qrStatusEl.textContent = '스캔 시작을 누르면 실물 티켓 QR을 바로 읽습니다.';
+                    qrStatusEl.textContent = '스캔 시작으로 바로 확인합니다.';
                 }
             }
             if (tabId !== 'qr' && qrStream) {
-                stopQrScanner('QR 탭을 벗어나 스캔을 중지했습니다.');
+                stopQrScanner('스캔을 멈췄습니다.');
             }
         },
         onLinkNavigate() {
@@ -1115,7 +1115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (qrStopBtn) {
         qrStopBtn.addEventListener('click', () => {
-            stopQrScanner('스캔이 중지되었습니다.');
+            stopQrScanner('스캔 중지');
         });
     }
 
@@ -1124,7 +1124,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const round = qrLastMatchedRound || currentWeeklyData?.drwNo;
             if (!round) {
                 if (qrStatusEl) {
-                    qrStatusEl.textContent = '먼저 QR을 스캔하거나 기준 회차를 불러와 주세요.';
+                    qrStatusEl.textContent = '먼저 스캔해 주세요.';
                 }
                 return;
             }
@@ -1137,7 +1137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         qrCopyNumbersBtn.addEventListener('click', async () => {
             if (!qrLastNumbers.length) {
                 if (qrStatusEl) {
-                    qrStatusEl.textContent = '복사할 번호가 없습니다. QR을 먼저 스캔해 주세요.';
+                    qrStatusEl.textContent = '먼저 스캔해 주세요.';
                 }
                 return;
             }
@@ -1150,11 +1150,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     await navigator.clipboard.writeText(text);
                 }
                 if (qrStatusEl) {
-                    qrStatusEl.textContent = '번호를 복사했습니다. 이번주 탭에서 바로 비교할 수 있습니다.';
+                    qrStatusEl.textContent = '번호를 복사했습니다.';
                 }
             } catch {
                 if (qrStatusEl) {
-                    qrStatusEl.textContent = '번호를 입력칸에 채웠습니다. 이번주 탭에서 확인해 주세요.';
+                    qrStatusEl.textContent = '번호를 입력칸에 넣었습니다.';
                 }
             }
         });
@@ -3134,17 +3134,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateDashboardSummaryUi() {
         if (dashSyncStatusEl) {
             if (currentWeeklyData && Number(currentWeeklyData.drwNo) > 0) {
-                dashSyncStatusEl.textContent = `${currentWeeklyData.drwNo}회 기준 준비 완료`;
+                dashSyncStatusEl.textContent = `${currentWeeklyData.drwNo}회 준비`;
             } else {
-                dashSyncStatusEl.textContent = '회차 기준 불러오는 중';
+                dashSyncStatusEl.textContent = '회차 불러오는 중';
             }
         }
         if (dashSyncTimeEl) {
             if (lastWeeklyRenderedAt) {
-                const sourceLabel = lastWeeklyRenderSource === 'main-info' ? '메인 정보' : '공식 데이터';
-                dashSyncTimeEl.textContent = `${formatRelativeTime(lastWeeklyRenderedAt)} · ${sourceLabel} 기준`;
+                dashSyncTimeEl.textContent = `${formatRelativeTime(lastWeeklyRenderedAt)} 업데이트`;
             } else {
-                dashSyncTimeEl.textContent = '공식 기준 정리 중';
+                dashSyncTimeEl.textContent = '업데이트 대기';
             }
         }
         if (dashMembershipChipEl) {
@@ -3153,10 +3152,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dashActivityChipEl) {
             const stats = getGenerationStats();
             if (stats.totalSets > 0) {
-                const modeLabel = stats.lastSourceMode === 'premium' ? '추천 플랜' : '직접 선택';
-                dashActivityChipEl.textContent = `누적 ${formatNumber(stats.totalSets)}세트 · 최근 ${modeLabel}`;
+                dashActivityChipEl.textContent = `누적 ${formatNumber(stats.totalSets)}세트`;
             } else {
-                dashActivityChipEl.textContent = '첫 생성 전';
+                dashActivityChipEl.textContent = '생성 전';
             }
         }
     }
@@ -4602,21 +4600,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (mypageMembershipDescEl) {
             mypageMembershipDescEl.textContent = authPending
-                ? '저장된 계정과 플랜 상태를 확인하고 있습니다.'
+                ? '플랜 확인 중'
                 : premiumActive
-                ? `${plan.label} 구성으로 이번 회차 추천 ${recommendedSetCount}세트와 전체 복사를 바로 사용할 수 있습니다.`
+                ? `${plan.label} · ${recommendedSetCount}세트`
                 : member
-                ? '지금은 FREE 흐름으로 직접 기준을 고르고 있습니다. STARTER 3세트, STANDARD 5세트, MASTER 7세트로 바로 확장할 수 있습니다.'
-                : '로그인하면 저장한 기준과 최근 기록을 그대로 이어서 보고, 원하는 추천 플랜도 바로 선택할 수 있습니다.';
+                ? 'FREE · 직접 선택'
+                : '로그인 후 저장';
         }
         if (mypageMembershipNextEl) {
             mypageMembershipNextEl.textContent = authPending
-                ? '로그인 상태 확인 중'
+                ? '확인 중'
                 : premiumActive
                 ? `${plan.label} 사용 중`
                 : member
-                ? '지금 플랜 업그레이드 가능'
-                : '로그인 후 즉시 시작';
+                ? '업그레이드 가능'
+                : '로그인 후 시작';
         }
         if (mypagePlanNoteEl) {
             if (authPending) {
@@ -4640,28 +4638,28 @@ document.addEventListener('DOMContentLoaded', () => {
             mypagePlanCopyAccessEl.textContent = authPending
                 ? '확인 중'
                 : premiumActive
-                ? '바로 사용'
+                ? '가능'
                 : member
-                ? '선택 시 해제'
-                : '로그인 후 해제';
+                ? '잠금'
+                : '로그인 필요';
         }
         if (mypagePlanGuideEl) {
             mypagePlanGuideEl.textContent = authPending
-                ? '플랜 정보를 불러오는 중입니다.'
+                ? '플랜 확인 중'
                 : premiumActive
-                ? `${plan.label}로 이번 회차 추천 ${recommendedSetCount}세트를 바로 받아볼 수 있습니다.`
+                ? `${plan.label} 바로 사용`
                 : member
-                ? '추천 플랜을 고르면 이번 회차 추천번호와 기록 흐름을 한 번에 이어서 볼 수 있습니다.'
-                : 'STANDARD가 세트 수와 기록 흐름이 가장 균형적인 기본 추천입니다.';
+                ? '추천으로 확장 가능'
+                : 'STANDARD 추천';
         }
         if (mypagePlanFlowEl) {
             mypagePlanFlowEl.textContent = authPending
-                ? '잠시만 기다려 주세요.'
+                ? '잠시만'
                 : premiumActive
-                ? '현재 플랜으로 추천번호 생성 화면까지 바로 이어집니다.'
+                ? `${recommendedSetCount}세트 사용 중`
                 : member
-                ? 'FREE 상태에서는 직접 선택 중심으로 사용 중이며, 아래 카드에서 즉시 플랜을 고를 수 있습니다.'
-                : '플랜 카드를 눌러 구성을 비교하고, 로그인 후 바로 시작할 수 있습니다.';
+                ? '카드에서 바로 선택'
+                : '로그인 후 시작';
         }
         if (mypagePlanManageBtn) {
             mypagePlanManageBtn.textContent = authPending
@@ -4714,12 +4712,12 @@ document.addEventListener('DOMContentLoaded', () => {
             mypagePresetUpdatedEl.textContent = latestPresetAt ? formatRelativeTime(latestPresetAt) : '아직 저장 없음';
         }
         if (mypageSlotSummaryEl) {
-            mypageSlotSummaryEl.textContent = activeSlots ? `보관함 ${activeSlots}칸 사용 중` : '보관함 비어 있음';
+            mypageSlotSummaryEl.textContent = activeSlots ? `${activeSlots}칸 사용` : '비어 있음';
         }
         if (mypageSlotUpdatedEl) {
             mypageSlotUpdatedEl.textContent = latestSlot && latestSlot.savedAt
                 ? `최근 저장 ${formatSlotDate(latestSlot.savedAt)}`
-                : '보관함 1~3에 기준을 저장하면 여기서 다시 불러올 수 있습니다.';
+                : '저장 없음';
         }
         if (mypageStatsGeneratedEl) {
             mypageStatsGeneratedEl.textContent = `${formatNumber(stats.totalSets || 0)}세트`;
@@ -4853,7 +4851,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!firebaseDb) {
             mypageHistoryListEl.innerHTML = `
                 <li>
-                    <span class="info-label">Firebase 연결 후 이력을 확인할 수 있습니다.</span>
+                    <span class="info-label">기록 연결 필요</span>
                     <strong>-</strong>
                 </li>
             `;
@@ -4867,7 +4865,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mypageHistoryListEl.dataset.loaded = 'false';
         mypageHistoryListEl.innerHTML = `
             <li>
-                <span class="info-label">이력을 불러오는 중...</span>
+                <span class="info-label">불러오는 중</span>
                 <strong>-</strong>
             </li>
         `;
@@ -4908,8 +4906,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!rows.length) {
                 mypageHistoryListEl.innerHTML = `
                     <li>
-                        <span class="info-label">아직 쌓인 기록이 없습니다.</span>
-                        <strong>번호를 한 번 생성하면 최근 흐름이 여기에 표시됩니다.</strong>
+                        <span class="info-label">기록 없음</span>
+                        <strong>번호를 만들면 여기에 표시됩니다.</strong>
                     </li>
                 `;
                 if (mypageHistoryBadgeEl) {
@@ -4938,8 +4936,8 @@ document.addEventListener('DOMContentLoaded', () => {
             console.warn('마이페이지 추첨 이력 로드 실패', error);
             mypageHistoryListEl.innerHTML = `
                 <li>
-                    <span class="info-label">기록을 불러오지 못했습니다.</span>
-                    <strong>잠시 후 다시 확인해 주세요.</strong>
+                    <span class="info-label">불러오기 실패</span>
+                    <strong>잠시 후 다시 시도해 주세요.</strong>
                 </li>
             `;
         }
@@ -4993,11 +4991,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (!firebaseDb) {
-            setLastWeekDashboardFallback('생성 기록 연결 중');
+            setLastWeekDashboardFallback('기록 연결 중');
             return;
         }
         if (!roundData || !Number.isFinite(Number(roundData.drwNo))) {
-            setLastWeekDashboardFallback('직전 회차 기준 정리 중');
+            setLastWeekDashboardFallback('회차 정리 중');
             return;
         }
         const roundNo = Number(roundData.drwNo);
@@ -5005,8 +5003,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         pendingWinDashboardRound = roundNo;
-        dashWinRoundLabelEl.textContent = `직전 ${roundNo}회`;
-        dashWinStatusEl.textContent = `${roundNo}회 생성 결과 집계 중`;
+        dashWinRoundLabelEl.textContent = `${roundNo}회`;
+        dashWinStatusEl.textContent = `${roundNo}회 집계 중`;
         try {
             const snapshot = await firebaseDb.collection('draw_entries').where('round', '==', roundNo).get();
             const winningNumbers = [
@@ -5019,7 +5017,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ].filter(value => Number.isInteger(value) && value >= 1 && value <= 45);
             const bonusNumber = Number(roundData.bnusNo);
             if (winningNumbers.length !== 6 || !Number.isInteger(bonusNumber)) {
-                setLastWeekDashboardFallback('직전 회차 데이터 확인 필요');
+                setLastWeekDashboardFallback('데이터 확인 필요');
                 return;
             }
             const rankCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
@@ -5056,11 +5054,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             lastWinDashboardRound = roundNo;
             dashWinStatusEl.textContent = totalGenerated
-                ? `${roundNo}회 · ${formatNumber(totalGenerated)}세트 중 ${formatNumber(totalWinners)}세트 당첨`
-                : `${roundNo}회 · 앱에 기록된 생성 번호가 아직 없습니다`;
+                ? `당첨 ${formatNumber(totalWinners)} / ${formatNumber(totalGenerated)}세트`
+                : `${roundNo}회 기록 없음`;
         } catch (error) {
             console.warn('지난주 당첨 대시보드 집계 실패', error);
-            setLastWeekDashboardFallback('생성 결과를 불러오지 못했습니다');
+            setLastWeekDashboardFallback('집계 실패');
         } finally {
             if (pendingWinDashboardRound === roundNo) {
                 pendingWinDashboardRound = null;
@@ -6905,15 +6903,15 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            qrStatusEl.textContent = '현재 브라우저에서는 카메라 스캔을 지원하지 않습니다.';
+            qrStatusEl.textContent = '이 브라우저는 스캔을 지원하지 않습니다.';
             return;
         }
         if (qrStream) {
-            qrStatusEl.textContent = 'QR 스캔이 이미 실행 중입니다. 코드를 프레임 안에 맞춰 주세요.';
+            qrStatusEl.textContent = '스캔 중입니다.';
             return;
         }
         try {
-            qrStatusEl.textContent = '카메라를 준비하는 중입니다. 권한 요청을 허용해 주세요.';
+            qrStatusEl.textContent = '카메라 여는 중';
             qrResultBadgeEl.textContent = '스캔 중';
             qrResultBadgeEl.classList.remove('muted');
             qrStream = await navigator.mediaDevices.getUserMedia({
@@ -6926,7 +6924,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             qrVideoEl.srcObject = qrStream;
             await qrVideoEl.play();
-            qrStatusEl.textContent = 'QR 코드를 프레임 중앙에 맞춰 주세요.';
+            qrStatusEl.textContent = 'QR을 프레임에 맞춰 주세요.';
             qrLastPayload = '';
             qrLastNumbers = [];
             qrLastMatchedRound = null;
@@ -6935,11 +6933,11 @@ document.addEventListener('DOMContentLoaded', () => {
             logProxyError('startQrScanner', error);
             qrResultBadgeEl.textContent = '오류';
             qrResultBadgeEl.classList.add('muted');
-            qrStatusEl.textContent = '카메라를 열지 못했습니다. 브라우저의 카메라 권한을 확인해 주세요.';
+            qrStatusEl.textContent = '카메라를 열지 못했습니다.';
         }
     }
 
-    function stopQrScanner(statusMessage = 'QR 스캔이 중지되었습니다.') {
+    function stopQrScanner(statusMessage = '스캔 중지') {
         if (qrScanRafId) {
             window.cancelAnimationFrame(qrScanRafId);
             qrScanRafId = null;
@@ -7027,14 +7025,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         qrPayloadEl.textContent = payload || '-';
-        qrStatusEl.textContent = 'QR을 인식했습니다. 당첨번호를 비교 중입니다.';
+        qrStatusEl.textContent = 'QR 인식 완료';
         const numbers = extractTicketNumbersFromQr(payload);
         qrLastNumbers = numbers.slice();
         renderQrNumbers(numbers);
 
         if (numbers.length < 6) {
             qrLastMatchedRound = null;
-            qrMatchResultEl.textContent = 'QR에서 로또 번호 6개를 인식하지 못했습니다. QR을 가까이 비추고 다시 스캔해 주세요.';
+            qrMatchResultEl.textContent = '번호를 읽지 못했습니다.';
             qrResultBadgeEl.textContent = '재시도';
             qrResultBadgeEl.classList.remove('muted');
             return;
@@ -7054,7 +7052,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (!drawData || drawData.returnValue !== 'success') {
             qrLastMatchedRound = null;
-            qrMatchResultEl.textContent = '비교할 회차 데이터를 아직 준비하지 못했습니다. 회차를 불러온 뒤 다시 스캔해 주세요.';
+            qrMatchResultEl.textContent = '회차 데이터 없음';
             qrResultBadgeEl.textContent = '대기';
             qrResultBadgeEl.classList.add('muted');
             return;
@@ -7073,10 +7071,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const rank = getRank(matchCount, bonusMatch);
         const roundLabel = `${drawData.drwNo}회`;
         qrLastMatchedRound = Number(drawData.drwNo);
-        qrMatchResultEl.textContent = `${roundLabel} 기준 일치 ${matchCount}개${bonusMatch ? ' + 보너스' : ''} → ${rank}`;
+        qrMatchResultEl.textContent = `${roundLabel} · ${matchCount}개${bonusMatch ? ' + 보너스' : ''} · ${rank}`;
         qrResultBadgeEl.textContent = matchCount >= 3 ? '확인 완료' : '미당첨';
         qrResultBadgeEl.classList.remove('muted');
-        qrStatusEl.textContent = '스캔이 완료되었습니다. 아래 버튼으로 다음 동작을 선택하세요.';
+        qrStatusEl.textContent = '스캔 완료';
     }
 
     function extractTicketNumbersFromQr(payload) {

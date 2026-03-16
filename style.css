@@ -19751,3 +19751,362 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
         padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
     }
 }
+
+/* Dashboard / mypage / store / QR simplification */
+#tab-dashboard .dashboard-section--essentials,
+#tab-dashboard .dashboard-deep-grid,
+#tab-dashboard .dashboard-structure-card {
+    display: none;
+}
+
+#tab-dashboard .dashboard-shell {
+    gap: 20px;
+}
+
+#tab-dashboard .dashboard-card-meta,
+#tab-dashboard .dashboard-result-group-note,
+#tab-dashboard .dashboard-win-head p {
+    display: none;
+}
+
+#tab-dashboard .dashboard-hero {
+    padding: clamp(22px, 3vw, 30px);
+}
+
+#tab-dashboard .dashboard-hero-copy {
+    gap: 12px;
+}
+
+#tab-dashboard .dash-intro-sub {
+    max-width: 460px;
+    font-size: 14px;
+}
+
+#tab-dashboard .dashboard-signal-card {
+    min-height: 154px;
+    padding: 20px 22px;
+}
+
+#tab-dashboard .dashboard-card-actions--split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#tab-dashboard .dashboard-result-prize,
+#tab-dashboard .dashboard-prize-strip {
+    gap: 6px;
+    padding: 18px 20px;
+}
+
+#tab-dashboard .dashboard-win-summary {
+    gap: 16px;
+}
+
+#tab-dashboard .dashboard-win-status {
+    padding: 12px 14px;
+}
+
+#tab-dashboard .dashboard-win-kpi,
+#tab-dashboard .dashboard-win-ranks > div {
+    padding: 16px 18px;
+}
+
+#tab-mypage .mypage-account-helper,
+#tab-mypage .mypage-account-meta-note,
+#tab-mypage .mypage-plan-callout {
+    display: none;
+}
+
+#tab-mypage .mypage-plan-panel {
+    gap: 14px;
+}
+
+#tab-mypage .mypage-plan-current {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+    padding: 16px;
+}
+
+#tab-mypage .mypage-plan-highlight {
+    gap: 8px;
+}
+
+#tab-mypage .mypage-plan-highlight-item {
+    padding: 14px 12px;
+    border-radius: 18px;
+}
+
+#tab-mypage .mypage-plan-highlight-item span {
+    font-size: 10px;
+}
+
+#tab-mypage .mypage-plan-highlight-item strong {
+    font-size: 17px;
+}
+
+#tab-mypage .mypage-plan-offers {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+#tab-mypage .mypage-plan-offer-card {
+    gap: 10px;
+    padding: 16px;
+    border-radius: 22px;
+}
+
+#tab-mypage .mypage-plan-offer-card p {
+    display: none;
+}
+
+#tab-mypage .mypage-plan-offer-top {
+    gap: 4px;
+}
+
+#tab-mypage .mypage-plan-offer-top strong {
+    font-size: 20px;
+}
+
+#tab-mypage .mypage-plan-offer-price {
+    font-size: 12px;
+}
+
+#tab-mypage .mypage-plan-offer-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+#tab-mypage .mypage-plan-offer-list li {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #f4f7fb;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    color: #354052;
+    font-size: 11px;
+    line-height: 1.2;
+}
+
+#tab-mypage .mypage-plan-offer-list li::before {
+    display: none;
+}
+
+#tab-mypage .mypage-slot-actions {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+#tab-mypage .mypage-shortcut-btn {
+    gap: 6px;
+    padding: 18px 16px;
+}
+
+#tab-mypage .mypage-shortcut-btn span {
+    font-size: 11px;
+}
+
+#tab-mypage .mypage-shortcut-btn strong {
+    font-size: 16px;
+}
+
+#tab-mypage .mypage-access-section {
+    display: grid;
+    gap: 12px;
+    padding: 20px 22px;
+    border-radius: 26px;
+    border: 1px solid rgba(2, 32, 71, 0.08);
+    background: linear-gradient(180deg, #eef5ff 0%, #ffffff 100%);
+    box-shadow: 0 12px 28px rgba(2, 32, 71, 0.06);
+}
+
+#tab-mypage .mypage-access-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+#tab-mypage .mypage-access-bullets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#tab-mypage .mypage-access-bullets span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    color: #44576d;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#tab-store .store-shell-title {
+    gap: 8px;
+}
+
+#tab-store .store-shell-card {
+    overflow: hidden;
+    border-radius: 28px;
+    border: 1px solid rgba(2, 32, 71, 0.08);
+    background: #ffffff;
+    box-shadow: 0 14px 32px rgba(2, 32, 71, 0.08);
+}
+
+#tab-store .store-shell-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px 16px;
+    background: linear-gradient(180deg, #f5f9ff 0%, #ffffff 100%);
+    border-bottom: 1px solid rgba(2, 32, 71, 0.08);
+}
+
+#tab-store .store-webview-frame {
+    min-height: min(72vh, 960px);
+    background: #ffffff;
+}
+
+#tab-qr .section-title {
+    gap: 8px;
+}
+
+#tab-qr .qr-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
+    gap: 16px;
+}
+
+#tab-qr .qr-camera-card,
+#tab-qr .qr-result-card {
+    display: grid;
+    gap: 14px;
+    padding: 20px;
+    border-radius: 26px;
+    border: 1px solid rgba(2, 32, 71, 0.08);
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    box-shadow: 0 14px 32px rgba(2, 32, 71, 0.08);
+}
+
+#tab-qr .qr-camera-head,
+#tab-qr .qr-result-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+#tab-qr .qr-preview {
+    overflow: hidden;
+    border-radius: 22px;
+}
+
+#tab-qr .qr-actions,
+#tab-qr .qr-next-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+#tab-qr .qr-block {
+    display: grid;
+    gap: 10px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+#tab-qr .qr-result-head + .qr-block {
+    padding-top: 0;
+    border-top: 0;
+}
+
+#tab-qr .qr-label {
+    color: #1b64da;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+#tab-qr .qr-numbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 40px;
+    align-items: center;
+}
+
+#tab-qr .qr-match {
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+#tab-qr .qr-detail-disclosure {
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(15, 23, 42, 0.12);
+}
+
+#tab-qr .qr-detail-disclosure summary {
+    cursor: pointer;
+    color: #6b7684;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#tab-qr .qr-payload {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 14px;
+    background: #f7fafc;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+@media (max-width: 1080px) {
+    #tab-mypage .mypage-plan-offers {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #tab-qr .qr-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    #tab-dashboard .dashboard-spotlight-grid,
+    #tab-dashboard .dashboard-win-kpis,
+    #tab-dashboard .dashboard-win-ranks {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #tab-dashboard .dashboard-hero {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-dashboard .dashboard-signal-card {
+        min-height: auto;
+    }
+
+    #tab-mypage .mypage-plan-current,
+    #tab-mypage .mypage-plan-offers,
+    #tab-mypage .mypage-slot-actions {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-mypage .mypage-access-body,
+    #tab-store .store-shell-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #tab-qr .qr-actions,
+    #tab-qr .qr-next-actions {
+        grid-template-columns: 1fr;
+    }
+}
