@@ -1454,7 +1454,73 @@
         <section id="tab-dashboard" class="tab-panel app-shell app-shell--dashboard is-active" role="tabpanel" aria-labelledby="tab-dashboard-btn" tabindex="0">
             <div class="container-box">
                 <div class="dashboard-shell">
+                    <section class="dashboard-hero">
+                        <div class="dashboard-hero-copy">
+                            <span class="dash-intro-kicker">대시보드</span>
+                            <h2 class="content-tit">이번 회차 한눈에</h2>
+                            <p class="dash-intro-sub">이번 회차, 직전 결과, 내 기록 순서로 봅니다.</p>
+                            <div class="dash-intro-actions">
+                                <button class="cta" type="button" data-tab-link="draw">번호 만들기</button>
+                                <button class="ghost" type="button" data-tab-link="mypage">마이페이지</button>
+                            </div>
+                        </div>
+                        <div class="dashboard-hero-side">
+                            <article class="dashboard-signal-card">
+                                <span class="dashboard-card-kicker">공식 회차</span>
+                                <strong id="dash-sync-status">최신 회차 확인 중</strong>
+                                <p id="dash-sync-time">공식 데이터 대기 중</p>
+                            </article>
+                            <article class="dashboard-signal-card dashboard-signal-card--accent">
+                                <span class="dashboard-card-kicker">내 준비 상태</span>
+                                <strong id="dash-membership-chip">FREE</strong>
+                                <p id="dash-activity-chip">생성 이력 없음</p>
+                            </article>
+                        </div>
+                    </section>
+
                     <section class="dashboard-spotlight-grid" aria-label="핵심 회차 카드">
+                        <article class="dashboard-card dashboard-card--next">
+                            <div class="dashboard-card-head">
+                                <span class="dashboard-card-kicker">이번 회차</span>
+                                <span class="dashboard-card-meta">번호 준비</span>
+                            </div>
+                            <div class="dashboard-round-row">
+                                <div class="result-round dashboard-round-badge" id="dash-thsLtEpsd"></div>
+                                <div class="dashboard-round-copy">
+                                    <strong><span id="dash-thsLtRflYmd"></span> 추첨 예정</strong>
+                                    <p>이번 회차 일정과 남은 시간</p>
+                                </div>
+                            </div>
+                            <div class="dashboard-countdown-head">남은 시간</div>
+                            <div class="timer-box dashboard-countdown">
+                                <div class="time-circle">
+                                    <div class="time-num" id="dash-DD"></div>
+                                    <div class="time-txt">일</div>
+                                </div>
+                                <div class="time-circle">
+                                    <div class="time-num" id="dash-HH"></div>
+                                    <div class="time-txt">시</div>
+                                </div>
+                                <div class="time-circle">
+                                    <div class="time-num" id="dash-MM"></div>
+                                    <div class="time-txt">분</div>
+                                </div>
+                                <div class="time-circle">
+                                    <div class="time-num" id="dash-SS"></div>
+                                    <div class="time-txt">초</div>
+                                </div>
+                            </div>
+                            <div class="dashboard-prize-strip">
+                                <span class="dashboard-prize-label">예상 1등 당첨금</span>
+                                <strong class="winnings dashboard-prize-value" id="dash-rnk1ExpcAmt"></strong>
+                                <span class="dashboard-prize-note">공식 예상치</span>
+                            </div>
+                            <div class="dashboard-card-actions">
+                                <button class="btn-butNow dashboard-primary-btn" type="button" id="dash-btnBuyLt645">추첨 탭 열기</button>
+                                <button class="dashboard-inline-btn" type="button" data-tab-link="store">판매점 보기</button>
+                            </div>
+                        </article>
+
                         <article class="dashboard-card dashboard-card--result">
                             <div class="dashboard-card-head">
                                 <span class="dashboard-card-kicker">직전 회차</span>
@@ -1464,7 +1530,7 @@
                                 <div class="result-round dashboard-round-badge" id="dash-pstLtEpsd"></div>
                                 <div class="dashboard-round-copy">
                                     <strong id="dash-pstLtRflYmd"></strong>
-                                    <p>당첨 번호만 빠르게 확인합니다.</p>
+                                    <p>직전 당첨 번호와 총 당첨금</p>
                                 </div>
                             </div>
                             <div class="result-ballWrapper dashboard-result-balls">
@@ -1511,72 +1577,6 @@
                                 <button class="dashboard-inline-btn" type="button" data-tab-link="qr">QR 확인</button>
                             </div>
                         </article>
-
-                        <article class="dashboard-card dashboard-card--next">
-                            <div class="dashboard-card-head">
-                                <span class="dashboard-card-kicker">이번 회차</span>
-                                <span class="dashboard-card-meta">번호 준비</span>
-                            </div>
-                            <div class="dashboard-round-row">
-                                <div class="result-round dashboard-round-badge" id="dash-thsLtEpsd"></div>
-                                <div class="dashboard-round-copy">
-                                    <strong><span id="dash-thsLtRflYmd"></span> 추첨 예정</strong>
-                                    <p>이번 회차 일정만 확인합니다.</p>
-                                </div>
-                            </div>
-                            <div class="dashboard-countdown-head">남은 시간</div>
-                            <div class="timer-box dashboard-countdown">
-                                <div class="time-circle">
-                                    <div class="time-num" id="dash-DD"></div>
-                                    <div class="time-txt">일</div>
-                                </div>
-                                <div class="time-circle">
-                                    <div class="time-num" id="dash-HH"></div>
-                                    <div class="time-txt">시</div>
-                                </div>
-                                <div class="time-circle">
-                                    <div class="time-num" id="dash-MM"></div>
-                                    <div class="time-txt">분</div>
-                                </div>
-                                <div class="time-circle">
-                                    <div class="time-num" id="dash-SS"></div>
-                                    <div class="time-txt">초</div>
-                                </div>
-                            </div>
-                            <div class="dashboard-prize-strip">
-                                <span class="dashboard-prize-label">예상 1등 당첨금</span>
-                                <strong class="winnings dashboard-prize-value" id="dash-rnk1ExpcAmt"></strong>
-                                <span class="dashboard-prize-note">공식 예상치 기준</span>
-                            </div>
-                            <div class="dashboard-card-actions">
-                                <button class="btn-butNow dashboard-primary-btn" type="button" id="dash-btnBuyLt645">추첨 탭 열기</button>
-                                <button class="dashboard-inline-btn" type="button" data-tab-link="store">판매점 보기</button>
-                            </div>
-                        </article>
-                    </section>
-
-                    <section class="dashboard-hero">
-                        <div class="dashboard-hero-copy">
-                            <span class="dash-intro-kicker">오늘의 브리핑</span>
-                            <h2 class="content-tit">이번 회차 핵심만 빠르게 확인하세요</h2>
-                            <p class="dash-intro-sub">결과, 일정, 내 상태만 바로 봅니다.</p>
-                            <div class="dash-intro-actions">
-                                <button class="cta" type="button" data-tab-link="draw">이번 회차 번호 만들기</button>
-                                <button class="ghost" type="button" data-tab-link="mypage">내 저장 기준 보기</button>
-                            </div>
-                        </div>
-                        <div class="dashboard-hero-side">
-                            <article class="dashboard-signal-card">
-                                <span class="dashboard-card-kicker">공식 회차</span>
-                                <strong id="dash-sync-status">최신 회차 확인 중</strong>
-                                <p id="dash-sync-time">공식 데이터 대기 중</p>
-                            </article>
-                            <article class="dashboard-signal-card dashboard-signal-card--accent">
-                                <span class="dashboard-card-kicker">내 준비 상태</span>
-                                <strong id="dash-membership-chip">FREE</strong>
-                                <p id="dash-activity-chip">생성 이력 없음</p>
-                            </article>
-                        </div>
                     </section>
 
                     <section class="dashboard-win-summary dashboard-card" aria-labelledby="dash-win-summary-title">
