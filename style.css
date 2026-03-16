@@ -18490,13 +18490,15 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-overview-copy strong {
     margin: 0;
-    font-size: clamp(24px, 3vw, 32px);
-    line-height: 1.06;
+    max-inline-size: min(100%, 14ch);
+    font-size: clamp(18px, min(2.6vw, 3.4vh), 28px);
+    line-height: 1.1;
     color: #10233a;
     letter-spacing: -0.04em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: keep-all;
+    text-wrap: balance;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-overview-badges {
@@ -19068,13 +19070,16 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-review-overview {
+        grid-template-columns: minmax(0, 1fr) minmax(72px, 22vw);
         padding: 14px;
         gap: 10px;
         border-radius: 20px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-review-overview-copy strong {
-        font-size: clamp(20px, 5.4vw, 24px);
+        max-inline-size: min(100%, 12ch);
+        font-size: clamp(16px, min(4.8vw, 3.8vh), 21px);
+        line-height: 1.14;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-review-overview-gauge {

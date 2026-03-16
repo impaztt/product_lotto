@@ -536,10 +536,10 @@ document.addEventListener('DOMContentLoaded', () => {
             navNote: '직접 제외수는 선택 사항이지만 생성 직전에 바로 반영됩니다.'
         },
         review: {
-            title: '조건 대시보드',
-            copy: '한 화면에서 확인하고 바로 추첨합니다.',
-            navTitle: '대시보드',
-            navNote: '조건만 확인하고 바로 추첨'
+            title: '추첨 전 확인',
+            copy: '조건을 보고 바로 추첨합니다.',
+            navTitle: '추첨 전 확인',
+            navNote: '조건 확인 후 추첨'
         },
         result: {
             title: '추첨 결과가 준비됐습니다',
@@ -3715,9 +3715,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 : 'neutral';
         const overviewStatus = restriction.blocked
             ? (activeConditionCount ? '조건 조정' : '선택 필요')
-            : benefitPct > 0
-                ? '바로 추첨'
-                : '기본 범위';
+            : '추첨 전 확인';
         const overviewHeadline = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)}`;
         const overviewBadges = [
             `1등 ${formatDrawWizardCompactOddsLabel(currentFirstOdds)}`,
