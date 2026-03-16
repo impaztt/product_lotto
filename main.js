@@ -3903,6 +3903,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderDrawWizardDashboard({
         currentStep,
+        progressInfo,
+        viewMeta,
         restriction,
         selectedCount,
         excludeCount
@@ -3930,85 +3932,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalBenefitPct = Math.max(0, Math.round((1 - remainingRatio) * 100));
         const selectionTotalCount = selectedCount + excludeCount;
         const selectionExcludeVisualCount = excludeCount;
-        const hasSelection = selectionTotalCount > 0;
-        const dashboardState = currentStep === 'result'
-            ? 'result'
-            : restriction.blocked && (currentStep === 'review' || hasSelection)
-                ? 'warning'
-                : hasSelection
-                    ? 'ready'
-                    : 'idle';
+        const cumulativeReducedCombos = Number.isFinite(currentExcludedCombos) ? currentExcludedCombos : 0;
 
-        let dashboardStep = '현재 누적 상태';
-        let dashboardTitle = '핵심 지표만 보며 조정하세요';
-        let dashboardCopy = hasSelection
-            ? '남은 후보, 1등 기준, 활성 조건만 보면서 과하게 줄지 않는지 확인하세요.'
-            : '규칙이나 직접 제외수를 고르면 아래 핵심 지표가 바로 바뀝니다.';
-        let statusValue = '기본 범위';
-        let statusNote = '아직 선택 전';
-        let rangeValue = formatDrawWizardCompactCount(remainingCombos);
-        let rangeNote = hasSelection
-            ? `전체의 ${remainingPct}% 범위가 추첨 대상입니다.`
-            : '전체 조합이 그대로 추첨 대상입니다.';
-        let oddsValue = formatDrawWizardCompactOddsLabel(currentFirstOdds);
+        let dashboardStep = '누적 현황';
+        let dashboardTitle = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)}`;
+        let dashboardCopy = selectionTotalCount
+            ? `규칙 ${selectedCount}개 · 제외수 ${excludeCount}개 반영`
+            : '아직 선택 전 · 기본 범위 유지';
         let oddsNote = totalBenefitPct
-            ? `기본 대비 1등 기대 +${totalBenefitPct}%`
-            : '기본 당첨 확률과 같습니다.';
-        let activeValue = hasSelection ? `${selectionTotalCount}개 적용` : '아직 없음';
-        let activeNote = hasSelection
-            ? excludeCount
-                ? `규칙 ${selectedCount}개 · 직접 제외 ${excludeCount}개`
-                : `규칙 ${selectedCount}개 선택`
-            : '규칙과 직접 제외수를 고르면 여기서 요약됩니다.';
+            ? `1등 기대 +${totalBenefitPct}%`
+            : '1등 기준 기본';
+        let impactValue = totalBenefitPct ? `+${totalBenefitPct}%` : '기본';
+        let impactNote = '1등 기대';
+        let selectionValue = `${remainingPct}%`;
+        let selectionNote = '남은 범위';
+        let visualLabel = cumulativeReducedCombos ? formatDrawWizardCompactCount(cumulativeReducedCombos) : '0개';
+        let visualNote = selectionTotalCount ? '누적 제외' : '선택 없음';
 
-        if (currentStep === 'rules') {
-            dashboardTitle = '선택한 규칙이 바로 누적 반영됩니다';
-            dashboardCopy = selectedCount
-                ? '남은 후보와 1등 기준이 함께 바뀌므로 필요한 패턴만 남겨 두세요.'
-                : '빼고 싶은 패턴만 누르면 아래 핵심 지표가 즉시 갱신됩니다.';
-            statusValue = selectedCount ? '규칙 반영 중' : '기본 범위';
-            statusNote = selectedCount ? `규칙 ${selectedCount}개 선택` : '아직 규칙 선택 전';
-        } else if (currentStep === 'exclude') {
-            dashboardTitle = '직접 제외수는 마지막 미세 조정 단계입니다';
-            dashboardCopy = excludeCount
-                ? '직접 제외수를 추가할수록 남은 후보와 활성 조건이 바로 다시 계산됩니다.'
-                : '필요한 숫자만 직접 제외하고 바로 최종 확인으로 넘어갈 수 있습니다.';
-            statusValue = excludeCount ? '직접 제외 반영 중' : '마지막 조정 단계';
-            statusNote = excludeCount ? `직접 제외 ${excludeCount}개 적용` : '이 단계는 건너뛰어도 됩니다';
-        } else if (currentStep === 'review') {
-            dashboardStep = '추첨 전 핵심 요약';
-            dashboardTitle = restriction.blocked
-                ? hasSelection
-                    ? '후보가 너무 적지 않은지 마지막으로 확인하세요'
-                    : '아직 조건을 고르지 않았습니다'
-                : '지금 조건이면 바로 추첨해도 됩니다';
-            dashboardCopy = restriction.blocked
-                ? hasSelection
-                    ? '남은 후보가 너무 적으면 생성이 어려울 수 있습니다. 꼭 필요한 조건만 남겨 주세요.'
-                    : '규칙이나 직접 제외수를 하나 이상 고르면 바로 추첨을 시작할 수 있습니다.'
-                : '추첨 전에 필요한 핵심 수치만 남겼습니다. 아래 세 카드만 보고 결정하면 됩니다.';
-            statusValue = restriction.blocked ? '조건 보완 필요' : '바로 추첨 가능';
-            statusNote = restriction.blocked
-                ? hasSelection
-                    ? '몇 개 조건만 덜어내면 안정적입니다'
-                    : '규칙 또는 직접 제외수를 먼저 골라 주세요'
-                : `${selectionTotalCount}개 조건이 생성에 반영됩니다`;
-        } else if (currentStep === 'result') {
-            dashboardStep = '생성 결과 요약';
-            dashboardTitle = '이번 생성에 반영된 조건입니다';
-            dashboardCopy = '같은 조건으로 다시 추첨하거나 이전 단계로 돌아가 바로 조정할 수 있습니다.';
-            statusValue = '생성 완료';
-            statusNote = hasSelection ? `${selectionTotalCount}개 조건 반영` : '기본 범위로 생성';
+        if (progressInfo?.label) {
+            dashboardStep = `${progressInfo.label} · 누적 현황`;
         }
-
-        if (restriction.blocked && hasSelection) {
-            rangeNote = currentRemainingCombos <= 20
-                ? '남은 후보가 너무 적어 생성이 어려울 수 있습니다.'
-                : `전체의 ${remainingPct}%만 남아 있습니다.`;
-            if (currentStep !== 'review' && currentStep !== 'result') {
-                statusValue = '조건이 강함';
-                statusNote = '남은 후보가 빠르게 줄고 있습니다';
-            }
+        if (currentStep === 'exclude') {
+            dashboardCopy = selectionTotalCount
+                ? `규칙 ${selectedCount}개 · 제외수 ${excludeCount}개 반영`
+                : '직접 제외수까지 더해 범위를 줄여보세요';
+        } else if (currentStep === 'review') {
+            dashboardCopy = restriction.blocked
+                ? '조건이 조금 강합니다 · 몇 개만 덜어내도 됩니다'
+                : '이 누적 기준으로 바로 번호를 만들 수 있습니다';
+        } else if (currentStep === 'result') {
+            dashboardStep = '최종 결과 · 누적 현황';
+            dashboardCopy = totalBenefitPct
+                ? '누적 기준이 반영된 범위에서 생성 완료'
+                : '기본 범위에 가깝게 생성 완료';
         }
 
         if (drawWizardDashboardStepEl) {
@@ -4020,40 +3976,39 @@ document.addEventListener('DOMContentLoaded', () => {
         if (drawWizardDashboardCopyEl) {
             drawWizardDashboardCopyEl.textContent = dashboardCopy;
         }
-        drawWizardDashboardEl.dataset.state = dashboardState;
         if (drawWizardDashboardOddsEl) {
-            drawWizardDashboardOddsEl.textContent = statusValue;
+            drawWizardDashboardOddsEl.textContent = formatDrawWizardCompactOddsLabel(currentFirstOdds);
         }
         if (drawWizardDashboardOddsNoteEl) {
-            drawWizardDashboardOddsNoteEl.textContent = statusNote;
+            drawWizardDashboardOddsNoteEl.textContent = oddsNote;
         }
         if (drawWizardDashboardGaugeEl) {
             const gaugeAngle = Math.max(0, Math.min(360, Math.round(totalBenefitPct * 3.6)));
             drawWizardDashboardGaugeEl.style.setProperty('--draw-dashboard-gauge-angle', `${gaugeAngle}deg`);
         }
         if (drawWizardDashboardImpactEl) {
-            drawWizardDashboardImpactEl.textContent = oddsValue;
+            drawWizardDashboardImpactEl.textContent = impactValue;
         }
         if (drawWizardDashboardImpactNoteEl) {
-            drawWizardDashboardImpactNoteEl.textContent = oddsNote;
+            drawWizardDashboardImpactNoteEl.textContent = impactNote;
         }
         if (drawWizardDashboardMeterFillEl) {
-            drawWizardDashboardMeterFillEl.style.width = `${Math.max(12, remainingPct)}%`;
+            drawWizardDashboardMeterFillEl.style.width = `${Math.max(8, remainingPct)}%`;
         }
         if (drawWizardDashboardSelectionEl) {
-            drawWizardDashboardSelectionEl.textContent = rangeValue;
+            drawWizardDashboardSelectionEl.textContent = selectionValue;
         }
         if (drawWizardDashboardSelectionNoteEl) {
-            drawWizardDashboardSelectionNoteEl.textContent = rangeNote;
+            drawWizardDashboardSelectionNoteEl.textContent = selectionNote;
         }
         if (drawWizardDashboardSelectionVisualEl) {
             drawWizardDashboardSelectionVisualEl.innerHTML = getDrawWizardSelectionVisualMarkup(selectionTotalCount, selectionExcludeVisualCount);
         }
         if (drawWizardDashboardVisualLabelEl) {
-            drawWizardDashboardVisualLabelEl.textContent = activeValue;
+            drawWizardDashboardVisualLabelEl.textContent = visualLabel;
         }
         if (drawWizardDashboardVisualNoteEl) {
-            drawWizardDashboardVisualNoteEl.textContent = activeNote;
+            drawWizardDashboardVisualNoteEl.textContent = visualNote;
         }
     }
 
@@ -4148,6 +4103,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         renderDrawWizardDashboard({
             currentStep,
+            progressInfo,
+            viewMeta,
             restriction,
             selectedCount,
             excludeCount
