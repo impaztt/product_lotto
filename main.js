@@ -252,11 +252,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const mypageNicknameDisplayEl = document.getElementById('mypage-nickname-display');
     const mypageHistoryListEl = document.getElementById('mypage-history-list');
     const mypageHistoryBadgeEl = document.getElementById('mypage-history-badge');
+    const mypageProfileTitleEl = document.getElementById('mypage-profile-title');
     const mypageProfileEmailEl = document.getElementById('mypage-profile-email');
     const mypageMembershipTierEl = document.getElementById('mypage-membership-tier');
     const mypageMembershipTierSummaryEl = document.getElementById('mypage-membership-tier-summary');
     const mypageMembershipDescEl = document.getElementById('mypage-membership-desc');
     const mypageMembershipNextEl = document.getElementById('mypage-membership-next');
+    const mypagePlanHeadingEl = document.getElementById('mypage-plan-heading');
     const mypagePlanNoteEl = document.getElementById('mypage-plan-note');
     const mypagePlanSetCountEl = document.getElementById('mypage-plan-set-count');
     const mypagePlanCopyAccessEl = document.getElementById('mypage-plan-copy-access');
@@ -4693,6 +4695,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const member = isMember();
         const premiumActive = isPremiumMember();
         const recommendedSetCount = member ? getRecommendedSetCount(plan.id) : 0;
+        const planHeading = authPending
+            ? '확인 중'
+            : premiumActive
+            ? `${plan.label} 플랜`
+            : member
+            ? 'FREE 플랜'
+            : '무료 플랜';
+
+        if (mypagePlanHeadingEl) {
+            mypagePlanHeadingEl.textContent = planHeading;
+        }
 
         if (mypageProfileEmailEl) {
             if (authPending) {
@@ -4724,9 +4737,9 @@ document.addEventListener('DOMContentLoaded', () => {
             mypageMembershipNextEl.textContent = authPending
                 ? '확인 중'
                 : premiumActive
-                ? plan.label
+                ? '유료'
                 : member
-                ? 'FREE'
+                ? '무료'
                 : '비회원';
         }
         if (mypagePlanNoteEl) {
@@ -4776,8 +4789,8 @@ document.addEventListener('DOMContentLoaded', () => {
             mypagePlanManageBtn.textContent = authPending
                 ? '확인 중'
                 : premiumActive
-                ? '추천'
-                : '플랜';
+                ? '추천 보기'
+                : '플랜 보기';
             mypagePlanManageBtn.disabled = authPending;
         }
         if (mypagePlanCancelBtn) {
@@ -6901,19 +6914,29 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderNicknameUi() {
         const member = isMember();
         const authPending = isAuthStatePending();
+        const nicknameText = authPending
+            ? '로그인 상태 확인 중...'
+            : !member
+            ? '첫 로그인 후 자동으로 정해져요'
+            : currentUserProfile && currentUserProfile.nickname
+            ? currentUserProfile.nickname
+            : '닉네임 불러오는 중...';
+        const profileTitleText = authPending
+            ? '확인 중'
+            : !member
+            ? '계정'
+            : currentUserProfile && currentUserProfile.nickname
+            ? currentUserProfile.nickname
+            : '닉네임 확인 중';
+
         if (mypageAuthBadgeEl) {
             mypageAuthBadgeEl.textContent = authPending ? '확인 중' : (member ? '로그인 완료' : '비회원');
         }
+        if (mypageProfileTitleEl) {
+            mypageProfileTitleEl.textContent = profileTitleText;
+        }
         if (mypageNicknameDisplayEl) {
-            if (authPending) {
-                mypageNicknameDisplayEl.textContent = '로그인 상태 확인 중...';
-            } else if (!member) {
-                mypageNicknameDisplayEl.textContent = '첫 로그인 후 자동으로 정해져요';
-            } else if (currentUserProfile && currentUserProfile.nickname) {
-                mypageNicknameDisplayEl.textContent = currentUserProfile.nickname;
-            } else {
-                mypageNicknameDisplayEl.textContent = '닉네임 불러오는 중...';
-            }
+            mypageNicknameDisplayEl.textContent = nicknameText;
         }
         const remaining = getNicknameRemainingChanges();
         if (nicknameStatusEl && authPending) {

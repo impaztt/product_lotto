@@ -21405,6 +21405,11 @@ body[data-theme="dark"] #tab-store .locker-history-more-sets {
     text-align: left !important;
 }
 
+#tab-mypage .mypage-account-copy h3 {
+    min-width: 0;
+    word-break: break-word;
+}
+
 #tab-mypage .mypage-hero-email {
     max-width: none !important;
     text-align: left !important;
@@ -21453,38 +21458,16 @@ body[data-theme="dark"] #tab-store .locker-history-more-sets {
     letter-spacing: -0.03em;
 }
 
-#tab-mypage .mypage-account-list {
-    display: grid !important;
-    gap: 10px !important;
-}
-
-#tab-mypage .mypage-account-list-row {
-    display: grid !important;
-    grid-template-columns: 72px minmax(0, 1fr) auto;
-    align-items: center;
+#tab-mypage .mypage-account-bullet--nickname {
+    grid-column: 1 / -1;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
     gap: 10px;
-    min-width: 0;
-    padding: 14px 16px;
-    border-radius: 18px;
-    background: #f7f9fc;
-    border: 1px solid rgba(15, 23, 42, 0.06);
 }
 
-#tab-mypage .mypage-account-list-row:last-child {
-    grid-template-columns: 72px minmax(0, 1fr);
-}
-
-#tab-mypage .mypage-account-list-label {
-    color: #667085;
-    font-size: 12px;
-    font-weight: 800;
-}
-
-#tab-mypage .mypage-account-list-row strong {
-    min-width: 0;
-    color: #111827;
+#tab-mypage .mypage-account-bullet--nickname strong {
+    justify-self: start;
     font-size: 15px;
-    line-height: 1.25;
+    line-height: 1.2;
     letter-spacing: -0.02em;
 }
 
@@ -21494,6 +21477,10 @@ body[data-theme="dark"] #tab-store .locker-history-more-sets {
     border-radius: 12px !important;
     font-size: 12px !important;
     font-weight: 800 !important;
+}
+
+#tab-mypage .mypage-account-bullet--nickname .mypage-inline-edit {
+    justify-self: end;
 }
 
 #tab-mypage .mypage-account-actions {
@@ -21570,14 +21557,18 @@ body[data-theme="dark"] #tab-mypage .mypage-account-list-row strong {
         grid-template-columns: auto minmax(0, 1fr);
     }
 
-    #tab-mypage .mypage-account-list-row,
-    #tab-mypage .mypage-account-list-row:last-child {
-        grid-template-columns: 1fr !important;
-        align-items: start;
+    #tab-mypage .mypage-account-bullet--nickname {
+        grid-template-columns: auto auto minmax(0, 1fr) !important;
+        align-items: center;
     }
 
-    #tab-mypage .mypage-account-list-row strong {
+    #tab-mypage .mypage-account-bullet--nickname strong {
         font-size: 14px;
+    }
+
+    #tab-mypage .mypage-account-bullet--nickname .mypage-inline-edit {
+        grid-column: 1 / -1;
+        width: 100%;
     }
 
     #tab-mypage .mypage-shell-footer {
