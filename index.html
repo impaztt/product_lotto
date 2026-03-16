@@ -2063,7 +2063,7 @@
 	                            </section>
 	                            <section class="draw-funnel-panel" data-draw-wizard-step="exclude" hidden>
 	                                <div class="draw-funnel-copy">
-	                                    <span class="draw-funnel-step-kicker">직접 제외수</span>
+	                                    <span class="draw-funnel-step-kicker" id="draw-wizard-exclude-kicker">8단계</span>
 	                                    <h3>추가로 제외하고 싶은 숫자가 있나요?</h3>
 	                                    <p>규칙 라이브러리 선택이 끝났다면 마지막으로 직접 제외할 숫자를 고를 수 있습니다. 이 단계는 선택 사항입니다.</p>
 	                                </div>
@@ -2085,17 +2085,22 @@
 	                            <section class="draw-funnel-panel" data-draw-wizard-step="review" hidden>
 	                                <div class="draw-funnel-copy">
 	                                    <span class="draw-funnel-step-kicker">최종 확인</span>
-	                                    <h3>고른 규칙을 확인하고 바로 추첨하세요</h3>
-	                                    <p>여기서는 지금까지 선택한 규칙을 그룹별로 다시 보고, 생성할 세트 수를 정한 뒤 바로 추첨합니다.</p>
+	                                    <h3>지금 조건을 한눈에 보고 바로 추첨하세요</h3>
+	                                    <p>규칙과 직접 제외수, 남는 후보 수, 기대 변화까지 한 번에 확인하고 바로 생성합니다.</p>
 	                                </div>
+	                                <div id="draw-wizard-review-overview" class="draw-funnel-review-overview"></div>
 	                                <div class="draw-funnel-review-grid">
 	                                    <article class="draw-funnel-review-card">
-	                                        <span class="draw-funnel-review-label">선택 요약</span>
-	                                        <div id="draw-wizard-review-summary" class="draw-funnel-review-list"></div>
+	                                        <span class="draw-funnel-review-label">핵심 지표</span>
+	                                        <div id="draw-wizard-review-summary" class="draw-funnel-review-metrics"></div>
 	                                    </article>
 	                                    <article class="draw-funnel-review-card">
 	                                        <span class="draw-funnel-review-label">그룹별 선택</span>
-	                                        <div id="draw-wizard-review-groups" class="draw-funnel-review-list"></div>
+	                                        <div id="draw-wizard-review-groups" class="draw-funnel-review-groups"></div>
+	                                    </article>
+	                                    <article class="draw-funnel-review-card">
+	                                        <span class="draw-funnel-review-label">직접 제외수</span>
+	                                        <div id="draw-wizard-review-excludes" class="draw-funnel-review-excludes"></div>
 	                                    </article>
 	                                    <article class="draw-funnel-review-card">
 	                                        <span class="draw-funnel-review-label">생성 세트 수</span>

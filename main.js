@@ -197,9 +197,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawWizardDetailGroupsEl = document.getElementById('draw-wizard-detail-groups');
     const drawWizardDetailNoteEl = document.getElementById('draw-wizard-detail-note');
     const drawWizardScrollGuideEl = document.getElementById('draw-wizard-scroll-guide');
+    const drawWizardExcludeKickerEl = document.getElementById('draw-wizard-exclude-kicker');
     const drawWizardExcludeSummaryEl = document.getElementById('draw-wizard-exclude-summary');
+    const drawWizardReviewOverviewEl = document.getElementById('draw-wizard-review-overview');
     const drawWizardReviewSummaryEl = document.getElementById('draw-wizard-review-summary');
     const drawWizardReviewGroupsEl = document.getElementById('draw-wizard-review-groups');
+    const drawWizardReviewExcludesEl = document.getElementById('draw-wizard-review-excludes');
     const drawWizardResultTitleEl = document.getElementById('draw-wizard-result-title');
     const drawWizardResultCopyEl = document.getElementById('draw-wizard-result-copy');
     const drawWizardSelfResultShellEl = document.getElementById('draw-wizard-self-result-shell');
@@ -527,14 +530,14 @@ document.addEventListener('DOMContentLoaded', () => {
             navNote: '규칙 라이브러리 항목을 그룹별로 순서대로 고릅니다.'
         },
         exclude: {
-            title: '직접 제외 숫자를 추가할 수 있습니다',
-            copy: '규칙 라이브러리 선택이 끝났다면 마지막으로 직접 제외할 숫자를 고를 수 있습니다.',
-            navTitle: '직접 제외 숫자',
-            navNote: '이 단계는 선택 사항입니다.'
+            title: '8단계에서 직접 제외수를 추가합니다',
+            copy: '규칙 라이브러리 선택이 끝났다면 마지막 8단계에서 직접 제외할 숫자를 고를 수 있습니다.',
+            navTitle: '8단계',
+            navNote: '직접 제외수는 선택 사항이지만 생성 직전에 바로 반영됩니다.'
         },
         review: {
-            title: '선택한 규칙을 확인하고 바로 추첨하세요',
-            copy: '그룹별로 고른 규칙과 직접 제외 숫자를 확인한 뒤 생성할 세트 수를 정합니다.',
+            title: '최종 확인 대시보드',
+            copy: '규칙, 직접 제외수, 남은 후보와 기대 변화를 한눈에 확인한 뒤 바로 추첨합니다.',
             navTitle: '최종 확인',
             navNote: '최소 1개 규칙 또는 직접 제외수가 있어야 추첨할 수 있습니다.'
         },
@@ -3345,6 +3348,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return ruleSteps[index] || null;
     }
 
+    function getDrawWizardExcludeStepNumber() {
+        return getDrawWizardRuleSteps().length + 1;
+    }
+
     function getDrawWizardViewMeta(stepKey = getDrawWizardCurrentStep()) {
         if (stepKey === 'rules') {
             const currentRuleStep = getDrawWizardCurrentRuleStep();
@@ -3355,6 +3362,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 navTitle: currentRuleStep.kicker,
                 navNote: `${Math.min(ruleSteps.length, drawWizardState.currentGroupIndex + 1)} / ${ruleSteps.length} 단계`
             } : DRAW_WIZARD_STEP_META.rules;
+        }
+        if (stepKey === 'exclude') {
+            const excludeStepNumber = getDrawWizardExcludeStepNumber();
+            return {
+                ...DRAW_WIZARD_STEP_META.exclude,
+                navTitle: `${excludeStepNumber}단계`,
+                navNote: `${excludeStepNumber} / ${excludeStepNumber} 단계 · 선택 사항이지만 생성 직전에 바로 반영됩니다.`
+            };
         }
         return DRAW_WIZARD_STEP_META[stepKey] || DRAW_WIZARD_STEP_META.start;
     }
@@ -3375,7 +3390,11 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
         if (stepKey === 'exclude') {
-            return { label: 'OPTION', count: 'EXCLUDE' };
+            const excludeStepNumber = getDrawWizardExcludeStepNumber();
+            return {
+                label: `${excludeStepNumber}단계`,
+                count: `${excludeStepNumber} / ${excludeStepNumber}`
+            };
         }
         return { label: 'CHECK', count: 'REVIEW' };
     }
@@ -3440,6 +3459,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function syncDrawWizardExcludeNumbersFromControl(options = {}) {
+        const { commit = true } = options;
+        const normalized = Array.from(excludeNumberValues).sort((left, right) => left - right);
+        if (!drawWizardState) {
+            return normalized;
+        }
+        drawWizardState.excludeNumbers = normalized;
+        if (commit) {
+            commitDrawWizardState({
+                syncRules: true
+            });
+        }
+        return normalized;
+    }
+
     function syncDrawWizardSelections() {
         if (!drawWizardState) {
             return;
@@ -3473,11 +3507,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getDrawWizardRestrictionState() {
         const derivedRuleIds = getDrawWizardDerivedRuleIds();
+        const excludeCount = Array.isArray(drawWizardState?.excludeNumbers) ? drawWizardState.excludeNumbers.length : 0;
         if (!derivedRuleIds.length) {
             return {
                 kind: 'info',
-                title: '최소 1개 규칙을 선택해 주세요.',
+                title: '최소 1개 규칙 또는 직접 제외수를 선택해 주세요.',
                 body: '규칙 라이브러리 항목이나 직접 제외수를 하나 이상 고르면 추첨을 시작할 수 있습니다.',
+                blocked: true
+            };
+        }
+        if (excludeCount > 39) {
+            return {
+                kind: 'danger',
+                title: '직접 제외수가 너무 많습니다.',
+                body: '45개 중 최소 6개는 남아 있어야 번호 1세트를 만들 수 있습니다. 직접 제외수를 조금 줄여 주세요.',
                 blocked: true
             };
         }
@@ -3527,14 +3570,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const ruleSteps = getDrawWizardRuleSteps();
             const lastIndex = Math.max(0, ruleSteps.length - 1);
             return drawWizardState.currentGroupIndex >= lastIndex
-                ? '직접 제외수로'
+                ? `${getDrawWizardExcludeStepNumber()}단계로`
                 : `${drawWizardState.currentGroupIndex + 2}단계로`;
         }
         if (stepKey === 'exclude') {
             return '최종 확인';
         }
         if (stepKey === 'review') {
-            return getDrawWizardRestrictionState().blocked ? '규칙 더 고르기' : '추첨 시작';
+            return getDrawWizardRestrictionState().blocked ? '조건 보완 필요' : '추첨 시작';
         }
         return '다음';
     }
@@ -3637,31 +3680,122 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderDrawWizardReview() {
-        if (!drawWizardReviewSummaryEl || !drawWizardReviewGroupsEl || !drawWizardState) {
+        if (!drawWizardState) {
             return;
         }
-        const remainPct = Math.max(0, Math.min(100, Math.round((Number(currentRemainingRatio) || 0) * 1000) / 10));
-        const summaryRows = [
-            { label: '선택한 규칙', value: `${drawWizardState.selectedRuleIds.length}개` },
-            { label: '직접 제외수', value: drawWizardState.excludeNumbers.length ? `${drawWizardState.excludeNumbers.length}개` : '없음' },
-            { label: '남은 후보', value: `${formatNumber(currentRemainingCombos || TOTAL_COMBOS)}개` },
-            { label: '남은 비중', value: `${remainPct}%` }
-        ];
-        drawWizardReviewSummaryEl.innerHTML = summaryRows.map(row => `
-            <div class="draw-funnel-review-row">
-                <span>${escapeHtml(row.label)}</span>
-                <strong>${escapeHtml(row.value)}</strong>
-            </div>
-        `).join('');
+        const restriction = getDrawWizardRestrictionState();
+        const selectedRuleCount = drawWizardState.selectedRuleIds.length;
+        const excludeNumbers = normalizeDrawWizardExcludeNumbers(drawWizardState.excludeNumbers);
+        const excludeCount = excludeNumbers.length;
+        const drawCount = Math.max(1, parseInt(drawCountSelect?.value, 10) || 1);
+        const remainRatio = Number.isFinite(currentRemainingRatio)
+            ? Math.max(0, Math.min(1, currentRemainingRatio))
+            : 1;
+        const remainPct = Math.max(0, Math.min(100, Math.round(remainRatio * 1000) / 10));
+        const excludedPct = Math.max(0, Math.min(100, Math.round((1 - remainRatio) * 1000) / 10));
+        const remainingCombos = Math.max(0, Math.round(Number(currentRemainingCombos) || TOTAL_COMBOS));
+        const excludedCombos = Math.max(0, Math.round(Number(currentExcludedCombos) || 0));
+        const baseFirstOdds = Number(getBaseOddsMap()?.[1]) || TOTAL_COMBOS;
+        const currentFirstOdds = Math.max(1, Math.round(baseFirstOdds * (remainRatio || 1)));
+        const benefitPct = Math.max(0, Math.round((1 - remainRatio) * 100));
         const groupedSelections = getDrawWizardGroupedSelections();
-        drawWizardReviewGroupsEl.innerHTML = groupedSelections.length
-            ? groupedSelections.map(group => `
-                <div class="draw-funnel-review-group">
-                    <strong>${escapeHtml(group.groupLabel)}</strong>
-                    <span>${escapeHtml(group.rules.map(rule => rule.title).join(', '))}</span>
+        const overviewState = restriction.blocked
+            ? 'warning'
+            : benefitPct > 0
+                ? 'positive'
+                : 'neutral';
+        const overviewHeadline = restriction.blocked
+            ? restriction.title
+            : benefitPct > 0
+                ? `현재 조건으로 후보를 ${remainPct}%까지 정리했습니다`
+                : '기본 범위에 가까운 상태입니다';
+        const overviewCopy = restriction.blocked
+            ? restriction.body
+            : benefitPct > 0
+                ? `규칙 ${selectedRuleCount}개와 직접 제외수 ${excludeCount}개가 반영되어 ${formatNumber(excludedCombos)}개 조합이 제외됩니다.`
+                : '선택한 조건이 가벼워 기본 범위와 유사한 후보군에서 번호를 생성합니다.';
+        if (drawWizardReviewOverviewEl) {
+            const gaugeAngle = Math.max(0, Math.min(360, Math.round((restriction.blocked ? excludedPct : benefitPct) * 3.6)));
+            drawWizardReviewOverviewEl.dataset.state = overviewState;
+            drawWizardReviewOverviewEl.innerHTML = `
+                <div class="draw-funnel-review-overview-copy">
+                    <span class="draw-funnel-review-overview-kicker">${escapeHtml(restriction.blocked ? '조건 점검 필요' : '추첨 직전 대시보드')}</span>
+                    <strong>${escapeHtml(overviewHeadline)}</strong>
+                    <p>${escapeHtml(overviewCopy)}</p>
+                    <div class="draw-funnel-review-overview-badges">
+                        <span class="draw-funnel-review-overview-badge">규칙 ${escapeHtml(String(selectedRuleCount))}개</span>
+                        <span class="draw-funnel-review-overview-badge">직접 제외 ${escapeHtml(String(excludeCount))}개</span>
+                        <span class="draw-funnel-review-overview-badge">${escapeHtml(String(drawCount))}세트 생성</span>
+                    </div>
                 </div>
-            `).join('')
-            : '<div class="draw-funnel-empty-state">아직 선택된 규칙이 없습니다.</div>';
+                <div class="draw-funnel-review-overview-gauge" style="--draw-review-angle:${gaugeAngle}deg;">
+                    <div class="draw-funnel-review-overview-gauge-body">
+                        <strong>${escapeHtml(restriction.blocked ? `${remainPct}%` : benefitPct ? `+${benefitPct}%` : '기본')}</strong>
+                        <span>${escapeHtml(restriction.blocked ? '남은 비중' : benefitPct ? '1등 기대' : '현재 범위')}</span>
+                    </div>
+                </div>
+            `;
+        }
+        if (drawWizardReviewSummaryEl) {
+            const summaryRows = [
+                {
+                    label: '남은 후보',
+                    value: `${formatNumber(remainingCombos)}개`,
+                    note: `전체의 ${remainPct}%`,
+                    tone: 'range'
+                },
+                {
+                    label: '제외된 조합',
+                    value: `${formatNumber(excludedCombos)}개`,
+                    note: `전체의 ${excludedPct}%`,
+                    tone: 'exclude'
+                },
+                {
+                    label: '1등 기준',
+                    value: formatDrawWizardCompactOddsLabel(currentFirstOdds),
+                    note: benefitPct ? `기대 +${benefitPct}%` : '기본과 유사',
+                    tone: 'odds'
+                },
+                {
+                    label: '활성 조건',
+                    value: `${selectedRuleCount + (excludeCount ? 1 : 0)}개`,
+                    note: excludeCount ? `직접 제외 ${excludeCount}개 포함` : '규칙만 반영',
+                    tone: 'rules'
+                }
+            ];
+            drawWizardReviewSummaryEl.innerHTML = summaryRows.map(row => `
+                <article class="draw-funnel-review-metric draw-funnel-review-metric--${escapeHtml(row.tone)}">
+                    <span>${escapeHtml(row.label)}</span>
+                    <strong>${escapeHtml(row.value)}</strong>
+                    <p>${escapeHtml(row.note)}</p>
+                </article>
+            `).join('');
+        }
+        if (drawWizardReviewGroupsEl) {
+            drawWizardReviewGroupsEl.innerHTML = groupedSelections.length
+                ? groupedSelections.map(group => `
+                    <div class="draw-funnel-review-group-card">
+                        <div class="draw-funnel-review-group-head">
+                            <strong>${escapeHtml(group.groupLabel)}</strong>
+                            <span>${escapeHtml(String(group.rules.length))}개</span>
+                        </div>
+                        <p>${escapeHtml(group.rules.map(rule => rule.title).join(', '))}</p>
+                    </div>
+                `).join('')
+                : '<div class="draw-funnel-empty-state">아직 선택된 규칙이 없습니다.</div>';
+        }
+        if (drawWizardReviewExcludesEl) {
+            drawWizardReviewExcludesEl.innerHTML = excludeNumbers.length
+                ? `
+                    <div class="draw-funnel-review-exclude-balls">
+                        ${excludeNumbers.map(number => `
+                            <span class="exclude-number-ball ${escapeHtml(getExcludeRangeClass(number))} is-active">${escapeHtml(String(number))}</span>
+                        `).join('')}
+                    </div>
+                    <p class="draw-funnel-review-exclude-note">선택한 숫자가 포함된 조합은 모두 제외됩니다.</p>
+                `
+                : '<div class="draw-funnel-empty-state">직접 제외수를 고르지 않으면 규칙만으로 번호를 추립니다.</div>';
+        }
     }
 
     function formatDrawWizardOddsLabel(value) {
@@ -3921,6 +4055,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (drawWizardProgressCountEl) {
             drawWizardProgressCountEl.textContent = progressInfo.count;
         }
+        if (drawWizardExcludeKickerEl) {
+            drawWizardExcludeKickerEl.textContent = `${getDrawWizardExcludeStepNumber()}단계`;
+        }
         if (drawTabPanel) {
             drawTabPanel.classList.toggle('is-draw-intro-view', currentStep === 'start');
         }
@@ -4102,7 +4239,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const currentStep = getDrawWizardCurrentStep();
         if (!getDrawWizardCanProceed(currentStep)) {
-            showActionPopup('추첨을 시작하려면 최소 1개 규칙을 선택해 주세요.');
+            showActionPopup('추첨을 시작하려면 규칙 또는 직접 제외수를 하나 이상 선택해 주세요.');
             return;
         }
         if (currentStep === 'review') {
@@ -4159,19 +4296,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 drawWizardState.selectedRuleIds = Array.from(next);
                 commitDrawWizardState();
-            });
-        }
-        if (excludeNumberGrid) {
-            excludeNumberGrid.addEventListener('click', () => {
-                if (!drawWizardState) {
-                    return;
-                }
-                window.requestAnimationFrame(() => {
-                    drawWizardState.excludeNumbers = Array.from(excludeNumberValues).sort((left, right) => left - right);
-                    commitDrawWizardState({
-                        syncRules: true
-                    });
-                });
             });
         }
         if (drawWizardResumeBtn) {
@@ -7521,6 +7645,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     selected: excludeNumberValues.has(num)
                 });
                 clearActiveStrategySelection();
+                if (drawWizardState) {
+                    syncDrawWizardExcludeNumbersFromControl({
+                        commit: true
+                    });
+                    return;
+                }
                 updateSelectionCount();
                 updateCombinedEstimates();
                 updateScenarioMetrics();

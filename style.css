@@ -18420,20 +18420,254 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     border-radius: 14px;
 }
 
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview {
+    padding: 22px;
+    border-radius: 28px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) auto;
+    gap: 18px;
+    border: 1px solid rgba(20, 38, 64, 0.08);
+    background:
+        radial-gradient(circle at top right, rgba(236, 159, 51, 0.18), transparent 32%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(246, 249, 252, 0.92));
+    box-shadow: 0 18px 38px rgba(28, 56, 92, 0.08);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview[data-state="warning"] {
+    background:
+        radial-gradient(circle at top right, rgba(235, 107, 63, 0.18), transparent 32%),
+        linear-gradient(145deg, rgba(255, 250, 244, 0.98), rgba(255, 255, 255, 0.94));
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview-copy {
+    display: grid;
+    gap: 10px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview-kicker {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #5f7287;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview-copy strong {
+    margin: 0;
+    font-size: clamp(24px, 3vw, 34px);
+    line-height: 1.06;
+    color: #10233a;
+    letter-spacing: -0.04em;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview-copy p {
+    margin: 0;
+    color: #566a80;
+    line-height: 1.58;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview-badge {
+    min-height: 30px;
+    padding: 0 12px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(19, 38, 61, 0.07);
+    color: #1f3958;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview-gauge {
+    --draw-review-angle: 0deg;
+    width: 132px;
+    aspect-ratio: 1;
+    position: relative;
+    border-radius: 50%;
+    background: conic-gradient(#13263d var(--draw-review-angle), rgba(19, 38, 61, 0.1) 0deg);
+    box-shadow: inset 0 0 0 1px rgba(19, 38, 61, 0.05);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview[data-state="positive"] .draw-funnel-review-overview-gauge {
+    background: conic-gradient(#ec9f33 var(--draw-review-angle), rgba(19, 38, 61, 0.1) 0deg);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview[data-state="warning"] .draw-funnel-review-overview-gauge {
+    background: conic-gradient(#eb6b3f var(--draw-review-angle), rgba(19, 38, 61, 0.1) 0deg);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview-gauge::after {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: inset 0 0 0 1px rgba(19, 38, 61, 0.06);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview-gauge-body {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    gap: 2px;
+    padding: 20px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview-gauge-body strong {
+    font-size: 28px;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: #10233a;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-overview-gauge-body span {
+    font-size: 11px;
+    font-weight: 700;
+    color: #61758a;
+}
+
 #tab-draw.draw-wizard-tab .draw-funnel-review-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-card {
     padding: 20px;
     border-radius: 24px;
     display: grid;
-    gap: 10px;
+    gap: 14px;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-card--warning {
     background: linear-gradient(180deg, rgba(255, 248, 231, 0.96), rgba(255, 255, 255, 0.92));
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-metric {
+    min-height: 116px;
+    padding: 16px;
+    border-radius: 20px;
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    border: 1px solid rgba(20, 38, 64, 0.08);
+    background: rgba(248, 250, 252, 0.92);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-metric--range {
+    background: linear-gradient(180deg, rgba(241, 247, 255, 0.98), rgba(248, 250, 252, 0.94));
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-metric--exclude {
+    background: linear-gradient(180deg, rgba(255, 247, 238, 0.98), rgba(248, 250, 252, 0.94));
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-metric--odds {
+    background: linear-gradient(180deg, rgba(244, 248, 252, 0.98), rgba(248, 250, 252, 0.94));
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-metric--rules {
+    background: linear-gradient(180deg, rgba(247, 251, 246, 0.98), rgba(248, 250, 252, 0.94));
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-metric span {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #62768c;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-metric strong {
+    font-size: 24px;
+    line-height: 1.04;
+    color: #10233a;
+    letter-spacing: -0.05em;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-metric p {
+    margin: 0;
+    color: #607489;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-groups,
+#tab-draw.draw-wizard-tab .draw-funnel-review-excludes {
+    display: grid;
+    gap: 10px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-group-card {
+    padding: 14px 16px;
+    border-radius: 18px;
+    display: grid;
+    gap: 8px;
+    background: rgba(248, 250, 252, 0.92);
+    border: 1px solid rgba(20, 38, 64, 0.08);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-group-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-group-head strong {
+    font-size: 15px;
+    color: #10233a;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-group-head span {
+    min-height: 26px;
+    padding: 0 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(19, 38, 61, 0.07);
+    color: #27415f;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-group-card p {
+    margin: 0;
+    color: #5b6f84;
+    line-height: 1.55;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-exclude-balls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-exclude-balls .exclude-number-ball {
+    width: 34px;
+    height: 34px;
+    font-size: 12px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-review-exclude-note {
+    margin: 0;
+    color: #5b6f84;
+    line-height: 1.55;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-row,
@@ -18495,6 +18729,11 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 @media (max-width: 1100px) {
+    #tab-draw.draw-wizard-tab .draw-funnel-review-overview {
+        grid-template-columns: 1fr;
+        justify-items: start;
+    }
+
     #tab-draw.draw-wizard-tab .draw-funnel-review-grid {
         grid-template-columns: 1fr;
     }
@@ -18707,8 +18946,42 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
         border-radius: 20px;
     }
 
+    #tab-draw.draw-wizard-tab .draw-funnel-review-overview {
+        padding: 16px;
+        gap: 14px;
+        border-radius: 20px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-review-overview-copy strong {
+        font-size: clamp(22px, 5.4vw, 28px);
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-review-overview-gauge {
+        width: 108px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-review-overview-gauge-body strong {
+        font-size: 23px;
+    }
+
     #tab-draw.draw-wizard-tab .draw-funnel-review-grid {
         gap: 10px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-review-metrics {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-review-metric {
+        min-height: 0;
+        padding: 14px;
+        border-radius: 18px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-review-exclude-balls .exclude-number-ball {
+        width: 30px;
+        height: 30px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-nav {
@@ -18747,6 +19020,29 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
         padding-top: 12px;
     }
 
+    #tab-draw.draw-wizard-tab .draw-funnel-review-overview {
+        padding: 14px;
+        gap: 12px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-review-overview-copy strong {
+        font-size: 22px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-review-overview-badge {
+        min-height: 28px;
+        padding: 0 10px;
+        font-size: 11px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-review-overview-gauge {
+        width: 96px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-review-overview-gauge-body strong {
+        font-size: 21px;
+    }
+
     #tab-draw.draw-wizard-tab .draw-funnel-header {
         gap: 8px;
     }
@@ -18780,6 +19076,11 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-card {
         padding: 12px;
+        border-radius: 16px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-review-metric {
+        padding: 13px;
         border-radius: 16px;
     }
 
