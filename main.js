@@ -264,6 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mypagePlanFlowEl = document.getElementById('mypage-plan-flow');
     const mypagePlanManageBtn = document.getElementById('mypage-plan-manage-btn');
     const mypagePlanCancelBtn = document.getElementById('mypage-plan-cancel-btn');
+    const mypageShellFooterEl = document.querySelector('#tab-mypage .mypage-shell-footer');
     const mypagePlanOfferCards = Array.from(document.querySelectorAll('.mypage-plan-offer-card[data-premium-plan-card]'));
     const mypagePresetBadgeEl = document.getElementById('mypage-preset-badge');
     const mypagePresetSummaryEl = document.getElementById('mypage-preset-summary');
@@ -5920,6 +5921,9 @@ document.addEventListener('DOMContentLoaded', () => {
             button.disabled = !member;
             button.hidden = !member;
         });
+        if (mypageShellFooterEl) {
+            mypageShellFooterEl.hidden = !member;
+        }
         authEntryLinks.forEach(link => {
             link.hidden = member || authPending;
         });
