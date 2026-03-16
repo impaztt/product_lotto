@@ -3605,7 +3605,7 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardRuleTitleEl.textContent = currentRuleStep.title;
         }
         if (drawWizardRuleCopyEl) {
-            drawWizardRuleCopyEl.textContent = currentRuleStep.copy;
+            drawWizardRuleCopyEl.textContent = `${currentRuleStep.copy} · ${selectedCount ? `${selectedCount}개 선택됨` : '아직 선택 전'}`;
         }
         drawWizardDetailGroupsEl.innerHTML = currentRuleStep.rules.map(rule => {
             const active = selectedIds.has(rule.id);
@@ -3632,8 +3632,8 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }).join('');
         drawWizardDetailNoteEl.textContent = selectedCount
-            ? `현재 그룹에서 ${selectedCount}개 선택됨`
-            : '현재 그룹 선택 없음';
+            ? `${selectedCount}개 선택됨`
+            : '아직 선택 전';
     }
 
     function renderDrawWizardReview() {
@@ -3800,35 +3800,41 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectionExcludeVisualCount = excludeCount;
         const cumulativeReducedCombos = Number.isFinite(currentExcludedCombos) ? currentExcludedCombos : 0;
 
-        let dashboardTitle = '현재까지 누적 변화';
-        let dashboardCopy = '지금까지 고른 기준이 누적으로 반영되고 있습니다.';
-        let impactValue = totalBenefitPct ? `+${totalBenefitPct}%` : '0%';
-        let impactNote = cumulativeReducedCombos
-            ? `총 ${formatDrawWizardCompactCount(cumulativeReducedCombos)} 제외`
-            : '누적 변화 없음';
-        let selectionValue = selectionTotalCount
-            ? `규칙 ${selectedCount}개 · 제외 ${excludeCount}개`
-            : '아직 선택 없음';
-        let selectionNote = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)} · ${remainingPct}%`;
-        let visualLabel = selectionTotalCount ? `${selectionTotalCount}개 반영` : '선택 없음';
-        let visualNote = '누적 반영 수';
+        let dashboardStep = '누적 현황';
+        let dashboardTitle = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)}`;
+        let dashboardCopy = selectionTotalCount
+            ? `규칙 ${selectedCount}개 · 제외수 ${excludeCount}개 반영`
+            : '아직 선택 전 · 기본 범위 유지';
+        let oddsNote = totalBenefitPct
+            ? `1등 기대 +${totalBenefitPct}%`
+            : '1등 기준 기본';
+        let impactValue = totalBenefitPct ? `+${totalBenefitPct}%` : '기본';
+        let impactNote = '1등 기대';
+        let selectionValue = `${remainingPct}%`;
+        let selectionNote = '남은 범위';
+        let visualLabel = cumulativeReducedCombos ? formatDrawWizardCompactCount(cumulativeReducedCombos) : '0개';
+        let visualNote = selectionTotalCount ? '누적 제외' : '선택 없음';
 
+        if (progressInfo?.label) {
+            dashboardStep = `${progressInfo.label} · 누적 현황`;
+        }
         if (currentStep === 'exclude') {
-            dashboardCopy = '직접 제외 숫자까지 포함한 누적 기준입니다.';
+            dashboardCopy = selectionTotalCount
+                ? `규칙 ${selectedCount}개 · 제외수 ${excludeCount}개 반영`
+                : '직접 제외수까지 더해 범위를 줄여보세요';
         } else if (currentStep === 'review') {
-            dashboardTitle = '최종 전 누적 현황';
             dashboardCopy = restriction.blocked
-                ? '조건을 조금만 줄이면 더 넓은 범위에서 생성할 수 있습니다.'
-                : '이 누적 기준으로 바로 번호를 만들 수 있습니다.';
+                ? '조건이 조금 강합니다 · 몇 개만 덜어내도 됩니다'
+                : '이 누적 기준으로 바로 번호를 만들 수 있습니다';
         } else if (currentStep === 'result') {
-            dashboardTitle = '최종 누적 결과';
+            dashboardStep = '최종 결과 · 누적 현황';
             dashboardCopy = totalBenefitPct
-                ? '누적 기준이 반영된 범위에서 번호 생성을 마쳤습니다.'
-                : '기본 범위에 가까운 상태로 번호를 만들었습니다.';
+                ? '누적 기준이 반영된 범위에서 생성 완료'
+                : '기본 범위에 가깝게 생성 완료';
         }
 
         if (drawWizardDashboardStepEl) {
-            drawWizardDashboardStepEl.textContent = '누적 현황';
+            drawWizardDashboardStepEl.textContent = dashboardStep;
         }
         if (drawWizardDashboardTitleEl) {
             drawWizardDashboardTitleEl.textContent = dashboardTitle;
@@ -3840,9 +3846,7 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardDashboardOddsEl.textContent = formatDrawWizardCompactOddsLabel(currentFirstOdds);
         }
         if (drawWizardDashboardOddsNoteEl) {
-            drawWizardDashboardOddsNoteEl.textContent = totalBenefitPct
-                ? `기본 대비 +${totalBenefitPct}%`
-                : '기본과 동일';
+            drawWizardDashboardOddsNoteEl.textContent = oddsNote;
         }
         if (drawWizardDashboardGaugeEl) {
             const gaugeAngle = Math.max(0, Math.min(360, Math.round(totalBenefitPct * 3.6)));
