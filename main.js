@@ -3719,8 +3719,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const overviewHeadline = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)}`;
         const overviewBadges = [
             `1등 ${formatDrawWizardCompactOddsLabel(currentFirstOdds)}`,
-            `규칙 ${selectedRuleCount}개`,
-            excludeCount ? `제외수 ${excludeCount}개` : '제외수 없음',
+            `규칙 ${selectedRuleCount}`,
+            `제외 ${excludeCount}`,
             `${drawCount}세트`
         ];
         if (drawWizardReviewOverviewEl) {
@@ -3747,21 +3747,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (drawWizardReviewSummaryEl) {
             const summaryRows = [
                 {
-                    label: '남은 비중',
+                    label: '남은',
                     value: `${remainPct}%`,
                     note: formatDrawWizardCompactCount(remainingCombos),
                     tone: 'range'
                 },
                 {
-                    label: '제외 조합',
+                    label: '제외',
                     value: formatDrawWizardCompactCount(excludedCombos),
-                    note: `${excludedPct}% 제외`,
+                    note: `${excludedPct}%`,
                     tone: 'exclude'
                 },
                 {
-                    label: '활성 조건',
+                    label: '규칙',
                     value: `${activeConditionCount}개`,
-                    note: excludeCount ? `규칙 ${selectedRuleCount} · 제외 ${excludeCount}` : `규칙 ${selectedRuleCount}`,
+                    note: excludeCount ? `${selectedRuleCount} + ${excludeCount}` : `${selectedRuleCount}개`,
                     tone: 'rules'
                 }
             ];
@@ -3781,11 +3781,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <strong>${escapeHtml(group.groupLabel)}</strong>
                             <span>${escapeHtml(String(group.rules.length))}개</span>
                         </div>
-                        <p>${escapeHtml(
-                            group.rules.length <= 2
-                                ? group.rules.map(rule => rule.title).join(' · ')
-                                : `${group.rules.length}개 선택`
-                        )}</p>
+                        <p>${escapeHtml(`${group.rules.length}개 선택`)}</p>
                     </div>
                 `).join('')
                 : '<div class="draw-funnel-empty-state">선택 없음</div>';
