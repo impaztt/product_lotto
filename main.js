@@ -3386,11 +3386,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return '';
         }
         return `
-            <div class="rule-sample draw-funnel-rule-samples" aria-hidden="true">
-                <span class="rule-sample-label">예시</span>
-                ${sample.map(number => `
-                    <span class="sample-ball draw-funnel-rule-ball ${escapeHtml(getSampleBallClass(number))}">${escapeHtml(String(number))}</span>
-                `).join('')}
+            <div class="draw-funnel-rule-preview" aria-hidden="true">
+                <span class="draw-funnel-rule-preview-label">예시</span>
+                <div class="draw-funnel-rule-preview-balls">
+                    ${sample.map(number => `
+                        <span class="sample-ball draw-funnel-rule-ball ${escapeHtml(getSampleBallClass(number))}">${escapeHtml(String(number))}</span>
+                    `).join('')}
+                </div>
             </div>
         `;
     }
@@ -3561,11 +3563,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const ratio = Math.max(0, Math.min(0.95, Number(stat?.ratio) || 0));
         if (!ratio) {
             return {
-                label: '1등 기대',
-                value: '기본',
-                note: active ? '현재 유지' : '변화 적음',
-                meterPct: 12,
-                stateLabel: active ? '적용됨' : '탭해서 제외'
+                label: active ? '현재 제외' : '선택 시 제외',
+                value: '변화 적음',
+                bulletPrimary: active ? '현재 반영 유지' : '효과는 크지 않음',
+                bulletSecondary: active ? '이미 적용됨' : '탭해서 적용'
             };
         }
         const gainPct = ((1 / (1 - ratio)) - 1) * 100;
@@ -3574,11 +3575,10 @@ document.addEventListener('DOMContentLoaded', () => {
             ? Math.round(currentCombos * (ratio / (1 - ratio)))
             : Math.round(currentCombos * ratio);
         return {
-            label: '1등 기대',
-            value: `+${Math.max(1, Math.round(gainPct))}%`,
-            note: `${active ? '현재' : '선택 시'} 후보 ${formatDrawWizardCompactCount(affectedCombos)}↓`,
-            meterPct: Math.max(14, Math.min(100, Math.round(gainPct))),
-            stateLabel: active ? '적용됨' : '탭해서 제외'
+            label: active ? '현재 제외' : '선택 시 제외',
+            value: formatDrawWizardCompactCount(affectedCombos),
+            bulletPrimary: `1등 기대 +${Math.max(1, Math.round(gainPct))}%`,
+            bulletSecondary: active ? '이미 적용됨' : '탭해서 적용'
         };
     }
 
@@ -3621,11 +3621,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="draw-funnel-rule-impact">
                             <span class="draw-funnel-rule-impact-label">${escapeHtml(impact.label)}</span>
                             <strong class="draw-funnel-rule-impact-value">${escapeHtml(impact.value)}</strong>
-                            <span class="draw-funnel-rule-impact-meter" aria-hidden="true">
-                                <span style="width:${escapeHtml(String(impact.meterPct))}%"></span>
-                            </span>
-                            <p class="draw-funnel-rule-impact-note">${escapeHtml(impact.note)}</p>
-                            <span class="draw-funnel-rule-state">${escapeHtml(impact.stateLabel)}</span>
+                            <ul class="draw-funnel-rule-impact-list">
+                                <li>${escapeHtml(impact.bulletPrimary)}</li>
+                                <li>${escapeHtml(impact.bulletSecondary)}</li>
+                            </ul>
                         </div>
                         ${getDrawWizardRulePreviewHtml(rule.id)}
                     </div>
