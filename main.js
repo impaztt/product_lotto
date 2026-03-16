@@ -104,6 +104,26 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     let isDrawAdvancedOpen = false;
     const storeOpenOfficialBtn = document.getElementById('store-open-official-btn');
+    const lockerSaveRulesBtn = document.getElementById('locker-save-rules-btn');
+    const lockerLoadRulesBtn = document.getElementById('locker-load-rules-btn');
+    const lockerSavedRulesCountEl = document.getElementById('locker-saved-rules-count');
+    const lockerSavedRulesNoteEl = document.getElementById('locker-saved-rules-note');
+    const lockerCustomCountEl = document.getElementById('locker-custom-count');
+    const lockerCustomNoteEl = document.getElementById('locker-custom-note');
+    const lockerSlotCountEl = document.getElementById('locker-slot-count');
+    const lockerSlotNoteEl = document.getElementById('locker-slot-note');
+    const lockerLastRoundEl = document.getElementById('locker-last-round');
+    const lockerLastUpdatedEl = document.getElementById('locker-last-updated');
+    const lockerSlotTitleEls = {
+        1: document.getElementById('locker-slot-title-1'),
+        2: document.getElementById('locker-slot-title-2'),
+        3: document.getElementById('locker-slot-title-3')
+    };
+    const lockerSlotMetaEls = {
+        1: document.getElementById('locker-slot-meta-1'),
+        2: document.getElementById('locker-slot-meta-2'),
+        3: document.getElementById('locker-slot-meta-3')
+    };
     const groupLevelButtons = Array.from(document.querySelectorAll('[data-group-level]'));
     const slotSaveButtons = Array.from(document.querySelectorAll('[data-slot-save]'));
     const slotApplyButtons = Array.from(document.querySelectorAll('[data-slot-apply]'));
@@ -379,6 +399,35 @@ document.addEventListener('DOMContentLoaded', () => {
     let compareResult = null;
     let recentCountSelect = null;
     let trendChart = null;
+    const analysisRecentCountSelectEl = document.getElementById('analysis-recent-count');
+    const analysisRecentRoundsEl = document.getElementById('analysis-recent-rounds');
+    const analysisTrendChartEl = document.getElementById('analysis-trend-chart');
+    const analysisTrendBadgeEl = document.getElementById('analysis-trend-badge');
+    const analysisCompareInputEl = document.getElementById('analysis-compare-input');
+    const analysisCompareBonusInputEl = document.getElementById('analysis-compare-bonus');
+    const analysisCompareBtnEl = document.getElementById('analysis-compare-btn');
+    const analysisCompareResultEl = document.getElementById('analysis-compare-result');
+    const analysisCurrentRoundEl = document.getElementById('analysis-current-round');
+    const analysisCurrentDateEl = document.getElementById('analysis-current-date');
+    const analysisCountdownEl = document.getElementById('analysis-countdown');
+    const analysisExpectedAmountEl = document.getElementById('analysis-expected-amount');
+    const analysisLatestRoundEl = document.getElementById('analysis-latest-round');
+    const analysisLatestDateEl = document.getElementById('analysis-latest-date');
+    const analysisLatestNumberEls = [
+        document.getElementById('analysis-num-1'),
+        document.getElementById('analysis-num-2'),
+        document.getElementById('analysis-num-3'),
+        document.getElementById('analysis-num-4'),
+        document.getElementById('analysis-num-5'),
+        document.getElementById('analysis-num-6')
+    ];
+    const analysisBonusEl = document.getElementById('analysis-bonus');
+    const analysisLatestTotalEl = document.getElementById('analysis-latest-total');
+    const analysisLatestWinnersEl = document.getElementById('analysis-latest-winners');
+    const analysisTrendWindowEl = document.getElementById('analysis-trend-window');
+    const analysisTrendSummaryEl = document.getElementById('analysis-trend-summary');
+    const analysisLatestPrizeChipEl = document.getElementById('analysis-latest-prize-chip');
+    const analysisPeakPrizeChipEl = document.getElementById('analysis-peak-prize-chip');
     const qrStatusEl = document.getElementById('qr-status');
     const qrVideoEl = document.getElementById('qr-video');
     const qrCanvasEl = document.getElementById('qr-canvas');
@@ -428,6 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawGeneratorSectionEl = document.getElementById('generator');
     let currentWeeklyData = null;
     let latestAvailableRound = null;
+    let recentRoundDataList = [];
     const roundMetaByNo = new Map();
     let mainInfoCache = {
         ts: 0,
@@ -489,7 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
         login: '로그인은 왜 필요해?',
         plan: '플랜 차이 알려줘',
         dashboard: '대시보드는 뭐야?',
-        qr: 'QR은 어떻게 써?'
+        qr: '분석 탭은 뭐야?'
     };
     let googleRedirectFlowPending = readGoogleRedirectPendingState();
     let drawWizardScrollHintSeen = readDrawWizardScrollHintSeen();
@@ -624,8 +674,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 scheduleDrawHorizontalWidthSync();
             }
             if (tabId === 'qr') {
-                if (qrStatusEl && !qrStream) {
-                    qrStatusEl.textContent = '스캔 시작을 누르면 실물 티켓 QR을 바로 읽습니다.';
+                updateAnalysisSummaryUi();
+                if (latestAvailableRound && analysisRecentRoundsEl && !analysisRecentRoundsEl.children.length) {
+                    loadRecentRounds(latestAvailableRound).catch(error => {
+                        logProxyError('analysisRecentRounds', error, { latestRound: latestAvailableRound });
+                    });
                 }
             }
             if (tabId !== 'qr' && qrStream) {
@@ -784,6 +837,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 dashPrchsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         }
+    }
+
+    function getRecentRoundContainers() {
+        return [recentRoundsEl, analysisRecentRoundsEl].filter(Boolean);
+    }
+
+    function getTrendChartTargets() {
+        return [trendChart, analysisTrendChartEl].filter(Boolean);
+    }
+
+    function syncRecentCountControls(nextValue) {
+        const value = String(nextValue || getRecentCount());
+        [recentCountSelect, analysisRecentCountSelectEl].forEach(select => {
+            if (select) {
+                select.value = value;
+            }
+        });
     }
 
     function normalizeRelativeResourceUrls(rootId, { rewriteSrcset = false } = {}) {
@@ -1087,6 +1157,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    if (analysisCompareBtnEl) {
+        analysisCompareBtnEl.addEventListener('click', () => {
+            handleCompareWithRefs({
+                inputEl: analysisCompareInputEl,
+                bonusEl: analysisCompareBonusInputEl,
+                resultEl: analysisCompareResultEl
+            });
+        });
+    }
+
     if (generateCtaBtn) {
         generateCtaBtn.addEventListener('click', () => {
             handleDrawGenerationRequest('cta');
@@ -1095,6 +1175,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (recentCountSelect) {
         recentCountSelect.addEventListener('change', () => {
+            syncRecentCountControls(recentCountSelect.value);
+            if (latestAvailableRound) {
+                loadRecentRounds(latestAvailableRound);
+            }
+        });
+    }
+
+    if (analysisRecentCountSelectEl) {
+        analysisRecentCountSelectEl.addEventListener('change', () => {
+            syncRecentCountControls(analysisRecentCountSelectEl.value);
             if (latestAvailableRound) {
                 loadRecentRounds(latestAvailableRound);
             }
@@ -1104,6 +1194,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (storeOpenOfficialBtn) {
         storeOpenOfficialBtn.addEventListener('click', () => {
             window.open('https://www.dhlottery.co.kr/prchsplcsrch/home', '_blank', 'noopener');
+        });
+    }
+
+    if (lockerSaveRulesBtn) {
+        lockerSaveRulesBtn.addEventListener('click', () => {
+            persistSelectedRules();
+        });
+    }
+
+    if (lockerLoadRulesBtn) {
+        lockerLoadRulesBtn.addEventListener('click', () => {
+            setActiveTab('draw', true);
+            setDrawServiceMode('self');
+            applySavedRules(true);
         });
     }
 
@@ -1383,11 +1487,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (saveRulesBtn) {
         saveRulesBtn.addEventListener('click', () => {
-            const selected = ruleInputs.filter(input => input.checked).map(input => input.value);
-            localStorage.setItem('lotto_rules', JSON.stringify(selected));
-            localStorage.setItem(RULES_UPDATED_AT_KEY, new Date().toISOString());
-            updateRulesStatus('선택한 규칙을 저장했습니다.');
-            updateMypageSummaryUi();
+            persistSelectedRules();
         });
     }
 
@@ -2002,6 +2102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateDrawContextUi();
             updateDashboardSummaryUi();
             updateMypageSummaryUi();
+            updateAnalysisSummaryUi();
             initializeDrawWizard();
         } catch (error) {
             console.error('초기화 오류', error);
@@ -2882,6 +2983,14 @@ document.addEventListener('DOMContentLoaded', () => {
             console.warn('저장된 규칙 로드 실패', error);
             return [];
         }
+    }
+
+    function persistSelectedRules() {
+        const selected = ruleInputs.filter(input => input.checked).map(input => input.value);
+        localStorage.setItem('lotto_rules', JSON.stringify(selected));
+        localStorage.setItem(RULES_UPDATED_AT_KEY, new Date().toISOString());
+        updateRulesStatus('선택한 규칙을 저장했습니다.');
+        updateMypageSummaryUi();
     }
 
     function getGenerationStats() {
@@ -4737,6 +4846,165 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mypageStatsModeEl) {
             mypageStatsModeEl.textContent = stats.lastSourceMode === 'premium' ? '추천 플랜' : '직접 선택';
         }
+        updateLockerTabUi();
+    }
+
+    function updateLockerTabUi() {
+        const savedRules = readStoredRuleIds('lotto_rules');
+        const customPreset = readStoredRuleIds('lotto_custom_preset');
+        const savedRulesUpdatedAt = localStorage.getItem(RULES_UPDATED_AT_KEY) || '';
+        const customPresetUpdatedAt = localStorage.getItem(CUSTOM_PRESET_UPDATED_AT_KEY) || '';
+        const stats = getGenerationStats();
+        const slotPresets = getSlotPresets();
+        const activeSlots = Object.values(slotPresets).filter(value => Array.isArray(value && value.ids) && value.ids.length).length;
+        const latestSlot = Object.values(slotPresets)
+            .filter(value => value && value.savedAt)
+            .sort((a, b) => new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime())[0] || null;
+        const latestRuleSavedAt = [savedRulesUpdatedAt, customPresetUpdatedAt, latestSlot?.savedAt || '']
+            .filter(Boolean)
+            .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0] || '';
+        const lastRound = Number(stats.lastRound || getTargetRoundForEntries() || 0);
+
+        if (lockerSavedRulesCountEl) {
+            lockerSavedRulesCountEl.textContent = `${savedRules.length}개`;
+        }
+        if (lockerSavedRulesNoteEl) {
+            lockerSavedRulesNoteEl.textContent = savedRulesUpdatedAt
+                ? `${formatRelativeTime(savedRulesUpdatedAt)} 저장`
+                : '아직 저장 없음';
+        }
+        if (lockerCustomCountEl) {
+            lockerCustomCountEl.textContent = `${customPreset.length}개`;
+        }
+        if (lockerCustomNoteEl) {
+            lockerCustomNoteEl.textContent = customPresetUpdatedAt
+                ? `${formatRelativeTime(customPresetUpdatedAt)} 저장`
+                : '직접 저장 전';
+        }
+        if (lockerSlotCountEl) {
+            lockerSlotCountEl.textContent = `${activeSlots}칸`;
+        }
+        if (lockerSlotNoteEl) {
+            lockerSlotNoteEl.textContent = activeSlots ? `${activeSlots}칸 사용 중` : '비어 있음';
+        }
+        if (lockerLastRoundEl) {
+            lockerLastRoundEl.textContent = lastRound > 0 ? `${lastRound}회` : '-';
+        }
+        if (lockerLastUpdatedEl) {
+            lockerLastUpdatedEl.textContent = latestRuleSavedAt
+                ? `최근 저장 ${formatRelativeTime(latestRuleSavedAt)}`
+                : '아직 기록 없음';
+        }
+
+        [1, 2, 3].forEach(slot => {
+            const titleEl = lockerSlotTitleEls[slot];
+            const metaEl = lockerSlotMetaEls[slot];
+            const data = slotPresets[String(slot)];
+            if (!titleEl || !metaEl) {
+                return;
+            }
+            if (!data || !Array.isArray(data.ids) || !data.ids.length) {
+                titleEl.textContent = '비어 있음';
+                metaEl.textContent = '저장 전';
+                return;
+            }
+            titleEl.textContent = `규칙 ${data.ids.length}개`;
+            metaEl.textContent = data.savedAt
+                ? `${formatSlotDate(data.savedAt)} 저장`
+                : '저장됨';
+        });
+    }
+
+    function updateAnalysisSummaryUi() {
+        const currentRoundText = String(weeklyThisRoundEl?.textContent || '').trim();
+        const currentDateText = String(weeklyThisDateEl?.textContent || '').trim();
+        const latest = currentWeeklyData;
+        const recentItems = recentRoundDataList
+            .filter(Boolean)
+            .map(item => ({
+                ...item,
+                firstWinamntNum: Number(item.firstWinamnt || 0)
+            }))
+            .filter(item => Number.isFinite(item.firstWinamntNum) && item.firstWinamntNum >= 0);
+        const latestTrend = recentItems[0] || (latest ? {
+            ...latest,
+            firstWinamntNum: Number(latest.firstWinamnt || 0)
+        } : null);
+        const peakTrend = recentItems.length
+            ? recentItems.reduce((best, current) => (current.firstWinamntNum > best.firstWinamntNum ? current : best), recentItems[0])
+            : latestTrend;
+
+        if (analysisCurrentRoundEl) {
+            analysisCurrentRoundEl.textContent = currentRoundText || (latest ? `${Number(latest.drwNo || 0) + 1}회` : '-');
+        }
+        if (analysisCurrentDateEl) {
+            analysisCurrentDateEl.textContent = currentDateText || '추첨 일정 확인 중';
+        }
+        if (analysisExpectedAmountEl) {
+            if (weeklyExpectedOverride != null) {
+                analysisExpectedAmountEl.textContent = formatCurrency(weeklyExpectedOverride);
+            } else if (dashExpectedAmountEl && String(dashExpectedAmountEl.textContent || '').trim()) {
+                analysisExpectedAmountEl.textContent = String(dashExpectedAmountEl.textContent || '').trim();
+            } else {
+                analysisExpectedAmountEl.textContent = '-';
+            }
+        }
+        if (analysisLatestRoundEl) {
+            analysisLatestRoundEl.textContent = latest ? `${latest.drwNo}회` : '-';
+        }
+        if (analysisLatestDateEl) {
+            analysisLatestDateEl.textContent = latest?.drwNoDate ? `${formatShortDate(latest.drwNoDate)} 추첨` : '최근 회차 확인 중';
+        }
+
+        const numbers = latest
+            ? [latest.drwtNo1, latest.drwtNo2, latest.drwtNo3, latest.drwtNo4, latest.drwtNo5, latest.drwtNo6]
+            : [];
+        analysisLatestNumberEls.forEach((el, index) => {
+            if (!el) {
+                return;
+            }
+            const value = numbers[index] || '-';
+            el.textContent = value;
+            applyBallStyle(el, numbers[index]);
+        });
+        if (analysisBonusEl) {
+            analysisBonusEl.textContent = latest?.bnusNo || '-';
+            applyBallStyle(analysisBonusEl, latest?.bnusNo);
+        }
+        if (analysisLatestTotalEl) {
+            const total = latest
+                ? (latest.firstAccumamnt || (latest.firstWinamnt && latest.firstPrzwnerCo ? latest.firstWinamnt * latest.firstPrzwnerCo : null))
+                : null;
+            analysisLatestTotalEl.textContent = `1등 총액 ${formatKrwCompact(total)}`;
+        }
+        if (analysisLatestWinnersEl) {
+            analysisLatestWinnersEl.textContent = latest
+                ? `당첨자 ${formatNumber(latest.firstPrzwnerCo || 0)}명`
+                : '당첨자 -명';
+        }
+        if (analysisTrendWindowEl) {
+            analysisTrendWindowEl.textContent = recentItems.length ? `최근 ${recentItems.length}회` : '최근 흐름 준비 중';
+        }
+        if (analysisTrendSummaryEl) {
+            if (latestTrend && peakTrend) {
+                analysisTrendSummaryEl.textContent = `최신 ${formatKrwCompact(latestTrend.firstWinamntNum)} · 최고 ${formatKrwCompact(peakTrend.firstWinamntNum)}`;
+            } else {
+                analysisTrendSummaryEl.textContent = '당첨금 흐름 준비 중';
+            }
+        }
+        if (analysisLatestPrizeChipEl) {
+            analysisLatestPrizeChipEl.textContent = latestTrend
+                ? `최신 ${formatKrwCompact(latestTrend.firstWinamntNum)}`
+                : '최신 -';
+        }
+        if (analysisPeakPrizeChipEl) {
+            analysisPeakPrizeChipEl.textContent = peakTrend
+                ? `최대 ${formatKrwCompact(peakTrend.firstWinamntNum)}`
+                : '최대 -';
+        }
+        if (analysisTrendBadgeEl) {
+            analysisTrendBadgeEl.textContent = recentItems.length ? `최근 ${recentItems.length}회` : '최근 0회';
+        }
     }
 
     function getTargetRoundForEntries() {
@@ -5261,6 +5529,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDrawContextUi();
         updateDashboardSummaryUi();
         updateMypageSummaryUi();
+        updateAnalysisSummaryUi();
     }
 
     async function setMembershipTier(tier) {
@@ -6253,26 +6522,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 ].filter(Boolean)
             };
         }
-        if (matchesHelpChatQuery(compact, ['qr', '큐알', '스캔', '티켓'])) {
+        if (matchesHelpChatQuery(compact, ['qr', '큐알', '분석', '회차흐름', '최근회차', '비교'])) {
             return {
-                text: 'QR 탭에서는 실물 복권 QR을 읽고 회차 비교까지 바로 할 수 있습니다.\n번호를 복사해서 이번 회차와 비교하는 흐름도 연결돼 있어요.',
+                text: '분석 탭에서는 최근 회차 카드, 번호 비교, 1등 당첨금 흐름을 한 화면에서 바로 볼 수 있습니다.\n직전 흐름을 먼저 보고 추첨 탭으로 넘어갈 때 가장 빠른 화면이에요.',
                 actions: [
-                    { kind: 'tab', label: 'QR 탭 열기', value: 'qr', toast: 'QR 탭으로 이동했습니다.' },
+                    { kind: 'tab', label: '분석 탭 열기', value: 'qr', toast: '분석 탭으로 이동했습니다.' },
                     createHelpChatPromptAction('dashboard')
                 ].filter(Boolean)
             };
         }
-        if (matchesHelpChatQuery(compact, ['스토어', '복권방', '구매처', '공식구매', '어디서사'])) {
+        if (matchesHelpChatQuery(compact, ['스토어', '보관함', '저장슬롯', '복권방', '구매처', '공식구매', '어디서사'])) {
             return {
-                text: '스토어 탭에서는 공식 구매 페이지로 바로 이동할 수 있습니다.\n실제 구매는 공식 사이트나 오프라인 판매점에서 진행하면 됩니다.',
+                text: '보관함 탭에서는 저장 규칙, 내 프리셋, 슬롯 1~3을 다시 불러올 수 있습니다.\n공식 판매점은 보관함 안 버튼으로만 가볍게 열리도록 정리돼 있습니다.',
                 actions: [
-                    { kind: 'tab', label: '스토어 탭 열기', value: 'store', toast: '스토어 탭으로 이동했습니다.' },
-                    createHelpChatPromptAction('qr')
+                    { kind: 'tab', label: '보관함 열기', value: 'store', toast: '보관함 탭으로 이동했습니다.' },
+                    { kind: 'tab', label: '추첨 탭 열기', value: 'draw', toast: '추첨 탭으로 이동했습니다.' }
                 ].filter(Boolean)
             };
         }
         return {
-            text: '이 질문은 이렇게 많이 물어보세요.\n앱 소개, 번호 생성, 필터 활용, 로그인, 추천 플랜, QR 사용법 중 하나를 눌러보면 바로 이어서 안내해 드릴게요.',
+            text: '이 질문은 이렇게 많이 물어보세요.\n앱 소개, 번호 생성, 필터 활용, 로그인, 추천 플랜, 분석 탭 중 하나를 누르면 바로 이어서 안내해 드릴게요.',
             actions: buildHelpChatPromptActions(['app', 'draw', 'filters', 'login', 'plan', 'qr'])
         };
     }
@@ -7297,6 +7566,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (weeklyCountdownEl) {
             weeklyCountdownEl.textContent = `${days}일 ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
         }
+        if (analysisCountdownEl) {
+            analysisCountdownEl.textContent = `${days}일 ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+        }
         if (weeklyCountdownDaysEl) {
             weeklyCountdownDaysEl.textContent = String(days);
         }
@@ -7469,6 +7741,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDrawContextUi();
         updateDashboardSummaryUi();
         updateMypageSummaryUi();
+        updateAnalysisSummaryUi();
     }
 
     function annotateDrawDataSource(data, source) {
@@ -8960,38 +9233,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadRecentRounds(latestRound) {
-        if (!recentRoundsEl) {
+        const containers = getRecentRoundContainers();
+        if (!containers.length) {
             return;
         }
         const count = getRecentCount();
+        syncRecentCountControls(count);
         const rounds = [];
         for (let i = 0; i < count; i += 1) {
             rounds.push(Math.max(1, latestRound - i));
         }
-        recentRoundsEl.innerHTML = '';
-        recentRoundsEl.classList.add('is-loading');
+        recentRoundDataList = [];
+        containers.forEach(container => {
+            container.innerHTML = '';
+            container.classList.add('is-loading');
+        });
         const cards = rounds.map(round => {
-            const card = document.createElement('button');
-            card.type = 'button';
-            card.className = 'recent-card';
-            card.dataset.round = String(round);
-            card.innerHTML = `
-                <div class="recent-title">
-                    <span>${round}회</span>
-                    <span class="recent-date">불러오는 중</span>
-                </div>
-                <div class="recent-numbers"></div>
-            `;
-            card.addEventListener('click', () => {
-                loadRound(round);
+            containers.forEach(container => {
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className = 'recent-card';
+                card.dataset.round = String(round);
+                card.innerHTML = `
+                    <div class="recent-title">
+                        <span>${round}회</span>
+                        <span class="recent-date">불러오는 중</span>
+                    </div>
+                    <div class="recent-numbers"></div>
+                `;
+                card.addEventListener('click', () => {
+                    loadRound(round);
+                });
+                container.appendChild(card);
             });
-            recentRoundsEl.appendChild(card);
-            return { card, round };
+            return { round };
         });
         updateRecentActive(latestRound);
         const chartData = [];
         for (const item of cards) {
-            const data = await hydrateRecentCard(item.card, item.round);
+            const cardSet = containers
+                .map(container => container.querySelector(`.recent-card[data-round="${item.round}"]`))
+                .filter(Boolean);
+            const data = await hydrateRecentCard(cardSet, item.round);
             if (data) {
                 chartData.push(data);
             }
@@ -8999,22 +9282,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!chartData.length && currentWeeklyData) {
             chartData.push(currentWeeklyData);
         }
+        recentRoundDataList = chartData.slice();
         renderTrendChart(chartData);
-        recentRoundsEl.classList.remove('is-loading');
-        if (!recentRoundsEl.children.length) {
-            recentRoundsEl.innerHTML = '<div class="recent-empty">최근 회차 정보를 불러오지 못했습니다.</div>';
-        }
+        containers.forEach(container => {
+            container.classList.remove('is-loading');
+            if (!container.children.length) {
+                container.innerHTML = '<div class="recent-empty">최근 회차 정보를 불러오지 못했습니다.</div>';
+            }
+        });
+        updateAnalysisSummaryUi();
     }
 
-    async function hydrateRecentCard(card, round) {
+    async function hydrateRecentCard(cards, round) {
+        const cardList = Array.isArray(cards) ? cards.filter(Boolean) : [cards].filter(Boolean);
         const cached = getCachedRound(round);
         if (cached && cached.data) {
-            fillRecentCard(card, cached.data);
+            cardList.forEach(card => fillRecentCard(card, cached.data));
         }
         try {
             const data = await fetchDrawData(round);
             if (data && data.returnValue === 'success') {
-                fillRecentCard(card, data);
+                cardList.forEach(card => fillRecentCard(card, data));
                 cacheRoundOnly(data);
                 return data;
             }
@@ -9022,12 +9310,25 @@ document.addEventListener('DOMContentLoaded', () => {
             logProxyError('recentCard', error, { round });
         }
         if (!cached?.data) {
-            fillRecentCard(card, { drwNo: round, drwNoDate: '-', drwtNo1: '-', drwtNo2: '-', drwtNo3: '-', drwtNo4: '-', drwtNo5: '-', drwtNo6: '-' });
+            const fallbackData = {
+                drwNo: round,
+                drwNoDate: '-',
+                drwtNo1: '-',
+                drwtNo2: '-',
+                drwtNo3: '-',
+                drwtNo4: '-',
+                drwtNo5: '-',
+                drwtNo6: '-'
+            };
+            cardList.forEach(card => fillRecentCard(card, fallbackData));
         }
         return cached?.data || null;
     }
 
     function fillRecentCard(card, data) {
+        if (!card) {
+            return;
+        }
         rememberRoundMeta(data);
         const dateEl = card.querySelector('.recent-date');
         const numbersEl = card.querySelector('.recent-numbers');
@@ -9048,21 +9349,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateRecentActive(round) {
-        if (!recentRoundsEl) {
-            return;
-        }
-        Array.from(recentRoundsEl.querySelectorAll('.recent-card')).forEach(card => {
-            card.classList.toggle('is-active', card.dataset.round === String(round));
+        getRecentRoundContainers().forEach(container => {
+            Array.from(container.querySelectorAll('.recent-card')).forEach(card => {
+                card.classList.toggle('is-active', card.dataset.round === String(round));
+            });
         });
     }
 
     function renderTrendChart(dataList) {
-        if (!trendChart) {
+        getTrendChartTargets().forEach(target => {
+            renderTrendChartInto(target, dataList);
+        });
+        if (dataList.length) {
+            recentRoundDataList = dataList.filter(Boolean);
+        }
+        updateAnalysisSummaryUi();
+    }
+
+    function renderTrendChartInto(target, dataList) {
+        if (!target) {
             return;
         }
         if (!dataList.length) {
-            trendChart.classList.add('is-empty');
-            trendChart.innerHTML = '<div class="trend-empty">최근 회차 데이터를 불러오는 중입니다.</div>';
+            target.classList.add('is-empty');
+            target.innerHTML = '<div class="trend-empty">최근 회차 데이터를 불러오는 중입니다.</div>';
             return;
         }
         const byRoundAsc = dataList
@@ -9075,11 +9385,11 @@ document.addEventListener('DOMContentLoaded', () => {
             .filter(data => Number.isFinite(data.firstWinamntNum) && data.firstWinamntNum > 0)
             .sort((a, b) => a.drwNo - b.drwNo);
         if (!byRoundAsc.length) {
-            trendChart.classList.add('is-empty');
-            trendChart.innerHTML = '<div class="trend-empty">표시할 당첨금 데이터가 부족합니다. 회차를 변경해 주세요.</div>';
+            target.classList.add('is-empty');
+            target.innerHTML = '<div class="trend-empty">표시할 당첨금 데이터가 부족합니다. 회차를 변경해 주세요.</div>';
             return;
         }
-        trendChart.classList.remove('is-empty');
+        target.classList.remove('is-empty');
         const rows = byRoundAsc.slice().sort((a, b) => b.drwNo - a.drwNo);
         const latest = byRoundAsc[byRoundAsc.length - 1];
         const previous = byRoundAsc.length > 1 ? byRoundAsc[byRoundAsc.length - 2] : null;
@@ -9092,7 +9402,7 @@ document.addEventListener('DOMContentLoaded', () => {
             : null;
         const maxValue = Math.max(...byRoundAsc.map(item => item.firstWinamntNum), 1);
 
-        trendChart.innerHTML = `
+        target.innerHTML = `
             <div class="trend-insight-grid">
                 <div class="trend-metric">
                     <span class="trend-metric-label">최신 1등 당첨금</span>
@@ -9118,7 +9428,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="trend-rows"></div>
         `;
 
-        const rowsEl = trendChart.querySelector('.trend-rows');
+        const rowsEl = target.querySelector('.trend-rows');
         rows.forEach(item => {
             const ratio = Math.max(0.08, item.firstWinamntNum / maxValue);
             const perWinner = item.firstPrzwnerCoNum > 0
@@ -9161,32 +9471,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getRecentCount() {
-        if (!recentCountSelect) {
-            return 8;
-        }
-        const value = Number(recentCountSelect.value);
+        const value = Number(
+            analysisRecentCountSelectEl?.value
+            || recentCountSelect?.value
+            || 8
+        );
         return Number.isFinite(value) ? value : 8;
     }
 
     function handleCompare() {
-        if (!compareInput || !compareResult) {
+        handleCompareWithRefs({
+            inputEl: compareInput,
+            bonusEl: compareBonusInput,
+            resultEl: compareResult
+        });
+    }
+
+    function handleCompareWithRefs({ inputEl, bonusEl, resultEl }) {
+        if (!inputEl || !resultEl) {
             return;
         }
         if (!currentWeeklyData) {
-            updateCompareResult('회차 정보를 불러온 뒤 비교할 수 있습니다.');
+            updateCompareResult('회차 정보를 불러온 뒤 비교할 수 있습니다.', resultEl);
             return;
         }
-        const raw = compareInput.value || '';
+        const raw = inputEl.value || '';
         const nums = raw
             .split(/[,\s]+/)
             .map(value => Number(value))
             .filter(value => Number.isInteger(value));
         const unique = Array.from(new Set(nums));
         if (unique.length !== 6 || unique.some(n => n < 1 || n > 45)) {
-            updateCompareResult('1~45 사이의 숫자 6개를 중복 없이 입력해 주세요.');
+            updateCompareResult('1~45 사이 숫자 6개를 넣어 주세요.', resultEl);
             return;
         }
-        const bonus = compareBonusInput ? Number(compareBonusInput.value) : 0;
+        const bonus = bonusEl ? Number(bonusEl.value) : 0;
         const winning = new Set([
             currentWeeklyData.drwtNo1,
             currentWeeklyData.drwtNo2,
@@ -9198,7 +9517,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const matchCount = unique.filter(n => winning.has(n)).length;
         const bonusMatch = bonus ? bonus === currentWeeklyData.bnusNo : false;
         const rank = getRank(matchCount, bonusMatch);
-        updateCompareResult(`일치 ${matchCount}개${bonusMatch ? ' + 보너스' : ''} → ${rank}`);
+        updateCompareResult(`일치 ${matchCount}개${bonusMatch ? ' + 보너스' : ''} → ${rank}`, resultEl);
     }
 
     function getRank(matchCount, bonusMatch) {
@@ -9220,9 +9539,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return '아쉽게도 미당첨';
     }
 
-    function updateCompareResult(message) {
-        if (compareResult) {
-            compareResult.textContent = message;
+    function updateCompareResult(message, target = compareResult) {
+        if (target) {
+            target.textContent = message;
         }
     }
 
