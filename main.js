@@ -3948,14 +3948,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 {
                     label: '제외',
-                    value: formatDrawWizardCompactCount(excludedCombos),
-                    note: `${excludedPct}%`,
+                    value: `${excludedPct}%`,
+                    note: excludeCount ? `직접 ${excludeCount}` : formatDrawWizardCompactCount(excludedCombos),
                     tone: 'exclude'
                 },
                 {
                     label: '규칙',
                     value: `${activeConditionCount}개`,
-                    note: excludeCount ? `${selectedRuleCount} + ${excludeCount}` : `${selectedRuleCount}개`,
+                    note: excludeCount ? `규칙 ${selectedRuleCount} · 직접 ${excludeCount}` : `규칙 ${selectedRuleCount}`,
                     tone: 'rules'
                 }
             ];
@@ -3975,7 +3975,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             <strong>${escapeHtml(group.groupLabel)}</strong>
                             <span>${escapeHtml(String(group.rules.length))}개</span>
                         </div>
-                        <p>${escapeHtml(`${group.rules.length}개 선택`)}</p>
                     </div>
                 `).join('')
                 : '<div class="draw-funnel-empty-state">선택 없음</div>';
@@ -4342,8 +4341,10 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardResultTitleEl.textContent = '추첨 완료';
         }
         if (drawWizardResultCopyEl) {
-            drawWizardResultCopyEl.textContent = '';
-            drawWizardResultCopyEl.hidden = true;
+            const showWizardCopy = currentStep === 'result' && lastGeneratedDraws.length > 0;
+            drawWizardResultCopyEl.textContent = '번호 복사';
+            drawWizardResultCopyEl.hidden = !showWizardCopy;
+            drawWizardResultCopyEl.disabled = !lastGeneratedDraws.length;
         }
         if (drawWizardSelfResultShellEl) {
             drawWizardSelfResultShellEl.hidden = false;
@@ -4538,6 +4539,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (drawWizardRerunBtn) {
             drawWizardRerunBtn.addEventListener('click', () => {
                 runDrawWizardGeneration();
+            });
+        }
+        if (drawWizardResultCopyEl) {
+            drawWizardResultCopyEl.addEventListener('click', async () => {
+                await copyAllGeneratedNumbers();
             });
         }
         if (drawWizardEditBtn) {
