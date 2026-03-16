@@ -5145,42 +5145,32 @@ document.addEventListener('DOMContentLoaded', () => {
         lockerHistoryListEl.innerHTML = sessions.map(session => {
             const when = formatSlotDate(session.createdAt);
             const roundText = Number(session.round || 0) > 0 ? `${Number(session.round)}회` : '회차 미정';
-            const modeText = session.sourceMode === 'premium' ? '추천' : '직접';
             const entries = Array.isArray(session.entries) ? session.entries : [];
             const previewEntries = entries.slice(0, 2);
             const hiddenSets = Math.max(0, entries.length - previewEntries.length);
             const setsHtml = previewEntries
                 .map(entry => `
-                    <div class="locker-history-set">
+                    <div class="locker-history-set locker-history-set--compact">
                         <span class="locker-history-set-label">S${entry.setNo}</span>
                         <div class="locker-history-balls">
                             ${(Array.isArray(entry.numbers) ? entry.numbers : []).map(number => `<span class="locker-history-ball">${escapeHtml(number)}</span>`).join('')}
                         </div>
                     </div>
                 `).join('');
-            const summaryItems = [
-                `${Number(session.setCount || 0)}세트`,
-                modeText
-            ];
-            if (Number(session.ruleCount || 0) > 0) {
-                summaryItems.push(`${Number(session.ruleCount)}규칙`);
-            }
+
             return `
-                <article class="locker-history-card">
-                    <div class="locker-history-head">
-                        <div class="locker-history-title">
-                            <strong>${roundText}</strong>
-                            <span class="locker-history-meta">${when}</span>
-                        </div>
-                        <button type="button" class="ghost locker-copy-btn" data-locker-copy="${escapeHtml(session.generationId)}">복사</button>
+                <article class="locker-history-row">
+                    <div class="locker-history-row-info">
+                        <strong>${roundText}</strong>
+                        <span>${when}</span>
                     </div>
-                    <div class="locker-history-summary">
-                        ${summaryItems.map(item => `<span>${escapeHtml(item)}</span>`).join('')}
-                    </div>
-                    <div class="locker-history-sets">
+                    <div class="locker-history-row-sets">
                         ${setsHtml}
+                        ${hiddenSets ? `<div class="locker-history-more-sets">+${hiddenSets}</div>` : ''}
                     </div>
-                    ${hiddenSets ? `<div class="locker-history-more-sets">+${hiddenSets}</div>` : ''}
+                    <button type="button" class="ghost locker-copy-btn-mini" data-locker-copy="${escapeHtml(session.generationId)}" aria-label="복사">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
                 </article>
             `;
         }).join('') + (hiddenCount
