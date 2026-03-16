@@ -1454,83 +1454,17 @@
         <section id="tab-dashboard" class="tab-panel app-shell app-shell--dashboard is-active" role="tabpanel" aria-labelledby="tab-dashboard-btn" tabindex="0">
             <div class="container-box">
                 <div class="dashboard-shell">
-                    <section class="dashboard-hero">
-                        <div class="dashboard-hero-copy">
-                            <span class="dash-intro-kicker">대시보드</span>
-                            <h2 class="content-tit">이번 회차 한눈에</h2>
-                            <p class="dash-intro-sub">이번 회차, 직전 결과, 내 기록 순서로 봅니다.</p>
-                            <div class="dash-intro-actions">
-                                <button class="cta" type="button" data-tab-link="draw">번호 만들기</button>
-                                <button class="ghost" type="button" data-tab-link="mypage">마이페이지</button>
-                            </div>
-                        </div>
-                        <div class="dashboard-hero-side">
-                            <article class="dashboard-signal-card">
-                                <span class="dashboard-card-kicker">공식 회차</span>
-                                <strong id="dash-sync-status">최신 회차 확인 중</strong>
-                                <p id="dash-sync-time">공식 데이터 대기 중</p>
-                            </article>
-                            <article class="dashboard-signal-card dashboard-signal-card--accent">
-                                <span class="dashboard-card-kicker">내 준비 상태</span>
-                                <strong id="dash-membership-chip">FREE</strong>
-                                <p id="dash-activity-chip">생성 이력 없음</p>
-                            </article>
-                        </div>
-                    </section>
-
                     <section class="dashboard-spotlight-grid" aria-label="핵심 회차 카드">
-                        <article class="dashboard-card dashboard-card--next">
-                            <div class="dashboard-card-head">
-                                <span class="dashboard-card-kicker">이번 회차</span>
-                                <span class="dashboard-card-meta">번호 준비</span>
-                            </div>
-                            <div class="dashboard-round-row">
-                                <div class="result-round dashboard-round-badge" id="dash-thsLtEpsd"></div>
-                                <div class="dashboard-round-copy">
-                                    <strong><span id="dash-thsLtRflYmd"></span> 추첨 예정</strong>
-                                    <p>이번 회차 일정과 남은 시간</p>
-                                </div>
-                            </div>
-                            <div class="dashboard-countdown-head">남은 시간</div>
-                            <div class="timer-box dashboard-countdown">
-                                <div class="time-circle">
-                                    <div class="time-num" id="dash-DD"></div>
-                                    <div class="time-txt">일</div>
-                                </div>
-                                <div class="time-circle">
-                                    <div class="time-num" id="dash-HH"></div>
-                                    <div class="time-txt">시</div>
-                                </div>
-                                <div class="time-circle">
-                                    <div class="time-num" id="dash-MM"></div>
-                                    <div class="time-txt">분</div>
-                                </div>
-                                <div class="time-circle">
-                                    <div class="time-num" id="dash-SS"></div>
-                                    <div class="time-txt">초</div>
-                                </div>
-                            </div>
-                            <div class="dashboard-prize-strip">
-                                <span class="dashboard-prize-label">예상 1등 당첨금</span>
-                                <strong class="winnings dashboard-prize-value" id="dash-rnk1ExpcAmt"></strong>
-                                <span class="dashboard-prize-note">공식 예상치</span>
-                            </div>
-                            <div class="dashboard-card-actions">
-                                <button class="btn-butNow dashboard-primary-btn" type="button" id="dash-btnBuyLt645">추첨 탭 열기</button>
-                                <button class="dashboard-inline-btn" type="button" data-tab-link="store">판매점 보기</button>
-                            </div>
-                        </article>
-
                         <article class="dashboard-card dashboard-card--result">
                             <div class="dashboard-card-head">
                                 <span class="dashboard-card-kicker">직전 회차</span>
-                                <span class="dashboard-card-meta">최근 결과</span>
+                                <span class="dashboard-card-meta">당첨 결과</span>
                             </div>
                             <div class="dashboard-round-row">
                                 <div class="result-round dashboard-round-badge" id="dash-pstLtEpsd"></div>
                                 <div class="dashboard-round-copy">
                                     <strong id="dash-pstLtRflYmd"></strong>
-                                    <p>직전 당첨 번호와 총 당첨금</p>
+                                    <p>직전 결과를 확인하고 다음 조합 판단으로 바로 이어갑니다.</p>
                                 </div>
                             </div>
                             <div class="result-ballWrapper dashboard-result-balls">
@@ -1573,18 +1507,85 @@
                                 </div>
                             </div>
                             <div class="dashboard-card-actions dashboard-card-actions--split">
+                                <button class="dashboard-inline-btn" type="button" id="dash-btnWnStrc">당첨 구조</button>
                                 <button class="dashboard-inline-btn" type="button" data-tab-link="draw">다음 조합 만들기</button>
                                 <button class="dashboard-inline-btn" type="button" data-tab-link="qr">QR 확인</button>
                             </div>
                         </article>
+
+                        <article class="dashboard-card dashboard-card--next">
+                            <div class="dashboard-card-head">
+                                <span class="dashboard-card-kicker">이번 회차</span>
+                                <span class="dashboard-card-meta">번호 준비</span>
+                            </div>
+                            <div class="dashboard-round-row">
+                                <div class="result-round dashboard-round-badge" id="dash-thsLtEpsd"></div>
+                                <div class="dashboard-round-copy">
+                                    <strong><span id="dash-thsLtRflYmd"></span> 추첨 예정</strong>
+                                    <p>회차를 확인한 뒤 기준을 정리하고 바로 추첨 탭으로 이어갑니다.</p>
+                                </div>
+                            </div>
+                            <div class="dashboard-countdown-head">남은 시간</div>
+                            <div class="timer-box dashboard-countdown">
+                                <div class="time-circle">
+                                    <div class="time-num" id="dash-DD"></div>
+                                    <div class="time-txt">일</div>
+                                </div>
+                                <div class="time-circle">
+                                    <div class="time-num" id="dash-HH"></div>
+                                    <div class="time-txt">시</div>
+                                </div>
+                                <div class="time-circle">
+                                    <div class="time-num" id="dash-MM"></div>
+                                    <div class="time-txt">분</div>
+                                </div>
+                                <div class="time-circle">
+                                    <div class="time-num" id="dash-SS"></div>
+                                    <div class="time-txt">초</div>
+                                </div>
+                            </div>
+                            <div class="dashboard-prize-strip">
+                                <span class="dashboard-prize-label">예상 1등 당첨금</span>
+                                <strong class="winnings dashboard-prize-value" id="dash-rnk1ExpcAmt"></strong>
+                                <span class="dashboard-prize-note">공식 예상치 기준</span>
+                            </div>
+                            <div class="dashboard-card-actions">
+                                <button class="btn-butNow dashboard-primary-btn" type="button" id="dash-btnBuyLt645">추첨 탭 열기</button>
+                                <button class="dashboard-inline-btn" type="button" id="dash-btnPrchsMthd">공식 구매 정보</button>
+                            </div>
+                        </article>
+                    </section>
+
+                    <section class="dashboard-hero">
+                        <div class="dashboard-hero-copy">
+                            <span class="dash-intro-kicker">서비스 브리핑</span>
+                            <h2 class="content-tit">이번 회차, 직전 결과, 내 기준 흐름을 한 번에 정리합니다</h2>
+                            <p class="dash-intro-sub">번호를 고르기 전에 필요한 핵심만 먼저 보고, 바로 추첨 탭과 마이페이지로 이어집니다.</p>
+                            <div class="dash-intro-actions">
+                                <button class="cta" type="button" data-tab-link="draw">이번 회차 번호 만들기</button>
+                                <button class="ghost" type="button" data-tab-link="mypage">내 저장 기준 보기</button>
+                            </div>
+                        </div>
+                        <div class="dashboard-hero-side">
+                            <article class="dashboard-signal-card">
+                                <span class="dashboard-card-kicker">공식 회차</span>
+                                <strong id="dash-sync-status">최신 회차 확인 중</strong>
+                                <p id="dash-sync-time">공식 데이터 대기 중</p>
+                            </article>
+                            <article class="dashboard-signal-card dashboard-signal-card--accent">
+                                <span class="dashboard-card-kicker">내 준비 상태</span>
+                                <strong id="dash-membership-chip">FREE</strong>
+                                <p id="dash-activity-chip">생성 이력 없음</p>
+                            </article>
+                        </div>
                     </section>
 
                     <section class="dashboard-win-summary dashboard-card" aria-labelledby="dash-win-summary-title">
                         <div class="dashboard-win-head">
                             <div>
                                 <span class="dashboard-card-kicker">생성 성과</span>
-                                <h3 id="dash-win-summary-title">내 생성 결과</h3>
-                                <p>직전 회차 기준 요약</p>
+                                <h3 id="dash-win-summary-title">앱에서 만든 번호의 지난 회차 결과</h3>
+                                <p>직전 회차 기준으로 앱에서 생성된 번호 흐름을 요약해서 보여줍니다.</p>
                             </div>
                             <span class="badge muted" id="dash-win-round-label">집계 대기</span>
                         </div>
@@ -2237,7 +2238,7 @@
 		                            <div class="mypage-avatar-mark" aria-hidden="true">LP</div>
 		                            <div class="mypage-account-copy">
 		                                <span class="section-kicker">내 계정</span>
-		                                <h3>내 상태</h3>
+		                                <h3>계정과 이용 상태</h3>
 		                                <strong class="mypage-hero-email" id="mypage-profile-email">비회원으로 둘러보는 중</strong>
 		                            </div>
 		                        </div>
@@ -2256,10 +2257,10 @@
 		                        <article class="mypage-account-meta-row mypage-account-meta-row--plan">
 		                            <span class="info-label">현재 플랜</span>
 		                            <strong id="mypage-membership-tier">FREE</strong>
-		                            <span class="mypage-account-meta-note">저장과 추천 기준</span>
+		                            <span class="mypage-account-meta-note">저장 기준과 추천 기록을 같은 흐름으로 정리합니다.</span>
 		                        </article>
 		                    </div>
-		                    <p class="helper-text mypage-account-helper" id="nickname-status">로그인하면 기록이 이어집니다.</p>
+		                    <p class="helper-text mypage-account-helper" id="nickname-status">로그인하면 저장 기준, 추천 기록, 최근 활동이 그대로 이어집니다.</p>
 		                    <div class="mypage-inline-actions mypage-account-actions">
 		                        <button class="cta" type="button" data-open-auth="true">로그인하고 이어보기</button>
 		                        <button class="ghost" type="button" data-logout="true" hidden>로그아웃</button>
@@ -2270,13 +2271,13 @@
 		                    <div class="mypage-hero-head mypage-plan-head">
 		                        <div>
 		                            <span class="section-kicker">추천 플랜</span>
-		                            <h3>플랜</h3>
+		                            <h3>이용 플랜과 추천 구성</h3>
 		                        </div>
 		                        <span class="mypage-plan-badge" id="mypage-membership-next">내게 맞는 플랜 보기</span>
 		                    </div>
 		                    <div class="mypage-plan-current">
 		                        <div class="mypage-plan-summary">
-		                            <span class="mypage-plan-current-label">현재</span>
+		                            <span class="mypage-plan-current-label">현재 사용 중인 구성</span>
 		                            <strong id="mypage-membership-tier-summary">FREE</strong>
 		                            <p id="mypage-membership-desc">직접 선택부터 추천 세트 확인까지 현재 구성 기준으로 정리합니다.</p>
 		                        </div>
@@ -2296,8 +2297,8 @@
 		                        </div>
 		                    </div>
 		                    <div class="mypage-plan-callout">
-		                        <strong id="mypage-plan-guide">바로 쓰기 쉬운 플랜</strong>
-		                        <span id="mypage-plan-flow">STANDARD 추천</span>
+		                        <strong id="mypage-plan-guide">추천 플랜을 고르면 이번 회차 추천번호를 바로 받아볼 수 있습니다.</strong>
+		                        <span id="mypage-plan-flow">STANDARD가 세트 수와 기록 흐름이 가장 균형적인 기본 추천입니다.</span>
 		                    </div>
 		                    <div class="mypage-plan-offers" aria-label="추천 플랜 상품">
 		                        <article class="mypage-plan-offer-card" data-premium-plan-card="starter">
@@ -2306,11 +2307,11 @@
 		                                <strong>STARTER</strong>
 		                                <span class="mypage-plan-offer-price">월 4,900원</span>
 		                            </div>
-		                            <p>가볍게 시작하는 추천 플랜</p>
+		                            <p>추천 흐름을 가볍게 시작하면서 바로 결과를 확인하는 구성입니다.</p>
 		                            <ul class="mypage-plan-offer-list">
-		                                <li>3세트</li>
-		                                <li>전체 복사</li>
-		                                <li>기록 저장</li>
+		                                <li>이번 회차 추천 세트 3개</li>
+		                                <li>전체 복사 지원</li>
+		                                <li>마이페이지 기록 저장</li>
 		                            </ul>
 		                            <button type="button" class="premium-plan-buy mypage-plan-buy" data-premium-plan="starter">STARTER 시작하기</button>
 		                        </article>
@@ -2320,11 +2321,11 @@
 		                                <strong>STANDARD</strong>
 		                                <span class="mypage-plan-offer-price">월 9,900원</span>
 		                            </div>
-		                            <p>가장 균형적인 기본 플랜</p>
+		                            <p>추천 세트 수와 기록 흐름이 가장 균형적인 기본 플랜입니다.</p>
 		                            <ul class="mypage-plan-offer-list">
-		                                <li>5세트</li>
-		                                <li>전체 복사</li>
-		                                <li>기록 확인</li>
+		                                <li>이번 회차 추천 세트 5개</li>
+		                                <li>전체 복사와 기록 확인</li>
+		                                <li>추첨 탭과 마이페이지 즉시 연동</li>
 		                            </ul>
 		                            <button type="button" class="premium-plan-buy mypage-plan-buy" data-premium-plan="standard">STANDARD 시작하기</button>
 		                        </article>
@@ -2334,11 +2335,11 @@
 		                                <strong>MASTER</strong>
 		                                <span class="mypage-plan-offer-price">월 19,900원</span>
 		                            </div>
-		                            <p>더 넓게 보는 상위 플랜</p>
+		                            <p>더 넓은 세트 범위를 한 번에 보고 싶은 사용자를 위한 상위 구성입니다.</p>
 		                            <ul class="mypage-plan-offer-list">
-		                                <li>7세트</li>
-		                                <li>전체 복사</li>
-		                                <li>넓은 추천</li>
+		                                <li>이번 회차 추천 세트 7개</li>
+		                                <li>전체 복사와 기록 저장</li>
+		                                <li>넓은 추천 폭으로 빠른 비교</li>
 		                            </ul>
 		                            <button type="button" class="premium-plan-buy mypage-plan-buy" data-premium-plan="master">MASTER 시작하기</button>
 		                        </article>
@@ -2368,7 +2369,7 @@
 		                    <div class="info-header">
 		                        <div>
 		                            <span class="section-kicker">저장 기준</span>
-		                            <h3>저장 기준</h3>
+		                            <h3>저장한 기준과 보관함</h3>
 		                        </div>
 		                        <span class="badge muted" id="mypage-preset-badge">0개</span>
 		                    </div>
@@ -2386,7 +2387,7 @@
 		                            <strong id="mypage-slot-summary">비어 있음</strong>
 		                        </div>
 		                    </div>
-		                    <p class="helper-text" id="mypage-slot-updated">추첨 탭 기준이 바로 반영됩니다.</p>
+		                    <p class="helper-text" id="mypage-slot-updated">추첨 탭에서 정한 기준과 보관함 상태가 그대로 반영됩니다.</p>
 		                    <div class="mypage-slot-actions">
 		                        <button class="ghost" type="button" data-tab-link="draw">기준 다시 열기</button>
 		                        <button class="ghost" type="button" data-mypage-slot-apply="1">1번 적용</button>
@@ -2398,22 +2399,22 @@
 		                    <div class="info-header">
 		                        <div>
 		                            <span class="section-kicker">빠른 이동</span>
-		                            <h3>바로 가기</h3>
+		                            <h3>바로 이어서 하기</h3>
 		                        </div>
 		                        <span class="badge muted">빠른 이동</span>
 		                    </div>
 		                    <div class="mypage-shortcut-grid">
 		                        <button class="mypage-shortcut-btn" type="button" data-tab-link="draw">
 		                            <span>번호 생성</span>
-		                            <strong>번호 만들기</strong>
+		                            <strong>기준 잡고 번호 만들기</strong>
 		                        </button>
 		                        <button class="mypage-shortcut-btn" type="button" data-tab-link="qr">
 		                            <span>QR 확인</span>
-		                            <strong>QR 확인</strong>
+		                            <strong>스캔 후 결과 확인하기</strong>
 		                        </button>
 		                        <button class="mypage-shortcut-btn" type="button" data-tab-link="dashboard">
 		                            <span>회차 확인</span>
-		                            <strong>회차 보기</strong>
+		                            <strong>이번 회차 다시 보기</strong>
 		                        </button>
 		                    </div>
 		                </article>
@@ -2421,7 +2422,7 @@
 		                    <div class="info-header">
 		                        <div>
 		                            <span class="section-kicker">최근 기록</span>
-		                            <h3>최근 기록</h3>
+		                            <h3>최근 생성과 확인 기록</h3>
 		                        </div>
 		                        <span class="badge muted" id="mypage-history-badge">최근 20건</span>
 		                    </div>
@@ -2438,8 +2439,8 @@
 	                <div class="mypage-access-head">
 	                    <div>
 	                        <span class="section-kicker">로그인 시작</span>
-	                        <h3>구글 로그인</h3>
-	                        <p id="firebase-auth-status" class="helper-text">기록과 기준을 이어갑니다.</p>
+	                        <h3>구글 로그인으로 기준과 기록을 바로 이어갑니다</h3>
+	                        <p id="firebase-auth-status" class="helper-text">로그인 준비 중</p>
 	                    </div>
 	                </div>
 	                <div class="mypage-access-body">
@@ -2450,9 +2451,9 @@
 	                        </button>
 	                    </div>
 	                    <div class="mypage-access-bullets">
-	                        <span>기준 이어보기</span>
-	                        <span>기록 확인</span>
-	                        <span>다음 접속 복원</span>
+	                        <span>저장한 규칙과 보관함을 그대로 이어서 사용</span>
+	                        <span>추천 세트와 생성 기록을 한 화면에서 확인</span>
+	                        <span>이번 회차 기준을 다음 접속에도 바로 불러오기</span>
 	                    </div>
 	                </div>
 	            </section>
@@ -2461,13 +2462,24 @@
         <section id="tab-store" class="tab-panel app-shell app-shell--store store-webview-tab" role="tabpanel" aria-labelledby="tab-store-btn" tabindex="0">
             <div class="section-title store-shell-title">
                 <span class="section-kicker">공식 판매점</span>
-                <h2>판매점</h2>
-                <p>공식 판매점을 바로 확인합니다.</p>
+                <h2>공식 판매점 확인</h2>
+                <p>생성한 번호를 들고 공식 판매점 페이지로 바로 이어질 수 있게 정리한 탭입니다.</p>
+            </div>
+            <div class="store-shell-lead">
+                <div class="store-shell-lead-copy">
+                    <strong>번호 생성은 추첨 탭에서, 실제 구매처 확인은 여기서 마무리합니다.</strong>
+                    <p>현재 탭은 동행복권 공식 판매점 페이지 연결용입니다. 필요하면 새 창으로 바로 넘겨서 이어서 확인할 수 있습니다.</p>
+                </div>
+                <div class="store-shell-lead-pills">
+                    <span>동행복권 공식 페이지</span>
+                    <span>새 창 전환 가능</span>
+                    <span>구매 전 확인용</span>
+                </div>
             </div>
             <div class="store-shell-card">
                 <div class="store-shell-toolbar">
                     <span class="badge muted">동행복권 공식</span>
-                    <button id="store-open-official-btn" class="ghost" type="button">새 창 열기</button>
+                    <button id="store-open-official-btn" class="ghost" type="button">공식 페이지 새 창 열기</button>
                 </div>
                 <iframe
                     class="store-webview-frame"
@@ -2482,13 +2494,13 @@
         <section id="tab-qr" class="tab-panel app-shell" role="tabpanel" aria-labelledby="tab-qr-btn" tabindex="0">
             <div class="section-title">
                 <span class="section-kicker">당첨 확인</span>
-                <h2>QR 확인</h2>
-                <p id="qr-status">티켓 QR을 바로 읽습니다.</p>
+                <h2>당첨 QR 확인</h2>
+                <p id="qr-status">실물 티켓 QR을 읽어 회차와 번호를 바로 맞춰봅니다.</p>
             </div>
             <div class="qr-layout">
                 <div class="qr-camera-card">
                     <div class="qr-camera-head">
-                        <h3>QR 스캔</h3>
+                        <h3>카메라 스캔</h3>
                         <span class="badge muted">실시간</span>
                     </div>
                     <div class="qr-preview">
@@ -2503,23 +2515,23 @@
                 </div>
                 <div class="qr-result-card">
                     <div class="qr-result-head">
-                        <h3>결과</h3>
+                        <h3>인식 결과</h3>
                         <span class="badge muted" id="qr-result-badge">대기 중</span>
                     </div>
                     <div class="qr-block">
-                        <span class="qr-label">번호</span>
+                        <span class="qr-label">인식된 번호</span>
                         <div id="qr-ticket-numbers" class="qr-numbers">-</div>
                     </div>
                     <div class="qr-block">
-                        <span class="qr-label">비교</span>
-                        <div id="qr-match-result" class="qr-match">스캔 대기</div>
+                        <span class="qr-label">당첨 비교</span>
+                        <div id="qr-match-result" class="qr-match">QR을 스캔하면 결과가 표시됩니다.</div>
                     </div>
                     <details class="qr-detail-disclosure">
-                        <summary>원본</summary>
+                        <summary>스캔 원본 보기</summary>
                         <pre id="qr-payload" class="qr-payload">-</pre>
                     </details>
                     <div class="qr-next-actions">
-                        <button id="qr-open-round-btn" type="button">회차 보기</button>
+                        <button id="qr-open-round-btn" type="button">해당 회차 보기</button>
                         <button id="qr-copy-numbers-btn" type="button" class="ghost">번호 복사</button>
                     </div>
                 </div>
