@@ -4717,7 +4717,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? `${plan.label} 추천 ${recommendedSetCount}세트를 바로 사용할 수 있습니다.`
                 : member
                 ? '지금은 FREE로 사용 중입니다.'
-                : '로그인하면 저장과 생성 기록이 이어집니다.';
+                : '로그인하면 계정과 플랜이 이어집니다.';
         }
         if (mypageMembershipNextEl) {
             mypageMembershipNextEl.textContent = authPending
