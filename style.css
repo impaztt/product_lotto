@@ -21375,3 +21375,163 @@ body[data-theme="dark"] #tab-store .locker-history-more-sets {
         font-size: 24px !important;
     }
 }
+
+/* Final override v2: denser mypage */
+#tab-mypage .mypage-hero-card--account {
+    display: grid !important;
+    gap: 14px !important;
+}
+
+#tab-mypage .mypage-account-top {
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding-bottom: 2px !important;
+}
+
+#tab-mypage .mypage-account-identity {
+    min-width: 0;
+}
+
+#tab-mypage .mypage-account-bullets {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px !important;
+}
+
+#tab-mypage .mypage-account-bullet {
+    display: grid !important;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 12px 14px;
+    border-radius: 18px;
+    background: #f7f9fc;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+#tab-mypage .mypage-account-bullet-dot,
+#tab-mypage .mypage-mini-kpi-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #1b64da, #5aa2ff);
+    box-shadow: 0 0 0 5px rgba(27, 100, 218, 0.12);
+}
+
+#tab-mypage .mypage-account-bullet-label {
+    color: #667085;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+#tab-mypage .mypage-account-bullet strong {
+    justify-self: end;
+    min-width: 0;
+    color: #111827;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+}
+
+#tab-mypage .mypage-account-list {
+    display: grid !important;
+    gap: 10px !important;
+}
+
+#tab-mypage .mypage-account-list-row {
+    display: grid !important;
+    grid-template-columns: 72px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: #f7f9fc;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+#tab-mypage .mypage-account-list-row:last-child {
+    grid-template-columns: 72px minmax(0, 1fr);
+}
+
+#tab-mypage .mypage-account-list-label {
+    color: #667085;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+#tab-mypage .mypage-account-list-row strong {
+    min-width: 0;
+    color: #111827;
+    font-size: 15px;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+}
+
+#tab-mypage .mypage-inline-edit {
+    min-height: 34px !important;
+    padding: 0 12px !important;
+    border-radius: 12px !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+}
+
+#tab-mypage .mypage-plan-panel {
+    align-content: start !important;
+}
+
+#tab-mypage .mypage-plan-panel .info-header {
+    align-items: center !important;
+}
+
+#tab-mypage .mypage-mini-kpis {
+    gap: 8px !important;
+}
+
+#tab-mypage .mypage-mini-kpi {
+    grid-template-columns: auto minmax(0, 1fr) auto !important;
+    gap: 10px !important;
+    padding: 13px 14px !important;
+}
+
+#tab-mypage .mypage-mini-kpi strong {
+    font-size: 17px !important;
+}
+
+#tab-mypage .mypage-plan-cta {
+    margin-top: 2px;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-bullet,
+body[data-theme="dark"] #tab-mypage .mypage-account-list-row {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: rgba(137, 180, 255, 0.1) !important;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-bullet-label,
+body[data-theme="dark"] #tab-mypage .mypage-account-list-label {
+    color: #b7c5d8 !important;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-bullet strong,
+body[data-theme="dark"] #tab-mypage .mypage-account-list-row strong {
+    color: #f8fafc !important;
+}
+
+@media (max-width: 760px) {
+    #tab-mypage .mypage-account-bullets {
+        grid-template-columns: 1fr !important;
+    }
+
+    #tab-mypage .mypage-account-list-row,
+    #tab-mypage .mypage-account-list-row:last-child {
+        grid-template-columns: 1fr !important;
+        align-items: start;
+    }
+
+    #tab-mypage .mypage-account-list-row strong {
+        font-size: 14px;
+    }
+}
