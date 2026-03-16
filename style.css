@@ -18361,32 +18361,85 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     padding: 22px;
     border-radius: 28px;
     display: grid;
-    gap: 16px;
+    gap: 14px;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-exclude-head {
     display: flex;
     justify-content: space-between;
     gap: 12px;
-    align-items: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-exclude-card {
     margin: 0;
-    padding: 18px;
+    padding: 16px;
     border-radius: 24px;
+    background: linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(255, 255, 255, 0.94));
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="exclude"] .draw-funnel-copy {
+    gap: 6px;
+    max-width: none;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="exclude"] .draw-funnel-copy h3 {
+    font-size: clamp(22px, 2.8vw, 30px);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="exclude"] .draw-funnel-copy p {
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-exclude-head strong {
+    font-size: 18px;
+    line-height: 1.1;
+    color: #10233a;
+    letter-spacing: -0.03em;
+}
+
+#tab-draw.draw-wizard-tab #draw-wizard-exclude-summary {
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(19, 38, 61, 0.07);
+    color: #32506d;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: min(100%, 100%);
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-exclude-card .rule-body {
+    width: 100%;
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-exclude-card .rule-control {
     display: grid;
     grid-template-columns: repeat(9, minmax(0, 1fr));
     gap: 8px;
-    margin-top: 8px;
+    margin-top: 0;
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-exclude-card .exclude-number-ball {
+    width: 100%;
     min-height: 44px;
-    border-radius: 14px;
+    border-radius: 16px;
+    font-size: 12px;
+    opacity: 0.34;
+    filter: saturate(0.7);
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-exclude-card .exclude-number-ball.is-active {
+    opacity: 1;
+    filter: none;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-overview {
@@ -18915,6 +18968,19 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
         border-radius: 20px;
     }
 
+    #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="exclude"] .draw-funnel-copy h3 {
+        font-size: 22px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="exclude"] .draw-funnel-copy p {
+        font-size: 11px;
+    }
+
+    #tab-draw.draw-wizard-tab #draw-wizard-exclude-summary {
+        width: 100%;
+        justify-content: center;
+    }
+
     #tab-draw.draw-wizard-tab .draw-funnel-review-overview {
         padding: 16px;
         gap: 14px;
@@ -19018,6 +19084,10 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
     #tab-draw.draw-wizard-tab .draw-wizard-exclude-card .rule-control {
         grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    #tab-draw.draw-wizard-tab #draw-wizard-exclude-summary {
+        font-size: 11px;
     }
 
     #tab-draw.draw-wizard-tab .draw-screen-step-title-row h3 {

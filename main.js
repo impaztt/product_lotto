@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const body = document.body;
     const siteHeaderEl = document.querySelector('.site-header');
     const bottomTabBarEl = document.querySelector('.bottom-tab-bar');
-    const ruleInputs = Array.from(document.querySelectorAll('.rules-grid input[type="checkbox"]'));
+    const ruleInputs = Array.from(document.querySelectorAll('.rule-input[type="checkbox"]'));
     const excludeNumberGrid = document.getElementById('exclude-number-grid');
     const excludeNumberCard = document.getElementById('exclude-number-card');
     const excludeNumberTitle = document.getElementById('exclude-number-title');
@@ -4119,8 +4119,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (drawWizardExcludeSummaryEl) {
             drawWizardExcludeSummaryEl.textContent = excludeCount
-                ? `${excludeCount}개 직접 제외: ${drawWizardState.excludeNumbers.join(', ')}`
-                : '아직 직접 제외한 숫자가 없습니다.';
+                ? drawWizardState.excludeNumbers.join(' · ')
+                : '없음';
         }
         renderDrawWizardSelectionChips();
         renderDrawWizardRuleStep();
@@ -4227,6 +4227,9 @@ document.addEventListener('DOMContentLoaded', () => {
             renderDrawWizard();
             return false;
         }
+        syncDrawWizardExcludeNumbersFromControl({
+            commit: false
+        });
         syncDrawWizardSelections();
         const generated = handleDrawGenerationRequest('wizard');
         if (!generated) {
@@ -7551,7 +7554,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateExcludeNumberLabel() {
         const count = excludeNumberValues.size;
-        const label = count ? `숫자 제외 (${count}개)` : '숫자 제외';
+        const label = count ? `제외수 ${count}개` : '제외수 없음';
         if (excludeNumberTitle) {
             excludeNumberTitle.textContent = label;
         }
