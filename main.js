@@ -104,26 +104,15 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     let isDrawAdvancedOpen = false;
     const storeOpenOfficialBtn = document.getElementById('store-open-official-btn');
-    const lockerSaveRulesBtn = document.getElementById('locker-save-rules-btn');
-    const lockerLoadRulesBtn = document.getElementById('locker-load-rules-btn');
-    const lockerSavedRulesCountEl = document.getElementById('locker-saved-rules-count');
-    const lockerSavedRulesNoteEl = document.getElementById('locker-saved-rules-note');
-    const lockerCustomCountEl = document.getElementById('locker-custom-count');
-    const lockerCustomNoteEl = document.getElementById('locker-custom-note');
-    const lockerSlotCountEl = document.getElementById('locker-slot-count');
-    const lockerSlotNoteEl = document.getElementById('locker-slot-note');
+    const lockerSessionCountEl = document.getElementById('locker-session-count');
+    const lockerSessionNoteEl = document.getElementById('locker-session-note');
+    const lockerTotalSetsEl = document.getElementById('locker-total-sets');
+    const lockerTotalNoteEl = document.getElementById('locker-total-note');
     const lockerLastRoundEl = document.getElementById('locker-last-round');
+    const lockerLastNoteEl = document.getElementById('locker-last-note');
     const lockerLastUpdatedEl = document.getElementById('locker-last-updated');
-    const lockerSlotTitleEls = {
-        1: document.getElementById('locker-slot-title-1'),
-        2: document.getElementById('locker-slot-title-2'),
-        3: document.getElementById('locker-slot-title-3')
-    };
-    const lockerSlotMetaEls = {
-        1: document.getElementById('locker-slot-meta-1'),
-        2: document.getElementById('locker-slot-meta-2'),
-        3: document.getElementById('locker-slot-meta-3')
-    };
+    const lockerLastNoteTextEl = document.getElementById('locker-last-note-text');
+    const lockerHistoryListEl = document.getElementById('locker-history-list');
     const groupLevelButtons = Array.from(document.querySelectorAll('[data-group-level]'));
     const slotSaveButtons = Array.from(document.querySelectorAll('[data-slot-save]'));
     const slotApplyButtons = Array.from(document.querySelectorAll('[data-slot-apply]'));
@@ -522,6 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let drawWizardScrollGuideRafId = 0;
     const DRAW_ENTRY_LOCAL_KEY = 'lotto_guest_tracking_id';
     const GENERATION_STATS_KEY = 'lotto_generation_stats';
+    const GENERATED_HISTORY_LOCAL_KEY = 'lotto_generated_history_v1';
     const RULES_UPDATED_AT_KEY = 'lotto_rules_updated_at';
     const CUSTOM_PRESET_UPDATED_AT_KEY = 'lotto_custom_preset_updated_at';
     const DRAW_WIZARD_DRAFT_KEY = 'lotto_draw_wizard_draft';
@@ -539,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
         login: '로그인은 왜 필요해?',
         plan: '플랜 차이 알려줘',
         dashboard: '대시보드는 뭐야?',
-        qr: '분석 탭은 뭐야?'
+        locker: '보관함은 뭐야?'
     };
     let googleRedirectFlowPending = readGoogleRedirectPendingState();
     let drawWizardScrollHintSeen = readDrawWizardScrollHintSeen();
@@ -1197,17 +1187,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (lockerSaveRulesBtn) {
-        lockerSaveRulesBtn.addEventListener('click', () => {
-            persistSelectedRules();
-        });
-    }
-
-    if (lockerLoadRulesBtn) {
-        lockerLoadRulesBtn.addEventListener('click', () => {
-            setActiveTab('draw', true);
-            setDrawServiceMode('self');
-            applySavedRules(true);
+    if (lockerHistoryListEl) {
+        lockerHistoryListEl.addEventListener('click', event => {
+            const button = event.target instanceof Element ? event.target.closest('[data-locker-copy]') : null;
+            if (!button) {
+                return;
+            }
+            copyLockerSession(String(button.dataset.lockerCopy || ''));
         });
     }
 
@@ -3033,6 +3019,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function readGeneratedHistorySessions() {
+        try {
+            const raw = localStorage.getItem(GENERATED_HISTORY_LOCAL_KEY);
+            if (!raw) {
+                return [];
+            }
+            const parsed = JSON.parse(raw);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+            console.warn('생성 번호 보관함 로드 실패', error);
+            return [];
+        }
+    }
+
+    function saveGeneratedHistorySessions(items) {
+        try {
+            localStorage.setItem(GENERATED_HISTORY_LOCAL_KEY, JSON.stringify(items));
+        } catch (error) {
+            console.warn('생성 번호 보관함 저장 실패', error);
+        }
+    }
+
     function recordGenerationStats({ sourceMode = 'self', setCount = 0, round = 0 } = {}) {
         const current = getGenerationStats();
         const next = {
@@ -4688,12 +4696,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const customPreset = readStoredRuleIds('lotto_custom_preset');
         const savedRulesUpdatedAt = localStorage.getItem(RULES_UPDATED_AT_KEY) || '';
         const customPresetUpdatedAt = localStorage.getItem(CUSTOM_PRESET_UPDATED_AT_KEY) || '';
-        const slotPresets = getSlotPresets();
-        const activeSlots = Object.values(slotPresets).filter(value => Array.isArray(value && value.ids) && value.ids.length).length;
-        const latestSlot = Object.values(slotPresets)
-            .filter(value => value && value.savedAt)
-            .sort((a, b) => new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime())[0] || null;
-        const strongestPresetCount = Math.max(savedRules.length, customPreset.length);
+        const generatedSessions = getGeneratedHistoryForCurrentOwner();
+        const latestSession = generatedSessions[0] || null;
+        const generatedSetCount = generatedSessions.reduce((sum, item) => sum + Math.max(0, Number(item && item.setCount) || 0), 0);
+        const totalPresetCount = savedRules.length + customPreset.length;
         const latestPresetAt = [savedRulesUpdatedAt, customPresetUpdatedAt]
             .filter(Boolean)
             .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0] || '';
@@ -4717,21 +4723,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (mypageMembershipDescEl) {
             mypageMembershipDescEl.textContent = authPending
-                ? '저장된 계정과 플랜 상태를 확인하고 있습니다.'
+                ? '계정 상태 확인 중입니다.'
                 : premiumActive
-                ? `${plan.label} 구성으로 이번 회차 추천 ${recommendedSetCount}세트와 전체 복사를 바로 사용할 수 있습니다.`
+                ? `${plan.label} 추천 ${recommendedSetCount}세트를 바로 사용할 수 있습니다.`
                 : member
-                ? '지금은 FREE 흐름으로 직접 기준을 고르고 있습니다. STARTER 3세트, STANDARD 5세트, MASTER 7세트로 바로 확장할 수 있습니다.'
-                : '로그인하면 저장한 기준과 최근 기록을 그대로 이어서 보고, 원하는 추천 플랜도 바로 선택할 수 있습니다.';
+                ? '지금은 FREE로 사용 중입니다.'
+                : '로그인하면 저장과 생성 기록이 이어집니다.';
         }
         if (mypageMembershipNextEl) {
             mypageMembershipNextEl.textContent = authPending
-                ? '로그인 상태 확인 중'
+                ? '확인 중'
                 : premiumActive
                 ? `${plan.label} 사용 중`
                 : member
-                ? '지금 플랜 업그레이드 가능'
-                : '로그인 후 즉시 시작';
+                ? '업그레이드 가능'
+                : '로그인 후 시작';
         }
         if (mypagePlanNoteEl) {
             if (authPending) {
@@ -4741,51 +4747,49 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (premiumActive) {
                 mypagePlanNoteEl.textContent = `${plan.label} 추천 사용 중`;
             } else {
-                mypagePlanNoteEl.textContent = '직접 선택 사용 중';
+                mypagePlanNoteEl.textContent = 'FREE 사용 중';
             }
         }
         if (mypagePlanSetCountEl) {
             mypagePlanSetCountEl.textContent = authPending
-                ? '-'
+                ? '확인 중'
                 : premiumActive
                 ? `${recommendedSetCount}세트`
-                : '3~7세트';
+                : '0세트';
         }
         if (mypagePlanCopyAccessEl) {
             mypagePlanCopyAccessEl.textContent = authPending
                 ? '확인 중'
                 : premiumActive
                 ? '바로 사용'
-                : member
-                ? '선택 시 해제'
-                : '로그인 후 해제';
+                : '기본';
         }
         if (mypagePlanGuideEl) {
             mypagePlanGuideEl.textContent = authPending
                 ? '플랜 정보를 불러오는 중입니다.'
                 : premiumActive
-                ? `${plan.label}로 이번 회차 추천 ${recommendedSetCount}세트를 바로 받아볼 수 있습니다.`
+                ? `${plan.label} 추천 ${recommendedSetCount}세트를 바로 볼 수 있습니다.`
                 : member
-                ? '추천 플랜을 고르면 이번 회차 추천번호와 기록 흐름을 한 번에 이어서 볼 수 있습니다.'
-                : 'STANDARD가 세트 수와 기록 흐름이 가장 균형적인 기본 추천입니다.';
+                ? '필요할 때만 플랜을 올리면 됩니다.'
+                : '기본은 FREE로 충분합니다.';
         }
         if (mypagePlanFlowEl) {
             mypagePlanFlowEl.textContent = authPending
                 ? '잠시만 기다려 주세요.'
                 : premiumActive
-                ? '현재 플랜으로 추천번호 생성 화면까지 바로 이어집니다.'
+                ? '추천 번호로 바로 이동합니다.'
                 : member
-                ? 'FREE 상태에서는 직접 선택 중심으로 사용 중이며, 아래 카드에서 즉시 플랜을 고를 수 있습니다.'
-                : '플랜 카드를 눌러 구성을 비교하고, 로그인 후 바로 시작할 수 있습니다.';
+                ? '지금은 직접 선택 중심입니다.'
+                : '로그인 후 필요하면 플랜을 선택할 수 있습니다.';
         }
         if (mypagePlanManageBtn) {
             mypagePlanManageBtn.textContent = authPending
                 ? '확인 중'
                 : premiumActive
-                ? '추천번호 받으러 가기'
+                ? '추천으로 이동'
                 : member
-                ? '추천 플랜 고르기'
-                : '추천 플랜 비교 보기';
+                ? '플랜 보기'
+                : '플랜 보기';
             mypagePlanManageBtn.disabled = authPending;
         }
         if (mypagePlanCancelBtn) {
@@ -4816,25 +4820,27 @@ document.addEventListener('DOMContentLoaded', () => {
             actionButton.setAttribute('aria-pressed', String(isCurrent));
         });
         if (mypagePresetBadgeEl) {
-            mypagePresetBadgeEl.textContent = `${strongestPresetCount}개`;
+            mypagePresetBadgeEl.textContent = `${totalPresetCount}개`;
         }
         if (mypagePresetSummaryEl) {
-            if (strongestPresetCount) {
-                mypagePresetSummaryEl.textContent = `규칙 ${savedRules.length}개 · 내 프리셋 ${customPreset.length}개`;
+            if (totalPresetCount) {
+                mypagePresetSummaryEl.textContent = `기본 ${savedRules.length}개 · 내 기준 ${customPreset.length}개`;
             } else {
-                mypagePresetSummaryEl.textContent = '아직 저장한 기준이 없습니다';
+                mypagePresetSummaryEl.textContent = '저장한 규칙 없음';
             }
         }
         if (mypagePresetUpdatedEl) {
             mypagePresetUpdatedEl.textContent = latestPresetAt ? formatRelativeTime(latestPresetAt) : '아직 저장 없음';
         }
         if (mypageSlotSummaryEl) {
-            mypageSlotSummaryEl.textContent = activeSlots ? `보관함 ${activeSlots}칸 사용 중` : '보관함 비어 있음';
+            mypageSlotSummaryEl.textContent = generatedSessions.length
+                ? `${generatedSessions.length}회 · ${formatNumber(generatedSetCount)}세트`
+                : '자동 저장 대기';
         }
         if (mypageSlotUpdatedEl) {
-            mypageSlotUpdatedEl.textContent = latestSlot && latestSlot.savedAt
-                ? `최근 저장 ${formatSlotDate(latestSlot.savedAt)}`
-                : '보관함 1~3에 기준을 저장하면 여기서 다시 불러올 수 있습니다.';
+            mypageSlotUpdatedEl.textContent = latestSession
+                ? `${Number(latestSession.round || 0) > 0 ? `${Number(latestSession.round)}회` : '회차 없음'} · ${formatRelativeTime(latestSession.createdAt)}`
+                : '생성 번호는 보관함에 자동 저장됩니다.';
         }
         if (mypageStatsGeneratedEl) {
             mypageStatsGeneratedEl.textContent = `${formatNumber(stats.totalSets || 0)}세트`;
@@ -4844,75 +4850,47 @@ document.addEventListener('DOMContentLoaded', () => {
             mypageStatsRoundEl.textContent = round > 0 ? `${round}회` : '-';
         }
         if (mypageStatsModeEl) {
-            mypageStatsModeEl.textContent = stats.lastSourceMode === 'premium' ? '추천 플랜' : '직접 선택';
+            mypageStatsModeEl.textContent = Number(stats.totalSets || 0) > 0
+                ? (stats.lastSourceMode === 'premium' ? '추천 플랜' : '직접 선택')
+                : '기록 없음';
         }
         updateLockerTabUi();
     }
 
     function updateLockerTabUi() {
-        const savedRules = readStoredRuleIds('lotto_rules');
-        const customPreset = readStoredRuleIds('lotto_custom_preset');
-        const savedRulesUpdatedAt = localStorage.getItem(RULES_UPDATED_AT_KEY) || '';
-        const customPresetUpdatedAt = localStorage.getItem(CUSTOM_PRESET_UPDATED_AT_KEY) || '';
         const stats = getGenerationStats();
-        const slotPresets = getSlotPresets();
-        const activeSlots = Object.values(slotPresets).filter(value => Array.isArray(value && value.ids) && value.ids.length).length;
-        const latestSlot = Object.values(slotPresets)
-            .filter(value => value && value.savedAt)
-            .sort((a, b) => new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime())[0] || null;
-        const latestRuleSavedAt = [savedRulesUpdatedAt, customPresetUpdatedAt, latestSlot?.savedAt || '']
-            .filter(Boolean)
-            .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0] || '';
-        const lastRound = Number(stats.lastRound || getTargetRoundForEntries() || 0);
+        const sessions = getGeneratedHistoryForCurrentOwner();
+        const totalSets = sessions.reduce((sum, item) => sum + Math.max(0, Number(item.setCount || 0)), 0);
+        const latest = sessions[0] || null;
+        const lastRound = Number(latest?.round || stats.lastRound || 0);
 
-        if (lockerSavedRulesCountEl) {
-            lockerSavedRulesCountEl.textContent = `${savedRules.length}개`;
+        if (lockerSessionCountEl) {
+            lockerSessionCountEl.textContent = `${sessions.length}회`;
         }
-        if (lockerSavedRulesNoteEl) {
-            lockerSavedRulesNoteEl.textContent = savedRulesUpdatedAt
-                ? `${formatRelativeTime(savedRulesUpdatedAt)} 저장`
-                : '아직 저장 없음';
+        if (lockerSessionNoteEl) {
+            lockerSessionNoteEl.textContent = latest ? `${formatRelativeTime(latest.createdAt)} 생성` : '아직 기록 없음';
         }
-        if (lockerCustomCountEl) {
-            lockerCustomCountEl.textContent = `${customPreset.length}개`;
+        if (lockerTotalSetsEl) {
+            lockerTotalSetsEl.textContent = `${formatNumber(totalSets)}세트`;
         }
-        if (lockerCustomNoteEl) {
-            lockerCustomNoteEl.textContent = customPresetUpdatedAt
-                ? `${formatRelativeTime(customPresetUpdatedAt)} 저장`
-                : '직접 저장 전';
-        }
-        if (lockerSlotCountEl) {
-            lockerSlotCountEl.textContent = `${activeSlots}칸`;
-        }
-        if (lockerSlotNoteEl) {
-            lockerSlotNoteEl.textContent = activeSlots ? `${activeSlots}칸 사용 중` : '비어 있음';
+        if (lockerTotalNoteEl) {
+            lockerTotalNoteEl.textContent = totalSets ? `누적 ${formatNumber(totalSets)}세트` : '생성 후 자동 저장';
         }
         if (lockerLastRoundEl) {
             lockerLastRoundEl.textContent = lastRound > 0 ? `${lastRound}회` : '-';
         }
-        if (lockerLastUpdatedEl) {
-            lockerLastUpdatedEl.textContent = latestRuleSavedAt
-                ? `최근 저장 ${formatRelativeTime(latestRuleSavedAt)}`
-                : '아직 기록 없음';
+        if (lockerLastNoteEl) {
+            lockerLastNoteEl.textContent = latest ? (latest.sourceMode === 'premium' ? '추천 생성' : '직접 생성') : '아직 생성 전';
         }
-
-        [1, 2, 3].forEach(slot => {
-            const titleEl = lockerSlotTitleEls[slot];
-            const metaEl = lockerSlotMetaEls[slot];
-            const data = slotPresets[String(slot)];
-            if (!titleEl || !metaEl) {
-                return;
-            }
-            if (!data || !Array.isArray(data.ids) || !data.ids.length) {
-                titleEl.textContent = '비어 있음';
-                metaEl.textContent = '저장 전';
-                return;
-            }
-            titleEl.textContent = `규칙 ${data.ids.length}개`;
-            metaEl.textContent = data.savedAt
-                ? `${formatSlotDate(data.savedAt)} 저장`
-                : '저장됨';
-        });
+        if (lockerLastUpdatedEl) {
+            lockerLastUpdatedEl.textContent = latest ? formatHistoryDateTime(latest.createdAt) : '-';
+        }
+        if (lockerLastNoteTextEl) {
+            lockerLastNoteTextEl.textContent = latest
+                ? `${Number(latest.setCount || 0)}세트 저장`
+                : '최근 생성 내역이 없습니다.';
+        }
+        renderLockerHistoryUi();
     }
 
     function updateAnalysisSummaryUi() {
@@ -5036,8 +5014,59 @@ document.addEventListener('DOMContentLoaded', () => {
         return normalized.length === 6 ? normalized : [];
     }
 
+    function buildGeneratedHistorySession(draws, options = {}) {
+        if (!Array.isArray(draws) || !draws.length) {
+            return null;
+        }
+        const sourceMode = options.sourceMode === 'premium' ? 'premium' : 'self';
+        const ruleIds = Array.isArray(options.ruleIds)
+            ? Array.from(new Set(options.ruleIds.map(value => String(value || '').trim()).filter(Boolean)))
+            : [];
+        const entries = draws
+            .map((draw, index) => {
+                const numbers = normalizeEntryNumbers(draw && draw.numbers);
+                if (!numbers.length) {
+                    return null;
+                }
+                return {
+                    setNo: Number(draw && draw.setNo ? draw.setNo : index + 1),
+                    numbers,
+                    strategy: draw && draw.strategy ? String(draw.strategy).trim() : ''
+                };
+            })
+            .filter(Boolean);
+        if (!entries.length) {
+            return null;
+        }
+        return {
+            ownerKey: getHistoryOwnerKey(),
+            generationId: `local_${Date.now()}_${createClientNonce(10)}`,
+            createdAt: new Date().toISOString(),
+            round: Number(getTargetRoundForEntries() || 0),
+            sourceMode,
+            ruleCount: ruleIds.length,
+            setCount: entries.length,
+            entries
+        };
+    }
+
+    function persistGeneratedHistorySession(draws, options = {}) {
+        const nextSession = buildGeneratedHistorySession(draws, options);
+        if (!nextSession) {
+            return;
+        }
+        const current = readGeneratedHistorySessions();
+        current.unshift(nextSession);
+        saveGeneratedHistorySessions(current.slice(0, 24));
+    }
+
     async function persistGeneratedEntries(draws, options = {}) {
-        if (!firebaseDb || !window.firebase || !window.firebase.firestore || !Array.isArray(draws) || !draws.length) {
+        if (!Array.isArray(draws) || !draws.length) {
+            return;
+        }
+        persistGeneratedHistorySession(draws, options);
+        updateLockerTabUi();
+        if (!firebaseDb || !window.firebase || !window.firebase.firestore) {
             return;
         }
         try {
@@ -5118,6 +5147,94 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const date = new Date(millis);
         return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    }
+
+    function getGeneratedHistoryForCurrentOwner() {
+        const ownerKey = getHistoryOwnerKey();
+        return readGeneratedHistorySessions()
+            .filter(item => item && item.ownerKey === ownerKey)
+            .sort((a, b) => getTimestampMillis(b.createdAt) - getTimestampMillis(a.createdAt));
+    }
+
+    function buildGeneratedSessionCopyText(session) {
+        if (!session || !Array.isArray(session.entries)) {
+            return '';
+        }
+        return session.entries
+            .map(entry => `${entry.setNo}세트: ${Array.isArray(entry.numbers) ? entry.numbers.join(', ') : ''}`)
+            .filter(Boolean)
+            .join('\n');
+    }
+
+    async function copyLockerSession(sessionId) {
+        const target = getGeneratedHistoryForCurrentOwner().find(item => item.generationId === sessionId);
+        if (!target) {
+            showActionPopup('복사할 번호를 찾지 못했습니다.');
+            return;
+        }
+        const text = buildGeneratedSessionCopyText(target);
+        if (!text) {
+            showActionPopup('복사할 번호가 없습니다.');
+            return;
+        }
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(text);
+            }
+            showActionPopup(`${target.setCount || 0}세트를 복사했습니다.`);
+        } catch {
+            showActionPopup('복사에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+        }
+    }
+
+    function renderLockerHistoryUi() {
+        if (!lockerHistoryListEl) {
+            return;
+        }
+        const sessions = getGeneratedHistoryForCurrentOwner().slice(0, 12);
+        if (!sessions.length) {
+            lockerHistoryListEl.innerHTML = `
+                <article class="locker-history-empty">
+                    <strong>아직 생성한 번호가 없습니다.</strong>
+                    <p>추첨 탭에서 번호를 만들면 여기에 카드로 쌓입니다.</p>
+                </article>
+            `;
+            return;
+        }
+        lockerHistoryListEl.innerHTML = sessions.map(session => {
+            const when = formatHistoryDateTime(session.createdAt);
+            const roundText = Number(session.round || 0) > 0 ? `${Number(session.round)}회` : '회차 없음';
+            const modeText = session.sourceMode === 'premium' ? '추천' : '직접';
+            const ruleText = Number(session.ruleCount || 0) > 0 ? `규칙 ${Number(session.ruleCount)}개` : '규칙 없음';
+            const setsHtml = Array.isArray(session.entries)
+                ? session.entries.map(entry => `
+                    <div class="locker-history-set">
+                        <span class="locker-history-set-label">${entry.setNo}세트</span>
+                        <div class="locker-history-balls">
+                            ${(Array.isArray(entry.numbers) ? entry.numbers : []).map(number => `<span class="locker-history-ball">${escapeHtml(number)}</span>`).join('')}
+                        </div>
+                    </div>
+                `).join('')
+                : '';
+            return `
+                <article class="locker-history-card">
+                    <div class="locker-history-head">
+                        <div class="locker-history-title">
+                            <span class="locker-history-meta">${roundText} · ${modeText}</span>
+                            <strong>${when}</strong>
+                        </div>
+                        <button type="button" class="ghost" data-locker-copy="${escapeHtml(session.generationId)}">번호 복사</button>
+                    </div>
+                    <div class="locker-history-summary">
+                        <span>${Number(session.setCount || 0)}세트</span>
+                        <span>${ruleText}</span>
+                    </div>
+                    <div class="locker-history-sets">
+                        ${setsHtml}
+                    </div>
+                </article>
+            `;
+        }).join('');
     }
 
     async function loadMypageDrawHistory(force = false) {
@@ -6505,11 +6622,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (matchesHelpChatQuery(compact, ['마이페이지', '기록', '이력', '저장한기준', '저장'])) {
             return {
-                text: '마이페이지에서는 현재 이용 구성, 저장한 기준, 최근 생성 이력을 한 번에 확인할 수 있습니다.\n로그인 상태라면 플랜 비교와 추천 흐름도 여기서 바로 이어집니다.',
+                text: '마이페이지는 계정, 플랜, 저장 기준만 짧게 정리한 화면입니다.\n복잡한 기록은 보관함에서 바로 확인하도록 분리했습니다.',
                 actions: [
                     { kind: 'tab', label: '마이페이지 열기', value: 'mypage', toast: '마이페이지로 이동했습니다.' },
-                    createHelpChatPromptAction('login'),
-                    createHelpChatPromptAction('plan')
+                    createHelpChatPromptAction('locker'),
+                    createHelpChatPromptAction('login')
                 ].filter(Boolean)
             };
         }
@@ -6524,16 +6641,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (matchesHelpChatQuery(compact, ['qr', '큐알', '분석', '회차흐름', '최근회차', '비교'])) {
             return {
-                text: '분석 탭에서는 최근 회차 카드, 번호 비교, 1등 당첨금 흐름을 한 화면에서 바로 볼 수 있습니다.\n직전 흐름을 먼저 보고 추첨 탭으로 넘어갈 때 가장 빠른 화면이에요.',
+                text: '초기 버전에서는 분석 탭을 숨기고 대시보드와 보관함 중심으로 구성했습니다.\n회차 흐름은 대시보드에서 보고, 생성한 번호는 보관함에서 다시 확인하면 됩니다.',
                 actions: [
-                    { kind: 'tab', label: '분석 탭 열기', value: 'qr', toast: '분석 탭으로 이동했습니다.' },
-                    createHelpChatPromptAction('dashboard')
+                    { kind: 'tab', label: '대시보드 열기', value: 'dashboard', toast: '대시보드 탭으로 이동했습니다.' },
+                    { kind: 'tab', label: '보관함 열기', value: 'store', toast: '보관함 탭으로 이동했습니다.' }
                 ].filter(Boolean)
             };
         }
         if (matchesHelpChatQuery(compact, ['스토어', '보관함', '저장슬롯', '복권방', '구매처', '공식구매', '어디서사'])) {
             return {
-                text: '보관함 탭에서는 저장 규칙, 내 프리셋, 슬롯 1~3을 다시 불러올 수 있습니다.\n공식 판매점은 보관함 안 버튼으로만 가볍게 열리도록 정리돼 있습니다.',
+                text: '보관함 탭에서는 생성한 번호가 카드로 쌓이고, 각 카드에서 바로 복사할 수 있습니다.\n최근 회차와 세트 수도 함께 보여서 어떤 번호를 만들었는지 한눈에 확인할 수 있습니다.',
                 actions: [
                     { kind: 'tab', label: '보관함 열기', value: 'store', toast: '보관함 탭으로 이동했습니다.' },
                     { kind: 'tab', label: '추첨 탭 열기', value: 'draw', toast: '추첨 탭으로 이동했습니다.' }
@@ -6541,8 +6658,8 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
         return {
-            text: '이 질문은 이렇게 많이 물어보세요.\n앱 소개, 번호 생성, 필터 활용, 로그인, 추천 플랜, 분석 탭 중 하나를 누르면 바로 이어서 안내해 드릴게요.',
-            actions: buildHelpChatPromptActions(['app', 'draw', 'filters', 'login', 'plan', 'qr'])
+            text: '이 질문은 이렇게 많이 물어보세요.\n앱 소개, 번호 생성, 필터 활용, 보관함, 로그인, 추천 플랜 중 하나를 누르면 바로 이어서 안내해 드릴게요.',
+            actions: buildHelpChatPromptActions(['app', 'draw', 'filters', 'locker', 'login', 'plan'])
         };
     }
 
