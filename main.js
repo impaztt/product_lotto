@@ -3638,6 +3638,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const selectedIds = new Set(drawWizardState.selectedRuleIds);
         const selectedCount = currentRuleStep.rules.filter(rule => selectedIds.has(rule.id)).length;
+        const compactRuleHeadline = (() => {
+            const baseLabel = String(currentRuleStep.groupLabel || currentRuleStep.title || '')
+                .replace(/\s*제외하기$/, '')
+                .trim();
+            return baseLabel ? `${baseLabel}만 고르세요` : '빼고 싶은 패턴만 고르세요';
+        })();
         if (drawWizardRuleKickerEl) {
             drawWizardRuleKickerEl.textContent = currentRuleStep.kicker;
         }
@@ -3645,10 +3651,12 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardRuleProgressEl.textContent = `${drawWizardState.currentGroupIndex + 1} / ${ruleSteps.length}`;
         }
         if (drawWizardRuleTitleEl) {
-            drawWizardRuleTitleEl.textContent = currentRuleStep.title;
+            drawWizardRuleTitleEl.textContent = compactRuleHeadline;
         }
         if (drawWizardRuleCopyEl) {
-            drawWizardRuleCopyEl.textContent = `${currentRuleStep.copy} · ${selectedCount ? `${selectedCount}개 선택됨` : '아직 선택 전'}`;
+            drawWizardRuleCopyEl.textContent = selectedCount
+                ? `${selectedCount}개 선택됨`
+                : '선택 없이 다음 단계로 넘어가도 됩니다.';
         }
         drawWizardDetailGroupsEl.innerHTML = currentRuleStep.rules.map(rule => {
             const active = selectedIds.has(rule.id);
