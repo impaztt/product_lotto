@@ -4695,13 +4695,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (mypageProfileEmailEl) {
             if (authPending) {
-                mypageProfileEmailEl.textContent = '로그인 상태 확인 중';
+                mypageProfileEmailEl.textContent = '확인 중';
             } else if (currentUser && currentUser.email) {
                 mypageProfileEmailEl.textContent = currentUser.email;
             } else if (isMember() && currentUser) {
                 mypageProfileEmailEl.textContent = currentUser.uid;
             } else {
-                mypageProfileEmailEl.textContent = '로그인 전 둘러보기';
+                mypageProfileEmailEl.textContent = '비회원';
             }
         }
         if (mypageMembershipTierEl) {
@@ -4712,21 +4712,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (mypageMembershipDescEl) {
             mypageMembershipDescEl.textContent = authPending
-                ? '계정 상태 확인 중입니다.'
+                ? '확인 중'
                 : premiumActive
-                ? `${plan.label} 추천 ${recommendedSetCount}세트를 바로 사용할 수 있습니다.`
+                ? '추천 사용 중'
                 : member
-                ? '지금은 FREE로 사용 중입니다.'
-                : '로그인하면 계정과 플랜이 이어집니다.';
+                ? '기본 사용'
+                : '로그인 전';
         }
         if (mypageMembershipNextEl) {
             mypageMembershipNextEl.textContent = authPending
                 ? '확인 중'
                 : premiumActive
-                ? `${plan.label} 사용 중`
+                ? plan.label
                 : member
-                ? '업그레이드 가능'
-                : '로그인 후 시작';
+                ? 'FREE'
+                : '비회원';
         }
         if (mypagePlanNoteEl) {
             if (authPending) {
@@ -4741,16 +4741,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (mypagePlanSetCountEl) {
             mypagePlanSetCountEl.textContent = authPending
-                ? '확인 중'
+                ? '-'
                 : premiumActive
                 ? `${recommendedSetCount}세트`
-                : '0세트';
+                : '-';
         }
         if (mypagePlanCopyAccessEl) {
             mypagePlanCopyAccessEl.textContent = authPending
                 ? '확인 중'
                 : premiumActive
-                ? '바로 사용'
+                ? '가능'
                 : '기본';
         }
         if (mypagePlanGuideEl) {
@@ -4775,10 +4775,8 @@ document.addEventListener('DOMContentLoaded', () => {
             mypagePlanManageBtn.textContent = authPending
                 ? '확인 중'
                 : premiumActive
-                ? '추천으로 이동'
-                : member
-                ? '플랜 보기'
-                : '플랜 보기';
+                ? '추천'
+                : '플랜';
             mypagePlanManageBtn.disabled = authPending;
         }
         if (mypagePlanCancelBtn) {
@@ -4839,51 +4837,51 @@ document.addEventListener('DOMContentLoaded', () => {
             .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0] || '';
 
         if (lockerSessionCountEl) {
-            lockerSessionCountEl.textContent = `${sessions.length}회`;
+            lockerSessionCountEl.textContent = `${sessions.length}개`;
         }
         if (lockerSessionNoteEl) {
-            lockerSessionNoteEl.textContent = latest ? `${formatRelativeTime(latest.createdAt)} 생성` : '아직 기록 없음';
+            lockerSessionNoteEl.textContent = latest ? formatRelativeTime(latest.createdAt) : '없음';
         }
         if (lockerTotalSetsEl) {
             lockerTotalSetsEl.textContent = `${formatNumber(totalSets)}세트`;
         }
         if (lockerTotalNoteEl) {
-            lockerTotalNoteEl.textContent = totalSets ? `누적 ${formatNumber(totalSets)}세트` : '생성 후 자동 저장';
+            lockerTotalNoteEl.textContent = totalSets ? '자동 저장' : '대기';
         }
         if (lockerLastRoundEl) {
             lockerLastRoundEl.textContent = lastRound > 0 ? `${lastRound}회` : '-';
         }
         if (lockerLastNoteEl) {
-            lockerLastNoteEl.textContent = latest ? (latest.sourceMode === 'premium' ? '추천 생성' : '직접 생성') : '아직 생성 전';
+            lockerLastNoteEl.textContent = latest ? (latest.sourceMode === 'premium' ? '추천' : '직접') : '없음';
         }
         if (lockerLastUpdatedEl) {
-            lockerLastUpdatedEl.textContent = latest ? formatHistoryDateTime(latest.createdAt) : '-';
+            lockerLastUpdatedEl.textContent = latest ? formatSlotDate(latest.createdAt) : '-';
         }
         if (lockerLastNoteTextEl) {
             lockerLastNoteTextEl.textContent = latest
-                ? `${Number(latest.setCount || 0)}세트 저장`
-                : '최근 생성 내역이 없습니다.';
+                ? `${Number(latest.setCount || 0)}세트`
+                : '최근 없음';
         }
         if (mypagePresetBadgeEl) {
             mypagePresetBadgeEl.textContent = `${totalPresetCount}개`;
         }
         if (mypagePresetSummaryEl) {
             mypagePresetSummaryEl.textContent = totalPresetCount
-                ? `기본 ${savedRules.length}개 · 내 기준 ${customPreset.length}개`
-                : '저장한 규칙 없음';
+                ? `기본 ${savedRules.length} · 내 ${customPreset.length}`
+                : '없음';
         }
         if (mypagePresetUpdatedEl) {
-            mypagePresetUpdatedEl.textContent = latestPresetAt ? formatRelativeTime(latestPresetAt) : '아직 저장 없음';
+            mypagePresetUpdatedEl.textContent = latestPresetAt ? formatSlotDate(latestPresetAt) : '-';
         }
         if (mypageSlotSummaryEl) {
             mypageSlotSummaryEl.textContent = sessions.length
-                ? `${sessions.length}회 · ${formatNumber(totalSets)}세트`
-                : '자동 저장 대기';
+                ? `${sessions.length}개 카드`
+                : '대기';
         }
         if (mypageSlotUpdatedEl) {
             mypageSlotUpdatedEl.textContent = latest
-                ? `${lastRound > 0 ? `${lastRound}회` : '회차 없음'} · ${formatRelativeTime(latest.createdAt)}`
-                : '생성 번호는 보관함에 자동 저장됩니다.';
+                ? `${lastRound > 0 ? `${lastRound}회` : '없음'} · ${formatRelativeTime(latest.createdAt)}`
+                : '자동 저장';
         }
         renderLockerHistoryUi();
     }
@@ -5186,50 +5184,63 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!lockerHistoryListEl) {
             return;
         }
-        const sessions = getGeneratedHistoryForCurrentOwner().slice(0, 12);
+        const allSessions = getGeneratedHistoryForCurrentOwner();
+        const sessions = allSessions.slice(0, 4);
         if (!sessions.length) {
             lockerHistoryListEl.innerHTML = `
                 <article class="locker-history-empty">
-                    <strong>아직 생성한 번호가 없습니다.</strong>
-                    <p>추첨 탭에서 번호를 만들면 여기에 카드로 쌓입니다.</p>
+                    <strong>아직 없음</strong>
+                    <p>추첨 후 자동 저장</p>
                 </article>
             `;
             return;
         }
+        const hiddenCount = Math.max(0, allSessions.length - sessions.length);
         lockerHistoryListEl.innerHTML = sessions.map(session => {
-            const when = formatHistoryDateTime(session.createdAt);
+            const when = formatSlotDate(session.createdAt);
             const roundText = Number(session.round || 0) > 0 ? `${Number(session.round)}회` : '회차 없음';
             const modeText = session.sourceMode === 'premium' ? '추천' : '직접';
-            const ruleText = Number(session.ruleCount || 0) > 0 ? `규칙 ${Number(session.ruleCount)}개` : '규칙 없음';
-            const setsHtml = Array.isArray(session.entries)
-                ? session.entries.map(entry => `
+            const ruleText = Number(session.ruleCount || 0) > 0 ? `규칙 ${Number(session.ruleCount)}개` : '기본';
+            const entries = Array.isArray(session.entries) ? session.entries : [];
+            const previewEntries = entries.slice(0, 2);
+            const hiddenSets = Math.max(0, entries.length - previewEntries.length);
+            const setsHtml = previewEntries
+                .map(entry => `
                     <div class="locker-history-set">
                         <span class="locker-history-set-label">${entry.setNo}세트</span>
                         <div class="locker-history-balls">
                             ${(Array.isArray(entry.numbers) ? entry.numbers : []).map(number => `<span class="locker-history-ball">${escapeHtml(number)}</span>`).join('')}
                         </div>
                     </div>
-                `).join('')
-                : '';
+                `).join('');
             return `
                 <article class="locker-history-card">
                     <div class="locker-history-head">
                         <div class="locker-history-title">
-                            <span class="locker-history-meta">${roundText} · ${modeText}</span>
+                            <span class="locker-history-meta">${roundText}</span>
                             <strong>${when}</strong>
                         </div>
-                        <button type="button" class="ghost" data-locker-copy="${escapeHtml(session.generationId)}">번호 복사</button>
+                        <button type="button" class="ghost locker-copy-btn" data-locker-copy="${escapeHtml(session.generationId)}">복사</button>
                     </div>
                     <div class="locker-history-summary">
                         <span>${Number(session.setCount || 0)}세트</span>
+                        <span>${modeText}</span>
                         <span>${ruleText}</span>
                     </div>
                     <div class="locker-history-sets">
                         ${setsHtml}
                     </div>
+                    ${hiddenSets ? `<div class="locker-history-more-sets">+${hiddenSets}세트</div>` : ''}
                 </article>
             `;
-        }).join('');
+        }).join('') + (hiddenCount
+            ? `
+                <article class="locker-history-more">
+                    <strong>+${hiddenCount}개 더 있음</strong>
+                    <p>최근 4개만 표시</p>
+                </article>
+            `
+            : '');
     }
 
     async function loadMypageDrawHistory(force = false) {

@@ -14,6 +14,479 @@
     --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
 }
 
+/* Refined locker + mypage surfaces */
+#tab-mypage.app-shell {
+    background: linear-gradient(180deg, #f5f7fb 0%, #eef3f9 100%);
+}
+
+#tab-mypage .mypage-simple-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
+    gap: 16px;
+    align-items: stretch;
+}
+
+#tab-mypage .mypage-hero-card--account,
+#tab-mypage .mypage-plan-panel {
+    padding: 20px;
+    border-radius: 26px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: rgba(255, 255, 255, 0.98) !important;
+    box-shadow: 0 18px 34px rgba(15, 23, 42, 0.06);
+}
+
+#tab-mypage .mypage-account-top {
+    align-items: flex-start;
+    gap: 14px;
+}
+
+#tab-mypage .mypage-account-copy h3,
+#tab-mypage .mypage-plan-panel .info-header h3 {
+    margin: 4px 0 0;
+    font-size: 26px;
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+}
+
+#tab-mypage .mypage-hero-email {
+    color: #4b5563;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#tab-mypage .mypage-account-meta--compact {
+    display: grid;
+    gap: 10px;
+}
+
+#tab-mypage .mypage-account-meta-row {
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: #f7f9fc;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+#tab-mypage .mypage-account-meta-row strong {
+    color: #111827;
+    font-size: 18px;
+    line-height: 1.15;
+}
+
+#tab-mypage .mypage-account-meta-note {
+    color: #667085;
+    font-size: 12px;
+}
+
+#tab-mypage .mypage-inline-actions {
+    display: flex;
+    gap: 10px;
+}
+
+#tab-mypage .mypage-inline-actions .cta,
+#tab-mypage .mypage-inline-actions .ghost {
+    min-height: 46px;
+    padding: 0 16px;
+    border-radius: 16px;
+}
+
+#tab-mypage .mypage-plan-panel {
+    display: grid;
+    gap: 14px;
+}
+
+#tab-mypage .mypage-plan-badge {
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(27, 100, 218, 0.08);
+    color: #1b64da;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+#tab-mypage .mypage-mini-kpis {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+#tab-mypage .mypage-mini-kpi {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: #f7f9fc;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+#tab-mypage .mypage-mini-kpi span {
+    color: #667085;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#tab-mypage .mypage-mini-kpi strong {
+    justify-self: end;
+    color: #111827;
+    font-size: 18px;
+    line-height: 1;
+}
+
+#tab-mypage .mypage-plan-cta {
+    width: 100%;
+    min-height: 46px;
+    border-radius: 16px;
+}
+
+#tab-store.app-shell {
+    background: linear-gradient(180deg, #f5f7fb 0%, #eef3f9 100%);
+}
+
+#tab-store .store-shell-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding: 0;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+#tab-store .store-shell-title h2 {
+    margin: 4px 0 0;
+    font-size: 28px;
+    line-height: 1.08;
+    letter-spacing: -0.05em;
+}
+
+#tab-store .store-shell-title p {
+    display: none;
+}
+
+#tab-store .store-shell-title .ghost {
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 16px;
+}
+
+#tab-store .locker-layout {
+    display: grid;
+    gap: 14px;
+}
+
+#tab-store .locker-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+#tab-store .locker-stat-card {
+    padding: 16px 16px 14px;
+    border-radius: 20px;
+    gap: 6px;
+    box-shadow: 0 14px 26px rgba(15, 23, 42, 0.05);
+}
+
+#tab-store .locker-stat-label {
+    min-height: 0;
+    padding: 0;
+    background: transparent;
+    color: #8a94a6;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+#tab-store .locker-stat-card strong {
+    font-size: 24px;
+    line-height: 1.02;
+}
+
+#tab-store .locker-stat-card p {
+    color: #667085;
+    font-size: 12px;
+    line-height: 1.3;
+}
+
+#tab-store .locker-board {
+    display: grid;
+    grid-template-columns: minmax(0, 1.22fr) minmax(260px, 0.78fr);
+    gap: 14px;
+    align-items: start;
+}
+
+#tab-store .locker-panel {
+    padding: 18px;
+    border-radius: 24px;
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+}
+
+#tab-store .locker-panel-head {
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+#tab-store .locker-panel-head h3 {
+    margin: 4px 0 0;
+    font-size: 20px;
+    line-height: 1.08;
+}
+
+#tab-store .locker-panel-kicker {
+    min-height: 24px;
+    padding: 0 10px;
+    font-size: 10px;
+}
+
+#tab-store .locker-panel-chip {
+    min-height: 26px;
+    padding: 0 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.05);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    color: #667085;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+#tab-store .locker-history-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+#tab-store .locker-history-card,
+#tab-store .locker-history-more {
+    padding: 14px;
+    border-radius: 18px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+    box-shadow: none;
+}
+
+#tab-store .locker-history-head {
+    align-items: center;
+    gap: 10px;
+}
+
+#tab-store .locker-history-title {
+    gap: 2px;
+}
+
+#tab-store .locker-history-meta {
+    font-size: 11px;
+    letter-spacing: 0.04em;
+}
+
+#tab-store .locker-history-title strong {
+    font-size: 15px;
+    line-height: 1.15;
+}
+
+#tab-store .locker-copy-btn {
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+#tab-store .locker-history-summary {
+    gap: 6px;
+}
+
+#tab-store .locker-history-summary span {
+    min-height: 24px;
+    padding: 0 9px;
+    font-size: 11px;
+}
+
+#tab-store .locker-history-sets {
+    display: grid;
+    gap: 8px;
+}
+
+#tab-store .locker-history-set {
+    padding: 10px 12px;
+    border-radius: 16px;
+    gap: 6px;
+}
+
+#tab-store .locker-history-set-label {
+    font-size: 10px;
+}
+
+#tab-store .locker-history-balls {
+    gap: 6px;
+}
+
+#tab-store .locker-history-ball {
+    min-width: 28px;
+    height: 28px;
+    padding: 0 6px;
+    font-size: 11px;
+}
+
+#tab-store .locker-history-more-sets {
+    color: #667085;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+#tab-store .locker-history-more {
+    display: grid;
+    place-items: center;
+    gap: 4px;
+    text-align: center;
+    border-style: dashed;
+    background: rgba(255, 255, 255, 0.72);
+}
+
+#tab-store .locker-history-more strong {
+    color: #111827;
+    font-size: 16px;
+}
+
+#tab-store .locker-history-more p {
+    margin: 0;
+    color: #667085;
+    font-size: 12px;
+}
+
+#tab-store .locker-saved-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+#tab-store .locker-saved-row {
+    padding: 12px 14px;
+    border-radius: 16px;
+    gap: 4px;
+}
+
+#tab-store .locker-saved-row span {
+    font-size: 10px;
+}
+
+#tab-store .locker-saved-row strong {
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+#tab-store .locker-saved-row em {
+    font-size: 11px;
+    line-height: 1.35;
+}
+
+body[data-theme="dark"] #tab-mypage.app-shell,
+body[data-theme="dark"] #tab-store.app-shell {
+    background: linear-gradient(180deg, #0e1520 0%, #0b111a 100%);
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-hero-card--account,
+body[data-theme="dark"] #tab-mypage .mypage-plan-panel,
+body[data-theme="dark"] #tab-store .locker-stat-card,
+body[data-theme="dark"] #tab-store .locker-panel,
+body[data-theme="dark"] #tab-store .locker-history-card,
+body[data-theme="dark"] #tab-store .locker-history-more {
+    background: rgba(12, 18, 28, 0.94) !important;
+    border-color: rgba(137, 180, 255, 0.12);
+    box-shadow: none;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-meta-row,
+body[data-theme="dark"] #tab-mypage .mypage-mini-kpi,
+body[data-theme="dark"] #tab-store .locker-history-set,
+body[data-theme="dark"] #tab-store .locker-saved-row,
+body[data-theme="dark"] #tab-store .locker-history-summary span,
+body[data-theme="dark"] #tab-store .locker-panel-chip {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(137, 180, 255, 0.1);
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-copy h3,
+body[data-theme="dark"] #tab-mypage .mypage-hero-email,
+body[data-theme="dark"] #tab-mypage .mypage-account-meta-row strong,
+body[data-theme="dark"] #tab-mypage .mypage-mini-kpi strong,
+body[data-theme="dark"] #tab-store .store-shell-title h2,
+body[data-theme="dark"] #tab-store .locker-history-title strong,
+body[data-theme="dark"] #tab-store .locker-history-more strong,
+body[data-theme="dark"] #tab-store .locker-saved-row strong {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-meta-note,
+body[data-theme="dark"] #tab-mypage .mypage-mini-kpi span,
+body[data-theme="dark"] #tab-store .locker-stat-card p,
+body[data-theme="dark"] #tab-store .locker-history-more p,
+body[data-theme="dark"] #tab-store .locker-saved-row em,
+body[data-theme="dark"] #tab-store .locker-history-more-sets {
+    color: #b7c5d8;
+}
+
+@media (max-width: 1100px) {
+    #tab-mypage .mypage-simple-shell,
+    #tab-store .locker-board {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-store .locker-history-list {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    #tab-mypage .mypage-simple-shell,
+    #tab-store .locker-layout,
+    #tab-store .locker-board {
+        gap: 12px;
+    }
+
+    #tab-mypage .mypage-hero-card--account,
+    #tab-mypage .mypage-plan-panel,
+    #tab-store .locker-panel,
+    #tab-store .locker-stat-card {
+        padding: 16px;
+        border-radius: 20px;
+    }
+
+    #tab-store .store-shell-title {
+        align-items: flex-start;
+    }
+
+    #tab-store .locker-summary-grid,
+    #tab-store .locker-history-list {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    #tab-mypage .mypage-account-copy h3,
+    #tab-store .store-shell-title h2 {
+        font-size: 24px;
+    }
+
+    #tab-mypage .mypage-mini-kpis,
+    #tab-store .locker-summary-grid,
+    #tab-store .locker-history-list {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-store .locker-history-head {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
 /* Initial 4-tab simplification */
 #tab-mypage .mypage-simple-shell {
     display: grid;
@@ -20479,5 +20952,426 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
     #tab-draw.draw-wizard-tab .draw-funnel-nav {
         padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    }
+}
+
+/* Final override: compact mypage + locker */
+#tab-mypage.app-shell {
+    background: linear-gradient(180deg, #f5f7fb 0%, #eef3f9 100%) !important;
+}
+
+#tab-mypage .mypage-simple-shell {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+}
+
+#tab-mypage .mypage-hero-card--account,
+#tab-mypage .mypage-plan-panel {
+    padding: 20px !important;
+    border-radius: 26px !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: 0 18px 34px rgba(15, 23, 42, 0.06) !important;
+}
+
+#tab-mypage .mypage-account-copy h3,
+#tab-mypage .mypage-plan-panel .info-header h3 {
+    margin: 4px 0 0 !important;
+    font-size: 26px !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.04em !important;
+}
+
+#tab-mypage .mypage-hero-email {
+    color: #4b5563 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+
+#tab-mypage .mypage-account-meta--compact,
+#tab-mypage .mypage-mini-kpis {
+    display: grid !important;
+    gap: 10px !important;
+}
+
+#tab-mypage .mypage-mini-kpis {
+    grid-template-columns: 1fr !important;
+}
+
+#tab-mypage .mypage-account-meta-row,
+#tab-mypage .mypage-mini-kpi {
+    padding: 14px 16px !important;
+    border-radius: 18px !important;
+    background: #f7f9fc !important;
+    border: 1px solid rgba(15, 23, 42, 0.06) !important;
+}
+
+#tab-mypage .mypage-mini-kpi {
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+#tab-mypage .mypage-account-meta-row strong,
+#tab-mypage .mypage-mini-kpi strong {
+    color: #111827 !important;
+}
+
+#tab-mypage .mypage-account-meta-row strong {
+    font-size: 18px !important;
+}
+
+#tab-mypage .mypage-mini-kpi strong {
+    justify-self: end !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+}
+
+#tab-mypage .mypage-account-meta-note,
+#tab-mypage .mypage-mini-kpi span {
+    color: #667085 !important;
+    font-size: 12px !important;
+}
+
+#tab-mypage .mypage-inline-actions {
+    display: flex !important;
+    gap: 10px !important;
+}
+
+#tab-mypage .mypage-inline-actions .cta,
+#tab-mypage .mypage-inline-actions .ghost,
+#tab-mypage .mypage-plan-cta {
+    min-height: 46px !important;
+    padding: 0 16px !important;
+    border-radius: 16px !important;
+}
+
+#tab-mypage .mypage-plan-cta {
+    width: 100% !important;
+}
+
+#tab-store.app-shell {
+    background: linear-gradient(180deg, #f5f7fb 0%, #eef3f9 100%) !important;
+}
+
+#tab-store .store-shell-title {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    margin-bottom: 14px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+#tab-store .store-shell-title h2 {
+    margin: 4px 0 0 !important;
+    font-size: 28px !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.05em !important;
+}
+
+#tab-store .store-shell-title p {
+    display: none !important;
+}
+
+#tab-store .store-shell-title .ghost {
+    min-height: 42px !important;
+    padding: 0 16px !important;
+    border-radius: 16px !important;
+}
+
+#tab-store .locker-layout {
+    display: grid !important;
+    gap: 14px !important;
+}
+
+#tab-store .locker-summary-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+#tab-store .locker-stat-card {
+    padding: 16px 16px 14px !important;
+    border-radius: 20px !important;
+    gap: 6px !important;
+    box-shadow: 0 14px 26px rgba(15, 23, 42, 0.05) !important;
+}
+
+#tab-store .locker-stat-label {
+    min-height: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    color: #8a94a6 !important;
+    font-size: 11px !important;
+}
+
+#tab-store .locker-stat-card strong {
+    font-size: 24px !important;
+    line-height: 1.02 !important;
+}
+
+#tab-store .locker-stat-card p {
+    color: #667085 !important;
+    font-size: 12px !important;
+    line-height: 1.3 !important;
+}
+
+#tab-store .locker-board {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.22fr) minmax(260px, 0.78fr) !important;
+    gap: 14px !important;
+    align-items: start !important;
+}
+
+#tab-store .locker-panel {
+    padding: 18px !important;
+    border-radius: 24px !important;
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06) !important;
+}
+
+#tab-store .locker-panel-head {
+    align-items: center !important;
+    margin-bottom: 2px !important;
+}
+
+#tab-store .locker-panel-head h3 {
+    margin: 4px 0 0 !important;
+    font-size: 20px !important;
+    line-height: 1.08 !important;
+}
+
+#tab-store .locker-panel-chip {
+    min-height: 26px !important;
+    padding: 0 10px !important;
+    border-radius: 999px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    background: rgba(15, 23, 42, 0.05) !important;
+    border: 1px solid rgba(15, 23, 42, 0.06) !important;
+    color: #667085 !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+}
+
+#tab-store .locker-history-list {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+}
+
+#tab-store .locker-history-card,
+#tab-store .locker-history-more {
+    padding: 14px !important;
+    border-radius: 18px !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%) !important;
+    box-shadow: none !important;
+}
+
+#tab-store .locker-history-head {
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+#tab-store .locker-history-title {
+    gap: 2px !important;
+}
+
+#tab-store .locker-history-meta {
+    font-size: 11px !important;
+    letter-spacing: 0.04em !important;
+}
+
+#tab-store .locker-history-title strong {
+    font-size: 15px !important;
+    line-height: 1.15 !important;
+}
+
+#tab-store .locker-copy-btn {
+    min-height: 32px !important;
+    padding: 0 12px !important;
+    border-radius: 12px !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+}
+
+#tab-store .locker-history-summary {
+    gap: 6px !important;
+}
+
+#tab-store .locker-history-summary span {
+    min-height: 24px !important;
+    padding: 0 9px !important;
+    font-size: 11px !important;
+}
+
+#tab-store .locker-history-sets {
+    display: grid !important;
+    gap: 8px !important;
+}
+
+#tab-store .locker-history-set {
+    padding: 10px 12px !important;
+    border-radius: 16px !important;
+    gap: 6px !important;
+}
+
+#tab-store .locker-history-set-label {
+    font-size: 10px !important;
+}
+
+#tab-store .locker-history-balls {
+    gap: 6px !important;
+}
+
+#tab-store .locker-history-ball {
+    min-width: 28px !important;
+    height: 28px !important;
+    padding: 0 6px !important;
+    font-size: 11px !important;
+}
+
+#tab-store .locker-history-more-sets {
+    color: #667085 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+}
+
+#tab-store .locker-history-more {
+    display: grid !important;
+    place-items: center !important;
+    gap: 4px !important;
+    text-align: center !important;
+    border-style: dashed !important;
+    background: rgba(255, 255, 255, 0.72) !important;
+}
+
+#tab-store .locker-history-more strong {
+    color: #111827 !important;
+    font-size: 16px !important;
+}
+
+#tab-store .locker-history-more p {
+    margin: 0 !important;
+    color: #667085 !important;
+    font-size: 12px !important;
+}
+
+#tab-store .locker-saved-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+}
+
+#tab-store .locker-saved-row {
+    padding: 12px 14px !important;
+    border-radius: 16px !important;
+    gap: 4px !important;
+}
+
+#tab-store .locker-saved-row span {
+    font-size: 10px !important;
+}
+
+#tab-store .locker-saved-row strong {
+    font-size: 16px !important;
+    line-height: 1.2 !important;
+}
+
+#tab-store .locker-saved-row em {
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+}
+
+body[data-theme="dark"] #tab-mypage.app-shell,
+body[data-theme="dark"] #tab-store.app-shell {
+    background: linear-gradient(180deg, #0e1520 0%, #0b111a 100%) !important;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-hero-card--account,
+body[data-theme="dark"] #tab-mypage .mypage-plan-panel,
+body[data-theme="dark"] #tab-store .locker-stat-card,
+body[data-theme="dark"] #tab-store .locker-panel,
+body[data-theme="dark"] #tab-store .locker-history-card,
+body[data-theme="dark"] #tab-store .locker-history-more {
+    background: rgba(12, 18, 28, 0.94) !important;
+    border-color: rgba(137, 180, 255, 0.12) !important;
+    box-shadow: none !important;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-meta-row,
+body[data-theme="dark"] #tab-mypage .mypage-mini-kpi,
+body[data-theme="dark"] #tab-store .locker-history-set,
+body[data-theme="dark"] #tab-store .locker-saved-row,
+body[data-theme="dark"] #tab-store .locker-history-summary span,
+body[data-theme="dark"] #tab-store .locker-panel-chip {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: rgba(137, 180, 255, 0.1) !important;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-copy h3,
+body[data-theme="dark"] #tab-mypage .mypage-hero-email,
+body[data-theme="dark"] #tab-mypage .mypage-account-meta-row strong,
+body[data-theme="dark"] #tab-mypage .mypage-mini-kpi strong,
+body[data-theme="dark"] #tab-store .store-shell-title h2,
+body[data-theme="dark"] #tab-store .locker-history-title strong,
+body[data-theme="dark"] #tab-store .locker-history-more strong,
+body[data-theme="dark"] #tab-store .locker-saved-row strong {
+    color: #f8fafc !important;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-account-meta-note,
+body[data-theme="dark"] #tab-mypage .mypage-mini-kpi span,
+body[data-theme="dark"] #tab-store .locker-stat-card p,
+body[data-theme="dark"] #tab-store .locker-history-more p,
+body[data-theme="dark"] #tab-store .locker-saved-row em,
+body[data-theme="dark"] #tab-store .locker-history-more-sets {
+    color: #b7c5d8 !important;
+}
+
+@media (max-width: 1100px) {
+    #tab-mypage .mypage-simple-shell,
+    #tab-store .locker-board {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 760px) {
+    #tab-mypage .mypage-hero-card--account,
+    #tab-mypage .mypage-plan-panel,
+    #tab-store .locker-panel,
+    #tab-store .locker-stat-card {
+        padding: 16px !important;
+        border-radius: 20px !important;
+    }
+
+    #tab-store .store-shell-title {
+        align-items: flex-start !important;
+    }
+
+    #tab-store .locker-summary-grid,
+    #tab-store .locker-history-list {
+        grid-template-columns: 1fr 1fr !important;
+    }
+}
+
+@media (max-width: 560px) {
+    #tab-mypage .mypage-simple-shell,
+    #tab-store .locker-board,
+    #tab-store .locker-summary-grid,
+    #tab-store .locker-history-list {
+        grid-template-columns: 1fr !important;
+    }
+
+    #tab-mypage .mypage-account-copy h3,
+    #tab-store .store-shell-title h2 {
+        font-size: 24px !important;
     }
 }
