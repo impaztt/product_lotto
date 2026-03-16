@@ -206,6 +206,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawWizardResultTitleEl = document.getElementById('draw-wizard-result-title');
     const drawWizardResultCopyEl = document.getElementById('draw-wizard-result-copy');
     const drawWizardSelfResultShellEl = document.getElementById('draw-wizard-self-result-shell');
+    const drawWizardResultStageEl = document.getElementById('draw-wizard-result-stage');
+    const drawWizardResultStageStateEl = document.getElementById('draw-wizard-result-stage-state');
+    const drawWizardResultStageMetaEl = document.getElementById('draw-wizard-result-stage-meta');
+    const drawWizardResultExcludeStripEl = document.getElementById('draw-wizard-result-exclude-strip');
+    const drawWizardResultReelsEl = document.getElementById('draw-wizard-result-reels');
     const drawWizardRerunBtn = document.getElementById('draw-wizard-rerun-btn');
     const drawWizardEditBtn = document.getElementById('draw-wizard-edit-btn');
     const welcomeModal = document.getElementById('welcome-modal');
@@ -293,6 +298,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawHorizontalTracks = [scenarioGrid, slotGrid].filter(Boolean);
     const excludeNumberValues = new Set();
     let lastGeneratedDraws = [];
+    let drawWizardResultRevealToken = 0;
+    let drawWizardResultPlayedToken = 0;
+    let drawWizardResultTimers = [];
     let lastPremiumDraws = [];
     let currentRemainingRatio = 1;
     let currentRemainingCombos = 0;
@@ -2157,9 +2165,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return extraCount ? `${visible.join(', ')} 외 ${extraCount}개` : visible.join(', ');
     }
 
-    function buildNumberTraitSummary(numbers) {
+    function buildNumberTraitMeta(numbers) {
         if (!Array.isArray(numbers) || numbers.length !== 6) {
-            return '';
+            return [];
         }
         const oddCount = countBy(numbers, number => number % 2 === 1);
         const evenCount = numbers.length - oddCount;
@@ -2167,12 +2175,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const consecutive = longestConsecutiveRun(numbers);
         const pieces = [
             `홀짝 ${oddCount}:${evenCount}`,
-            `합계 ${total}`
+            `합 ${total}`
         ];
         if (consecutive >= 2) {
-            pieces.push(`연속 최대 ${consecutive}개`);
+            pieces.push(`연속 ${consecutive}`);
         }
-        return pieces.join(' · ');
+        return pieces;
+    }
+
+    function buildNumberTraitSummary(numbers) {
+        return buildNumberTraitMeta(numbers).join(' · ');
     }
 
     function buildGeneratedReasonText(numbers, ruleIds = []) {
@@ -2191,16 +2203,181 @@ document.addEventListener('DOMContentLoaded', () => {
         return traits ? `${intro} · ${traits}` : intro;
     }
 
+    function clearDrawWizardResultTimers() {
+        drawWizardResultTimers.forEach(timerId => {
+            window.clearTimeout(timerId);
+        });
+        drawWizardResultTimers = [];
+    }
+
+    function queueDrawWizardResultTimer(callback, delay = 0) {
+        const timerId = window.setTimeout(() => {
+            drawWizardResultTimers = drawWizardResultTimers.filter(id => id !== timerId);
+            callback();
+        }, Math.max(0, delay));
+        drawWizardResultTimers.push(timerId);
+        return timerId;
+    }
+
+    function getDrawWizardResultStatusText(drawCount = lastGeneratedDraws.length) {
+        const excludeCount = normalizeDrawWizardExcludeNumbers(drawWizardState?.excludeNumbers).length;
+        return excludeCount
+            ? `제외수 ${excludeCount}개 반영 · ${drawCount}세트`
+            : `${drawCount}세트 추첨 완료`;
+    }
+
+    function renderDrawWizardResultStage(draws = lastGeneratedDraws) {
+        if (!drawWizardResultStageEl || !drawWizardResultStageStateEl || !drawWizardResultStageMetaEl || !drawWizardResultReelsEl) {
+            return;
+        }
+        const previewNumbers = Array.isArray(draws?.[0]?.numbers) ? draws[0].numbers : [];
+        const excludeNumbers = normalizeDrawWizardExcludeNumbers(drawWizardState?.excludeNumbers);
+        drawWizardResultStageEl.dataset.state = 'idle';
+        drawWizardResultStageStateEl.textContent = excludeNumbers.length ? '제외수 정리' : '추첨 준비';
+        drawWizardResultStageMetaEl.textContent = `${Math.max(1, draws.length || 1)}세트`;
+        drawWizardResultReelsEl.innerHTML = Array.from({ length: 6 }, (_, index) => {
+            const finalNumber = Number(previewNumbers[index] || 0);
+            const spinNumbers = generateUniqueNumbers(3, 1, 45)
+                .map(value => String(value).padStart(2, '0'))
+                .join(' ');
+            return `
+                <div class="draw-wizard-result-slot" data-slot-index="${index}">
+                    <span class="draw-wizard-result-slot-spin">${escapeHtml(spinNumbers)}</span>
+                    <span class="draw-wizard-result-slot-value">${finalNumber ? escapeHtml(String(finalNumber)) : '&nbsp;'}</span>
+                </div>
+            `;
+        }).join('');
+        if (!drawWizardResultExcludeStripEl) {
+            return;
+        }
+        if (!excludeNumbers.length) {
+            drawWizardResultExcludeStripEl.hidden = true;
+            drawWizardResultExcludeStripEl.innerHTML = '';
+            return;
+        }
+        const visibleExcludeNumbers = excludeNumbers.slice(0, 12);
+        const extraExcludeCount = Math.max(0, excludeNumbers.length - visibleExcludeNumbers.length);
+        drawWizardResultExcludeStripEl.hidden = false;
+        drawWizardResultExcludeStripEl.innerHTML = `
+            ${visibleExcludeNumbers.map(number => `
+                <span class="draw-wizard-result-exclude-ball ${escapeHtml(getExcludeRangeClass(number))}">${escapeHtml(String(number))}</span>
+            `).join('')}
+            ${extraExcludeCount ? `<span class="draw-wizard-result-exclude-more">+${escapeHtml(String(extraExcludeCount))}</span>` : ''}
+        `;
+    }
+
+    function finalizeDrawWizardResultExperience(draws = lastGeneratedDraws) {
+        renderDrawWizardResultStage(draws);
+        if (drawWizardResultStageEl) {
+            drawWizardResultStageEl.dataset.state = 'done';
+        }
+        if (drawWizardResultStageStateEl) {
+            drawWizardResultStageStateEl.textContent = '추첨 완료';
+        }
+        if (drawWizardResultStageMetaEl) {
+            drawWizardResultStageMetaEl.textContent = `${Math.max(1, draws.length || 1)}세트`;
+        }
+        if (drawWizardResultExcludeStripEl) {
+            drawWizardResultExcludeStripEl.querySelectorAll('.draw-wizard-result-exclude-ball').forEach(ball => {
+                ball.classList.add('is-dismissed');
+            });
+        }
+        if (drawWizardResultReelsEl) {
+            drawWizardResultReelsEl.querySelectorAll('.draw-wizard-result-slot').forEach(slot => {
+                slot.classList.add('is-revealed');
+            });
+        }
+        if (numbersContainer) {
+            numbersContainer.querySelectorAll('.number-row--wizard-result').forEach(row => {
+                row.classList.add('is-revealed');
+            });
+        }
+        setDrawCopyStatus(getDrawWizardResultStatusText(draws.length || 0));
+    }
+
+    function startDrawWizardResultExperience(draws = lastGeneratedDraws) {
+        if (!drawWizardResultStageEl || !Array.isArray(draws) || !draws.length) {
+            return;
+        }
+        clearDrawWizardResultTimers();
+        renderDrawWizardResultStage(draws);
+        const excludeBalls = Array.from(drawWizardResultExcludeStripEl?.querySelectorAll('.draw-wizard-result-exclude-ball') || []);
+        const slots = Array.from(drawWizardResultReelsEl?.querySelectorAll('.draw-wizard-result-slot') || []);
+        const rows = Array.from(numbersContainer?.querySelectorAll('.number-row--wizard-result') || []);
+        rows.forEach(row => row.classList.remove('is-revealed'));
+        slots.forEach(slot => slot.classList.remove('is-revealed'));
+        excludeBalls.forEach(ball => ball.classList.remove('is-dismissed'));
+        drawWizardResultStageEl.dataset.state = 'spinning';
+        if (drawWizardResultStageStateEl) {
+            drawWizardResultStageStateEl.textContent = excludeBalls.length ? '제외수 정리' : '번호 추첨 중';
+        }
+        if (drawWizardResultStageMetaEl) {
+            drawWizardResultStageMetaEl.textContent = `${draws.length}세트`;
+        }
+        const excludePhaseDelay = excludeBalls.length ? Math.min(820, 140 + excludeBalls.length * 70) : 0;
+        excludeBalls.forEach((ball, index) => {
+            queueDrawWizardResultTimer(() => {
+                ball.classList.add('is-dismissed');
+            }, 110 + index * 70);
+        });
+        const slotStartDelay = 260 + excludePhaseDelay;
+        slots.forEach((slot, index) => {
+            queueDrawWizardResultTimer(() => {
+                if (drawWizardResultStageStateEl) {
+                    drawWizardResultStageStateEl.textContent = '번호 추첨 중';
+                }
+                slot.classList.add('is-revealed');
+            }, slotStartDelay + index * 180);
+        });
+        const rowStartDelay = slotStartDelay + slots.length * 180 + 180;
+        rows.forEach((row, index) => {
+            queueDrawWizardResultTimer(() => {
+                row.classList.add('is-revealed');
+            }, rowStartDelay + index * 170);
+        });
+        queueDrawWizardResultTimer(() => {
+            drawWizardResultStageEl.dataset.state = 'done';
+            if (drawWizardResultStageStateEl) {
+                drawWizardResultStageStateEl.textContent = '추첨 완료';
+            }
+            if (drawWizardResultStageMetaEl) {
+                drawWizardResultStageMetaEl.textContent = `${draws.length}세트`;
+            }
+            setDrawCopyStatus(getDrawWizardResultStatusText(draws.length));
+        }, rowStartDelay + rows.length * 170);
+    }
+
+    function syncDrawWizardResultExperience(currentStep = getDrawWizardCurrentStep()) {
+        if (currentStep !== 'result') {
+            clearDrawWizardResultTimers();
+            return;
+        }
+        if (!lastGeneratedDraws.length) {
+            return;
+        }
+        if (drawWizardResultRevealToken && drawWizardResultRevealToken !== drawWizardResultPlayedToken) {
+            drawWizardResultPlayedToken = drawWizardResultRevealToken;
+            startDrawWizardResultExperience(lastGeneratedDraws);
+            return;
+        }
+        clearDrawWizardResultTimers();
+        finalizeDrawWizardResultExperience(lastGeneratedDraws);
+    }
+
     function displayNumbers(draws, options = {}) {
         numbersContainer.innerHTML = '';
         lastGeneratedDraws = [];
+        const isWizardResult = options.source === 'wizard';
         draws.forEach((numbers, index) => {
             const row = document.createElement('div');
             row.classList.add('number-row');
+            if (isWizardResult) {
+                row.classList.add('number-row--wizard-result');
+            }
 
             const label = document.createElement('div');
             label.classList.add('row-label');
-            label.textContent = `세트 ${index + 1}`;
+            label.textContent = isWizardResult ? `SET ${index + 1}` : `세트 ${index + 1}`;
             row.appendChild(label);
 
             if (numbers.length === 0) {
@@ -2214,9 +2391,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const balls = document.createElement('div');
             balls.className = 'number-balls';
-            numbers.forEach(number => {
+            numbers.forEach((number, numberIndex) => {
                 const numberElement = document.createElement('div');
                 numberElement.classList.add('number');
+                if (isWizardResult) {
+                    numberElement.style.setProperty('--draw-ball-delay', `${numberIndex * 80}ms`);
+                }
                 numberElement.textContent = number;
                 balls.appendChild(numberElement);
             });
@@ -2224,7 +2404,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const reason = document.createElement('div');
             reason.className = 'row-reason';
-            reason.textContent = buildGeneratedReasonText(numbers, options.ruleIds);
+            if (isWizardResult) {
+                const tags = buildNumberTraitMeta(numbers);
+                reason.classList.add('row-reason--tags');
+                if (tags.length) {
+                    reason.innerHTML = tags.map(tag => `<span class="draw-wizard-result-tag">${escapeHtml(tag)}</span>`).join('');
+                } else {
+                    reason.hidden = true;
+                }
+            } else {
+                reason.textContent = buildGeneratedReasonText(numbers, options.ruleIds);
+            }
             row.appendChild(reason);
 
             lastGeneratedDraws.push({
@@ -2238,7 +2428,11 @@ document.addEventListener('DOMContentLoaded', () => {
             setDrawCopyStatus('유효한 조합을 찾지 못했습니다. 필터를 조금 줄여 보세요.', true);
             return 0;
         }
-        setDrawCopyStatus(`총 ${lastGeneratedDraws.length}세트를 생성했습니다. 아래 결과를 확인해 주세요.`);
+        setDrawCopyStatus(
+            isWizardResult
+                ? getDrawWizardResultStatusText(lastGeneratedDraws.length)
+                : `총 ${lastGeneratedDraws.length}세트를 생성했습니다. 아래 결과를 확인해 주세요.`
+        );
         if (lastGeneratedDraws.length) {
             recordGenerationStats({
                 sourceMode: 'self',
@@ -4145,14 +4339,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 : '이전 선택을 그대로 불러올 수 있습니다.';
         }
         if (drawWizardResultTitleEl) {
-            drawWizardResultTitleEl.textContent = '선택한 조건에 맞는 추천 조합이 준비됐습니다';
+            drawWizardResultTitleEl.textContent = '추첨 완료';
         }
         if (drawWizardResultCopyEl) {
-            drawWizardResultCopyEl.textContent = '같은 조건으로 다시 추첨하거나 이전 단계로 돌아가 규칙을 다시 고를 수 있습니다.';
+            drawWizardResultCopyEl.textContent = '';
+            drawWizardResultCopyEl.hidden = true;
         }
         if (drawWizardSelfResultShellEl) {
             drawWizardSelfResultShellEl.hidden = false;
         }
+        syncDrawWizardResultExperience(currentStep);
         if (drawWizardLastViewKey && drawWizardLastViewKey !== currentViewKey) {
             triggerDrawWizardTransition();
         }
@@ -4229,6 +4425,8 @@ document.addEventListener('DOMContentLoaded', () => {
             renderDrawWizard();
             return false;
         }
+        drawWizardResultRevealToken = Date.now();
+        drawWizardResultPlayedToken = 0;
         drawWizardState.currentStep = 'result';
         drawWizardState.completed = true;
         commitDrawWizardState({

@@ -2124,22 +2124,27 @@
                                     </article>
                                 </div>
                             </section>
-	                            <section class="draw-funnel-panel" data-draw-wizard-step="result" hidden>
-	                                <div class="draw-funnel-copy">
-	                                    <span class="draw-funnel-step-kicker">추첨 결과</span>
-	                                    <h3 id="draw-wizard-result-title">선택한 조건에 맞는 추천 조합이 준비됐습니다</h3>
-	                                    <p id="draw-wizard-result-copy">같은 조건으로 다시 추첨하거나 이전 단계로 돌아가 규칙을 고쳐볼 수 있습니다.</p>
-	                                </div>
-	                                <div class="draw-funnel-result-shell" id="draw-wizard-self-result-shell">
-	                                    <div class="draw-wizard-result-actions">
-	                                        <button id="draw-wizard-rerun-btn" class="cta" type="button">같은 조건으로 다시 추첨</button>
-	                                        <button id="draw-copy-all-btn" class="ghost" type="button" disabled>결과 복사</button>
-	                                        <button id="draw-wizard-edit-btn" class="ghost" type="button">규칙 다시 고르기</button>
-	                                    </div>
-	                                    <div class="numbers-container"></div>
-	                                    <p class="helper-text" id="draw-copy-status" aria-live="polite"></p>
-	                                </div>
-	                            </section>
+		                            <section class="draw-funnel-panel" data-draw-wizard-step="result" hidden>
+		                                <div class="draw-funnel-copy draw-funnel-copy--result">
+		                                    <h3 id="draw-wizard-result-title">추첨 완료</h3>
+		                                </div>
+		                                <div class="draw-funnel-result-shell" id="draw-wizard-self-result-shell">
+		                                    <div class="draw-wizard-result-stage" id="draw-wizard-result-stage" data-state="idle" aria-live="polite">
+		                                        <div class="draw-wizard-result-stage-top">
+		                                            <span class="draw-wizard-result-stage-chip" id="draw-wizard-result-stage-state">추첨 준비</span>
+		                                            <span class="draw-wizard-result-stage-meta" id="draw-wizard-result-stage-meta">1세트</span>
+		                                        </div>
+		                                        <div class="draw-wizard-result-exclude-strip" id="draw-wizard-result-exclude-strip" hidden></div>
+		                                        <div class="draw-wizard-result-reels" id="draw-wizard-result-reels"></div>
+		                                    </div>
+		                                    <div class="numbers-container"></div>
+		                                    <div class="draw-wizard-result-actions">
+		                                        <button id="draw-wizard-rerun-btn" class="cta" type="button">다시 추첨</button>
+		                                        <button id="draw-wizard-edit-btn" class="ghost" type="button">조건 보기</button>
+		                                    </div>
+		                                    <p class="helper-text" id="draw-copy-status" aria-live="polite"></p>
+		                                </div>
+		                            </section>
 	                        </div>
 	                        <div class="draw-funnel-nav" id="draw-wizard-nav" hidden>
 	                            <button id="draw-wizard-prev-btn" class="ghost" type="button">이전</button>
