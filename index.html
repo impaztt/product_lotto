@@ -2080,60 +2080,50 @@
 	                                    </label>
 	                                </div>
 	                            </section>
-	                            <section class="draw-funnel-panel" data-draw-wizard-step="review" hidden>
-	                                <div class="draw-funnel-copy">
-	                                    <span class="draw-funnel-step-kicker">최종 확인</span>
-	                                    <h3>지금 조건을 한눈에 보고 바로 추첨하세요</h3>
-	                                    <p>규칙과 직접 제외수, 남는 후보 수, 기대 변화까지 한 번에 확인하고 바로 생성합니다.</p>
-	                                </div>
-	                                <div id="draw-wizard-review-overview" class="draw-funnel-review-overview"></div>
-	                                <div class="draw-funnel-review-grid">
-	                                    <article class="draw-funnel-review-card">
-	                                        <span class="draw-funnel-review-label">핵심 지표</span>
-	                                        <div id="draw-wizard-review-summary" class="draw-funnel-review-metrics"></div>
-	                                    </article>
-	                                    <article class="draw-funnel-review-card">
-	                                        <span class="draw-funnel-review-label">그룹별 선택</span>
-	                                        <div id="draw-wizard-review-groups" class="draw-funnel-review-groups"></div>
-	                                    </article>
-	                                    <article class="draw-funnel-review-card">
-	                                        <span class="draw-funnel-review-label">직접 제외수</span>
-	                                        <div id="draw-wizard-review-excludes" class="draw-funnel-review-excludes"></div>
-	                                    </article>
-	                                    <article class="draw-funnel-review-card">
-	                                        <span class="draw-funnel-review-label">생성 세트 수</span>
-	                                        <div class="draw-count-wrap">
-	                                            <label for="draw-count">한 번에 생성할 세트</label>
-	                                            <select id="draw-count" class="draw-count-native">
-	                                                <option value="1" selected>1</option>
-	                                                <option value="2">2</option>
-	                                                <option value="3">3</option>
-	                                                <option value="4">4</option>
-	                                                <option value="5">5</option>
-	                                                <option value="6">6</option>
-	                                                <option value="7">7</option>
-	                                                <option value="8">8</option>
-	                                                <option value="9">9</option>
-	                                                <option value="10">10</option>
-	                                            </select>
-	                                            <div class="draw-count-scroller" role="radiogroup" aria-label="한 번에 생성할 세트">
-	                                                <button class="draw-count-chip is-active" type="button" data-draw-count="1" aria-pressed="true">1세트</button>
-	                                                <button class="draw-count-chip" type="button" data-draw-count="3" aria-pressed="false">3세트</button>
-	                                                <button class="draw-count-chip" type="button" data-draw-count="5" aria-pressed="false">5세트</button>
-	                                                <button class="draw-count-chip" type="button" data-draw-count="7" aria-pressed="false">7세트</button>
-	                                                <button class="draw-count-chip" type="button" data-draw-count="10" aria-pressed="false">10세트</button>
-	                                            </div>
-	                                        </div>
-	                                        <div class="notice-bar" id="guest-banner">비회원도 바로 생성할 수 있고, 로그인하면 생성 기록을 이어서 볼 수 있습니다.</div>
-	                                        <p class="helper-text" id="guest-limit">비회원은 가볍게 생성할 수 있고, 로그인하면 기록과 저장 흐름을 이어서 씁니다.</p>
-	                                    </article>
-	                                    <article class="draw-funnel-review-card draw-funnel-review-card--warning">
-	                                        <span class="draw-funnel-review-label">추첨 전 확인</span>
-	                                        <strong id="draw-wizard-warning-title">최소 1개 규칙을 선택해 주세요.</strong>
-	                                        <p id="draw-wizard-warning-body">규칙 라이브러리 항목이나 직접 제외수를 하나 이상 고르면 추첨을 시작할 수 있습니다.</p>
-	                                    </article>
-	                                </div>
-	                            </section>
+                            <section class="draw-funnel-panel" data-draw-wizard-step="review" hidden>
+                                <div id="draw-wizard-review-overview" class="draw-funnel-review-overview"></div>
+                                <div class="draw-funnel-review-grid">
+                                    <article class="draw-funnel-review-card draw-funnel-review-card--metrics">
+                                        <span class="draw-funnel-review-label">핵심</span>
+                                        <div id="draw-wizard-review-summary" class="draw-funnel-review-metrics"></div>
+                                    </article>
+                                    <article class="draw-funnel-review-card draw-funnel-review-card--groups">
+                                        <span class="draw-funnel-review-label">규칙</span>
+                                        <div id="draw-wizard-review-groups" class="draw-funnel-review-groups"></div>
+                                    </article>
+                                    <article class="draw-funnel-review-card draw-funnel-review-card--excludes">
+                                        <span class="draw-funnel-review-label">제외수</span>
+                                        <div id="draw-wizard-review-excludes" class="draw-funnel-review-excludes"></div>
+                                    </article>
+                                    <article class="draw-funnel-review-card draw-funnel-review-card--count">
+                                        <span class="draw-funnel-review-label">세트</span>
+                                        <div class="draw-count-wrap">
+                                            <label for="draw-count">한 번에 생성할 세트</label>
+                                            <select id="draw-count" class="draw-count-native">
+                                                <option value="1" selected>1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                            </select>
+                                            <div class="draw-count-scroller" role="radiogroup" aria-label="한 번에 생성할 세트">
+                                                <button class="draw-count-chip is-active" type="button" data-draw-count="1" aria-pressed="true">1세트</button>
+                                                <button class="draw-count-chip" type="button" data-draw-count="3" aria-pressed="false">3세트</button>
+                                                <button class="draw-count-chip" type="button" data-draw-count="5" aria-pressed="false">5세트</button>
+                                                <button class="draw-count-chip" type="button" data-draw-count="7" aria-pressed="false">7세트</button>
+                                                <button class="draw-count-chip" type="button" data-draw-count="10" aria-pressed="false">10세트</button>
+                                            </div>
+                                        </div>
+                                        <div class="draw-funnel-review-guest" id="guest-banner">비회원 바로 생성</div>
+                                        <p class="draw-funnel-review-limit" id="guest-limit">비회원 1세트</p>
+                                    </article>
+                                </div>
+                            </section>
 	                            <section class="draw-funnel-panel" data-draw-wizard-step="result" hidden>
 	                                <div class="draw-funnel-copy">
 	                                    <span class="draw-funnel-step-kicker">추첨 결과</span>

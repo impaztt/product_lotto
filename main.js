@@ -536,10 +536,10 @@ document.addEventListener('DOMContentLoaded', () => {
             navNote: '직접 제외수는 선택 사항이지만 생성 직전에 바로 반영됩니다.'
         },
         review: {
-            title: '최종 확인 대시보드',
-            copy: '규칙, 직접 제외수, 남은 후보와 기대 변화를 한눈에 확인한 뒤 바로 추첨합니다.',
-            navTitle: '최종 확인',
-            navNote: '최소 1개 규칙 또는 직접 제외수가 있어야 추첨할 수 있습니다.'
+            title: '조건 대시보드',
+            copy: '한 화면에서 확인하고 바로 추첨합니다.',
+            navTitle: '대시보드',
+            navNote: '조건만 확인하고 바로 추첨'
         },
         result: {
             title: '추첨 결과가 준비됐습니다',
@@ -3707,39 +3707,41 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentFirstOdds = Math.max(1, Math.round(baseFirstOdds * (remainRatio || 1)));
         const benefitPct = Math.max(0, Math.round((1 - remainRatio) * 100));
         const groupedSelections = getDrawWizardGroupedSelections();
+        const activeConditionCount = selectedRuleCount + (excludeCount ? 1 : 0);
         const overviewState = restriction.blocked
             ? 'warning'
             : benefitPct > 0
                 ? 'positive'
                 : 'neutral';
-        const overviewHeadline = restriction.blocked
-            ? restriction.title
+        const overviewStatus = restriction.blocked
+            ? (activeConditionCount ? '조건 조정' : '선택 필요')
             : benefitPct > 0
-                ? `현재 조건으로 후보를 ${remainPct}%까지 정리했습니다`
-                : '기본 범위에 가까운 상태입니다';
-        const overviewCopy = restriction.blocked
-            ? restriction.body
-            : benefitPct > 0
-                ? `규칙 ${selectedRuleCount}개와 직접 제외수 ${excludeCount}개가 반영되어 ${formatNumber(excludedCombos)}개 조합이 제외됩니다.`
-                : '선택한 조건이 가벼워 기본 범위와 유사한 후보군에서 번호를 생성합니다.';
+                ? '바로 추첨'
+                : '기본 범위';
+        const overviewHeadline = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)}`;
+        const overviewBadges = [
+            `1등 ${formatDrawWizardCompactOddsLabel(currentFirstOdds)}`,
+            `규칙 ${selectedRuleCount}개`,
+            excludeCount ? `제외수 ${excludeCount}개` : '제외수 없음',
+            `${drawCount}세트`
+        ];
         if (drawWizardReviewOverviewEl) {
-            const gaugeAngle = Math.max(0, Math.min(360, Math.round((restriction.blocked ? excludedPct : benefitPct) * 3.6)));
+            const gaugeAngle = Math.max(0, Math.min(360, Math.round(excludedPct * 3.6)));
             drawWizardReviewOverviewEl.dataset.state = overviewState;
             drawWizardReviewOverviewEl.innerHTML = `
                 <div class="draw-funnel-review-overview-copy">
-                    <span class="draw-funnel-review-overview-kicker">${escapeHtml(restriction.blocked ? '조건 점검 필요' : '추첨 직전 대시보드')}</span>
+                    <span class="draw-funnel-review-overview-kicker">${escapeHtml(overviewStatus)}</span>
                     <strong>${escapeHtml(overviewHeadline)}</strong>
-                    <p>${escapeHtml(overviewCopy)}</p>
                     <div class="draw-funnel-review-overview-badges">
-                        <span class="draw-funnel-review-overview-badge">규칙 ${escapeHtml(String(selectedRuleCount))}개</span>
-                        <span class="draw-funnel-review-overview-badge">직접 제외 ${escapeHtml(String(excludeCount))}개</span>
-                        <span class="draw-funnel-review-overview-badge">${escapeHtml(String(drawCount))}세트 생성</span>
+                        ${overviewBadges.map(badge => `
+                            <span class="draw-funnel-review-overview-badge">${escapeHtml(badge)}</span>
+                        `).join('')}
                     </div>
                 </div>
                 <div class="draw-funnel-review-overview-gauge" style="--draw-review-angle:${gaugeAngle}deg;">
                     <div class="draw-funnel-review-overview-gauge-body">
-                        <strong>${escapeHtml(restriction.blocked ? `${remainPct}%` : benefitPct ? `+${benefitPct}%` : '기본')}</strong>
-                        <span>${escapeHtml(restriction.blocked ? '남은 비중' : benefitPct ? '1등 기대' : '현재 범위')}</span>
+                        <strong>${escapeHtml(`${excludedPct}%`)}</strong>
+                        <span>${escapeHtml(restriction.blocked ? '제외 과다' : '제외율')}</span>
                     </div>
                 </div>
             `;
@@ -3747,27 +3749,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (drawWizardReviewSummaryEl) {
             const summaryRows = [
                 {
-                    label: '남은 후보',
-                    value: `${formatNumber(remainingCombos)}개`,
-                    note: `전체의 ${remainPct}%`,
+                    label: '남은 비중',
+                    value: `${remainPct}%`,
+                    note: formatDrawWizardCompactCount(remainingCombos),
                     tone: 'range'
                 },
                 {
-                    label: '제외된 조합',
-                    value: `${formatNumber(excludedCombos)}개`,
-                    note: `전체의 ${excludedPct}%`,
+                    label: '제외 조합',
+                    value: formatDrawWizardCompactCount(excludedCombos),
+                    note: `${excludedPct}% 제외`,
                     tone: 'exclude'
                 },
                 {
-                    label: '1등 기준',
-                    value: formatDrawWizardCompactOddsLabel(currentFirstOdds),
-                    note: benefitPct ? `기대 +${benefitPct}%` : '기본과 유사',
-                    tone: 'odds'
-                },
-                {
                     label: '활성 조건',
-                    value: `${selectedRuleCount + (excludeCount ? 1 : 0)}개`,
-                    note: excludeCount ? `직접 제외 ${excludeCount}개 포함` : '규칙만 반영',
+                    value: `${activeConditionCount}개`,
+                    note: excludeCount ? `규칙 ${selectedRuleCount} · 제외 ${excludeCount}` : `규칙 ${selectedRuleCount}`,
                     tone: 'rules'
                 }
             ];
@@ -3787,10 +3783,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             <strong>${escapeHtml(group.groupLabel)}</strong>
                             <span>${escapeHtml(String(group.rules.length))}개</span>
                         </div>
-                        <p>${escapeHtml(group.rules.map(rule => rule.title).join(', '))}</p>
+                        <p>${escapeHtml(
+                            group.rules.length <= 2
+                                ? group.rules.map(rule => rule.title).join(' · ')
+                                : `${group.rules.length}개 선택`
+                        )}</p>
                     </div>
                 `).join('')
-                : '<div class="draw-funnel-empty-state">아직 선택된 규칙이 없습니다.</div>';
+                : '<div class="draw-funnel-empty-state">선택 없음</div>';
         }
         if (drawWizardReviewExcludesEl) {
             drawWizardReviewExcludesEl.innerHTML = excludeNumbers.length
@@ -3800,9 +3800,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="exclude-number-ball ${escapeHtml(getExcludeRangeClass(number))} is-active">${escapeHtml(String(number))}</span>
                         `).join('')}
                     </div>
-                    <p class="draw-funnel-review-exclude-note">선택한 숫자가 포함된 조합은 모두 제외됩니다.</p>
                 `
-                : '<div class="draw-funnel-empty-state">직접 제외수를 고르지 않으면 규칙만으로 번호를 추립니다.</div>';
+                : '<div class="draw-funnel-empty-state">없음</div>';
         }
     }
 
@@ -3917,7 +3916,7 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedCount,
         excludeCount
     }) {
-        const showDashboard = Boolean(drawWizardDashboardEl && currentStep !== 'start');
+        const showDashboard = Boolean(drawWizardDashboardEl && currentStep !== 'start' && currentStep !== 'review');
         if (drawWizardStageEl) {
             drawWizardStageEl.classList.toggle('has-dashboard', showDashboard);
         }
@@ -6433,17 +6432,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return true;
         }
         if (isAuthStatePending()) {
-            guestLimitEl.textContent = '로그인 상태 확인 중입니다. 잠시만 기다려 주세요.';
+            guestLimitEl.textContent = '상태 확인 중';
             if (guestBannerEl) {
-                guestBannerEl.textContent = '저장된 로그인 상태를 확인하고 있습니다.';
+                guestBannerEl.textContent = '확인 중';
             }
             return false;
         }
         const drawCount = parseInt(drawCountSelect.value, 10);
         if (isMember()) {
-            guestLimitEl.textContent = '가입 완료(로그인) 상태: 제한 없이 이용 가능합니다.';
+            guestLimitEl.textContent = '로그인 · 제한 없음';
             if (guestBannerEl) {
-                guestBannerEl.textContent = '가입 완료(로그인) 상태입니다. 모든 기능을 제한 없이 이용할 수 있습니다.';
+                guestBannerEl.textContent = '로그인 완료';
             }
             return true;
         }
@@ -6452,22 +6451,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const countKey = `guest_count_${todayKey}`;
         const current = Number(localStorage.getItem(countKey) || 0);
         if (drawCount > 1) {
-            guestLimitEl.textContent = '미로그인 사용자는 1회 1세트만 가능합니다. 로그인 후 이용해 주세요.';
+            guestLimitEl.textContent = '비회원 1세트만';
             if (guestBannerEl) {
-                guestBannerEl.textContent = '미로그인 제한으로 1회 1세트만 가능합니다. 로그인하면 가입 완료로 처리되어 제한이 해제됩니다.';
+                guestBannerEl.textContent = '로그인 시 다중 생성';
             }
             return false;
         }
         if (current >= limit) {
-            guestLimitEl.textContent = '미로그인 사용자 하루 50회 제한을 초과했습니다. 로그인 후 이용해 주세요.';
+            guestLimitEl.textContent = '비회원 한도 초과';
             if (guestBannerEl) {
-                guestBannerEl.textContent = '미로그인 사용자 하루 50회 제한을 초과했습니다. 로그인 후 이용해 주세요.';
+                guestBannerEl.textContent = '로그인 후 계속';
             }
             return false;
         }
-        guestLimitEl.textContent = `미로그인 사용자 남은 횟수: ${limit - current}회 (1회 1세트)`;
+        guestLimitEl.textContent = `비회원 ${limit - current}회 남음`;
         if (guestBannerEl) {
-            guestBannerEl.textContent = `미로그인 사용자 남은 횟수: ${limit - current}회 (1회 1세트)`;
+            guestBannerEl.textContent = '비회원 바로 생성';
         }
         return true;
     }
@@ -6484,9 +6483,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const current = Number(localStorage.getItem(countKey) || 0);
         const next = current + 1;
         localStorage.setItem(countKey, String(next));
-        guestLimitEl.textContent = `미로그인 사용자 남은 횟수: ${Math.max(0, 50 - next)}회 (1회 1세트)`;
+        guestLimitEl.textContent = `비회원 ${Math.max(0, 50 - next)}회 남음`;
         if (guestBannerEl) {
-            guestBannerEl.textContent = `미로그인 사용자 남은 횟수: ${Math.max(0, 50 - next)}회 (1회 1세트)`;
+            guestBannerEl.textContent = '비회원 바로 생성';
         }
     }
 
