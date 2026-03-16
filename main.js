@@ -3561,11 +3561,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const ratio = Math.max(0, Math.min(0.95, Number(stat?.ratio) || 0));
         if (!ratio) {
             return {
-                label: active ? '적용 중' : '선택 시',
+                label: '1등 기대',
                 value: '기본',
-                note: active ? '현재 반영됨' : '추가 반영',
+                note: active ? '현재 유지' : '변화 적음',
                 meterPct: 12,
-                stateLabel: active ? '제외 선택됨' : '눌러서 제외'
+                stateLabel: active ? '적용됨' : '탭해서 제외'
             };
         }
         const gainPct = ((1 / (1 - ratio)) - 1) * 100;
@@ -3574,13 +3574,11 @@ document.addEventListener('DOMContentLoaded', () => {
             ? Math.round(currentCombos * (ratio / (1 - ratio)))
             : Math.round(currentCombos * ratio);
         return {
-            label: active ? '적용 중' : '선택 시',
+            label: '1등 기대',
             value: `+${Math.max(1, Math.round(gainPct))}%`,
-            note: active
-                ? `${formatDrawWizardCompactCount(affectedCombos)} 줄인 상태`
-                : `${formatDrawWizardCompactCount(affectedCombos)} 더 제외`,
+            note: `${active ? '현재' : '선택 시'} 후보 ${formatDrawWizardCompactCount(affectedCombos)}↓`,
             meterPct: Math.max(14, Math.min(100, Math.round(gainPct))),
-            stateLabel: active ? '제외 선택됨' : '눌러서 제외'
+            stateLabel: active ? '적용됨' : '탭해서 제외'
         };
     }
 
@@ -3629,8 +3627,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p class="draw-funnel-rule-impact-note">${escapeHtml(impact.note)}</p>
                             <span class="draw-funnel-rule-state">${escapeHtml(impact.stateLabel)}</span>
                         </div>
+                        ${getDrawWizardRulePreviewHtml(rule.id)}
                     </div>
-                    ${getDrawWizardRulePreviewHtml(rule.id)}
                 </button>
             `;
         }).join('');

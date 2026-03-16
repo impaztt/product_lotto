@@ -18220,9 +18220,10 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     padding: 14px;
     border-radius: 20px;
     display: grid;
-    grid-template-rows: auto 1fr;
-    gap: 10px;
+    grid-template-rows: auto;
+    gap: 0;
     text-align: left;
+    overflow: hidden;
     transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
@@ -18245,12 +18246,17 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-main {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 116px;
-    gap: 12px;
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr) 118px;
+    grid-template-areas:
+        "copy impact"
+        "sample impact";
+    gap: 10px 12px;
+    align-items: stretch;
+    min-width: 0;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-copy {
+    grid-area: copy;
     min-width: 0;
     display: grid;
     gap: 6px;
@@ -18264,21 +18270,21 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-impact {
+    grid-area: impact;
     min-width: 0;
     padding: 10px;
     border-radius: 16px;
     display: grid;
-    gap: 6px;
-    align-content: start;
+    gap: 5px;
+    align-content: space-between;
     background: linear-gradient(180deg, rgba(244, 248, 252, 0.98), rgba(237, 244, 250, 0.92));
     border: 1px solid rgba(19, 38, 61, 0.08);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-label {
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: 0.01em;
     color: rgba(19, 38, 61, 0.56);
 }
 
@@ -18307,17 +18313,24 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-note {
     margin: 0;
-    font-size: 10px;
-    line-height: 1.35;
+    font-size: 11px;
+    line-height: 1.28;
     color: #5f738a;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-samples {
-    margin-top: 2px;
+    grid-area: sample;
+    display: flex;
+    min-width: 0;
+    margin-top: 0;
     gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-samples .rule-sample-label {
+    padding: 0 8px;
+    font-size: 10px;
     background: rgba(19, 38, 61, 0.06);
 }
 
@@ -18338,8 +18351,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     background: rgba(19, 38, 61, 0.07);
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
+    letter-spacing: 0;
     color: #38546d;
 }
 
@@ -18639,12 +18651,11 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     #tab-draw.draw-wizard-tab .draw-funnel-rule-card {
         padding: 13px;
         border-radius: 18px;
-        gap: 8px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-main {
-        grid-template-columns: minmax(0, 1fr) 108px;
-        gap: 10px;
+        grid-template-columns: minmax(0, 1fr) 104px;
+        gap: 9px 10px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-impact {
@@ -18653,12 +18664,16 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
         gap: 5px;
     }
 
+    #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-label {
+        font-size: 9px;
+    }
+
     #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-value {
         font-size: 17px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-note {
-        font-size: 9px;
+        font-size: 10px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-state {
@@ -18753,7 +18768,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-main {
-        grid-template-columns: minmax(0, 1fr) 100px;
+        grid-template-columns: minmax(0, 1fr) 96px;
         gap: 8px;
     }
 
@@ -18763,6 +18778,10 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-value {
         font-size: 16px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-note {
+        font-size: 9px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-card strong {
