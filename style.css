@@ -8145,11 +8145,11 @@ body[data-theme="dark"] #tab-draw .draw-selection-dock-chip {
     border: none;
     background: #ffffff;
     box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.12),
-        inset 0 -3px 6px rgba(0, 0, 0, 0.1),
-        inset 0 3px 6px rgba(255, 255, 255, 0.8);
+        0 4px 10px rgba(0, 0, 0, 0.15),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.15),
+        inset 0 4px 8px rgba(255, 255, 255, 0.9);
     color: #ffffff;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     font-size: 16px;
     font-weight: 800;
     display: flex;
@@ -8166,13 +8166,26 @@ body[data-theme="dark"] #tab-draw .draw-selection-dock-chip {
 .number-row--wizard-result .number::before {
     content: "";
     position: absolute;
-    top: 4px;
-    left: 8px;
-    width: 12px;
-    height: 7px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent);
-    border-radius: 50%;
+    top: 3px;
+    left: 7px;
+    width: 14px;
+    height: 9px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1));
+    border-radius: 50% 50% 45% 45%;
     z-index: 3;
+}
+
+.number-row--wizard-result .number::after {
+    content: "";
+    position: absolute;
+    bottom: 3px;
+    right: 7px;
+    width: 10px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    filter: blur(1px);
+    z-index: 2;
 }
 
 .number-row--wizard-result.is-revealed .number {
@@ -8180,12 +8193,12 @@ body[data-theme="dark"] #tab-draw .draw-selection-dock-chip {
     transform: translateY(0) scale(1);
 }
 
-/* Premium Lotto Ball Color Coding for Rows */
-.number-row--wizard-result .number[data-ball-range="1-10"] { background: radial-gradient(circle at 30% 30%, #ffd65a, #f59e0b 80%, #d97706); }
-.number-row--wizard-result .number[data-ball-range="11-20"] { background: radial-gradient(circle at 30% 30%, #6eb5ff, #2563eb 80%, #1d4ed8); }
-.number-row--wizard-result .number[data-ball-range="21-30"] { background: radial-gradient(circle at 30% 30%, #ff8585, #dc2626 80%, #b91c1c); }
-.number-row--wizard-result .number[data-ball-range="31-40"] { background: radial-gradient(circle at 30% 30%, #cbd5e1, #64748b 80%, #475569); }
-.number-row--wizard-result .number[data-ball-range="41-45"] { background: radial-gradient(circle at 30% 30%, #6ee7b7, #10b981 80%, #059669); }
+/* Highly Refined Lotto Ball Color Coding */
+.number-row--wizard-result .number[data-ball-range="1-10"] { background: radial-gradient(circle at 35% 35%, #ffeb3b, #fbc02d 75%, #f57f17); }
+.number-row--wizard-result .number[data-ball-range="11-20"] { background: radial-gradient(circle at 35% 35%, #42a5f5, #1976d2 75%, #0d47a1); }
+.number-row--wizard-result .number[data-ball-range="21-30"] { background: radial-gradient(circle at 35% 35%, #ef5350, #d32f2f 75%, #b71c1c); }
+.number-row--wizard-result .number[data-ball-range="31-40"] { background: radial-gradient(circle at 35% 35%, #bdbdbd, #757575 75%, #424242); }
+.number-row--wizard-result .number[data-ball-range="41-45"] { background: radial-gradient(circle at 35% 35%, #66bb6a, #388e3c 75%, #1b5e20); }
 
 
 .number-row--wizard-result .row-reason {
@@ -19976,20 +19989,20 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     background: #ffffff;
     border: none;
     box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.12),
-        inset 0 -3px 6px rgba(0, 0, 0, 0.1),
-        inset 0 3px 6px rgba(255, 255, 255, 0.8);
+        0 4px 10px rgba(0, 0, 0, 0.15),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.15),
+        inset 0 4px 8px rgba(255, 255, 255, 0.9);
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-result-slot::before {
     content: "";
     position: absolute;
-    top: 6px;
+    top: 4px;
     left: 10px;
-    width: 16px;
-    height: 10px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent);
-    border-radius: 50%;
+    width: 18px;
+    height: 11px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1));
+    border-radius: 50% 50% 45% 45%;
     z-index: 3;
 }
 
@@ -20011,7 +20024,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     display: grid;
     place-items: center;
     color: #ffffff;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     font-size: 20px;
     font-weight: 800;
     letter-spacing: -0.04em;
@@ -20020,12 +20033,12 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     transition: opacity 280ms ease, transform 280ms ease;
 }
 
-/* Premium Lotto Ball Color Coding for Slots (Reels) */
-#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="1-10"] { background: radial-gradient(circle at 30% 30%, #ffd65a, #f59e0b 80%, #d97706); }
-#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="11-20"] { background: radial-gradient(circle at 30% 30%, #6eb5ff, #2563eb 80%, #1d4ed8); }
-#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="21-30"] { background: radial-gradient(circle at 30% 30%, #ff8585, #dc2626 80%, #b91c1c); }
-#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="31-40"] { background: radial-gradient(circle at 30% 30%, #cbd5e1, #64748b 80%, #475569); }
-#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="41-45"] { background: radial-gradient(circle at 30% 30%, #6ee7b7, #10b981 80%, #059669); }
+/* Highly Refined Lotto Ball Color Coding for Slots (Reels) */
+#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="1-10"] { background: radial-gradient(circle at 35% 35%, #ffeb3b, #fbc02d 75%, #f57f17); }
+#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="11-20"] { background: radial-gradient(circle at 35% 35%, #42a5f5, #1976d2 75%, #0d47a1); }
+#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="21-30"] { background: radial-gradient(circle at 35% 35%, #ef5350, #d32f2f 75%, #b71c1c); }
+#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="31-40"] { background: radial-gradient(circle at 35% 35%, #bdbdbd, #757575 75%, #424242); }
+#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="41-45"] { background: radial-gradient(circle at 35% 35%, #66bb6a, #388e3c 75%, #1b5e20); }
 
 
 #tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed .draw-wizard-result-slot-spin {

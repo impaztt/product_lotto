@@ -12,8 +12,8 @@ A modern, framework-less web application for generating and managing lottery num
 - **Modern CSS:** Utilizes container queries, logical properties, and CSS variables for a robust design system.
 - **Native Feel Enhancement:** Disables global text selection (`user-select: none`) and touch callouts to provide a seamless, native app-like experience while preserving input interaction.
 - **Draw Completion Screen Optimization:** Refined the "추첨 완료" screen to be more compact and fit within a single viewport.
-    - Reduced redundant vertical spacing between the title and results.
-    - Transformed square slots and result balls into a circular **Lotto Ball design** with color-coding (1-10: Yellow, 11-20: Blue, etc.) and lighting effects.
+    - **Deleted Redundant Title:** Removed the "추첨 완료" text element to eliminate overlap issues and save vertical space.
+    - **Premium 3D Lotto Ball Design:** Upgraded the visual quality of balls and slots using sophisticated multi-layered gradients, inner shadows, and realistic glossy highlights for a modern, high-end 3D appearance.
     - Removed analysis tags (odd/even, etc.) from individual set rows for a cleaner, more focused UI.
 
 ## Current UI Improvement Plan (Archive & Draw Tabs)

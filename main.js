@@ -4441,9 +4441,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? `규칙 그룹 ${Number(drawWizardResumeState.currentGroupIndex || 0) + 1}부터 그대로 이어서 진행할 수 있습니다.`
                 : '이전 선택을 그대로 불러올 수 있습니다.';
         }
-        if (drawWizardResultTitleEl) {
-            drawWizardResultTitleEl.textContent = '추첨 완료';
-        }
         if (drawWizardResultCopyEl) {
             const showWizardCopy = currentStep === 'result' && lastGeneratedDraws.length > 0;
             drawWizardResultCopyEl.textContent = '번호 복사';
