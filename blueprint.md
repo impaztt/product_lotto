@@ -11,12 +11,12 @@ A modern, framework-less web application for generating and managing lottery num
 - **Firebase Integration:** Uses Firestore for storing user-generated numbers and Firebase Auth for account management.
 - **Modern CSS:** Utilizes container queries, logical properties, and CSS variables for a robust design system.
 - **Native Feel Enhancement:** Disables global text selection (`user-select: none`) and touch callouts to provide a seamless, native app-like experience while preserving input interaction.
+- **Draw Review Screen Optimization:**
+    - **Enhanced Headline:** Enlarged the "남은 후보" (Remaining Candidates) count to be the primary focus with a bolder, professional look.
+    - **Single-Line Metrics:** Reorganized "Core" metrics (Remaining %, Excluded %, Rules Count) into a clean, horizontal 3-column row where each item fits on a single line.
+    - **Clean Rules Summary:** Updated selected rules cards to a horizontal flex layout for better alignment and readability.
+    - **Deleted Redundant Tags:** Removed small tag-like bullets under the main count to minimize visual noise.
 - **Draw Completion Screen Optimization:** Refined the "추첨 완료" screen to be more compact and fit within a single viewport.
-    - **Deleted Redundant Title:** Removed the "추첨 완료" text element to eliminate overlap issues and save vertical space.
-    - **Premium 3D Lotto Ball Design:** Upgraded the visual quality of balls and slots using sophisticated multi-layered gradients, inner shadows, and realistic glossy highlights for a modern, high-end 3D appearance.
-    - Removed analysis tags (odd/even, etc.) from individual set rows for a cleaner, more focused UI.
-
-## Current UI Improvement Plan (Archive & Draw Tabs)
 1.  **Enhance Archive Title Readability:** Update the "최근 번호" (Recent Numbers) title in the Archive tab to include a bullet-point style indicator for better visual hierarchy and readability.
 2.  **Fix Archive Content Alignment:** Correct the alignment of the Archive tab's content. Currently, it is shifted to the left and needs to be centered to match the layout of other tabs (Draw, My Page).
 3.  **Optimize Draw Completion Screen:** Redesign the wizard result screen to be more compact by:

@@ -4042,19 +4042,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 {
                     label: '남은',
                     value: `${remainPct}%`,
-                    note: formatDrawWizardCompactCount(remainingCombos),
                     tone: 'range'
                 },
                 {
                     label: '제외',
                     value: `${excludedPct}%`,
-                    note: excludeCount ? `직접 ${excludeCount}` : formatDrawWizardCompactCount(excludedCombos),
                     tone: 'exclude'
                 },
                 {
                     label: '규칙',
                     value: `${activeConditionCount}개`,
-                    note: excludeCount ? `규칙 ${selectedRuleCount} · 직접 ${excludeCount}` : `규칙 ${selectedRuleCount}`,
                     tone: 'rules'
                 }
             ];
@@ -4062,7 +4059,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <article class="draw-funnel-review-metric draw-funnel-review-metric--${escapeHtml(row.tone)}">
                     <span>${escapeHtml(row.label)}</span>
                     <strong>${escapeHtml(row.value)}</strong>
-                    <p>${escapeHtml(row.note)}</p>
                 </article>
             `).join('');
         }
@@ -4070,10 +4066,8 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardReviewGroupsEl.innerHTML = groupedSelections.length
                 ? groupedSelections.map(group => `
                     <div class="draw-funnel-review-group-card">
-                        <div class="draw-funnel-review-group-head">
-                            <strong>${escapeHtml(group.groupLabel)}</strong>
-                            <span>${escapeHtml(String(group.rules.length))}개</span>
-                        </div>
+                        <strong>${escapeHtml(group.groupLabel)}</strong>
+                        <span>${escapeHtml(String(group.rules.length))}개</span>
                     </div>
                 `).join('')
                 : '<div class="draw-funnel-empty-state">선택 없음</div>';

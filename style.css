@@ -20188,36 +20188,25 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-overview-copy {
     display: grid;
-    gap: 12px;
+    gap: 4px;
     min-width: 0;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-overview-kicker {
-    width: fit-content;
-    min-height: 28px;
-    padding: 0 10px;
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: center;
-    background: rgba(19, 38, 61, 0.08);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 800;
-    letter-spacing: 0.08em;
+    color: #64748b;
     text-transform: uppercase;
-    color: #27415f;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-overview-copy strong {
     margin: 0;
-    max-inline-size: min(100%, 14ch);
-    font-size: clamp(18px, min(2.6vw, 3.4vh), 28px);
-    line-height: 1.1;
+    font-size: clamp(22px, 3.2vw, 32px);
+    font-weight: 900;
+    line-height: 1;
     color: #10233a;
-    letter-spacing: -0.04em;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: keep-all;
-    text-wrap: balance;
+    letter-spacing: -0.05em;
+    white-space: nowrap;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-overview-gauge {
@@ -20308,11 +20297,12 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-metric {
     min-height: 0;
-    padding: 9px 10px;
-    border-radius: 15px;
-    display: grid;
-    align-content: center;
-    gap: 2px;
+    padding: 10px 8px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     border: 1px solid rgba(20, 38, 64, 0.08);
     background: rgba(248, 250, 252, 0.92);
 }
@@ -20334,29 +20324,22 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-metric span {
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 800;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
     color: #62768c;
+    white-space: nowrap;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-metric strong {
-    font-size: clamp(13px, 1.1vw, 15px);
+    font-size: 14px;
     line-height: 1;
     color: #10233a;
-    letter-spacing: -0.05em;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-metric p {
-    margin: 0;
-    color: #607489;
-    font-size: 8px;
-    line-height: 1.1;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    overflow: hidden;
+    display: none !important;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-groups,
@@ -20368,37 +20351,36 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-group-card {
-    padding: 7px 8px;
+    padding: 10px 12px;
     border-radius: 14px;
-    display: grid;
-    gap: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
     background: rgba(248, 250, 252, 0.92);
     border: 1px solid rgba(20, 38, 64, 0.08);
 }
 
-#tab-draw.draw-wizard-tab .draw-funnel-review-group-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
-}
-
-#tab-draw.draw-wizard-tab .draw-funnel-review-group-head strong {
-    font-size: 10px;
+#tab-draw.draw-wizard-tab .draw-funnel-review-group-card strong {
+    font-size: 11px;
     color: #10233a;
-    line-height: 1.2;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-#tab-draw.draw-wizard-tab .draw-funnel-review-group-head span {
-    min-height: 18px;
-    padding: 0 6px;
+#tab-draw.draw-wizard-tab .draw-funnel-review-group-card span {
+    min-height: 20px;
+    padding: 0 8px;
     border-radius: 999px;
     display: inline-flex;
     align-items: center;
     background: rgba(19, 38, 61, 0.07);
     color: #27415f;
-    font-size: 9px;
-    font-weight: 700;
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-group-card p {
@@ -20925,32 +20907,13 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
         gap: 6px;
     }
 
-    #tab-draw.draw-wizard-tab .draw-funnel-review-metric {
-        min-height: 0;
-        padding: 8px 9px;
-        border-radius: 14px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-funnel-review-metric strong {
-        font-size: 13px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-funnel-review-metric p {
-        font-size: 8px;
-    }
-
     #tab-draw.draw-wizard-tab .draw-funnel-review-card--groups .draw-funnel-review-groups {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 5px;
     }
 
-    #tab-draw.draw-wizard-tab .draw-funnel-review-group-card {
-        padding: 7px 8px;
-        border-radius: 14px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-funnel-review-group-head strong {
-        font-size: 9px;
+    #tab-draw.draw-wizard-tab .draw-funnel-review-group-card strong {
+        font-size: 10px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-review-exclude-balls {
