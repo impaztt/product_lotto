@@ -4817,11 +4817,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateLockerTabUi() {
-        const sessions = getGeneratedHistoryForCurrentOwner();
-        if (lockerHistoryChipEl) {
-            const visibleCount = Math.min(4, sessions.length);
-            lockerHistoryChipEl.textContent = sessions.length ? `최근 ${visibleCount}개` : '최근 없음';
-        }
         renderLockerHistoryUi();
     }
 

@@ -21800,29 +21800,30 @@ body[data-theme="dark"] #tab-mypage .mypage-account-list-row strong {
     }
 }
 
-/* Final override v3: compact locker recent */
-#tab-store .store-shell-title--recent {
-    margin-bottom: 10px !important;
+/* Final override v4: tighten Archive tab layout */
+#tab-store.app-shell {
+    padding-top: 12px !important;
 }
 
-#tab-store .store-shell-title--recent .section-kicker {
-    display: none !important;
+#tab-store .store-shell-title--recent {
+    margin-bottom: 8px !important;
 }
 
 #tab-store .store-shell-title--recent h2 {
     margin: 0 !important;
     display: flex !important;
     align-items: center !important;
+    font-size: 20px !important; /* Slightly smaller for compactness */
 }
 
 #tab-store .store-shell-title--recent h2::before {
     content: "" !important;
     display: block !important;
-    width: 10px !important;
-    height: 10px !important;
+    width: 8px !important;
+    height: 8px !important;
     background-color: #2563eb !important;
     border-radius: 50% !important;
-    margin-right: 10px !important;
+    margin-right: 8px !important;
     flex-shrink: 0 !important;
 }
 
@@ -21831,18 +21832,13 @@ body[data-theme="dark"] #tab-mypage .mypage-account-list-row strong {
 }
 
 #tab-store .locker-panel--history-only {
-    padding: 14px !important;
-    border-radius: 22px !important;
-}
-
-#tab-store .locker-panel-head--compact {
-    justify-content: flex-end !important;
-    margin-bottom: 10px !important;
+    padding: 12px 10px !important;
+    border-radius: 20px !important;
 }
 
 #tab-store .locker-panel--history-only .locker-history-list {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 10px !important;
+    gap: 8px !important;
 }
 
 #tab-store .locker-history-empty {
