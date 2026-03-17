@@ -10,6 +10,7 @@ A modern, framework-less web application for generating and managing lottery num
 - **My Page Tab:** User profile, account settings, and membership information.
 - **Firebase Integration:** Uses Firestore for storing user-generated numbers and Firebase Auth for account management.
 - **Modern CSS:** Utilizes container queries, logical properties, and CSS variables for a robust design system.
+- **Native Feel Enhancement:** Disables global text selection (`user-select: none`) and touch callouts to provide a seamless, native app-like experience while preserving input interaction.
 
 ## Current UI Improvement Plan (Archive Tab)
 1.  **Enhance Title Readability:** Update the "최근 번호" (Recent Numbers) title in the Archive tab to include a bullet-point style indicator for better visual hierarchy and readability.
