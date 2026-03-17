@@ -5148,29 +5148,39 @@ document.addEventListener('DOMContentLoaded', () => {
             const entries = Array.isArray(session.entries) ? session.entries : [];
             const previewEntries = entries.slice(0, 2);
             const hiddenSets = Math.max(0, entries.length - previewEntries.length);
-            const setsHtml = previewEntries
-                .map(entry => `
-                    <div class="locker-history-set locker-history-set--compact">
-                        <span class="locker-history-set-label">S${entry.setNo}</span>
-                        <div class="locker-history-balls">
-                            ${(Array.isArray(entry.numbers) ? entry.numbers : []).map(number => `<span class="locker-history-ball">${escapeHtml(number)}</span>`).join('')}
-                        </div>
-                    </div>
-                `).join('');
+            
+            // Flatten all numbers into a single array for the first few sets to show in one line
+            let allNumbers = [];
+            previewEntries.forEach((entry, idx) => {
+                if (idx > 0) allNumbers.push("/"); // separator between sets
+                allNumbers = allNumbers.concat(Array.isArray(entry.numbers) ? entry.numbers : []);
+            });
+
+            const numbersHtml = allNumbers.map(number => {
+                if (number === "/") {
+                    return `<span class="locker-history-separator">/</span>`;
+                }
+                return `<span class="locker-history-ball">${escapeHtml(number)}</span>`;
+            }).join('');
 
             return `
                 <article class="locker-history-row">
-                    <div class="locker-history-row-info">
-                        <strong>${roundText}</strong>
-                        <span>${when}</span>
+                    <div class="locker-history-row-header">
+                        <strong class="locker-history-row-round">${roundText}</strong>
+                        <span class="locker-history-row-date">${when}</span>
                     </div>
-                    <div class="locker-history-row-sets">
-                        ${setsHtml}
-                        ${hiddenSets ? `<div class="locker-history-more-sets">+${hiddenSets}</div>` : ''}
+                    <div class="locker-history-row-body">
+                        <div class="locker-history-row-sets">
+                            <div class="locker-history-row-balls">
+                                ${numbersHtml}
+                            </div>
+                            ${hiddenSets ? `<div class="locker-history-more-sets">+${hiddenSets}</div>` : ''}
+                        </div>
+                        <button type="button" class="ghost locker-copy-btn-mini" data-locker-copy="${escapeHtml(session.generationId)}" aria-label="복사">
+                            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            <span>복사</span>
+                        </button>
                     </div>
-                    <button type="button" class="ghost locker-copy-btn-mini" data-locker-copy="${escapeHtml(session.generationId)}" aria-label="복사">
-                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                    </button>
                 </article>
             `;
         }).join('') + (hiddenCount
