@@ -1,22 +1,25 @@
-# Lotto Number Generator
+# Lotto Number Generator (Firebase Studio)
 
 ## Overview
+A modern, framework-less web application for generating and managing lottery numbers (Lotto 6/45). The app features a multi-tab interface (Dashboard, Draw, Archive, My Page) and integrates with Firebase for authentication and data storage. It uses Web Components and modern CSS for a high-quality, responsive user experience.
 
-This is a simple web application that generates random lottery numbers. The user can click a button to get a new set of 6 unique numbers between 1 and 45.
+## Project Structure & Features
+- **Dashboard Tab:** Displays recent draw results, win statistics, and quick-access tools.
+- **Draw Tab:** A wizard-based interface for generating lottery numbers with various filters and patterns.
+- **Archive (보관함) Tab:** Stores generated numbers, allowing users to review and manage their history.
+- **My Page Tab:** User profile, account settings, and membership information.
+- **Firebase Integration:** Uses Firestore for storing user-generated numbers and Firebase Auth for account management.
+- **Modern CSS:** Utilizes container queries, logical properties, and CSS variables for a robust design system.
 
-## Design and Features
+## Current UI Improvement Plan (Archive Tab)
+1.  **Enhance Title Readability:** Update the "최근 번호" (Recent Numbers) title in the Archive tab to include a bullet-point style indicator for better visual hierarchy and readability.
+2.  **Fix Content Alignment:** Correct the alignment of the Archive tab's content. Currently, it is shifted to the left and needs to be centered to match the layout of other tabs (Draw, My Page).
+3.  **Refine CSS Layout:** Update the `app-shell--store` and related layout classes in `style.css` to ensure consistent padding and centering across all devices.
 
-*   **UI:** The user interface is clean, modern, and responsive. It features a prominent title, a display area for the generated numbers, and a button to trigger the generation.
-*   **Styling:** The application uses modern CSS for a visually appealing experience, including a gradient background, custom fonts, and subtle animations.
-*   **Functionality:**
-    *   Generates 6 unique random numbers from 1 to 45.
-    *   Displays the generated numbers to the user.
-    *   The "Generate" button is the main interactive element.
-
-## Current Plan
-
-*   **Task:** Create a lottery number generator website.
-*   **Steps:**
-    1.  **Update `index.html`:** Set up the basic structure for the lottery generator, including a title, a container for the numbers, and a "Generate" button.
-    2.  **Update `style.css`:** Apply modern and visually appealing styles to the elements in `index.html`.
-    3.  **Update `main.js`:** Implement the JavaScript logic to generate and display the unique lottery numbers when the button is clicked.
+## Steps
+1.  **Modify `style.css`:**
+    -   Add a pseudo-element (`::before`) to `#tab-store .store-shell-title--recent h2` to create a bullet-point effect.
+    -   Add `#tab-store .locker-layout` and `#tab-store .locker-board` to the list of centered elements (around line 9853).
+    -   Update the `#tab-store.app-shell` selector to ensure it inherits the standard `app-shell` layout properties.
+2.  **Verify Changes:** Check the layout and title style in the Archive tab to ensure it is centered and visually consistent with the rest of the app.
+3.  **Push Changes:** Commit and push the updates to the repository.

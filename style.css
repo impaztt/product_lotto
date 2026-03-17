@@ -9830,7 +9830,7 @@ body[data-theme="dark"] #tab-dashboard .dash-intro-sub {
 #tab-draw.app-shell,
 #tab-mypage.app-shell,
 #tab-qr.app-shell,
-#tab-store.app-shell.store-webview-tab {
+#tab-store.app-shell {
     margin: -24px -6vw 0;
     padding: 24px 6vw calc(140px + env(safe-area-inset-bottom));
     background: #ffffff;
@@ -9845,7 +9845,9 @@ body[data-theme="dark"] #tab-dashboard .dash-intro-sub {
 #tab-qr .section-title,
 #tab-qr .qr-layout,
 #tab-store .store-shell-title,
-#tab-store .store-shell-card {
+#tab-store .store-shell-card,
+#tab-store .locker-layout,
+#tab-store .locker-board {
     width: min(100%, 1280px);
     max-width: 100%;
     min-width: 0;
@@ -21710,6 +21712,19 @@ body[data-theme="dark"] #tab-mypage .mypage-account-list-row strong {
 
 #tab-store .store-shell-title--recent h2 {
     margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+#tab-store .store-shell-title--recent h2::before {
+    content: "" !important;
+    display: block !important;
+    width: 10px !important;
+    height: 10px !important;
+    background-color: #2563eb !important;
+    border-radius: 50% !important;
+    margin-right: 10px !important;
+    flex-shrink: 0 !important;
 }
 
 #tab-store .locker-layout--recent {
