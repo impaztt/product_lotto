@@ -20220,24 +20220,6 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     text-wrap: balance;
 }
 
-#tab-draw.draw-wizard-tab .draw-funnel-review-overview-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-#tab-draw.draw-wizard-tab .draw-funnel-review-overview-badge {
-    min-height: 28px;
-    padding: 0 10px;
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: center;
-    background: rgba(19, 38, 61, 0.07);
-    color: #1f3958;
-    font-size: 11px;
-    font-weight: 700;
-}
-
 #tab-draw.draw-wizard-tab .draw-funnel-review-overview-gauge {
     --draw-review-angle: 0deg;
     width: 112px;
@@ -20319,7 +20301,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-metrics {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 6px;
     min-height: 0;
 }
@@ -20925,16 +20907,6 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-review-overview-kicker {
-        min-height: 24px;
-        padding: 0 8px;
-        font-size: 10px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-funnel-review-overview-badges {
-        gap: 5px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-funnel-review-overview-badge {
         min-height: 24px;
         padding: 0 8px;
         font-size: 10px;
