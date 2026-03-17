@@ -2319,7 +2319,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .map(value => String(value).padStart(2, '0'))
                 .join(' ');
             return `
-                <div class="draw-wizard-result-slot" data-slot-index="${index}">
+                <div class="draw-wizard-result-slot" data-slot-index="${index}" data-ball-range="${escapeHtml(getBallRange(finalNumber))}">
                     <span class="draw-wizard-result-slot-spin">${escapeHtml(spinNumbers)}</span>
                     <span class="draw-wizard-result-slot-value">${finalNumber ? escapeHtml(String(finalNumber)) : '&nbsp;'}</span>
                 </div>
@@ -2474,6 +2474,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 numberElement.classList.add('number');
                 if (isWizardResult) {
                     numberElement.style.setProperty('--draw-ball-delay', `${numberIndex * 80}ms`);
+                    numberElement.setAttribute('data-ball-range', getBallRange(number));
                 }
                 numberElement.textContent = number;
                 balls.appendChild(numberElement);
@@ -2483,13 +2484,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const reason = document.createElement('div');
             reason.className = 'row-reason';
             if (isWizardResult) {
-                const tags = buildNumberTraitMeta(numbers);
-                reason.classList.add('row-reason--tags');
-                if (tags.length) {
-                    reason.innerHTML = tags.map(tag => `<span class="draw-wizard-result-tag">${escapeHtml(tag)}</span>`).join('');
-                } else {
-                    reason.hidden = true;
-                }
+                // Simplify: Remove tags from wizard result to save space as per user request
+                reason.hidden = true;
             } else {
                 reason.textContent = buildGeneratedReasonText(numbers, options.ruleIds);
             }
@@ -8150,6 +8146,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return 'range-4';
         }
         return 'range-5';
+    }
+
+    function getBallRange(num) {
+        if (num <= 10) return '1-10';
+        if (num <= 20) return '11-20';
+        if (num <= 30) return '21-30';
+        if (num <= 40) return '31-40';
+        return '41-45';
     }
 
     function setupExcludeNumberControl() {

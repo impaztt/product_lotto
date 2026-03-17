@@ -8141,22 +8141,50 @@ body[data-theme="dark"] #tab-draw .draw-selection-dock-chip {
 .number-row--wizard-result .number {
     width: 38px;
     height: 38px;
-    border: 1px solid rgba(20, 38, 64, 0.06);
+    border-radius: 50%;
+    border: 1px solid rgba(20, 38, 64, 0.08);
     background: #ffffff;
-    box-shadow: 0 4px 10px rgba(28, 56, 92, 0.05);
-    color: #10233a;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     font-size: 16px;
     font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
     opacity: 0;
     transform: translateY(10px) scale(0.92);
     transition: opacity 280ms ease, transform 280ms ease;
     transition-delay: var(--draw-ball-delay, 0ms);
 }
 
+.number-row--wizard-result .number::before {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    width: 10px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    filter: blur(1px);
+    z-index: 3;
+}
+
 .number-row--wizard-result.is-revealed .number {
     opacity: 1;
     transform: translateY(0) scale(1);
 }
+
+/* Lotto Ball Color Coding for Rows */
+.number-row--wizard-result .number[data-ball-range="1-10"] { background: radial-gradient(circle at 35% 35%, #fcd34d, #f59e0b); border-color: #d97706; }
+.number-row--wizard-result .number[data-ball-range="11-20"] { background: radial-gradient(circle at 35% 35%, #60a5fa, #2563eb); border-color: #1d4ed8; }
+.number-row--wizard-result .number[data-ball-range="21-30"] { background: radial-gradient(circle at 35% 35%, #f87171, #dc2626); border-color: #b91c1c; }
+.number-row--wizard-result .number[data-ball-range="31-40"] { background: radial-gradient(circle at 35% 35%, #94a3b8, #475569); border-color: #334155; }
+.number-row--wizard-result .number[data-ball-range="41-45"] { background: radial-gradient(circle at 35% 35%, #4ade80, #16a34a); border-color: #15803d; }
+
 
 .number-row--wizard-result .row-reason {
     grid-column: 1 / -1;
@@ -19153,11 +19181,19 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     display: none !important;
 }
 
-#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="exclude"],
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="exclude"] {
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
 #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="result"] {
     overflow: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 4px; /* Tight gap */
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="review"] {
@@ -19536,6 +19572,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-copy--result {
     gap: 0;
+    margin-bottom: -10px;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-copy h3,
@@ -19920,29 +19957,36 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-result-reels {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    display: flex;
+    justify-content: center;
     gap: 8px;
+    padding: 4px 0;
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-result-slot {
-    min-height: 52px;
-    border-radius: 14px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
     position: relative;
     overflow: hidden;
     display: grid;
     place-items: center;
-    background: rgba(255, 255, 255, 0.88);
+    background: #ffffff;
     border: 1px solid rgba(20, 38, 64, 0.08);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06), inset 0 2px 4px rgba(255, 255, 255, 0.8);
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-result-slot::before {
     content: "";
     position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0));
-    opacity: 0.8;
+    top: 6px;
+    left: 10px;
+    width: 14px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    filter: blur(1px);
+    z-index: 3;
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-result-slot-spin {
@@ -19962,14 +20006,23 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     z-index: 2;
     display: grid;
     place-items: center;
-    color: #10233a;
-    font-size: 22px;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    font-size: 20px;
     font-weight: 800;
     letter-spacing: -0.04em;
     opacity: 0;
     transform: translateY(8px) scale(0.94);
     transition: opacity 280ms ease, transform 280ms ease;
 }
+
+/* Lotto Ball Color Coding for Slots (Reels) */
+#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="1-10"] { background: radial-gradient(circle at 35% 35%, #fcd34d, #f59e0b); border-color: #d97706; }
+#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="11-20"] { background: radial-gradient(circle at 35% 35%, #60a5fa, #2563eb); border-color: #1d4ed8; }
+#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="21-30"] { background: radial-gradient(circle at 35% 35%, #f87171, #dc2626); border-color: #b91c1c; }
+#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="31-40"] { background: radial-gradient(circle at 35% 35%, #94a3b8, #475569); border-color: #334155; }
+#tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed[data-ball-range="41-45"] { background: radial-gradient(circle at 35% 35%, #4ade80, #16a34a); border-color: #15803d; }
+
 
 #tab-draw.draw-wizard-tab .draw-wizard-result-slot.is-revealed .draw-wizard-result-slot-spin {
     opacity: 0;
@@ -20730,17 +20783,19 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-result-reels {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
+        display: flex;
+        justify-content: center;
         gap: 6px;
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-result-slot {
-        min-height: 44px;
-        border-radius: 12px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50% !important;
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-result-slot-value {
-        font-size: 18px;
+        font-size: 16px;
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-result-stage-chip {
