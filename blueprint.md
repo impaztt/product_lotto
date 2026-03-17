@@ -6,7 +6,7 @@ A modern, framework-less web application for generating and managing lottery num
 ## Project Structure & Features
 - **Dashboard Tab:** Displays recent draw results, win statistics, and quick-access tools.
 - **Draw Tab:** A wizard-based interface for generating lottery numbers with various filters and patterns.
-- **Archive (보관함) Tab:** Stores generated numbers, allowing users to review and manage their history.
+- **Archive (보관함) Tab:** Stores generated numbers, allowing users to review and manage their history (displays up to 20 recent sessions).
 - **My Page Tab:** User profile, account settings, and membership information.
 - **Firebase Integration:** Uses Firestore for storing user-generated numbers and Firebase Auth for account management.
 - **Modern CSS:** Utilizes container queries, logical properties, and CSS variables for a robust design system.

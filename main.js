@@ -5124,7 +5124,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const allSessions = getGeneratedHistoryForCurrentOwner();
-        const sessions = allSessions.slice(0, 4);
+        const sessions = allSessions.slice(0, 20);
         if (!sessions.length) {
             lockerHistoryListEl.innerHTML = `
                 <article class="locker-history-empty">
@@ -5180,7 +5180,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ? `
                 <article class="locker-history-more">
                     <strong>+${hiddenCount}</strong>
-                    <p>최근 4개만 표시</p>
+                    <p>최근 20개만 표시</p>
                 </article>
             `
             : '');
