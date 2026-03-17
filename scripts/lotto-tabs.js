@@ -69,12 +69,7 @@
             if (!tabButtons.length || !tabPanels.length) {
                 return;
             }
-            const hash = window.location.hash;
-            if (hash && hash.startsWith('#tab-')) {
-                setActiveTab(hash.replace('#tab-', ''), false, false);
-                return;
-            }
-            setActiveTab(defaultTab, false, false);
+            setActiveTab(defaultTab, false, true);
         }
 
         function bind() {
