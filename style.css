@@ -21873,3 +21873,10 @@ body[data-theme="dark"] #tab-store .locker-history-summary span {
         grid-template-columns: 1fr !important;
     }
 }
+
+
+/* Force locker history list to always be 1 column for the compact UI */
+#tab-store .locker-history-list,
+#tab-store .locker-panel--history-only .locker-history-list {
+    grid-template-columns: 1fr !important;
+}
