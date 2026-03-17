@@ -8098,15 +8098,16 @@ body[data-theme="dark"] #tab-draw .draw-selection-dock-chip {
 }
 
 .number-row--wizard-result {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
-    padding: 14px 16px;
-    border-radius: 22px;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 8px 12px;
+    padding: 10px 14px;
+    border-radius: 18px;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 248, 252, 0.94));
-    border-color: rgba(20, 38, 64, 0.1);
-    box-shadow: 0 12px 28px rgba(28, 56, 92, 0.08);
+    border-color: rgba(20, 38, 64, 0.08);
+    box-shadow: 0 8px 22px rgba(28, 56, 92, 0.06);
     opacity: 0;
-    transform: translateY(22px) scale(0.985);
+    transform: translateY(18px) scale(0.985);
     transition: opacity 320ms ease, transform 320ms ease, box-shadow 320ms ease;
 }
 
@@ -8116,39 +8117,38 @@ body[data-theme="dark"] #tab-draw .draw-selection-dock-chip {
 }
 
 .number-row--wizard-result .row-label {
-    min-height: 28px;
-    padding: 0 10px;
-    padding-top: 0;
-    border-radius: 999px;
+    min-height: 24px;
+    min-width: 48px;
+    padding: 0 8px;
+    border-radius: 8px;
     display: inline-flex;
     align-items: center;
-    justify-self: start;
-    background: rgba(19, 38, 61, 0.07);
-    color: #17324f;
-    font-size: 11px;
+    justify-content: center;
+    background: rgba(19, 38, 61, 0.06);
+    color: #4f647a;
+    font-size: 10px;
     font-weight: 800;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.02em;
     text-transform: uppercase;
 }
 
 .number-row--wizard-result .number-balls {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-    justify-items: center;
+    display: flex;
+    gap: 6px;
+    justify-content: flex-start;
 }
 
 .number-row--wizard-result .number {
-    width: 52px;
-    height: 52px;
-    border: 1px solid rgba(20, 38, 64, 0.08);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 248, 252, 0.94));
-    box-shadow: 0 10px 18px rgba(28, 56, 92, 0.1);
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(20, 38, 64, 0.06);
+    background: #ffffff;
+    box-shadow: 0 4px 10px rgba(28, 56, 92, 0.05);
     color: #10233a;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 800;
     opacity: 0;
-    transform: translateY(14px) scale(0.92);
+    transform: translateY(10px) scale(0.92);
     transition: opacity 280ms ease, transform 280ms ease;
     transition-delay: var(--draw-ball-delay, 0ms);
 }
@@ -8159,9 +8159,11 @@ body[data-theme="dark"] #tab-draw .draw-selection-dock-chip {
 }
 
 .number-row--wizard-result .row-reason {
+    grid-column: 1 / -1;
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 4px;
+    margin-top: -2px;
 }
 
 .number-row--wizard-result .row-reason--tags {
@@ -19817,25 +19819,25 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-exclude-shell,
 #tab-draw.draw-wizard-tab .draw-funnel-result-shell {
-    padding: 22px;
-    border-radius: 28px;
+    padding: 12px;
+    border-radius: 24px;
     display: grid;
-    gap: 14px;
+    gap: 10px;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-result-shell .numbers-container {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    grid-template-columns: 1fr;
+    gap: 10px;
     align-items: stretch;
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-result-stage {
     position: relative;
     overflow: hidden;
-    padding: 18px;
-    border-radius: 24px;
+    padding: 12px;
+    border-radius: 20px;
     display: grid;
-    gap: 14px;
+    gap: 10px;
     background:
         radial-gradient(circle at top right, rgba(236, 159, 51, 0.18), transparent 34%),
         radial-gradient(circle at bottom left, rgba(47, 109, 246, 0.1), transparent 30%),
@@ -19920,12 +19922,12 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 #tab-draw.draw-wizard-tab .draw-wizard-result-reels {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 10px;
+    gap: 8px;
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-result-slot {
-    min-height: 72px;
-    border-radius: 20px;
+    min-height: 52px;
+    border-radius: 14px;
     position: relative;
     overflow: hidden;
     display: grid;
@@ -19947,9 +19949,9 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     position: relative;
     z-index: 1;
     color: rgba(19, 38, 61, 0.34);
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 800;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.08em;
     animation: draw-wizard-result-spin 920ms linear infinite;
     transition: opacity 220ms ease, transform 220ms ease;
 }
@@ -19961,11 +19963,11 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     display: grid;
     place-items: center;
     color: #10233a;
-    font-size: clamp(22px, 2.2vw, 30px);
+    font-size: 22px;
     font-weight: 800;
     letter-spacing: -0.04em;
     opacity: 0;
-    transform: translateY(10px) scale(0.94);
+    transform: translateY(8px) scale(0.94);
     transition: opacity 280ms ease, transform 280ms ease;
 }
 
@@ -20717,32 +20719,32 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     #tab-draw.draw-wizard-tab .draw-funnel-exclude-shell,
     #tab-draw.draw-wizard-tab .draw-funnel-result-shell,
     #tab-draw.draw-wizard-tab .draw-funnel-review-card {
-        padding: 16px;
-        border-radius: 20px;
+        padding: 10px;
+        border-radius: 18px;
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-result-stage {
-        padding: 14px;
-        border-radius: 20px;
-        gap: 10px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-wizard-result-reels {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        padding: 10px;
+        border-radius: 16px;
         gap: 8px;
     }
 
+    #tab-draw.draw-wizard-tab .draw-wizard-result-reels {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 6px;
+    }
+
     #tab-draw.draw-wizard-tab .draw-wizard-result-slot {
-        min-height: 58px;
-        border-radius: 16px;
+        min-height: 44px;
+        border-radius: 12px;
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-result-slot-value {
-        font-size: 20px;
+        font-size: 18px;
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-result-stage-chip {
-        min-height: 26px;
+        min-height: 24px;
         padding: 0 10px;
         font-size: 10px;
     }
@@ -20763,29 +20765,32 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .number-row--wizard-result {
-        grid-template-columns: 1fr;
-        gap: 10px;
-        padding: 12px;
-        border-radius: 18px;
+        grid-template-columns: auto 1fr;
+        gap: 6px 10px;
+        padding: 8px 10px;
+        border-radius: 16px;
     }
 
     #tab-draw.draw-wizard-tab .number-row--wizard-result .row-label {
-        justify-self: start;
+        min-width: 42px;
+        min-height: 22px;
+        font-size: 9px;
     }
 
     #tab-draw.draw-wizard-tab .number-row--wizard-result .number-balls {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
+        display: flex;
+        gap: 4px;
+        justify-content: flex-start;
     }
 
     #tab-draw.draw-wizard-tab .number-row--wizard-result .number {
-        width: 44px;
-        height: 44px;
-        font-size: 17px;
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
     }
 
     #tab-draw.draw-wizard-tab .number-row--wizard-result .row-reason {
-        gap: 5px;
+        gap: 4px;
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-result-tag {
@@ -20795,12 +20800,16 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-result-actions {
-        gap: 8px;
+        gap: 6px;
+        margin-top: 4px;
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-result-actions .ghost,
     #tab-draw.draw-wizard-tab .draw-wizard-result-actions .cta {
         flex: 1 1 0;
+        min-height: 40px;
+        padding: 0 10px;
+        font-size: 13px;
         justify-content: center;
     }
 
