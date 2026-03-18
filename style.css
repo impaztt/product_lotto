@@ -20277,6 +20277,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     border-radius: 24px;
     display: grid;
     gap: 8px;
+    align-content: start;
     border: 1px solid rgba(20, 38, 64, 0.08);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 249, 252, 0.92));
     box-shadow: 0 12px 28px rgba(28, 56, 92, 0.06);
