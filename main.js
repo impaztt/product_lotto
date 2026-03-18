@@ -4028,6 +4028,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="draw-funnel-review-overview-copy">
                     <span class="draw-funnel-review-overview-kicker">${escapeHtml(overviewStatus)}</span>
                     <strong>${escapeHtml(overviewHeadline)}</strong>
+                    <div class="draw-funnel-review-overview-badges">
+                        ${overviewBadges.map(badge => `<span class="draw-funnel-review-overview-badge">${escapeHtml(badge)}</span>`).join('')}
+                    </div>
                 </div>
                 <div class="draw-funnel-review-overview-gauge" style="--draw-review-angle:${gaugeAngle}deg;">
                     <div class="draw-funnel-review-overview-gauge-body">
