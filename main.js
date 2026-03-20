@@ -3045,42 +3045,30 @@ document.addEventListener('DOMContentLoaded', () => {
             free: {
                 id: 'free',
                 label: 'FREE',
-                description: '직접 기준을 정리하고 저장한 흐름을 다시 확인할 수 있습니다.',
-                nextLabel: '추천 플랜 보기',
-                note: '직접 선택 사용 중',
-                recommendedSetCount: 0
+                level: 0,
+                description: '기본적인 분석 기능을 제공합니다.',
+                note: 'FREE 사용 중'
             },
-            starter: {
-                id: 'starter',
-                label: 'STARTER',
-                description: '이번 회차 추천 세트 3개와 복사, 기록 저장을 바로 확인하는 구성입니다.',
-                nextLabel: 'STARTER 구성 보기',
-                note: 'STARTER 선택',
-                recommendedSetCount: 3
+            gold: {
+                id: 'gold',
+                label: 'GOLD',
+                level: 1,
+                description: '3순위 이상의 고급 필터링을 제공합니다.',
+                note: 'GOLD 멤버십'
             },
-            standard: {
-                id: 'standard',
-                label: 'STANDARD',
-                description: '이번 회차 추천 세트 5개와 기록 흐름을 가장 균형 있게 확인하는 구성입니다.',
-                nextLabel: 'STANDARD 구성 보기',
-                note: 'STANDARD 선택',
-                recommendedSetCount: 5
+            platinum: {
+                id: 'platinum',
+                label: 'PLATINUM',
+                level: 2,
+                description: '2순위 이상의 프리미엄 필터링을 제공합니다.',
+                note: 'PLATINUM 멤버십'
             },
             master: {
                 id: 'master',
                 label: 'MASTER',
-                description: '이번 회차 추천 세트 7개를 넉넉하게 확인하는 확장 구성입니다.',
-                nextLabel: 'MASTER 구성 보기',
-                note: 'MASTER 선택',
-                recommendedSetCount: 7
-            },
-            premium: {
-                id: 'premium',
-                label: 'PREMIUM',
-                description: '추천 세트와 전체 복사 기능을 바로 확인할 수 있습니다.',
-                nextLabel: '추천 플랜 사용 중',
-                note: '추천 플랜 사용 중',
-                recommendedSetCount: 5
+                level: 3,
+                description: '모든 제한 없는 최상위 분석 기능을 제공합니다.',
+                note: 'MASTER 멤버십'
             }
         };
         return planMap[normalized] || planMap.free;
@@ -3938,16 +3926,53 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? `${selectedCount}개 선택됨`
                 : '선택 없이 다음 단계로 넘어가도 됩니다.';
         }
-        drawWizardDetailGroupsEl.innerHTML = currentRuleStep.rules.map(rule => {
+        const currentPlan = getMembershipPlanMeta();
+        const userLevel = currentPlan.level || 0;
+
+        // Rank rules in this step by ratio (descending)
+        const rulesWithStats = currentRuleStep.rules.map(rule => {
+            const stat = RULE_STATS?.[rule.id];
+            const ratio = Number(stat?.ratio) || 0;
+            return { rule, ratio };
+        }).sort((a, b) => b.ratio - a.ratio);
+
+        drawWizardDetailGroupsEl.innerHTML = rulesWithStats.map((item, index) => {
+            const rule = item.rule;
+            const rank = index + 1; // 1-based rank
             const active = selectedIds.has(rule.id);
             const description = rule.desc || rule.detail || '선택 시 이 패턴을 제외합니다.';
             const impact = getDrawWizardRuleImpactMeta(rule.id, { active });
+            
+            // Access check:
+            // Rank 1 -> Master (Level 3)
+            // Rank 2 -> Platinum (Level 2)
+            // Rank 3+ -> All (Level 0+)
+            let restricted = false;
+            let requiredTier = '';
+            
+            if (rank === 1 && userLevel < 3) {
+                restricted = true;
+                requiredTier = 'MASTER';
+            } else if (rank === 2 && userLevel < 2) {
+                restricted = true;
+                requiredTier = 'PLATINUM';
+            }
+
+            const restrictedClass = restricted ? ' is-restricted' : '';
+
             return `
-                <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}" type="button" data-wizard-rule="${escapeHtml(rule.id)}" aria-pressed="${String(active)}">
+                <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}${restrictedClass}" 
+                        type="button" 
+                        data-wizard-rule="${escapeHtml(rule.id)}" 
+                        data-rule-rank="${rank}"
+                        data-restricted="${restricted}"
+                        data-required-tier="${requiredTier}"
+                        aria-pressed="${String(active)}">
                     <div class="draw-funnel-rule-main">
                         <div class="draw-funnel-rule-copy">
                             <strong>${escapeHtml(rule.title)}</strong>
                             <p>${escapeHtml(description)}</p>
+                            ${restricted ? `<span class="rule-restricted-badge">${requiredTier} 전용</span>` : ''}
                         </div>
                         <div class="draw-funnel-rule-impact">
                             <span class="draw-funnel-rule-impact-label">${escapeHtml(impact.label)}</span>
@@ -4557,11 +4582,33 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDrawWizard();
 
         if (drawWizardDetailGroupsEl) {
-            drawWizardDetailGroupsEl.addEventListener('click', event => {
+            drawWizardDetailGroupsEl.addEventListener('click', async event => {
                 const button = event.target instanceof Element ? event.target.closest('[data-wizard-rule]') : null;
                 if (!button || !drawWizardState) {
                     return;
                 }
+
+                // Plan Restriction Check
+                if (button.dataset.restricted === 'true') {
+                    const requiredTier = button.dataset.requiredTier;
+                    const confirmed = await showActionConfirm(
+                        '플랜 제한 필터',
+                        `이 필터는 ${requiredTier} 멤버십 전용 기능입니다.\n플랜을 구매하고 최상위 필터 기능을 이용해 보세요.`,
+                        '플랜 구매하기',
+                        '닫기'
+                    );
+                    if (confirmed) {
+                        // Redirect to My Page Plan Section
+                        setActiveTab('mypage');
+                        // Scroll to plan manage section if possible
+                        const planBtn = document.getElementById('mypage-plan-manage-btn');
+                        if (planBtn) {
+                            planBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }
+                    return;
+                }
+
                 const ruleId = String(button.dataset.wizardRule || '').trim();
                 if (!ruleId) {
                     return;

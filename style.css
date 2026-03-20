@@ -19796,6 +19796,30 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     transform: translateY(-2px);
 }
 
+#tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-restricted {
+    opacity: 0.7;
+    background: #f8fafc;
+    border-style: dashed;
+}
+
+#tab-draw.draw-wizard-tab .rule-restricted-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: #1e293b;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    border-radius: 6px;
+    margin-top: 6px;
+    width: fit-content;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-restricted .draw-funnel-rule-impact {
+    filter: grayscale(1) opacity(0.5);
+    pointer-events: none;
+}
+
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-selected {
     border-color: rgba(233, 93, 53, 0.5);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 244, 233, 0.98));
