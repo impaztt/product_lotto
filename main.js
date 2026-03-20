@@ -2080,11 +2080,12 @@ document.addEventListener('DOMContentLoaded', () => {
             updateDashboardSummaryUi();
             updateMypageSummaryUi();
             updateAnalysisSummaryUi();
-            initializeDrawWizard();
         } catch (error) {
             console.error('초기화 오류', error);
         }
-    updateScenarioMetrics();
+        
+        initializeDrawWizard();
+        updateScenarioMetrics();
     fetchLatestDraw();
     fetchWeeklyIntroInfo();
     window.setInterval(() => {
