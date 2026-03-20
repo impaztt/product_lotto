@@ -3243,6 +3243,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function formatDisplayPercent(value) {
+        const num = Number(value);
+        if (!Number.isFinite(num)) return '0.0';
+        // Round to 1 decimal place and cap at 99.9%
+        const displayVal = Math.min(99.9, Math.round(num * 10) / 10);
+        return displayVal.toFixed(1);
+    }
+
     function updateDrawContextUi() {
         const plan = getMembershipPlanMeta();
         const authPending = isAuthStatePending();
@@ -3317,9 +3325,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!selectedCount) {
                 drawBottomGenerateDetailEl.textContent = '필터를 하나 이상 고르면 여기서 바로 번호를 생성할 수 있습니다.';
             } else {
-                const remainPct = Number.isFinite(currentRemainingRatio)
-                    ? Math.max(0, Math.min(100, Math.round(currentRemainingRatio * 1000) / 10))
-                    : 100;
+                const remainPct = formatDisplayPercent(Number.isFinite(currentRemainingRatio) ? currentRemainingRatio * 100 : 100);
                 const remainingValue = Number.isFinite(currentRemainingCombos) ? formatNumber(currentRemainingCombos) : '-';
                 drawBottomGenerateDetailEl.textContent = `남는 후보 ${remainingValue}개 · 전체의 ${remainPct}% 범위에서 생성합니다.`;
             }
@@ -3329,9 +3335,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 drawFilterDetailEl.textContent = '빠른 선택 또는 규칙을 추가해 조합을 좁혀보세요.';
                 return;
             }
-            const remainPct = Number.isFinite(currentRemainingRatio)
-                ? Math.max(0, Math.min(100, Math.round(currentRemainingRatio * 1000) / 10))
-                : 100;
+            const remainPct = formatDisplayPercent(Number.isFinite(currentRemainingRatio) ? currentRemainingRatio * 100 : 100);
             const remainingValue = Number.isFinite(currentRemainingCombos) ? formatNumber(currentRemainingCombos) : '-';
             const excludedValue = Number.isFinite(currentExcludedCombos) ? formatNumber(currentExcludedCombos) : '-';
             drawFilterDetailEl.textContent = `남는 후보 ${remainingValue}개 · 제외 ${excludedValue}개 · 남은 비중 ${remainPct}%`;
@@ -3975,18 +3979,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const remainRatio = Number.isFinite(currentRemainingRatio)
             ? Math.max(0, Math.min(1, currentRemainingRatio))
             : 1;
-        const remainPct = Math.max(0, Math.min(100, Math.round(remainRatio * 1000) / 10));
-        const excludedPct = Math.max(0, Math.min(100, Math.round((1 - remainRatio) * 1000) / 10));
+        const remainPct = formatDisplayPercent(remainRatio * 100);
+        const excludedPct = formatDisplayPercent((1 - remainRatio) * 100);
         const remainingCombos = Math.max(0, Math.round(Number(currentRemainingCombos) || TOTAL_COMBOS));
         const excludedCombos = Math.max(0, Math.round(Number(currentExcludedCombos) || 0));
         const baseFirstOdds = Number(getBaseOddsMap()?.[1]) || TOTAL_COMBOS;
         const currentFirstOdds = Math.max(1, Math.round(baseFirstOdds * (remainRatio || 1)));
-        const benefitPct = Math.max(0, Math.round((1 - remainRatio) * 100));
+        const benefitPct = formatDisplayPercent((1 - remainRatio) * 100);
         const groupedSelections = getDrawWizardGroupedSelections();
         const activeConditionCount = selectedRuleCount + (excludeCount ? 1 : 0);
         const overviewState = restriction.blocked
             ? 'warning'
-            : benefitPct > 0
+            : (Number(benefitPct) > 0)
                 ? 'positive'
                 : 'neutral';
         const overviewStatus = restriction.blocked
@@ -4000,7 +4004,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `${drawCount}세트`
         ];
         if (drawWizardReviewOverviewEl) {
-            const gaugeAngle = Math.max(0, Math.min(360, Math.round(excludedPct * 3.6)));
+            const gaugeAngle = Math.max(0, Math.min(360, Math.round(Number(excludedPct) * 3.6)));
             drawWizardReviewOverviewEl.dataset.state = overviewState;
             drawWizardReviewOverviewEl.innerHTML = `
                 <div class="draw-funnel-review-overview-copy">
@@ -4193,11 +4197,11 @@ document.addEventListener('DOMContentLoaded', () => {
             ? currentRemainingRatio
             : 1;
         const remainingCombos = Number.isFinite(currentRemainingCombos) ? currentRemainingCombos : TOTAL_COMBOS;
-        const remainingPct = Math.max(0, Math.min(100, Math.round(remainingRatio * 1000) / 10));
+        const remainingPct = formatDisplayPercent(remainingRatio * 100);
         const baseOddsMap = getBaseOddsMap();
         const baseFirstOdds = Number(baseOddsMap?.[1]) || TOTAL_COMBOS;
         const currentFirstOdds = Math.max(1, Math.round(baseFirstOdds * remainingRatio));
-        const totalBenefitPct = Math.max(0, Math.round((1 - remainingRatio) * 100));
+        const totalBenefitPct = formatDisplayPercent((1 - remainingRatio) * 100);
         const selectionTotalCount = selectedCount + excludeCount;
         const selectionExcludeVisualCount = excludeCount;
         const cumulativeReducedCombos = Number.isFinite(currentExcludedCombos) ? currentExcludedCombos : 0;
@@ -4207,10 +4211,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let dashboardCopy = selectionTotalCount
             ? `규칙 ${selectedCount}개 · 제외수 ${excludeCount}개 반영`
             : '아직 선택 전 · 기본 범위 유지';
-        let oddsNote = totalBenefitPct
+        let oddsNote = (Number(totalBenefitPct) > 0)
             ? `1등 기대 +${totalBenefitPct}%`
             : '1등 기준 기본';
-        let impactValue = totalBenefitPct ? `+${totalBenefitPct}%` : '기본';
+        let impactValue = (Number(totalBenefitPct) > 0) ? `+${totalBenefitPct}%` : '기본';
         let impactNote = '1등 기대';
         let selectionValue = `${remainingPct}%`;
         let selectionNote = '남은 범위';
@@ -4230,7 +4234,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 : '이 누적 기준으로 바로 번호를 만들 수 있습니다';
         } else if (currentStep === 'result') {
             dashboardStep = '최종 결과 · 누적 현황';
-            dashboardCopy = totalBenefitPct
+            dashboardCopy = (Number(totalBenefitPct) > 0)
                 ? '누적 기준이 반영된 범위에서 생성 완료'
                 : '기본 범위에 가깝게 생성 완료';
         }
@@ -4251,7 +4255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardDashboardOddsNoteEl.textContent = oddsNote;
         }
         if (drawWizardDashboardGaugeEl) {
-            const gaugeAngle = Math.max(0, Math.min(360, Math.round(totalBenefitPct * 3.6)));
+            const gaugeAngle = Math.max(0, Math.min(360, Math.round(Number(totalBenefitPct) * 3.6)));
             drawWizardDashboardGaugeEl.style.setProperty('--draw-dashboard-gauge-angle', `${gaugeAngle}deg`);
         }
         if (drawWizardDashboardImpactEl) {
@@ -8704,9 +8708,7 @@ document.addEventListener('DOMContentLoaded', () => {
         drawSelectionDockTitleEl.textContent = hasScenario
             ? `${PRESETS_LABEL[activeStrategy] || activeStrategy} · ${items.length}개 필터 적용 중`
             : `${items.length}개 필터 적용 중`;
-        const remainPct = Number.isFinite(currentRemainingRatio)
-            ? Math.max(0, Math.min(100, Math.round(currentRemainingRatio * 1000) / 10))
-            : 100;
+        const remainPct = formatDisplayPercent(Number.isFinite(currentRemainingRatio) ? currentRemainingRatio * 100 : 100);
         const remainingValue = Number.isFinite(currentRemainingCombos) ? formatNumber(currentRemainingCombos) : '-';
         const benefitPct = Number.isFinite(currentRemainingRatio)
             ? Math.max(0, Math.round((1 - Math.max(0.000001, Math.min(1, currentRemainingRatio))) * 100))
@@ -9087,7 +9089,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const ids = PRESETS[strategy] || [];
             const fallbackRatio = getEstimatedRatioByIds(ids);
             const fixed = SCENARIO_METRICS[strategy];
-            const excludedPct = fixed ? fixed.excludedPct : Math.max(0, Math.min(100, Math.round((1 - fallbackRatio) * 1000) / 10));
+            const excludedPct = fixed ? fixed.excludedPct : formatDisplayPercent((1 - fallbackRatio) * 100);
             const ratio = fixed ? Math.max(0.000001, 1 - excludedPct / 100) : fallbackRatio;
             const remainingCombos = Math.max(1, Math.round(TOTAL_COMBOS * ratio));
             const excludedCombos = Math.max(0, TOTAL_COMBOS - remainingCombos);
@@ -9097,7 +9099,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 excludedEl.textContent = `예상 제외: ${formatNumber(excludedCombos)}개`;
             }
             if (improveEl) {
-                const remainPct = Math.max(0, Math.min(100, Math.round(ratio * 1000) / 10));
+                const remainPct = formatDisplayPercent(ratio * 100);
                 improveEl.textContent = `제외 비중: ${excludedPct}% · 남는 비중: ${remainPct}%`;
             }
         });
