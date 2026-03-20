@@ -7460,52 +7460,35 @@ body.rule-picker-open {
     align-items: center;
     justify-content: center;
     font-size: 13px;
-    font-weight: 800;
+    font-weight: 700;
     color: rgba(15, 23, 42, 0.4);
     border: none;
     cursor: pointer;
-    background: #ffffff;
-    box-shadow: 
-        0 2px 4px rgba(0, 0, 0, 0.1),
-        inset 0 -2px 4px rgba(0, 0, 0, 0.1),
-        inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    background: #f1f5f9;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.1);
     opacity: 0.9;
     transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 .exclude-number-ball::after {
-    content: "";
-    position: absolute;
-    bottom: 3px;
-    right: 7px;
-    width: 10px;
-    height: 5px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    filter: blur(1px);
-    z-index: 2;
+    display: none;
 }
 
 .exclude-number-ball.is-active {
     opacity: 1;
     color: #fff;
     filter: none;
-    box-shadow: 
-        0 6px 12px rgba(0, 0, 0, 0.2), 
-        inset 0 -3px 6px rgba(0, 0, 0, 0.2),
-        inset 0 3px 6px rgba(255, 255, 255, 0.3);
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18);
     transform: translateY(-2px) scale(1.1);
     z-index: 2;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-.exclude-number-ball.is-active[data-ball-range="1-10"] { background: radial-gradient(circle at 35% 35%, #ffeb3b, #fbc02d 75%, #f57f17); }
-.exclude-number-ball.is-active[data-ball-range="11-20"] { background: radial-gradient(circle at 35% 35%, #42a5f5, #1976d2 75%, #0d47a1); }
-.exclude-number-ball.is-active[data-ball-range="21-30"] { background: radial-gradient(circle at 35% 35%, #ef5350, #d32f2f 75%, #b71c1c); }
-.exclude-number-ball.is-active[data-ball-range="31-40"] { background: radial-gradient(circle at 35% 35%, #bdbdbd, #757575 75%, #424242); }
-.exclude-number-ball.is-active[data-ball-range="41-45"] { background: radial-gradient(circle at 35% 35%, #66bb6a, #388e3c 75%, #1b5e20); }
+.exclude-number-ball.is-active[data-ball-range="1-10"] { background: #fbc400; }
+.exclude-number-ball.is-active[data-ball-range="11-20"] { background: #69c8f2; }
+.exclude-number-ball.is-active[data-ball-range="21-30"] { background: #ff6b6b; }
+.exclude-number-ball.is-active[data-ball-range="31-40"] { background: #aaaaaa; }
+.exclude-number-ball.is-active[data-ball-range="41-45"] { background: #b0d840; }
 
 .rule-desc,
 .rule-stat {
