@@ -6149,6 +6149,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function showActionConfirm(title, message, okLabel = '확인', cancelLabel = '취소') {
+        return new Promise((resolve) => {
+            const confirmed = window.confirm(`${title}\n\n${message}`);
+            resolve(confirmed);
+        });
+    }
+
     function showActionPopup(message) {
         if (!appToastEl) {
             window.alert(message);
