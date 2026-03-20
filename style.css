@@ -1048,7 +1048,7 @@ body[data-theme="dark"] #tab-store .locker-saved-row em {
 /* Analysis + locker tabs */
 #tab-store.tab-panel.is-active.app-shell,
 #tab-qr.tab-panel.is-active.app-shell {
-    display: grid;
+    display: grid !important;
     gap: 18px;
 }
 
@@ -3307,13 +3307,15 @@ body[data-theme="light"] .icon-dashboard::before {
 }
 
 .tab-panel {
-    display: none;
+    display: none !important;
     animation: tabFade 0.25s ease;
     width: 100%;
+    visibility: hidden;
 }
 
 .tab-panel.is-active {
-    display: block;
+    display: block !important;
+    visibility: visible;
 }
 
 .weekly-grid,
@@ -9906,18 +9908,26 @@ body[data-theme="dark"] #tab-dashboard .dash-intro-sub {
 /* Pull dashboard up to remove header-gap */
 #tab-dashboard.tab-panel.is-active {
     margin-top: -40px;
+    display: block !important;
 }
 
 @media (max-width: 960px) {
     #tab-dashboard.tab-panel.is-active {
         margin-top: -18px;
+        display: block !important;
     }
 }
 
 @media (max-width: 640px) {
     #tab-dashboard.tab-panel.is-active {
         margin-top: -16px;
+        display: block !important;
     }
+}
+
+#tab-draw.tab-panel.is-active,
+#tab-mypage.tab-panel.is-active {
+    display: block !important;
 }
 
 /* App shell refinement */
