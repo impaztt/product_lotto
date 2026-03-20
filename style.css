@@ -20411,16 +20411,19 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 #tab-draw.draw-wizard-tab .draw-funnel-review-exclude-balls {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 4px;
     align-content: start;
+    justify-content: flex-start;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-exclude-balls .exclude-number-ball {
-    width: 18px;
-    height: 18px;
-    aspect-ratio: 1/1;
-    min-height: 0;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    aspect-ratio: 1/1 !important;
     font-size: 9px;
+    flex: 0 0 auto !important;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-empty-state {
