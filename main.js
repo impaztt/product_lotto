@@ -4590,14 +4590,16 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDrawWizard();
 
         if (drawWizardDetailGroupsEl) {
-            drawWizardDetailGroupsEl.addEventListener('click', async event => {
+            // Use onclick to ensure only one listener exists and it's easier to verify
+            drawWizardDetailGroupsEl.onclick = async (event) => {
                 const button = event.target instanceof Element ? event.target.closest('[data-wizard-rule]') : null;
                 if (!button) {
                     return;
                 }
 
                 // Plan Restriction Check
-                if (button.getAttribute('data-restricted') === 'true') {
+                const isRestricted = button.getAttribute('data-restricted') === 'true';
+                if (isRestricted) {
                     const requiredTier = button.getAttribute('data-required-tier') || 'PREMIUM';
                     
                     if (!isMember()) {
@@ -4623,7 +4625,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (planBtn) {
                                 setTimeout(() => {
                                     planBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                }, 100);
+                                }, 150);
                             }
                         }
                     }
@@ -4643,7 +4645,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 drawWizardState.selectedRuleIds = Array.from(next);
                 commitDrawWizardState();
-            });
+            };
         }
         if (drawWizardResumeBtn) {
             drawWizardResumeBtn.addEventListener('click', () => {
