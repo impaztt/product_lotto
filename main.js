@@ -4578,27 +4578,31 @@ document.addEventListener('DOMContentLoaded', () => {
         if (drawTabPanel && drawTabPanel.dataset.wizardInitialized === 'true') {
             return;
         }
+        // Initialize Wizard State (Ensure it exists even for non-members)
+        if (!drawWizardState) {
+            drawWizardState = getDrawWizardDefaultState();
+        }
         const draft = authStateResolved && isMember() ? loadDrawWizardDraft() : null;
         drawWizardResumeState = draft ? { ...draft } : null;
-        drawWizardState = getDrawWizardDefaultState();
+        
         syncDrawWizardSelections();
         renderDrawWizard();
 
         if (drawWizardDetailGroupsEl) {
             drawWizardDetailGroupsEl.addEventListener('click', async event => {
                 const button = event.target instanceof Element ? event.target.closest('[data-wizard-rule]') : null;
-                if (!button || !drawWizardState) {
+                if (!button) {
                     return;
                 }
 
                 // Plan Restriction Check
-                if (button.dataset.restricted === 'true') {
-                    const requiredTier = button.dataset.requiredTier;
+                if (button.getAttribute('data-restricted') === 'true') {
+                    const requiredTier = button.getAttribute('data-required-tier') || 'PREMIUM';
                     
                     if (!isMember()) {
                         const confirmed = await showActionConfirm(
                             '멤버십 전용 기능',
-                            `이 필터는 ${requiredTier} 멤버십 이상 이용 가능한 프리미엄 기능입니다.\n로그인 후 다양한 필터 혜택을 확인해 보세요.`,
+                            `이 필터는 ${requiredTier} 멤버십 이상 이용 가능한 프리미엄 기능입니다.\n로그인 후 더 강력한 필터 혜택을 확인해 보세요.`,
                             '로그인하기',
                             '닫기'
                         );
@@ -4616,13 +4620,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             setActiveTab('mypage');
                             const planBtn = document.getElementById('mypage-plan-manage-btn');
                             if (planBtn) {
-                                planBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                setTimeout(() => {
+                                    planBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }, 100);
                             }
                         }
                     }
                     return;
                 }
 
+                if (!drawWizardState) return;
                 const ruleId = String(button.dataset.wizardRule || '').trim();
                 if (!ruleId) {
                     return;
