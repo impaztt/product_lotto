@@ -17,22 +17,27 @@ A modern, framework-less web application for generating and managing lottery num
     - **Clean Rules Summary:** Updated selected rules cards to a horizontal flex layout for better alignment and readability.
     - **Deleted Redundant Tags:** Removed small tag-like bullets under the main count to minimize visual noise.
 - **Draw Completion Screen Optimization:** Refined the "추첨 완료" screen to be more compact and fit within a single viewport.
-1.  **Enhance Archive Title Readability:** Update the "최근 번호" (Recent Numbers) title in the Archive tab to include a bullet-point style indicator for better visual hierarchy and readability.
-2.  **Fix Archive Content Alignment:** Correct the alignment of the Archive tab's content. Currently, it is shifted to the left and needs to be centered to match the layout of other tabs (Draw, My Page).
-3.  **Optimize Draw Completion Screen:** Redesign the wizard result screen to be more compact by:
-    -   Reducing paddings and gaps in the result shell and stage.
-    -   Shrinking the lottery reels and slots.
-    -   Transforming number rows from vertical/multi-line to horizontal/single-line layouts.
-    -   Optimizing action button sizes for mobile.
+- **Step 8 (Exclusion Selection) & Final Review Optimization:**
+    - **Step 8 UI Compression:** Reduced the height and font sizes of the step header and instructions.
+    - **Exclusion Number Title:** Shortened the "제외수 없음" label to "없음" and minimized its footprint for better mobile fit.
+    - **Lotto Ball Design:** Styled the number buttons (1-45) as authentic, circular lottery balls with range-based coloring and 3D effects.
+    - **Review Screen Space-Efficiency:** Aggressively minimized vertical margins, paddings, and gaps in the final confirmation (review) step to ensure all summary content fits within a single mobile screen height without scrolling. Added side-by-side layouts for metrics and session counts on mobile.
 
 ## Steps
 1.  **Modify `style.css` (Archive):**
     -   Add a pseudo-element (`::before`) to `#tab-store .store-shell-title--recent h2` to create a bullet-point effect.
-    -   Add `#tab-store .locker-layout` and `#tab-store .locker-board` to the list of centered elements (around line 9853).
+    -   Add `#tab-store .locker-layout` and `#tab-store .locker-board` to the list of centered elements.
     -   Update the `#tab-store.app-shell` selector to ensure it inherits the standard `app-shell` layout properties.
-2.  **Modify `style.css` (Draw Result):**
-    -   Reduce `draw-funnel-result-shell` and `draw-wizard-result-stage` paddings.
-    -   Update `number-row--wizard-result` to a horizontal grid with 6-column balls.
-    -   Scale down balls and slots for better vertical efficiency.
-3.  **Verify Changes:** Check the layout in both Archive and Draw tabs to ensure they are centered, visually consistent, and space-efficient.
-4.  **Push Changes:** Commit and push the updates to the repository.
+2.  **Modify `style.css` (Draw Step 8 & Review):**
+    -   **Step 8 (Exclude):**
+        -   Reduced header and copy gaps/font-sizes.
+        -   Ensured `.exclude-number-ball` is always circular (`border-radius: 50%`) and has `aspect-ratio: 1/1`.
+        -   Added 3D radial gradients and range-based colors for balls.
+    -   **Step 9 (Review):**
+        -   Reduced `gap` in `.draw-funnel-review-unified` and `.draw-funnel-review-dash`.
+        -   Minimized `padding` and `font-size` across all review components.
+        -   Implemented horizontal layouts for generation counts and session metrics to maximize vertical space.
+3.  **Modify `main.js` / `index.html`:**
+    -   Shortened exclusion labels ("없음" / "제외수 n").
+    -   Added `draw-funnel-review-row--split` to the count row for side-by-side layout.
+4.  **Verify Changes:** Verified the layout in mobile emulation mode to ensure single-screen fit for review and authentic ball styling in Step 8.

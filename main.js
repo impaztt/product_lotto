@@ -8090,7 +8090,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateExcludeNumberLabel() {
         const count = excludeNumberValues.size;
-        const label = count ? `제외수 ${count}개` : '제외수 없음';
+        const label = count ? `제외수 ${count}` : '없음';
         if (excludeNumberTitle) {
             excludeNumberTitle.textContent = label;
         }
