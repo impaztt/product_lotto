@@ -5823,10 +5823,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initFirebase() {
+        console.log('[Auth] Initializing Firebase...');
         if (typeof window.firebase === 'undefined') {
             authStateResolved = true;
+            console.error('[Auth] Firebase SDK not found on window');
             if (firebaseAuthStatusEl) {
-                firebaseAuthStatusEl.textContent = 'Firebase SDK 로딩 실패: 네트워크 또는 스크립트 로딩 상태를 확인하세요.';
+                firebaseAuthStatusEl.textContent = 'Firebase SDK 로딩 실패: 스크립트 연결을 확인하세요.';
+                firebaseAuthStatusEl.style.color = '#ef4444';
             }
             return;
         }
@@ -5834,8 +5837,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const config = window.LOTTO_FIREBASE_CONFIG || {};
         if (!config.apiKey || !config.authDomain || !config.projectId || !config.appId) {
             authStateResolved = true;
+            console.error('[Auth] Firebase config missing required fields', config);
             if (firebaseAuthStatusEl) {
-                firebaseAuthStatusEl.textContent = 'firebase-config.js에 Firebase 웹 앱 설정값을 입력해 주세요.';
+                firebaseAuthStatusEl.textContent = '설정 오류: firebase-config.js를 확인해 주세요.';
+                firebaseAuthStatusEl.style.color = '#ef4444';
             }
             return;
         }
@@ -5843,40 +5848,55 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             if (!window.firebase.apps.length) {
                 window.firebase.initializeApp(config);
+                console.log('[Auth] Firebase app initialized');
             }
+            
+            if (typeof window.firebase.auth !== 'function') {
+                throw new Error('Firebase Auth module not loaded');
+            }
+
             firebaseAuth = window.firebase.auth();
             firebaseDb = window.firebase.firestore();
             firebaseReady = true;
+            console.log('[Auth] Auth & Firestore ready');
+
             googleRedirectFlowPending = readGoogleRedirectPendingState();
-            if (window.firebase.auth && window.firebase.auth.Auth && window.firebase.auth.Auth.Persistence) {
+            
+            if (window.firebase.auth.Auth && window.firebase.auth.Auth.Persistence) {
                 const { Persistence } = window.firebase.auth.Auth;
                 authPersistenceReady = firebaseAuth.setPersistence(Persistence.LOCAL).catch(async error => {
-                    console.warn('Auth 로컬 세션 저장 설정 실패', error);
-                    if (Persistence.SESSION) {
-                        try {
-                            await firebaseAuth.setPersistence(Persistence.SESSION);
-                        } catch (sessionError) {
-                            console.warn('Auth 세션 저장 설정 실패', sessionError);
-                        }
+                    console.warn('[Auth] Persistence LOCAL failed, trying SESSION', error);
+                    try {
+                        await firebaseAuth.setPersistence(Persistence.SESSION);
+                    } catch (e) {
+                        console.error('[Auth] Persistence failed completely', e);
                     }
                 });
             } else {
                 authPersistenceReady = Promise.resolve();
             }
+
             firebaseAuth.onAuthStateChanged(async user => {
+                console.log('[Auth] Auth state changed:', user ? user.uid : 'null');
                 await syncAuthState(user);
             });
+
             void handleGoogleRedirectResult();
-            setFirebaseAuthStatus(
-                hasGoogleRedirectPending()
-                    ? '구글 로그인 결과를 확인하는 중입니다.'
-                    : '로그인 준비가 끝났어요. 바로 계속할 수 있어요.'
-            );
+            
+            if (firebaseAuthStatusEl) {
+                firebaseAuthStatusEl.textContent = hasGoogleRedirectPending()
+                    ? '구글 로그인 결과를 확인하는 중입니다...'
+                    : '로그인할 준비가 되었습니다.';
+                firebaseAuthStatusEl.style.color = '#64748b';
+            }
         } catch (error) {
+            console.error('[Auth] Critical initialization error:', error);
             firebaseReady = false;
             authStateResolved = true;
-            console.error('Firebase 초기화 실패', error);
-            setFirebaseAuthStatus('로그인 준비에 실패했어요. 설정을 다시 확인해 주세요.');
+            if (firebaseAuthStatusEl) {
+                firebaseAuthStatusEl.textContent = `초기화 실패: ${error.message}`;
+                firebaseAuthStatusEl.style.color = '#ef4444';
+            }
         }
         updateAuthUi();
     }
