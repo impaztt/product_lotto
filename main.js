@@ -2311,7 +2311,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const previewNumbers = Array.isArray(draws?.[0]?.numbers) ? draws[0].numbers : [];
         const excludeNumbers = normalizeDrawWizardExcludeNumbers(drawWizardState?.excludeNumbers);
         drawWizardResultStageEl.dataset.state = 'idle';
-        drawWizardResultStageStateEl.textContent = excludeNumbers.length ? '제외수 정리' : '추첨 준비';
+        drawWizardResultStageStateEl.textContent = '추첨 준비';
         drawWizardResultStageMetaEl.textContent = `${Math.max(1, draws.length || 1)}세트`;
         drawWizardResultReelsEl.innerHTML = Array.from({ length: 6 }, (_, index) => {
             const finalNumber = Number(previewNumbers[index] || 0);
@@ -2321,27 +2321,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return `
                 <div class="draw-wizard-result-slot" data-slot-index="${index}" data-ball-range="${escapeHtml(getBallRange(finalNumber))}">
                     <span class="draw-wizard-result-slot-spin">${escapeHtml(spinNumbers)}</span>
-                    <span class="draw-wizard-result-slot-value">${finalNumber ? escapeHtml(String(finalNumber)) : '&nbsp;'}</span>
+                    <span class="draw-wizard-result-slot-value"></span>
                 </div>
             `;
         }).join('');
-        if (!drawWizardResultExcludeStripEl) {
-            return;
-        }
-        if (!excludeNumbers.length) {
-            drawWizardResultExcludeStripEl.hidden = true;
-            drawWizardResultExcludeStripEl.innerHTML = '';
-            return;
-        }
-        const visibleExcludeNumbers = excludeNumbers.slice(0, 12);
-        const extraExcludeCount = Math.max(0, excludeNumbers.length - visibleExcludeNumbers.length);
-        drawWizardResultExcludeStripEl.hidden = false;
-        drawWizardResultExcludeStripEl.innerHTML = `
-            ${visibleExcludeNumbers.map(number => `
-                <span class="draw-wizard-result-exclude-ball ${escapeHtml(getExcludeRangeClass(number))}">${escapeHtml(String(number))}</span>
-            `).join('')}
-            ${extraExcludeCount ? `<span class="draw-wizard-result-exclude-more">+${escapeHtml(String(extraExcludeCount))}</span>` : ''}
-        `;
     }
 
     function finalizeDrawWizardResultExperience(draws = lastGeneratedDraws) {
@@ -2355,14 +2338,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (drawWizardResultStageMetaEl) {
             drawWizardResultStageMetaEl.textContent = `${Math.max(1, draws.length || 1)}세트`;
         }
-        if (drawWizardResultExcludeStripEl) {
-            drawWizardResultExcludeStripEl.querySelectorAll('.draw-wizard-result-exclude-ball').forEach(ball => {
-                ball.classList.add('is-dismissed');
-            });
-        }
         if (drawWizardResultReelsEl) {
             drawWizardResultReelsEl.querySelectorAll('.draw-wizard-result-slot').forEach(slot => {
                 slot.classList.add('is-revealed');
+                const slotValue = slot.querySelector('.draw-wizard-result-slot-value');
+                const previewNumbers = Array.isArray(draws?.[0]?.numbers) ? draws[0].numbers : [];
+                const idx = parseInt(slot.dataset.slotIndex, 10);
+                if (slotValue && previewNumbers[idx]) {
+                    slotValue.textContent = String(previewNumbers[idx]);
+                }
             });
         }
         if (numbersContainer) {
@@ -2379,32 +2363,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         clearDrawWizardResultTimers();
         renderDrawWizardResultStage(draws);
-        const excludeBalls = Array.from(drawWizardResultExcludeStripEl?.querySelectorAll('.draw-wizard-result-exclude-ball') || []);
         const slots = Array.from(drawWizardResultReelsEl?.querySelectorAll('.draw-wizard-result-slot') || []);
         const rows = Array.from(numbersContainer?.querySelectorAll('.number-row--wizard-result') || []);
         rows.forEach(row => row.classList.remove('is-revealed'));
         slots.forEach(slot => slot.classList.remove('is-revealed'));
-        excludeBalls.forEach(ball => ball.classList.remove('is-dismissed'));
         drawWizardResultStageEl.dataset.state = 'spinning';
         if (drawWizardResultStageStateEl) {
-            drawWizardResultStageStateEl.textContent = excludeBalls.length ? '제외수 정리' : '번호 추첨 중';
+            drawWizardResultStageStateEl.textContent = '번호 추첨 중';
         }
         if (drawWizardResultStageMetaEl) {
             drawWizardResultStageMetaEl.textContent = `${draws.length}세트`;
         }
-        const excludePhaseDelay = excludeBalls.length ? Math.min(820, 140 + excludeBalls.length * 70) : 0;
-        excludeBalls.forEach((ball, index) => {
-            queueDrawWizardResultTimer(() => {
-                ball.classList.add('is-dismissed');
-            }, 110 + index * 70);
-        });
-        const slotStartDelay = 260 + excludePhaseDelay;
+        const previewNumbers = Array.isArray(draws?.[0]?.numbers) ? draws[0].numbers : [];
+        const slotStartDelay = 260;
         slots.forEach((slot, index) => {
             queueDrawWizardResultTimer(() => {
-                if (drawWizardResultStageStateEl) {
-                    drawWizardResultStageStateEl.textContent = '번호 추첨 중';
-                }
                 slot.classList.add('is-revealed');
+                const slotValue = slot.querySelector('.draw-wizard-result-slot-value');
+                if (slotValue && previewNumbers[index]) {
+                    slotValue.textContent = String(previewNumbers[index]);
+                }
             }, slotStartDelay + index * 180);
         });
         const rowStartDelay = slotStartDelay + slots.length * 180 + 180;

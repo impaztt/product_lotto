@@ -19869,25 +19869,25 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-exclude-shell,
 #tab-draw.draw-wizard-tab .draw-funnel-result-shell {
-    padding: 12px;
-    border-radius: 24px;
+    padding: 8px;
+    border-radius: 20px;
     display: grid;
-    gap: 10px;
+    gap: 8px;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-result-shell .numbers-container {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 8px;
     align-items: stretch;
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-result-stage {
     position: relative;
     overflow: hidden;
-    padding: 12px;
-    border-radius: 20px;
+    padding: 8px 10px;
+    border-radius: 16px;
     display: grid;
-    gap: 10px;
+    gap: 6px;
     background:
         radial-gradient(circle at top right, rgba(236, 159, 51, 0.18), transparent 34%),
         radial-gradient(circle at bottom left, rgba(47, 109, 246, 0.1), transparent 30%),
@@ -19921,52 +19921,6 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     color: #4f647a;
     font-size: 12px;
     font-weight: 700;
-}
-
-#tab-draw.draw-wizard-tab .draw-wizard-result-exclude-strip {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    min-height: 32px;
-}
-
-#tab-draw.draw-wizard-tab .draw-wizard-result-exclude-ball,
-#tab-draw.draw-wizard-tab .draw-wizard-result-exclude-more {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    font-size: 12px;
-    font-weight: 800;
-    color: #10233a;
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(20, 38, 64, 0.08);
-    transition: transform 280ms ease, opacity 280ms ease, filter 280ms ease;
-}
-
-#tab-draw.draw-wizard-tab .draw-wizard-result-exclude-ball::after {
-    content: "";
-    position: absolute;
-    width: 20px;
-    height: 2px;
-    border-radius: 999px;
-    background: rgba(235, 107, 63, 0.86);
-    transform: rotate(-42deg);
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.66);
-}
-
-#tab-draw.draw-wizard-tab .draw-wizard-result-exclude-ball.is-dismissed {
-    opacity: 0.28;
-    transform: translateY(-8px) scale(0.92);
-    filter: grayscale(0.16);
-}
-
-#tab-draw.draw-wizard-tab .draw-wizard-result-exclude-more {
-    background: rgba(19, 38, 61, 0.08);
-    color: #17324f;
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-result-reels {
@@ -20789,17 +20743,6 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-result-stage-meta {
-        font-size: 11px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-wizard-result-exclude-strip {
-        gap: 6px;
-    }
-
-    #tab-draw.draw-wizard-tab .draw-wizard-result-exclude-ball,
-    #tab-draw.draw-wizard-tab .draw-wizard-result-exclude-more {
-        width: 28px;
-        height: 28px;
         font-size: 11px;
     }
 
