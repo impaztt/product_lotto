@@ -2026,9 +2026,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Initialize Firebase and basic dependencies immediately
+    initFirebase();
+
     try {
         guestTrackingId = getOrCreateGuestTrackingId();
-        initFirebase();
         syncMenuState(false);
         setupExcludeNumberControl();
         resetDrawSelectionsForEntry();
@@ -6064,18 +6066,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function signInWithGoogle() {
+        console.log('[Auth] Google sign-in requested');
         if (!firebaseReady || !firebaseAuth) {
+            console.error('[Auth] Firebase not ready', { firebaseReady, hasAuth: !!firebaseAuth });
             updateRulesStatus('Firebase 설정이 필요합니다. firebase-config.js 값을 먼저 입력하세요.');
             setFirebaseAuthStatus('Firebase 설정 미완료');
             return false;
         }
         if (shouldUseExternalBrowserPrompt()) {
+            console.log('[Auth] In-app browser detected, showing prompt');
             openInAppBrowserModal({ force: true });
             updateRulesStatus('카카오톡에서는 외부 브라우저에서 로그인해 주세요.');
             setFirebaseAuthStatus('카카오톡 인앱브라우저에서는 외부 브라우저로 다시 열어야 구글 로그인이 됩니다.');
             return false;
         }
         if (authActionInFlight) {
+            console.warn('[Auth] Auth action already in flight');
             setFirebaseAuthStatus('로그인 요청을 처리 중입니다. 잠시만 기다려 주세요.');
             return false;
         }
@@ -6086,8 +6092,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let startedRedirect = false;
         setAuthButtonsBusy(true);
         try {
+            console.log('[Auth] Waiting for persistence...');
             await authPersistenceReady;
             if (shouldPreferGoogleRedirect()) {
+                console.log('[Auth] Preferring redirect flow');
                 updateRulesStatus('구글 로그인 화면으로 이동합니다.');
                 setFirebaseAuthStatus('브라우저 환경에 맞춰 구글 로그인 화면으로 이동합니다.');
                 setGoogleRedirectPendingState(true);
@@ -6095,7 +6103,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 startedRedirect = true;
                 return false;
             }
+            console.log('[Auth] Launching popup...');
             const result = await firebaseAuth.signInWithPopup(provider);
+            console.log('[Auth] Popup result received', result?.user?.uid);
             if (result && result.user) {
                 await syncAuthState(result.user);
             }
@@ -6103,9 +6113,10 @@ document.addEventListener('DOMContentLoaded', () => {
             setFirebaseAuthStatus('구글 로그인 완료. 계정 정보를 불러오는 중입니다.');
             return true;
         } catch (error) {
-            console.error('구글 로그인 실패', error);
+            console.error('[Auth] Google sign-in error', error);
             if (!startedRedirect && shouldFallbackGoogleRedirect(error)) {
                 try {
+                    console.log('[Auth] Falling back to redirect flow due to popup block');
                     updateRulesStatus('팝업 대신 구글 로그인 화면으로 이동합니다.');
                     setFirebaseAuthStatus('팝업이 어려워 전체 페이지 로그인으로 전환합니다.');
                     setGoogleRedirectPendingState(true);
@@ -6113,6 +6124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     startedRedirect = true;
                     return false;
                 } catch (redirectError) {
+                    console.error('[Auth] Fallback redirect error', redirectError);
                     setGoogleRedirectPendingState(false);
                     console.error('구글 리디렉션 로그인 전환 실패', redirectError);
                     error = redirectError;
