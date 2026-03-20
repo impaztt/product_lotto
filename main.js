@@ -4594,19 +4594,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Plan Restriction Check
                 if (button.dataset.restricted === 'true') {
                     const requiredTier = button.dataset.requiredTier;
-                    const confirmed = await showActionConfirm(
-                        '플랜 제한 필터',
-                        `이 필터는 ${requiredTier} 멤버십 전용 기능입니다.\n플랜을 구매하고 최상위 필터 기능을 이용해 보세요.`,
-                        '플랜 구매하기',
-                        '닫기'
-                    );
-                    if (confirmed) {
-                        // Redirect to My Page Plan Section
-                        setActiveTab('mypage');
-                        // Scroll to plan manage section if possible
-                        const planBtn = document.getElementById('mypage-plan-manage-btn');
-                        if (planBtn) {
-                            planBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    if (!isMember()) {
+                        const confirmed = await showActionConfirm(
+                            '멤버십 전용 기능',
+                            `이 필터는 ${requiredTier} 멤버십 이상 이용 가능한 프리미엄 기능입니다.\n로그인 후 다양한 필터 혜택을 확인해 보세요.`,
+                            '로그인하기',
+                            '닫기'
+                        );
+                        if (confirmed) {
+                            openAuthModal();
+                        }
+                    } else {
+                        const confirmed = await showActionConfirm(
+                            '플랜 업그레이드',
+                            `고객님은 현재 FREE 등급입니다. ${requiredTier} 멤버십으로 업그레이드하고 최상위 필터 기능을 이용해 보세요.`,
+                            '플랜 구매하기',
+                            '닫기'
+                        );
+                        if (confirmed) {
+                            setActiveTab('mypage');
+                            const planBtn = document.getElementById('mypage-plan-manage-btn');
+                            if (planBtn) {
+                                planBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
                         }
                     }
                     return;

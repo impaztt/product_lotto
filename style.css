@@ -19825,10 +19825,16 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .rule-restricted-badge[data-tier="master"] {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 40%, #7c3aed 100%);
-    box-shadow: 2px 2px 12px rgba(245, 158, 11, 0.35);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 40%, #fbbf24 100%);
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+    border: 1px solid rgba(251, 191, 36, 0.5);
+    animation: masterPulse 2s infinite ease-in-out;
+}
+
+@keyframes masterPulse {
+    0% { box-shadow: 0 0 8px rgba(251, 191, 36, 0.3); }
+    50% { box-shadow: 0 0 18px rgba(251, 191, 36, 0.6); }
+    100% { box-shadow: 0 0 8px rgba(251, 191, 36, 0.3); }
 }
 
 #tab-draw.draw-wizard-tab .rule-restricted-badge[data-tier="platinum"] {
