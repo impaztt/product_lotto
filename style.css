@@ -19780,6 +19780,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card {
+    position: relative;
     width: 100%;
     min-height: 0;
     padding: 14px;
@@ -19803,16 +19804,19 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .rule-restricted-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 2px 8px;
-    background: #1e293b;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 4px 10px;
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
     color: #ffffff;
-    font-size: 10px;
-    font-weight: 800;
-    border-radius: 6px;
-    margin-top: 6px;
-    width: fit-content;
+    font-size: 9px;
+    font-weight: 900;
+    border-radius: 0 0 12px 0;
+    box-shadow: 2px 2px 8px rgba(99, 102, 241, 0.3);
+    z-index: 10;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-restricted .draw-funnel-rule-impact {
