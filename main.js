@@ -5089,7 +5089,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const allSessions = getGeneratedHistoryForCurrentOwner();
-        const sessions = allSessions.slice(0, 20);
+        const sessions = allSessions.slice(0, 30);
         if (!sessions.length) {
             lockerHistoryListEl.innerHTML = `
                 <article class="locker-history-empty">
@@ -5099,56 +5099,84 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             return;
         }
-        const hiddenCount = Math.max(0, allSessions.length - sessions.length);
-        lockerHistoryListEl.innerHTML = sessions.map(session => {
-            const when = formatSlotDate(session.createdAt);
-            const roundText = Number(session.round || 0) > 0 ? `${Number(session.round)}회` : '회차 미정';
-            const entries = Array.isArray(session.entries) ? session.entries : [];
-            const previewEntries = entries.slice(0, 2);
-            const hiddenSets = Math.max(0, entries.length - previewEntries.length);
-            
-            // Flatten all numbers into a single array for the first few sets to show in one line
-            let allNumbers = [];
-            previewEntries.forEach((entry, idx) => {
-                if (idx > 0) allNumbers.push("/"); // separator between sets
-                allNumbers = allNumbers.concat(Array.isArray(entry.numbers) ? entry.numbers : []);
-            });
 
-            const numbersHtml = allNumbers.map(number => {
-                if (number === "/") {
-                    return `<span class="locker-history-separator">/</span>`;
-                }
-                return `<span class="locker-history-ball">${escapeHtml(number)}</span>`;
+        // Group by Date (YYYY.MM.DD)
+        const groups = {};
+        sessions.forEach(session => {
+            const date = new Date(session.createdAt);
+            const dateKey = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+            if (!groups[dateKey]) {
+                groups[dateKey] = [];
+            }
+            groups[dateKey].push(session);
+        });
+
+        const sortedDateKeys = Object.keys(groups).sort((a, b) => b.localeCompare(a));
+
+        lockerHistoryListEl.innerHTML = sortedDateKeys.map((dateKey, groupIdx) => {
+            const dateSessions = groups[dateKey];
+            const isFirst = groupIdx === 0;
+            
+            const sessionsHtml = dateSessions.map(session => {
+                const date = new Date(session.createdAt);
+                const timeStr = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+                const roundText = Number(session.round || 0) > 0 ? `${Number(session.round)}회` : '회차 미정';
+                const entries = Array.isArray(session.entries) ? session.entries : [];
+                const previewEntries = entries.slice(0, 2);
+                const hiddenSets = Math.max(0, entries.length - previewEntries.length);
+                
+                let allNumbers = [];
+                previewEntries.forEach((entry, idx) => {
+                    if (idx > 0) allNumbers.push("/");
+                    allNumbers = allNumbers.concat(Array.isArray(entry.numbers) ? entry.numbers : []);
+                });
+
+                const numbersHtml = allNumbers.map(number => {
+                    if (number === "/") return `<span class="locker-history-separator">/</span>`;
+                    return `<span class="locker-history-ball">${escapeHtml(number)}</span>`;
+                }).join('');
+
+                return `
+                    <div class="locker-history-row">
+                        <div class="locker-history-row-header">
+                            <strong class="locker-history-row-round">${roundText}</strong>
+                            <span class="locker-history-row-date">${timeStr}</span>
+                        </div>
+                        <div class="locker-history-row-body">
+                            <div class="locker-history-row-sets">
+                                <div class="locker-history-row-balls">${numbersHtml}</div>
+                                ${hiddenSets ? `<div class="locker-history-more-sets">+${hiddenSets}</div>` : ''}
+                            </div>
+                            <button type="button" class="ghost locker-copy-btn-mini" data-locker-copy="${escapeHtml(session.generationId)}" aria-label="복사">
+                                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <span>복사</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
             }).join('');
 
             return `
-                <article class="locker-history-row">
-                    <div class="locker-history-row-header">
-                        <strong class="locker-history-row-round">${roundText}</strong>
-                        <span class="locker-history-row-date">${when}</span>
+                <div class="locker-history-group ${isFirst ? 'is-expanded' : ''}">
+                    <button type="button" class="locker-history-group-header" onclick="this.parentElement.classList.toggle('is-expanded')">
+                        <span class="locker-history-group-date">${dateKey}</span>
+                        <span class="locker-history-group-count">${dateSessions.length}건</span>
+                        <svg class="locker-history-group-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="locker-history-group-content">
+                        ${sessionsHtml}
                     </div>
-                    <div class="locker-history-row-body">
-                        <div class="locker-history-row-sets">
-                            <div class="locker-history-row-balls">
-                                ${numbersHtml}
-                            </div>
-                            ${hiddenSets ? `<div class="locker-history-more-sets">+${hiddenSets}</div>` : ''}
-                        </div>
-                        <button type="button" class="ghost locker-copy-btn-mini" data-locker-copy="${escapeHtml(session.generationId)}" aria-label="복사">
-                            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            <span>복사</span>
-                        </button>
-                    </div>
-                </article>
+                </div>
             `;
-        }).join('') + (hiddenCount
-            ? `
-                <article class="locker-history-more">
-                    <strong>+${hiddenCount}</strong>
-                    <p>최근 20개만 표시</p>
-                </article>
-            `
-            : '');
+        }).join('');
+
+        // Re-attach copy listeners
+        lockerHistoryListEl.querySelectorAll('[data-locker-copy]').forEach(btn => {
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                copyLockerSession(btn.dataset.lockerCopy);
+            };
+        });
     }
 
     async function loadMypageDrawHistory(force = false) {

@@ -278,30 +278,97 @@ input, textarea, [contenteditable="true"] {
 #tab-store .locker-history-list {
     display: grid;
     grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+#tab-store .locker-history-group {
+    display: grid;
+    gap: 0;
+    border-radius: 18px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+#tab-store .locker-history-group-header {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
     gap: 10px;
+    background: #ffffff;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s ease;
+}
+
+#tab-store .locker-history-group-header:hover {
+    background: #f8fbff;
+}
+
+#tab-store .locker-history-group-date {
+    font-size: 14px;
+    font-weight: 800;
+    color: #10233a;
+    flex: 1;
+}
+
+#tab-store .locker-history-group-count {
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+    padding: 2px 8px;
+    background: #f1f5f9;
+    border-radius: 999px;
+}
+
+#tab-store .locker-history-group-arrow {
+    width: 18px;
+    height: 18px;
+    color: #94a3b8;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#tab-store .locker-history-group.is-expanded .locker-history-group-arrow {
+    transform: rotate(180deg);
+}
+
+#tab-store .locker-history-group-content {
+    display: flex;
+    flex-direction: column;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    padding: 0 12px;
+    gap: 8px;
+}
+
+#tab-store .locker-history-group.is-expanded .locker-history-group-content {
+    height: auto;
+    opacity: 1;
+    visibility: visible;
+    padding: 12px;
+}
+
+/* Force locker history list to always be 1 column for the grouped UI */
+#tab-store .locker-history-list,
+#tab-store .locker-panel--history-only .locker-history-list {
+    grid-template-columns: 1fr !important;
 }
 
 #tab-store .locker-history-row {
     display: flex;
     flex-direction: column;
-    padding: 12px 16px;
-    border-radius: 16px;
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
-    gap: 8px;
-}
-
-#tab-store .locker-history-row-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#tab-store .locker-history-row-body {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    background: #ffffff;
+    gap: 6px;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.02);
 }
 
 #tab-store .locker-history-row-header {
@@ -21782,7 +21849,6 @@ body[data-theme="dark"] #tab-mypage .mypage-account-list-row strong {
 }
 
 #tab-store .locker-panel--history-only .locker-history-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 8px !important;
 }
 
