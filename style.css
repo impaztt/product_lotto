@@ -19812,16 +19812,37 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     position: absolute;
     top: 0;
     left: 0;
-    padding: 3px 8px;
-    background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+    padding: 3px 10px;
     color: #ffffff;
     font-size: 8px;
-    font-weight: 900;
-    border-radius: 0 0 10px 0;
-    box-shadow: 2px 2px 8px rgba(99, 102, 241, 0.25);
+    font-weight: 950;
+    border-radius: 0 0 12px 0;
     z-index: 10;
-    letter-spacing: 0.02em;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.04em;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+#tab-draw.draw-wizard-tab .rule-restricted-badge[data-tier="master"] {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 40%, #7c3aed 100%);
+    box-shadow: 2px 2px 12px rgba(245, 158, 11, 0.35);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#tab-draw.draw-wizard-tab .rule-restricted-badge[data-tier="platinum"] {
+    background: linear-gradient(135deg, #94a3b8 0%, #475569 45%, #2563eb 100%);
+    box-shadow: 2px 2px 12px rgba(37, 99, 235, 0.25);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+#tab-draw.draw-wizard-tab .rule-restricted-badge[data-tier="gold"] {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+    box-shadow: 2px 2px 12px rgba(251, 191, 36, 0.25);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-restricted .draw-funnel-rule-impact {

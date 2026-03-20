@@ -3956,6 +3956,9 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (rank === 2 && userLevel < 2) {
                 restricted = true;
                 requiredTier = 'PLATINUM';
+            } else if (rank === 3 && userLevel < 1) {
+                restricted = true;
+                requiredTier = 'GOLD';
             }
 
             const restrictedClass = restricted ? ' is-restricted' : '';
@@ -3972,7 +3975,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="draw-funnel-rule-copy">
                             <strong>${escapeHtml(rule.title)}</strong>
                             <p>${escapeHtml(description)}</p>
-                            ${restricted ? `<span class="rule-restricted-badge">${requiredTier} 전용</span>` : ''}
+                            ${restricted ? `<span class="rule-restricted-badge" data-tier="${escapeHtml(requiredTier.toLowerCase())}">${requiredTier} 전용</span>` : ''}
                         </div>
                         <div class="draw-funnel-rule-impact">
                             <span class="draw-funnel-rule-impact-label">${escapeHtml(impact.label)}</span>
