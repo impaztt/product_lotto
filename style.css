@@ -20942,16 +20942,18 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-review-exclude-balls {
-        grid-template-columns: repeat(9, minmax(0, 1fr));
+        display: flex;
+        flex-wrap: wrap;
         gap: 3px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-review-exclude-balls .exclude-number-ball {
         font-size: 7px;
-        width: 100%;
-        height: auto;
+        width: 18px;
+        height: 18px;
         aspect-ratio: 1/1;
         min-height: 0;
+        flex: 0 0 auto;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-review-card--count .draw-count-chip {
