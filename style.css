@@ -7453,14 +7453,14 @@ body.rule-picker-open {
 }
 
 .exclude-number-ball {
-    width: 32px;
-    height: 32px;
+    width: 22px;
+    height: 22px;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 10px;
     font-weight: 700;
     color: rgba(15, 23, 42, 0.4);
     border: none;
@@ -20158,7 +20158,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     aspect-ratio: 1 / 1;
     min-height: 0;
     border-radius: 50%;
-    font-size: 12px;
+    font-size: 9px;
     opacity: 0.34;
     filter: saturate(0.7);
 }
@@ -20416,11 +20416,11 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-exclude-balls .exclude-number-ball {
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     aspect-ratio: 1/1;
     min-height: 0;
-    font-size: 10px;
+    font-size: 9px;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-empty-state {
@@ -20947,7 +20947,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-review-exclude-balls .exclude-number-ball {
-        font-size: 8px;
+        font-size: 7px;
         width: 100%;
         height: auto;
         aspect-ratio: 1/1;
@@ -21043,7 +21043,8 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-exclude-card .rule-control {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: repeat(9, minmax(0, 1fr));
+        gap: 4px;
     }
 
     #tab-draw.draw-wizard-tab #draw-wizard-exclude-summary {
