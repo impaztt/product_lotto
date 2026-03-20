@@ -21189,6 +21189,14 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-store.app-shell {
     background: linear-gradient(180deg, #f5f7fb 0%, #eef3f9 100%) !important;
+    padding-top: max(24px, env(safe-area-inset-top)) !important;
+}
+
+#tab-store .store-shell-title,
+#tab-store .locker-layout,
+#tab-store .locker-board {
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
 
 #tab-store .store-shell-title {
@@ -21715,7 +21723,7 @@ body[data-theme="dark"] #tab-mypage .mypage-account-list-row strong {
 
 /* Final override v4: tighten Archive tab layout */
 #tab-store.app-shell {
-    padding-top: 12px !important;
+    padding-top: 48px !important;
 }
 
 #tab-store .store-shell-title--recent {
