@@ -4080,7 +4080,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? `
                     <div class="draw-funnel-review-exclude-balls">
                         ${excludeNumbers.map(number => `
-                            <span class="exclude-number-ball ${escapeHtml(getExcludeRangeClass(number))} is-active">${escapeHtml(String(number))}</span>
+                            <span class="exclude-number-ball ${escapeHtml(getExcludeRangeClass(number))} is-active" data-ball-range="${escapeHtml(getBallRange(number))}">${escapeHtml(String(number))}</span>
                         `).join('')}
                     </div>
                 `
@@ -8151,6 +8151,7 @@ document.addEventListener('DOMContentLoaded', () => {
             button.className = `exclude-number-ball ${getExcludeRangeClass(i)}`;
             button.textContent = String(i);
             button.dataset.number = String(i);
+            button.setAttribute('data-ball-range', getBallRange(i));
             excludeNumberGrid.appendChild(button);
         }
 
