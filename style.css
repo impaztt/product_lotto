@@ -19801,19 +19801,24 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     opacity: 0.7;
     background: #f8fafc;
     border-style: dashed;
+    padding-top: 28px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-restricted .draw-funnel-rule-copy {
+    margin-top: 4px;
 }
 
 #tab-draw.draw-wizard-tab .rule-restricted-badge {
     position: absolute;
     top: 0;
     left: 0;
-    padding: 4px 10px;
+    padding: 3px 8px;
     background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
     color: #ffffff;
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 900;
-    border-radius: 0 0 12px 0;
-    box-shadow: 2px 2px 8px rgba(99, 102, 241, 0.3);
+    border-radius: 0 0 10px 0;
+    box-shadow: 2px 2px 8px rgba(99, 102, 241, 0.25);
     z-index: 10;
     letter-spacing: 0.02em;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
