@@ -257,6 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mypagePlanCopyAccessEl = document.getElementById('mypage-plan-copy-access');
     const mypagePlanGuideEl = document.getElementById('mypage-plan-guide');
     const mypagePlanFlowEl = document.getElementById('mypage-plan-flow');
+    const mypagePlanOffersSectionEl = document.getElementById('mypage-plan-offers');
     const mypagePlanManageBtn = document.getElementById('mypage-plan-manage-btn');
     const mypagePlanCancelBtn = document.getElementById('mypage-plan-cancel-btn');
     const mypageShellFooterEl = document.querySelector('#tab-mypage .mypage-shell-footer');
@@ -1669,26 +1670,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (mypagePlanManageBtn) {
         mypagePlanManageBtn.addEventListener('click', () => {
-            if (isAuthStatePending()) {
-                setFirebaseAuthStatus(getAuthPendingStatusMessage());
-                return;
-            }
-            if (!isMember()) {
-                openPremiumPlanWorkspace({
-                    focusResults: false
+            if (!mypagePlanOffersSectionEl) return;
+            
+            const isHidden = mypagePlanOffersSectionEl.hidden;
+            mypagePlanOffersSectionEl.hidden = !isHidden;
+            
+            if (isHidden) {
+                // Scroll to plans
+                window.requestAnimationFrame(() => {
+                    mypagePlanOffersSectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 });
-                showActionPopup('추천 플랜 구성을 먼저 비교하고, 마음에 들면 로그인 후 바로 시작할 수 있습니다.');
-                return;
+                mypagePlanManageBtn.textContent = '플랜 닫기';
+            } else {
+                mypagePlanManageBtn.textContent = '플랜 보기';
             }
-            const focusResults = isPremiumMember();
-            openPremiumPlanWorkspace({
-                focusResults
-            });
-            showActionPopup(
-                focusResults
-                    ? '현재 선택한 플랜 기준 추천번호 영역으로 이동했습니다.'
-                    : '추천 플랜 비교 영역으로 이동했습니다. 원하는 구성을 바로 선택할 수 있습니다.'
-            );
         });
     }
 
@@ -1698,6 +1693,54 @@ document.addEventListener('DOMContentLoaded', () => {
             showActionPopup('무료 플랜으로 전환했습니다.');
         });
     }
+
+    // Membership Purchase Button Listeners
+    document.addEventListener('click', async (e) => {
+        const buyBtn = e.target.closest('.premium-plan-buy');
+        if (!buyBtn) return;
+        
+        const card = buyBtn.closest('[data-premium-plan-card]');
+        if (!card) return;
+        
+        const tier = card.dataset.premiumPlanCard;
+        const plan = getMembershipPlanMeta(tier);
+        
+        if (!isMember()) {
+            const confirmed = await showActionConfirm(
+                '로그인 필요',
+                `${plan.label} 멤버십은 로그인 후 이용 가능합니다. 로그인 화면으로 이동할까요?`,
+                '로그인하기',
+                '닫기'
+            );
+            if (confirmed) {
+                openAuthModal();
+            }
+            return;
+        }
+        
+        const currentPlan = getMembershipPlanMeta();
+        if (currentPlan.id === tier) {
+            showActionPopup(`이미 ${plan.label} 멤버십을 이용 중입니다.`);
+            return;
+        }
+        
+        const confirmed = await showActionConfirm(
+            '멤버십 플랜 변경',
+            `${plan.label} 멤버십(월 ${formatNumber(plan.price || 0)}원)으로 플랜을 변경하시겠습니까?\n변경 즉시 모든 혜택이 적용됩니다.`,
+            '변경하기',
+            '취소'
+        );
+        
+        if (confirmed) {
+            await setMembershipTier(tier);
+            showActionPopup(`${plan.label} 멤버십으로 성공적으로 변경되었습니다!`);
+            // Hide selection area after purchase
+            if (mypagePlanOffersSectionEl) {
+                mypagePlanOffersSectionEl.hidden = true;
+                if (mypagePlanManageBtn) mypagePlanManageBtn.textContent = '플랜 보기';
+            }
+        }
+    });
 
     if (nicknameOpenModalBtn) {
         nicknameOpenModalBtn.addEventListener('click', () => {
@@ -4808,45 +4851,49 @@ document.addEventListener('DOMContentLoaded', () => {
             mypagePlanFlowEl.textContent = authPending
                 ? '잠시만 기다려 주세요.'
                 : premiumActive
-                ? '추천 번호로 바로 이동합니다.'
+                ? `${plan.label} 플랜의 모든 혜택이 적용 중입니다.`
                 : member
-                ? '지금은 직접 선택 중심입니다.'
-                : '로그인 후 필요하면 플랜을 선택할 수 있습니다.';
+                ? '원하는 플랜으로 업그레이드할 수 있습니다.'
+                : '로그인 후 멤버십 플랜을 선택해 보세요.';
         }
         if (mypagePlanManageBtn) {
+            const isOffersVisible = mypagePlanOffersSectionEl && !mypagePlanOffersSectionEl.hidden;
             mypagePlanManageBtn.textContent = authPending
                 ? '확인 중'
-                : premiumActive
-                ? '추천 보기'
+                : isOffersVisible
+                ? '플랜 닫기'
                 : '플랜 보기';
             mypagePlanManageBtn.disabled = authPending;
         }
         if (mypagePlanCancelBtn) {
             mypagePlanCancelBtn.hidden = !premiumActive;
             mypagePlanCancelBtn.disabled = authPending;
-            mypagePlanCancelBtn.textContent = premiumActive ? 'FREE로 되돌리기' : 'FREE로 전환';
+            mypagePlanCancelBtn.textContent = 'FREE 플랜으로 전환';
         }
         mypagePlanOfferCards.forEach(card => {
             const tier = String(card.dataset.premiumPlanCard || '').toLowerCase();
             const isCurrent = !authPending && member && plan.id === tier;
             card.classList.toggle('is-active', isCurrent);
+            
             const actionButton = card.querySelector('.premium-plan-buy');
-            const label = card.querySelector('.mypage-plan-offer-top strong')?.textContent || tier.toUpperCase();
-            if (!actionButton) {
-                return;
-            }
+            if (!actionButton) return;
+
             if (authPending) {
                 actionButton.disabled = true;
                 actionButton.textContent = '확인 중';
                 return;
             }
-            actionButton.disabled = isCurrent;
-            actionButton.textContent = isCurrent
-                ? `${label} 사용 중`
-                : member
-                ? `${label} 시작하기`
-                : `${label} 로그인 후 시작`;
-            actionButton.setAttribute('aria-pressed', String(isCurrent));
+
+            if (isCurrent) {
+                actionButton.disabled = true;
+                actionButton.textContent = '이용 중';
+                actionButton.className = 'ghost premium-plan-buy';
+            } else {
+                actionButton.disabled = false;
+                const tierLabel = tier.toUpperCase();
+                actionButton.textContent = member ? `${tierLabel} 시작하기` : `${tierLabel} 로그인 후 시작`;
+                actionButton.className = 'cta premium-plan-buy';
+            }
         });
         if (mypageStatsGeneratedEl) {
             mypageStatsGeneratedEl.textContent = `${formatNumber(stats.totalSets || 0)}세트`;
@@ -5669,7 +5716,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function setMembershipTier(tier) {
-        const nextTier = ['starter', 'standard', 'master', 'premium'].includes(String(tier || '').toLowerCase())
+        const nextTier = ['gold', 'platinum', 'master'].includes(String(tier || '').toLowerCase())
             ? String(tier).toLowerCase()
             : 'free';
         localStorage.setItem('lotto_membership_tier', nextTier);
