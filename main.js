@@ -106,6 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const storeOpenOfficialBtn = document.getElementById('store-open-official-btn');
     const lockerHistoryChipEl = document.getElementById('locker-history-chip');
     const lockerHistoryListEl = document.getElementById('locker-history-list');
+    const lockerPlanChipEl = document.getElementById('locker-plan-chip');
+    const lockerPlanNoteEl = document.getElementById('locker-plan-note');
+    const lockerPlanHistoryListEl = document.getElementById('locker-plan-history-list');
     const groupLevelButtons = Array.from(document.querySelectorAll('[data-group-level]'));
     const slotSaveButtons = Array.from(document.querySelectorAll('[data-slot-save]'));
     const slotApplyButtons = Array.from(document.querySelectorAll('[data-slot-apply]'));
@@ -297,6 +300,10 @@ document.addEventListener('DOMContentLoaded', () => {
     } = window.LottoRules;
     const { createTabController } = window.LottoTabs;
     const drawHorizontalTracks = [scenarioGrid, slotGrid].filter(Boolean);
+    const PLAN_WEEKLY_HISTORY_LIMIT = 6;
+    const LOCKER_PREVIEW_ENTRY_LIMIT = 2;
+    const PLAN_LOCKER_PREVIEW_ENTRY_LIMIT = 3;
+    const RECOMMENDATION_STRATEGY_ORDER = ['balanced', 'expanded', 'sum_balance', 'digit_focus', 'light', 'aggressive', 'range_focus', 'prime_focus', 'conservative'];
     const excludeNumberValues = new Set();
     let lastGeneratedDraws = [];
     let drawWizardResultRevealToken = 0;
@@ -2235,28 +2242,35 @@ document.addEventListener('DOMContentLoaded', () => {
         return RULES.filter(rule => activeIds.has(rule.id));
     }
 
-    function generateNumbersWithRules(activeRules) {
+    function generateNumbersWithRules(activeRules, options = {}) {
+        const randomFn = typeof options.randomFn === 'function' ? options.randomFn : Math.random;
+        const excludedNumbers = options.excludedNumbers instanceof Set ? options.excludedNumbers : excludeNumberValues;
         const maxAttempts = 5000;
         for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-            const numbers = generateUniqueNumbers(6, 1, 45).sort((a, b) => a - b);
-            if (!shouldExclude(numbers, activeRules)) {
+            const numbers = generateUniqueNumbers(6, 1, 45, randomFn).sort((a, b) => a - b);
+            if (!shouldExclude(numbers, activeRules, excludedNumbers)) {
                 return numbers;
             }
         }
         return [];
     }
 
-    function shouldExclude(numbers, activeRules) {
+    function shouldExclude(numbers, activeRules, excludedNumbers = excludeNumberValues) {
         if (numbers.length === 0) {
             return true;
         }
-        return activeRules.some(rule => rule.exclude(numbers, excludeNumberValues));
+        const rules = Array.isArray(activeRules) ? activeRules : [];
+        return rules.some(rule => rule.exclude(numbers, excludedNumbers));
     }
 
-    function generateUniqueNumbers(count, min, max) {
+    function generateUniqueNumbers(count, min, max, randomFn = Math.random) {
         const numbers = new Set();
         while (numbers.size < count) {
-            const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+            const nextRandom = Number(randomFn());
+            const normalizedRandom = Number.isFinite(nextRandom)
+                ? Math.min(0.999999999, Math.max(0, nextRandom))
+                : Math.random();
+            const randomNumber = Math.floor(normalizedRandom * (max - min + 1)) + min;
             numbers.add(randomNumber);
         }
         return Array.from(numbers);
@@ -3092,29 +3106,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: 'free',
                 label: 'FREE',
                 level: 0,
-                description: '기본적인 분석 기능을 제공합니다.',
+                price: 0,
+                recommendedSetCount: 0,
+                weeklyLockerCount: 0,
+                description: '기본적인 분석 기능과 최근 번호 보관함을 제공합니다.',
                 note: 'FREE 사용 중'
             },
             gold: {
                 id: 'gold',
                 label: 'GOLD',
                 level: 1,
-                description: '3순위 이상의 고급 필터링을 제공합니다.',
-                note: 'GOLD 멤버십'
+                price: 4900,
+                recommendedSetCount: 5,
+                weeklyLockerCount: 5,
+                description: '상위권 필터링과 함께 매주 월요일 5세트 추천이 보관함에 채워집니다.',
+                note: 'GOLD 멤버십 · 주간 5세트'
             },
             platinum: {
                 id: 'platinum',
                 label: 'PLATINUM',
                 level: 2,
-                description: '2순위 이상의 프리미엄 필터링을 제공합니다.',
-                note: 'PLATINUM 멤버십'
+                price: 11900,
+                recommendedSetCount: 15,
+                weeklyLockerCount: 15,
+                description: '프리미엄 필터링과 매주 월요일 15세트 주간 추천을 제공합니다.',
+                note: 'PLATINUM 멤버십 · 주간 15세트'
             },
             master: {
                 id: 'master',
                 label: 'MASTER',
                 level: 3,
-                description: '모든 제한 없는 최상위 분석 기능을 제공합니다.',
-                note: 'MASTER 멤버십'
+                price: 19900,
+                recommendedSetCount: 30,
+                weeklyLockerCount: 30,
+                description: '최상위 분석 기능과 매주 월요일 30세트 주간 추천을 제공합니다.',
+                note: 'MASTER 멤버십 · 주간 30세트'
             }
         };
         return planMap[normalized] || planMap.free;
@@ -3122,6 +3148,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getRecommendedSetCount(tier = getMembershipTier()) {
         return Math.max(0, Number(getMembershipPlanMeta(tier).recommendedSetCount) || 0);
+    }
+
+    function getLockerWeeklySetCount(tier = getMembershipTier()) {
+        return Math.max(0, Number(getMembershipPlanMeta(tier).weeklyLockerCount) || 0);
+    }
+
+    function createSeededRandom(seedText) {
+        const input = String(seedText || 'lotto-seed');
+        let seed = 0;
+        for (let index = 0; index < input.length; index += 1) {
+            seed = Math.imul(seed ^ input.charCodeAt(index), 2654435761) >>> 0;
+        }
+        if (!seed) {
+            seed = 0x9e3779b9;
+        }
+        return () => {
+            seed = (seed + 0x6D2B79F5) | 0;
+            let value = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+            value ^= value + Math.imul(value ^ (value >>> 7), 61 | value);
+            return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+        };
+    }
+
+    function generateStrategyRecommendations(count, options = {}) {
+        const drawCount = Math.max(1, Number(count) || 5);
+        const strategyOrder = Array.isArray(options.strategyOrder) && options.strategyOrder.length
+            ? options.strategyOrder
+            : RECOMMENDATION_STRATEGY_ORDER;
+        const randomFn = typeof options.randomFn === 'function' ? options.randomFn : Math.random;
+        const excludedNumbers = options.excludedNumbers instanceof Set ? options.excludedNumbers : excludeNumberValues;
+        const draws = [];
+        const usedSignatures = new Set();
+
+        for (let index = 0; index < drawCount; index += 1) {
+            const strategy = strategyOrder[index % strategyOrder.length];
+            const ids = PRESETS[strategy] || [];
+            const activeRules = RULES.filter(rule => ids.includes(rule.id));
+            let selectedNumbers = [];
+
+            for (let attempt = 0; attempt < 24; attempt += 1) {
+                let candidate = generateNumbersWithRules(activeRules, {
+                    randomFn,
+                    excludedNumbers
+                });
+                if (!candidate.length) {
+                    candidate = generateUniqueNumbers(6, 1, 45, randomFn).sort((a, b) => a - b);
+                }
+                if (!candidate.length) {
+                    continue;
+                }
+                selectedNumbers = candidate;
+                const signature = candidate.join('-');
+                if (!usedSignatures.has(signature)) {
+                    usedSignatures.add(signature);
+                    break;
+                }
+            }
+
+            if (!selectedNumbers.length) {
+                selectedNumbers = generateUniqueNumbers(6, 1, 45, randomFn).sort((a, b) => a - b);
+            }
+
+            draws.push({
+                setNo: index + 1,
+                strategy: PRESETS_LABEL[strategy] || strategy,
+                numbers: selectedNumbers
+            });
+        }
+
+        return draws.filter(item => Array.isArray(item.numbers) && item.numbers.length === 6);
     }
 
     function scrollIntoViewSoon(target) {
@@ -4912,6 +5008,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateLockerTabUi() {
         renderLockerHistoryUi();
+        renderLockerPlanHistoryUi();
     }
 
     function updateAnalysisSummaryUi() {
@@ -5170,11 +5267,244 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
     }
 
+
     function getGeneratedHistoryForCurrentOwner() {
         const ownerKey = getHistoryOwnerKey();
         return readGeneratedHistorySessions()
             .filter(item => item && item.ownerKey === ownerKey)
             .sort((a, b) => getTimestampMillis(b.createdAt) - getTimestampMillis(a.createdAt));
+    }
+
+    function getLockerMondayStart(date = getKstNow()) {
+        const monday = new Date(date);
+        monday.setHours(0, 0, 0, 0);
+        const day = monday.getDay();
+        const offset = day === 0 ? 6 : day - 1;
+        monday.setDate(monday.getDate() - offset);
+        return monday;
+    }
+
+    function getLockerWeeklyDrawDate(mondayDate) {
+        const drawDate = new Date(mondayDate);
+        drawDate.setDate(drawDate.getDate() + 5);
+        drawDate.setHours(20, 35, 0, 0);
+        return drawDate;
+    }
+
+    function getEstimatedRoundFromDrawDate(drawDate) {
+        if (!(drawDate instanceof Date) || Number.isNaN(drawDate.getTime())) {
+            return 0;
+        }
+        const firstDrawUtcMs = Date.UTC(2002, 11, 7);
+        const targetUtcMs = Date.UTC(drawDate.getFullYear(), drawDate.getMonth(), drawDate.getDate());
+        const diffWeeks = Math.round((targetUtcMs - firstDrawUtcMs) / (7 * 24 * 60 * 60 * 1000));
+        return diffWeeks + 1;
+    }
+
+    function buildLockerWeeklyPlanSession({ ownerKey, tier, mondayDate }) {
+        const plan = getMembershipPlanMeta(tier);
+        const setCount = getLockerWeeklySetCount(plan.id);
+        if (!ownerKey || plan.id === 'free' || !setCount || !(mondayDate instanceof Date) || Number.isNaN(mondayDate.getTime())) {
+            return null;
+        }
+        const releaseAt = new Date(mondayDate);
+        releaseAt.setHours(9, 0, 0, 0);
+        const drawDate = getLockerWeeklyDrawDate(mondayDate);
+        const round = getEstimatedRoundFromDrawDate(drawDate);
+        const releaseDateLabel = formatShortDate(releaseAt);
+        const drawDateLabel = formatShortDate(drawDate);
+        const weekKey = releaseDateLabel.replace(/\./g, '');
+        const draws = generateStrategyRecommendations(setCount, {
+            randomFn: createSeededRandom(`${ownerKey}|${plan.id}|${weekKey}|${round}|weekly`),
+            excludedNumbers: new Set()
+        });
+        const entries = draws
+            .map((draw, index) => {
+                const numbers = normalizeEntryNumbers(draw && draw.numbers);
+                if (!numbers.length) {
+                    return null;
+                }
+                return {
+                    setNo: Number(draw && draw.setNo ? draw.setNo : index + 1),
+                    numbers,
+                    strategy: draw && draw.strategy ? String(draw.strategy).trim() : ''
+                };
+            })
+            .filter(Boolean);
+        if (!entries.length) {
+            return null;
+        }
+        return {
+            ownerKey,
+            generationId: `plan_${plan.id}_${weekKey}`,
+            createdAt: releaseAt.toISOString(),
+            releaseAt: releaseAt.toISOString(),
+            releaseDateLabel,
+            drawDate: drawDate.toISOString(),
+            drawDateLabel,
+            round,
+            sessionType: 'plan-weekly',
+            membershipTier: plan.id,
+            membershipLabel: plan.label,
+            setCount: entries.length,
+            entries
+        };
+    }
+
+    function getLockerPlanSessionsForCurrentOwner() {
+        if (!isPremiumMember()) {
+            return [];
+        }
+        const plan = getMembershipPlanMeta();
+        const ownerKey = getHistoryOwnerKey();
+        const latestMonday = getLockerMondayStart();
+        const sessions = [];
+        for (let index = 0; index < PLAN_WEEKLY_HISTORY_LIMIT; index += 1) {
+            const mondayDate = new Date(latestMonday);
+            mondayDate.setDate(latestMonday.getDate() - index * 7);
+            const session = buildLockerWeeklyPlanSession({
+                ownerKey,
+                tier: plan.id,
+                mondayDate
+            });
+            if (session) {
+                sessions.push(session);
+            }
+        }
+        return sessions.sort((a, b) => getTimestampMillis(b.releaseAt || b.createdAt) - getTimestampMillis(a.releaseAt || a.createdAt));
+    }
+
+    function getManualLockerSourceLabel(session) {
+        return session && session.sourceMode === 'premium' ? '즉시 추천 저장' : '직접 생성';
+    }
+
+    function getLockerStrategySummary(entries) {
+        const uniqueStrategies = Array.from(new Set(
+            (Array.isArray(entries) ? entries : [])
+                .map(entry => String(entry && entry.strategy ? entry.strategy : '').trim())
+                .filter(Boolean)
+        ));
+        if (!uniqueStrategies.length) {
+            return '';
+        }
+        if (uniqueStrategies.length === 1) {
+            return uniqueStrategies[0];
+        }
+        return `${uniqueStrategies[0]} 외 ${uniqueStrategies.length - 1}개 전략`;
+    }
+
+    function renderLockerEntryRows(entries) {
+        return (Array.isArray(entries) ? entries : [])
+            .map(entry => {
+                const numbers = normalizeEntryNumbers(entry && entry.numbers);
+                if (!numbers.length) {
+                    return '';
+                }
+                const setNo = Math.max(1, Number(entry && entry.setNo) || 1);
+                const strategy = String(entry && entry.strategy ? entry.strategy : '').trim();
+                return `
+                    <div class="locker-entry-row">
+                        <span class="locker-entry-label">${escapeHtml(`${setNo}세트`)}</span>
+                        <div class="locker-entry-balls">
+                            ${numbers.map(number => `<span class="locker-entry-ball" data-ball-range="${escapeHtml(getBallRange(number))}">${escapeHtml(String(number))}</span>`).join('')}
+                        </div>
+                        ${strategy ? `<span class="locker-entry-strategy">${escapeHtml(strategy)}</span>` : ''}
+                    </div>
+                `;
+            })
+            .join('');
+    }
+
+    function renderLockerSessionCard(session, options = {}) {
+        const tone = options.tone === 'plan' ? 'plan' : 'manual';
+        const entries = Array.isArray(session && session.entries) ? session.entries : [];
+        if (!entries.length) {
+            return '';
+        }
+        const previewLimit = tone === 'plan' ? PLAN_LOCKER_PREVIEW_ENTRY_LIMIT : LOCKER_PREVIEW_ENTRY_LIMIT;
+        const previewEntries = entries.slice(0, previewLimit);
+        const hiddenEntries = entries.slice(previewLimit);
+        const tags = Array.isArray(options.tags)
+            ? options.tags.map(value => String(value || '').trim()).filter(Boolean).slice(0, 4)
+            : [];
+        const expanded = Boolean(options.expanded || !hiddenEntries.length);
+        return `
+            <article class="locker-session-card locker-session-card--${tone}${expanded ? ' is-expanded' : ''}">
+                <div class="locker-session-head">
+                    <button type="button" class="locker-session-toggle" data-locker-toggle aria-expanded="${String(expanded)}">
+                        <span class="locker-session-kicker">${escapeHtml(String(options.kicker || ''))}</span>
+                        <strong>${escapeHtml(String(options.title || '번호 세션'))}</strong>
+                        <p>${escapeHtml(String(options.subtitle || ''))}</p>
+                        ${tags.length ? `<div class="locker-session-tags">${tags.map(tag => `<span class="locker-session-tag">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
+                    </button>
+                    <button type="button" class="ghost locker-copy-btn-mini locker-copy-btn-mini--panel" data-locker-copy="${escapeHtml(String(session.generationId || ''))}">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <span>복사</span>
+                    </button>
+                </div>
+                <div class="locker-session-preview">
+                    ${renderLockerEntryRows(previewEntries)}
+                    ${hiddenEntries.length ? `<div class="locker-session-more">+${formatNumber(hiddenEntries.length)}세트 더 보기</div>` : ''}
+                </div>
+                ${hiddenEntries.length ? `<div class="locker-session-content">${renderLockerEntryRows(hiddenEntries)}</div>` : ''}
+            </article>
+        `;
+    }
+
+    function bindLockerSectionUi(rootEl) {
+        if (!rootEl) {
+            return;
+        }
+        rootEl.querySelectorAll('[data-locker-toggle]').forEach(button => {
+            button.onclick = () => {
+                const card = button.closest('.locker-session-card');
+                if (!card) {
+                    return;
+                }
+                const expanded = !card.classList.contains('is-expanded');
+                card.classList.toggle('is-expanded', expanded);
+                button.setAttribute('aria-expanded', String(expanded));
+            };
+        });
+        rootEl.querySelectorAll('[data-locker-copy]').forEach(button => {
+            button.onclick = event => {
+                event.preventDefault();
+                event.stopPropagation();
+                copyLockerSession(String(button.dataset.lockerCopy || ''));
+            };
+        });
+    }
+
+    function renderLockerPlanEmptyState(options = {}) {
+        const authPending = Boolean(options.authPending);
+        const member = Boolean(options.member);
+        const premiumActive = Boolean(options.premiumActive);
+        const headline = authPending
+            ? '멤버십 상태를 확인하는 중입니다.'
+            : premiumActive
+            ? '이번 주 플랜 추천을 준비하는 중입니다.'
+            : member
+            ? '플랜을 올리면 주간 추천이 자동으로 들어옵니다.'
+            : '로그인 후 플랜을 선택하면 주간 추천이 열립니다.';
+        const description = authPending
+            ? '로그인 정보와 플랜 상태가 확인되면 최근 6주 추천이 표시됩니다.'
+            : premiumActive
+            ? '잠시 후 다시 열면 최근 6주 주간 추천 번호가 표시됩니다.'
+            : member
+            ? 'GOLD는 5세트, PLATINUM은 15세트, MASTER는 30세트를 매주 월요일 자동으로 보관합니다.'
+            : 'GOLD 5세트, PLATINUM 15세트, MASTER 30세트가 최근 6주까지 자동 보관됩니다.';
+        const badges = authPending
+            ? ['플랜 확인 중']
+            : ['GOLD 5세트', 'PLATINUM 15세트', 'MASTER 30세트', '최근 6주 보관'];
+        return `
+            <article class="locker-history-empty locker-history-empty--plan">
+                <strong>${escapeHtml(headline)}</strong>
+                <p>${escapeHtml(description)}</p>
+                <div class="locker-empty-badges">
+                    ${badges.map(label => `<span>${escapeHtml(label)}</span>`).join('')}
+                </div>
+            </article>
+        `;
     }
 
     function buildGeneratedSessionCopyText(session) {
@@ -5188,7 +5518,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function copyLockerSession(sessionId) {
-        const target = getGeneratedHistoryForCurrentOwner().find(item => item.generationId === sessionId);
+        const target = getGeneratedHistoryForCurrentOwner().find(item => item.generationId === sessionId)
+            || getLockerPlanSessionsForCurrentOwner().find(item => item.generationId === sessionId);
         if (!target) {
             showActionPopup('복사할 번호를 찾지 못했습니다.');
             return;
@@ -5212,95 +5543,107 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!lockerHistoryListEl) {
             return;
         }
-        const allSessions = getGeneratedHistoryForCurrentOwner();
-        const sessions = allSessions.slice(0, 30);
+        const sessions = getGeneratedHistoryForCurrentOwner();
+        if (lockerHistoryChipEl) {
+            lockerHistoryChipEl.textContent = sessions.length ? `최근 ${formatNumber(sessions.length)}건` : '0건';
+        }
         if (!sessions.length) {
             lockerHistoryListEl.innerHTML = `
                 <article class="locker-history-empty">
-                    <strong>최근 번호 없음</strong>
-                    <p>추첨 후 자동 저장</p>
+                    <strong>직접 추첨한 번호가 아직 없습니다.</strong>
+                    <p>추첨 후 자동 저장되며, 나중에 다시 열어 복사할 수 있습니다.</p>
                 </article>
             `;
             return;
         }
-
-        // Group by Date (YYYY.MM.DD)
-        const groups = {};
-        sessions.forEach(session => {
-            const date = new Date(session.createdAt);
-            const dateKey = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-            if (!groups[dateKey]) {
-                groups[dateKey] = [];
-            }
-            groups[dateKey].push(session);
-        });
-
-        const sortedDateKeys = Object.keys(groups).sort((a, b) => b.localeCompare(a));
-
-        lockerHistoryListEl.innerHTML = sortedDateKeys.map((dateKey, groupIdx) => {
-            const dateSessions = groups[dateKey];
-            const isFirst = groupIdx === 0;
-            
-            const sessionsHtml = dateSessions.map(session => {
-                const date = new Date(session.createdAt);
-                const timeStr = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+        lockerHistoryListEl.innerHTML = sessions
+            .map((session, index) => {
                 const roundText = Number(session.round || 0) > 0 ? `${Number(session.round)}회` : '회차 미정';
                 const entries = Array.isArray(session.entries) ? session.entries : [];
-                const previewEntries = entries.slice(0, 2);
-                const hiddenSets = Math.max(0, entries.length - previewEntries.length);
-                
-                let allNumbers = [];
-                previewEntries.forEach((entry, idx) => {
-                    if (idx > 0) allNumbers.push("/");
-                    allNumbers = allNumbers.concat(Array.isArray(entry.numbers) ? entry.numbers : []);
+                const strategySummary = getLockerStrategySummary(entries);
+                return renderLockerSessionCard(session, {
+                    tone: 'manual',
+                    expanded: index === 0,
+                    kicker: 'MANUAL',
+                    title: `${roundText} 직접 추첨`,
+                    subtitle: `${formatHistoryDateTime(session.createdAt)} 저장`,
+                    tags: [
+                        getManualLockerSourceLabel(session),
+                        `${formatNumber(entries.length)}세트`,
+                        Number(session.ruleCount || 0) > 0 ? `규칙 ${formatNumber(session.ruleCount)}개` : '',
+                        strategySummary
+                    ]
                 });
+            })
+            .join('');
+        bindLockerSectionUi(lockerHistoryListEl);
+    }
 
-                const numbersHtml = allNumbers.map(number => {
-                    if (number === "/") return `<span class="locker-history-separator">/</span>`;
-                    return `<span class="locker-history-ball">${escapeHtml(number)}</span>`;
-                }).join('');
+    function renderLockerPlanHistoryUi() {
+        if (!lockerPlanHistoryListEl) {
+            return;
+        }
+        const authPending = isAuthStatePending();
+        const member = isMember();
+        const premiumActive = isPremiumMember();
+        const plan = getMembershipPlanMeta();
+        const weeklySetCount = getLockerWeeklySetCount(plan.id);
 
-                return `
-                    <div class="locker-history-row">
-                        <div class="locker-history-row-header">
-                            <strong class="locker-history-row-round">${roundText}</strong>
-                            <span class="locker-history-row-date">${timeStr}</span>
-                        </div>
-                        <div class="locker-history-row-body">
-                            <div class="locker-history-row-sets">
-                                <div class="locker-history-row-balls">${numbersHtml}</div>
-                                ${hiddenSets ? `<div class="locker-history-more-sets">+${hiddenSets}</div>` : ''}
-                            </div>
-                            <button type="button" class="ghost locker-copy-btn-mini" data-locker-copy="${escapeHtml(session.generationId)}" aria-label="복사">
-                                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <span>복사</span>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+        if (lockerPlanChipEl) {
+            lockerPlanChipEl.textContent = authPending
+                ? '확인 중'
+                : premiumActive
+                ? `${plan.label} · 주 ${formatNumber(weeklySetCount)}세트`
+                : member
+                ? 'FREE'
+                : 'LOCKED';
+        }
+        if (lockerPlanNoteEl) {
+            lockerPlanNoteEl.textContent = authPending
+                ? '로그인과 플랜 상태를 확인하는 중입니다.'
+                : premiumActive
+                ? `${plan.label} 플랜은 매주 월요일 ${formatNumber(weeklySetCount)}세트씩, 최근 6주까지만 보관합니다.`
+                : member
+                ? 'FREE 플랜입니다. GOLD 5세트, PLATINUM 15세트, MASTER 30세트를 최근 6주까지 보관합니다.'
+                : '로그인 후 플랜을 선택하면 매주 월요일 추천 번호가 최근 6주까지 자동 보관됩니다.';
+        }
+        if (authPending || !premiumActive) {
+            lockerPlanHistoryListEl.innerHTML = renderLockerPlanEmptyState({
+                authPending,
+                member,
+                premiumActive
+            });
+            return;
+        }
 
-            return `
-                <div class="locker-history-group ${isFirst ? 'is-expanded' : ''}">
-                    <button type="button" class="locker-history-group-header" onclick="this.parentElement.classList.toggle('is-expanded')">
-                        <span class="locker-history-group-date">${dateKey}</span>
-                        <span class="locker-history-group-count">${dateSessions.length}건</span>
-                        <svg class="locker-history-group-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </button>
-                    <div class="locker-history-group-content">
-                        ${sessionsHtml}
-                    </div>
-                </div>
-            `;
-        }).join('');
+        const sessions = getLockerPlanSessionsForCurrentOwner();
+        if (!sessions.length) {
+            lockerPlanHistoryListEl.innerHTML = renderLockerPlanEmptyState({
+                member,
+                premiumActive
+            });
+            return;
+        }
 
-        // Re-attach copy listeners
-        lockerHistoryListEl.querySelectorAll('[data-locker-copy]').forEach(btn => {
-            btn.onclick = (e) => {
-                e.stopPropagation();
-                copyLockerSession(btn.dataset.lockerCopy);
-            };
-        });
+        lockerPlanHistoryListEl.innerHTML = sessions
+            .map((session, index) => {
+                const roundText = Number(session.round || 0) > 0 ? `${Number(session.round)}회` : '회차 미정';
+                const strategySummary = getLockerStrategySummary(session.entries);
+                return renderLockerSessionCard(session, {
+                    tone: 'plan',
+                    expanded: index === 0,
+                    kicker: `${session.membershipLabel || plan.label} WEEKLY`,
+                    title: `${roundText} 주간 추천`,
+                    subtitle: `${session.releaseDateLabel || formatShortDate(new Date(session.releaseAt || session.createdAt))} 배포 · ${session.drawDateLabel || estimateRoundDateLabel(session.round)} 추첨`,
+                    tags: [
+                        `${formatNumber(session.setCount || 0)}세트`,
+                        '최근 6주',
+                        strategySummary
+                    ]
+                });
+            })
+            .join('');
+        bindLockerSectionUi(lockerPlanHistoryListEl);
     }
 
     async function loadMypageDrawHistory(force = false) {
@@ -5743,24 +6086,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generatePremiumRecommendations(count) {
-        const drawCount = Math.max(1, Number(count) || 5);
-        const strategyOrder = ['balanced', 'expanded', 'sum_balance', 'digit_focus', 'light', 'aggressive'];
-        const draws = [];
-        for (let i = 0; i < drawCount; i += 1) {
-            const strategy = strategyOrder[i % strategyOrder.length];
-            const ids = PRESETS[strategy] || [];
-            const activeRules = RULES.filter(rule => ids.includes(rule.id));
-            let numbers = generateNumbersWithRules(activeRules);
-            if (!numbers.length) {
-                numbers = generateUniqueNumbers(6, 1, 45).sort((a, b) => a - b);
-            }
-            draws.push({
-                setNo: i + 1,
-                strategy: PRESETS_LABEL[strategy] || strategy,
-                numbers
-            });
-        }
-        return draws;
+        return generateStrategyRecommendations(count);
     }
 
     function renderPremiumNumbers(draws) {

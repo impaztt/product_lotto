@@ -2323,11 +2323,11 @@
                                             <strong>GOLD</strong>
                                             <span class="mypage-plan-offer-price">월 4,900원</span>
                                         </div>
-                                        <p>더 많은 추첨 기회와 상위권 필터링을 제공합니다.</p>
+                                        <p>더 많은 추첨 기회와 주간 추천 5세트를 제공합니다.</p>
                                         <ul class="mypage-plan-offer-list">
                                             <li>일일 추첨 15회</li>
                                             <li>고급 필터링 (3순위 이상)</li>
-                                            <li>기본 세트 복사 지원</li>
+                                            <li>매주 월요일 추천 5세트 자동 보관</li>
                                         </ul>
                                         <button class="cta premium-plan-buy" type="button">GOLD 시작하기</button>
                                     </article>
@@ -2339,11 +2339,11 @@
                                             <strong>PLATINUM</strong>
                                             <span class="mypage-plan-offer-price">월 11,900원</span>
                                         </div>
-                                        <p>강력한 필터링과 넉넉한 추첨 한도를 제공합니다.</p>
+                                        <p>강력한 필터링과 주간 추천 15세트를 제공합니다.</p>
                                         <ul class="mypage-plan-offer-list">
                                             <li>일일 추첨 30회</li>
                                             <li>프리미엄 필터링 (2순위 이상)</li>
-                                            <li>모든 번호 무제한 복사</li>
+                                            <li>매주 월요일 추천 15세트 자동 보관</li>
                                         </ul>
                                         <button class="cta premium-plan-buy" type="button">PLATINUM 시작하기</button>
                                     </article>
@@ -2355,11 +2355,11 @@
                                             <strong>MASTER</strong>
                                             <span class="mypage-plan-offer-price">월 19,900원</span>
                                         </div>
-                                        <p>모든 제한 없는 최상위 분석 기능을 제공합니다.</p>
+                                        <p>최상위 분석 기능과 주간 추천 30세트를 제공합니다.</p>
                                         <ul class="mypage-plan-offer-list">
                                             <li>추첨 횟수 무제한</li>
                                             <li>모든 필터 (1순위 포함)</li>
-                                            <li>전문가용 통계 분석 지원</li>
+                                            <li>매주 월요일 추천 30세트 자동 보관</li>
                                         </ul>
                                         <button class="cta premium-plan-buy" type="button">MASTER 시작하기</button>
                                     </article>
@@ -2375,16 +2375,42 @@
         <section id="tab-store" class="tab-panel app-shell app-shell--store" role="tabpanel" aria-labelledby="tab-store-btn" tabindex="0">
             <div class="section-title store-shell-title store-shell-title--recent">
                 <div>
-                    <h2>최근 번호</h2>
+                    <span class="section-kicker">LOCKER</span>
+                    <h2>번호 보관함</h2>
+                    <p>직접 추첨한 번호와 플랜 주간 추천 번호를 나눠서 확인합니다.</p>
                 </div>
                 <button type="button" class="ghost" data-tab-link="draw">추첨</button>
             </div>
             <div class="locker-layout locker-layout--recent">
-                <section class="locker-panel locker-panel--history locker-panel--history-only" aria-label="최근 번호">
+                <section class="locker-panel locker-panel--history locker-panel--history-only locker-panel--manual" aria-label="직접 추첨 번호">
+                    <div class="locker-panel-head locker-panel-head--locker">
+                        <div>
+                            <span class="locker-panel-kicker">MY PICKS</span>
+                            <h3>직접 추첨 번호</h3>
+                            <p>내가 직접 추첨해서 저장한 번호만 모아 봅니다.</p>
+                        </div>
+                        <span id="locker-history-chip" class="locker-panel-chip">0건</span>
+                    </div>
                     <div id="locker-history-list" class="locker-history-list">
                         <article class="locker-history-empty">
                             <strong>최근 번호 없음</strong>
                             <p>추첨 후 자동 저장</p>
+                        </article>
+                    </div>
+                </section>
+                <section class="locker-panel locker-panel--history locker-panel--history-only locker-panel--plan" aria-label="주간 플랜 추천">
+                    <div class="locker-panel-head locker-panel-head--locker">
+                        <div>
+                            <span class="locker-panel-kicker">PLAN WEEKLY</span>
+                            <h3>주간 플랜 추천</h3>
+                            <p id="locker-plan-note">플랜을 선택하면 매주 월요일 추천 번호가 자동으로 채워집니다.</p>
+                        </div>
+                        <span id="locker-plan-chip" class="locker-panel-chip">LOCKED</span>
+                    </div>
+                    <div id="locker-plan-history-list" class="locker-history-list locker-history-list--plan">
+                        <article class="locker-history-empty locker-history-empty--plan">
+                            <strong>플랜 추천 준비 중</strong>
+                            <p>로그인 후 플랜을 선택하면 최근 6주 추천이 표시됩니다.</p>
                         </article>
                     </div>
                 </section>
