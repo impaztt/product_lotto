@@ -521,6 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const GOOGLE_REDIRECT_STATE_KEY = 'lotto_google_redirect_state';
     const GOOGLE_REDIRECT_PENDING_TTL_MS = 10 * 60 * 1000;
     const KAKAO_INAPP_NOTICE_DISMISSED_KEY = 'lotto_kakao_inapp_notice_dismissed';
+    const MEMBERSHIP_STATE_LOCAL_KEY = 'lotto_membership_state_v1';
     const HELP_CHAT_PROMPTS = {
         app: '이 앱이 뭐야?',
         draw: '번호는 어떻게 생성해?',
@@ -1694,10 +1695,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     if (mypagePlanCancelBtn) {
         mypagePlanCancelBtn.addEventListener('click', async () => {
-            await setMembershipTier('free');
-            showActionPopup('무료 플랜으로 전환했습니다.');
+            const result = await setMembershipTier('free');
+            if (!result.changed) {
+                showActionPopup('이미 FREE 플랜을 이용 중입니다.');
+                return;
+            }
+            if (result.mode === 'downgrade') {
+                showActionPopup(`FREE 전환을 예약했습니다. ${formatMembershipDate(result.effectiveAt)}부터 FREE가 적용됩니다.`);
+                return;
+            }
+            showActionPopup('FREE 플랜으로 전환했습니다.');
         });
     }
 
@@ -1705,13 +1715,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', async (e) => {
         const buyBtn = e.target.closest('.premium-plan-buy');
         if (!buyBtn) return;
-        
+
         const card = buyBtn.closest('[data-premium-plan-card]');
         if (!card) return;
-        
-        const tier = card.dataset.premiumPlanCard;
+
+        const tier = normalizeMembershipTier(card.dataset.premiumPlanCard);
         const plan = getMembershipPlanMeta(tier);
-        
+
         if (!isMember()) {
             const confirmed = await showActionConfirm(
                 '로그인 필요',
@@ -1724,30 +1734,66 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return;
         }
-        
-        const currentPlan = getMembershipPlanMeta();
-        if (currentPlan.id === tier) {
+
+        const membershipState = getMembershipState();
+        const currentPlan = getMembershipPlanMeta(membershipState.membershipTier);
+        const scheduledPlan = membershipState.scheduledMembershipTier
+            ? getMembershipPlanMeta(membershipState.scheduledMembershipTier)
+            : null;
+        const changeMode = getMembershipChangeMode(currentPlan.id, tier, membershipState.scheduledMembershipTier);
+
+        if (changeMode === 'current') {
             showActionPopup(`이미 ${plan.label} 멤버십을 이용 중입니다.`);
             return;
         }
-        
+
+        let confirmTitle = '멤버십 플랜 변경';
+        let confirmBody = '';
+        let confirmAction = '변경하기';
+
+        if (changeMode === 'retain') {
+            confirmTitle = '예약 변경 취소';
+            confirmBody = scheduledPlan
+                ? `현재 ${currentPlan.label} 플랜은 ${formatMembershipDate(membershipState.subscriptionEndsAt)}까지 이용 중이며, ${scheduledPlan.label} 변경이 예약되어 있습니다.
+예약을 취소하고 ${currentPlan.label} 플랜을 유지할까요?`
+                : `${currentPlan.label} 플랜을 계속 유지할까요?`;
+            confirmAction = '예약 취소';
+        } else if (changeMode === 'downgrade') {
+            const scheduledDate = formatMembershipDate(membershipState.subscriptionEndsAt);
+            confirmBody = `${currentPlan.label} 플랜은 ${scheduledDate}까지 이용하고, ${plan.label} 플랜은 ${scheduledDate}부터 적용됩니다.
+다운그레이드는 다음 결제일부터 반영됩니다.`;
+            confirmAction = '예약하기';
+        } else {
+            const previewStart = new Date();
+            const previewEnd = addMonthsPreserveClock(previewStart, 1);
+            confirmBody = `${plan.label} 멤버십(월 ${formatNumber(plan.price || 0)}원)으로 ${changeMode === 'upgrade' ? '즉시 업그레이드' : '시작'}하시겠습니까?
+이용 기간은 ${formatMembershipPeriod(previewStart, previewEnd)}입니다.`;
+            confirmAction = changeMode === 'upgrade' ? '즉시 업그레이드' : '시작하기';
+        }
+
         const confirmed = await showActionConfirm(
-            '멤버십 플랜 변경',
-            `${plan.label} 멤버십(월 ${formatNumber(plan.price || 0)}원)으로 플랜을 변경하시겠습니까?\n변경 즉시 모든 혜택이 적용됩니다.`,
-            '변경하기',
+            confirmTitle,
+            confirmBody,
+            confirmAction,
             '취소'
         );
-        
+
         if (confirmed) {
-            await setMembershipTier(tier);
-            showActionPopup(`${plan.label} 멤버십으로 성공적으로 변경되었습니다!`);
-            // Hide selection area after purchase
+            const result = await setMembershipTier(tier);
+            if (result.mode === 'retain') {
+                showActionPopup(`예약된 플랜 변경을 취소했습니다. ${currentPlan.label} 플랜을 계속 이용합니다.`);
+            } else if (result.mode === 'downgrade') {
+                showActionPopup(`${plan.label} 변경을 예약했습니다. ${formatMembershipDate(result.effectiveAt)}부터 적용됩니다.`);
+            } else if (result.changed) {
+                showActionPopup(`${plan.label} 멤버십이 즉시 적용되었습니다. 이용 기간: ${formatMembershipPeriod(result.state.subscriptionStartedAt, result.state.subscriptionEndsAt)}`);
+            }
             if (mypagePlanOffersSectionEl) {
                 mypagePlanOffersSectionEl.hidden = true;
                 if (mypagePlanManageBtn) mypagePlanManageBtn.textContent = '플랜 보기';
             }
         }
     });
+
 
     if (nicknameOpenModalBtn) {
         nicknameOpenModalBtn.addEventListener('click', () => {
@@ -2941,18 +2987,215 @@ document.addEventListener('DOMContentLoaded', () => {
         return Boolean((firebaseReady && !authStateResolved) || hasGoogleRedirectPending());
     }
 
+
+    function normalizeMembershipTier(value) {
+        const normalized = String(value || '').trim().toLowerCase();
+        return ['free', 'gold', 'platinum', 'master'].includes(normalized) ? normalized : 'free';
+    }
+
+    function normalizeScheduledMembershipTier(value) {
+        const normalized = String(value || '').trim().toLowerCase();
+        return ['free', 'gold', 'platinum', 'master'].includes(normalized) ? normalized : '';
+    }
+
+    function serializeMembershipDate(value) {
+        const millis = getTimestampMillis(value);
+        return millis > 0 ? new Date(millis).toISOString() : '';
+    }
+
+    function addMonthsPreserveClock(value, months = 1) {
+        const base = value instanceof Date ? new Date(value.getTime()) : new Date(value);
+        if (!Number.isFinite(base.getTime())) {
+            return null;
+        }
+        const originalDay = base.getDate();
+        const result = new Date(base.getTime());
+        result.setDate(1);
+        result.setMonth(result.getMonth() + Number(months || 0));
+        const lastDay = new Date(result.getFullYear(), result.getMonth() + 1, 0).getDate();
+        result.setDate(Math.min(originalDay, lastDay));
+        result.setHours(base.getHours(), base.getMinutes(), base.getSeconds(), base.getMilliseconds());
+        return result;
+    }
+
+    function createFreeMembershipState(updatedAt = new Date()) {
+        return {
+            membershipTier: 'free',
+            subscriptionStatus: 'inactive',
+            subscriptionStartedAt: '',
+            subscriptionEndsAt: '',
+            scheduledMembershipTier: '',
+            scheduledMembershipApplyAt: '',
+            subscriptionUpdatedAt: serializeMembershipDate(updatedAt) || new Date().toISOString()
+        };
+    }
+
+    function createPaidMembershipState(tier, startAt = new Date(), extras = {}) {
+        const normalizedTier = normalizeMembershipTier(tier);
+        if (normalizedTier === 'free') {
+            return createFreeMembershipState(startAt);
+        }
+        const cycleStart = startAt instanceof Date ? new Date(startAt.getTime()) : new Date(startAt);
+        const safeStart = Number.isFinite(cycleStart.getTime()) ? cycleStart : new Date();
+        const cycleEnd = addMonthsPreserveClock(safeStart, 1) || new Date(safeStart.getTime());
+        return {
+            membershipTier: normalizedTier,
+            subscriptionStatus: extras.subscriptionStatus || 'active',
+            subscriptionStartedAt: safeStart.toISOString(),
+            subscriptionEndsAt: cycleEnd.toISOString(),
+            scheduledMembershipTier: normalizeScheduledMembershipTier(extras.scheduledMembershipTier),
+            scheduledMembershipApplyAt: serializeMembershipDate(extras.scheduledMembershipApplyAt),
+            subscriptionUpdatedAt: serializeMembershipDate(extras.subscriptionUpdatedAt) || new Date().toISOString()
+        };
+    }
+
+    function resolveMembershipState(raw = null) {
+        const source = raw && typeof raw === 'object' ? raw : readStoredMembershipState();
+        const baseTier = normalizeMembershipTier(source.membershipTier);
+        if (baseTier === 'free') {
+            return createFreeMembershipState(source.subscriptionUpdatedAt || source.updatedAt || source.createdAt || new Date());
+        }
+
+        const updatedIso = serializeMembershipDate(source.subscriptionUpdatedAt || source.updatedAt || source.createdAt) || new Date().toISOString();
+        let cycleStart = new Date(serializeMembershipDate(source.subscriptionStartedAt || source.subscriptionStartAt) || updatedIso);
+        if (!Number.isFinite(cycleStart.getTime())) {
+            cycleStart = new Date();
+        }
+        let cycleEnd = new Date(serializeMembershipDate(source.subscriptionEndsAt || source.subscriptionEndAt) || (addMonthsPreserveClock(cycleStart, 1)?.toISOString() || ''));
+        if (!Number.isFinite(cycleEnd.getTime())) {
+            cycleEnd = addMonthsPreserveClock(cycleStart, 1) || new Date(cycleStart.getTime());
+        }
+
+        let currentTier = baseTier;
+        let scheduledTier = normalizeScheduledMembershipTier(source.scheduledMembershipTier || source.pendingMembershipTier);
+        if (scheduledTier) {
+            const currentPlan = getMembershipPlanMeta(currentTier);
+            const scheduledPlan = getMembershipPlanMeta(scheduledTier);
+            if (scheduledPlan.level >= currentPlan.level) {
+                scheduledTier = '';
+            }
+        }
+
+        let scheduledApplyIso = serializeMembershipDate(source.scheduledMembershipApplyAt || source.pendingMembershipApplyAt);
+        if (scheduledTier && !scheduledApplyIso) {
+            scheduledApplyIso = cycleEnd.toISOString();
+        }
+
+        const nowMs = Date.now();
+        let guard = 0;
+        while (guard < 24 && Number.isFinite(cycleEnd.getTime()) && nowMs >= cycleEnd.getTime()) {
+            guard += 1;
+            const scheduledApplyMs = getTimestampMillis(scheduledApplyIso);
+            const shouldApplyScheduled = Boolean(scheduledTier && scheduledApplyMs && scheduledApplyMs <= cycleEnd.getTime() + 1000);
+            if (shouldApplyScheduled) {
+                if (scheduledTier === 'free') {
+                    return createFreeMembershipState(cycleEnd);
+                }
+                currentTier = scheduledTier;
+                scheduledTier = '';
+                scheduledApplyIso = '';
+            }
+            cycleStart = new Date(cycleEnd.getTime());
+            cycleEnd = addMonthsPreserveClock(cycleStart, 1) || new Date(cycleStart.getTime());
+        }
+
+        return {
+            membershipTier: currentTier,
+            subscriptionStatus: scheduledTier ? 'scheduled_downgrade' : 'active',
+            subscriptionStartedAt: cycleStart.toISOString(),
+            subscriptionEndsAt: cycleEnd.toISOString(),
+            scheduledMembershipTier: scheduledTier,
+            scheduledMembershipApplyAt: scheduledApplyIso,
+            subscriptionUpdatedAt: updatedIso
+        };
+    }
+
+    function getMembershipStatePayload(state) {
+        const tier = normalizeMembershipTier(state && state.membershipTier);
+        if (tier === 'free') {
+            return createFreeMembershipState(state && (state.subscriptionUpdatedAt || state.updatedAt || state.createdAt || new Date()));
+        }
+        const startIso = serializeMembershipDate(state && (state.subscriptionStartedAt || state.subscriptionStartAt))
+            || serializeMembershipDate(state && (state.subscriptionUpdatedAt || state.updatedAt || state.createdAt))
+            || new Date().toISOString();
+        const endIso = serializeMembershipDate(state && (state.subscriptionEndsAt || state.subscriptionEndAt))
+            || (addMonthsPreserveClock(startIso, 1)?.toISOString() || '');
+        return {
+            membershipTier: tier,
+            subscriptionStatus: state && state.subscriptionStatus === 'scheduled_downgrade' ? 'scheduled_downgrade' : 'active',
+            subscriptionStartedAt: startIso,
+            subscriptionEndsAt: endIso,
+            scheduledMembershipTier: normalizeScheduledMembershipTier(state && state.scheduledMembershipTier),
+            scheduledMembershipApplyAt: serializeMembershipDate(state && state.scheduledMembershipApplyAt),
+            subscriptionUpdatedAt: serializeMembershipDate(state && (state.subscriptionUpdatedAt || state.updatedAt || state.createdAt)) || new Date().toISOString()
+        };
+    }
+
+    function readStoredMembershipState() {
+        try {
+            const raw = localStorage.getItem(MEMBERSHIP_STATE_LOCAL_KEY);
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed && typeof parsed === 'object') {
+                    return parsed;
+                }
+            }
+        } catch (error) {
+            console.warn('멤버십 상태 로드 실패', error);
+        }
+        return {
+            membershipTier: localStorage.getItem('lotto_membership_tier') || 'free'
+        };
+    }
+
+    function persistLocalMembershipState(state) {
+        const payload = getMembershipStatePayload(resolveMembershipState(state));
+        try {
+            localStorage.setItem('lotto_membership_tier', payload.membershipTier);
+            localStorage.setItem(MEMBERSHIP_STATE_LOCAL_KEY, JSON.stringify(payload));
+        } catch (error) {
+            console.warn('멤버십 상태 저장 실패', error);
+        }
+    }
+
+    function getMembershipState() {
+        return resolveMembershipState(currentUserProfile || readStoredMembershipState());
+    }
+
+    function getMembershipChangeMode(currentTier, nextTier, scheduledTier = '') {
+        const current = normalizeMembershipTier(currentTier);
+        const next = normalizeMembershipTier(nextTier);
+        if (current === next) {
+            return scheduledTier ? 'retain' : 'current';
+        }
+        const currentPlan = getMembershipPlanMeta(current);
+        const nextPlan = getMembershipPlanMeta(next);
+        if (nextPlan.level > currentPlan.level) {
+            return currentPlan.level === 0 ? 'activate' : 'upgrade';
+        }
+        return 'downgrade';
+    }
+
+    function formatMembershipDate(value) {
+        const millis = getTimestampMillis(value);
+        return millis > 0 ? formatShortDate(new Date(millis)) : '-';
+    }
+
+    function formatMembershipPeriod(startAt, endAt) {
+        const startLabel = formatMembershipDate(startAt);
+        const endLabel = formatMembershipDate(endAt);
+        if (startLabel === '-' || endLabel === '-') {
+            return '-';
+        }
+        return `${startLabel} ~ ${endLabel}`;
+    }
+
     function getMembershipTier() {
-        if (currentUserProfile && typeof currentUserProfile.membershipTier === 'string') {
-            return currentUserProfile.membershipTier.toLowerCase();
-        }
-        const savedTier = localStorage.getItem('lotto_membership_tier');
-        if (savedTier) {
-            return savedTier.toLowerCase();
-        }
-        return 'free';
+        return getMembershipState().membershipTier;
     }
 
     function getOrCreateGuestTrackingId() {
+
         try {
             const stored = localStorage.getItem(DRAW_ENTRY_LOCAL_KEY);
             if (stored && /^[a-z0-9_-]{12,80}$/i.test(stored)) {
@@ -4855,13 +5098,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
     function updateMypageSummaryUi() {
-        const plan = getMembershipPlanMeta();
+        const membershipState = getMembershipState();
+        const plan = getMembershipPlanMeta(membershipState.membershipTier);
+        const scheduledPlan = membershipState.scheduledMembershipTier
+            ? getMembershipPlanMeta(membershipState.scheduledMembershipTier)
+            : null;
         const stats = getGenerationStats();
         const authPending = isAuthStatePending();
         const member = isMember();
-        const premiumActive = isPremiumMember();
+        const premiumActive = member && plan.id !== 'free';
         const recommendedSetCount = member ? getRecommendedSetCount(plan.id) : 0;
+        const nextBillingLabel = premiumActive ? formatMembershipDate(membershipState.subscriptionEndsAt) : '-';
+        const membershipStatusLabel = authPending
+            ? '확인 중'
+            : !member
+            ? '로그인 전'
+            : scheduledPlan
+            ? `${plan.label} 사용 중 · ${scheduledPlan.label} 예약`
+            : premiumActive
+            ? `${plan.label} 사용 중`
+            : 'FREE 사용 중';
+        const periodLabel = authPending
+            ? '플랜 정보를 불러오는 중입니다.'
+            : premiumActive
+            ? formatMembershipPeriod(membershipState.subscriptionStartedAt, membershipState.subscriptionEndsAt)
+            : '무료 이용';
+        const flowLabel = authPending
+            ? '플랜 정보를 확인하는 중입니다.'
+            : !member
+            ? '로그인 후 월간 플랜을 선택할 수 있습니다.'
+            : scheduledPlan
+            ? `${formatMembershipDate(membershipState.scheduledMembershipApplyAt)}부터 ${scheduledPlan.label}로 변경 예약됨`
+            : premiumActive
+            ? `업그레이드는 즉시 적용되고, 다운그레이드는 다음 결제일(${nextBillingLabel})부터 적용됩니다.`
+            : 'FREE에서 GOLD, PLATINUM, MASTER로 즉시 업그레이드할 수 있습니다.';
         const planHeading = authPending
             ? '확인 중'
             : premiumActive
@@ -4892,33 +5164,23 @@ document.addEventListener('DOMContentLoaded', () => {
             mypageMembershipTierSummaryEl.textContent = authPending ? '확인 중' : (member ? plan.label : 'FREE');
         }
         if (mypageMembershipDescEl) {
-            mypageMembershipDescEl.textContent = authPending
-                ? '확인 중'
-                : premiumActive
-                ? '추천 사용 중'
-                : member
-                ? '기본 사용'
-                : '로그인 전';
+            mypageMembershipDescEl.textContent = membershipStatusLabel;
         }
         if (mypageMembershipNextEl) {
             mypageMembershipNextEl.textContent = authPending
                 ? '확인 중'
+                : scheduledPlan
+                ? '예약 변경'
                 : premiumActive
-                ? '유료'
+                ? 'ACTIVE'
                 : member
-                ? '무료'
+                ? 'FREE'
                 : '비회원';
         }
         if (mypagePlanNoteEl) {
-            if (authPending) {
-                mypagePlanNoteEl.textContent = '확인 중';
-            } else if (!member) {
-                mypagePlanNoteEl.textContent = '로그인 후 추천 시작';
-            } else if (premiumActive) {
-                mypagePlanNoteEl.textContent = `${plan.label} 추천 사용 중`;
-            } else {
-                mypagePlanNoteEl.textContent = 'FREE 사용 중';
-            }
+            mypagePlanNoteEl.textContent = authPending
+                ? '확인 중'
+                : '플랜 순서: FREE < GOLD < PLATINUM < MASTER';
         }
         if (mypagePlanSetCountEl) {
             mypagePlanSetCountEl.textContent = authPending
@@ -4928,29 +5190,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 : '-';
         }
         if (mypagePlanCopyAccessEl) {
-            mypagePlanCopyAccessEl.textContent = authPending
-                ? '확인 중'
-                : premiumActive
-                ? '가능'
-                : '기본';
+            mypagePlanCopyAccessEl.textContent = authPending ? '확인 중' : nextBillingLabel;
         }
         if (mypagePlanGuideEl) {
-            mypagePlanGuideEl.textContent = authPending
-                ? '플랜 정보를 불러오는 중입니다.'
-                : premiumActive
-                ? `${plan.label} 추천 ${recommendedSetCount}세트를 바로 볼 수 있습니다.`
-                : member
-                ? '필요할 때만 플랜을 올리면 됩니다.'
-                : '기본은 FREE로 충분합니다.';
+            mypagePlanGuideEl.textContent = periodLabel;
         }
         if (mypagePlanFlowEl) {
-            mypagePlanFlowEl.textContent = authPending
-                ? '잠시만 기다려 주세요.'
-                : premiumActive
-                ? `${plan.label} 플랜의 모든 혜택이 적용 중입니다.`
-                : member
-                ? '원하는 플랜으로 업그레이드할 수 있습니다.'
-                : '로그인 후 멤버십 플랜을 선택해 보세요.';
+            mypagePlanFlowEl.textContent = flowLabel;
         }
         if (mypagePlanManageBtn) {
             const isOffersVisible = mypagePlanOffersSectionEl && !mypagePlanOffersSectionEl.hidden;
@@ -4962,15 +5208,20 @@ document.addEventListener('DOMContentLoaded', () => {
             mypagePlanManageBtn.disabled = authPending;
         }
         if (mypagePlanCancelBtn) {
+            const freeScheduled = Boolean(scheduledPlan && scheduledPlan.id === 'free');
             mypagePlanCancelBtn.hidden = !premiumActive;
-            mypagePlanCancelBtn.disabled = authPending;
-            mypagePlanCancelBtn.textContent = 'FREE 플랜으로 전환';
+            mypagePlanCancelBtn.disabled = authPending || freeScheduled;
+            mypagePlanCancelBtn.textContent = freeScheduled
+                ? `${formatMembershipDate(membershipState.scheduledMembershipApplyAt)} FREE 예약됨`
+                : '다음 결제일부터 FREE';
         }
         mypagePlanOfferCards.forEach(card => {
             const tier = String(card.dataset.premiumPlanCard || '').toLowerCase();
             const isCurrent = !authPending && member && plan.id === tier;
+            const isScheduled = !authPending && scheduledPlan && scheduledPlan.id === tier;
             card.classList.toggle('is-active', isCurrent);
-            
+            card.classList.toggle('is-scheduled', Boolean(isScheduled));
+
             const actionButton = card.querySelector('.premium-plan-buy');
             if (!actionButton) return;
 
@@ -4980,14 +5231,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            if (isCurrent) {
-                actionButton.disabled = true;
-                actionButton.textContent = '이용 중';
-                actionButton.className = 'ghost premium-plan-buy';
-            } else {
-                actionButton.disabled = false;
+            if (!member) {
                 const tierLabel = tier.toUpperCase();
-                actionButton.textContent = member ? `${tierLabel} 시작하기` : `${tierLabel} 로그인 후 시작`;
+                actionButton.disabled = false;
+                actionButton.textContent = `${tierLabel} 로그인 후 시작`;
+                actionButton.className = 'cta premium-plan-buy';
+                return;
+            }
+
+            if (isCurrent) {
+                if (scheduledPlan) {
+                    actionButton.disabled = false;
+                    actionButton.textContent = '예약 취소';
+                } else {
+                    actionButton.disabled = true;
+                    actionButton.textContent = '이용 중';
+                }
+                actionButton.className = 'ghost premium-plan-buy';
+                return;
+            }
+
+            if (isScheduled) {
+                actionButton.disabled = true;
+                actionButton.textContent = `${formatMembershipDate(membershipState.scheduledMembershipApplyAt)} 적용 예약`;
+                actionButton.className = 'ghost premium-plan-buy';
+                return;
+            }
+
+            const changeMode = getMembershipChangeMode(plan.id, tier, membershipState.scheduledMembershipTier);
+            const tierLabel = tier.toUpperCase();
+            actionButton.disabled = false;
+            if (changeMode === 'downgrade') {
+                actionButton.textContent = '다음 결제일부터 변경';
+                actionButton.className = 'ghost premium-plan-buy';
+            } else if (changeMode === 'upgrade') {
+                actionButton.textContent = `${tierLabel} 즉시 업그레이드`;
+                actionButton.className = 'cta premium-plan-buy';
+            } else {
+                actionButton.textContent = `${tierLabel} 시작하기`;
                 actionButton.className = 'cta premium-plan-buy';
             }
         });
@@ -5007,6 +5288,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateLockerTabUi() {
+
         renderLockerHistoryUi();
         renderLockerPlanHistoryUi();
     }
@@ -6058,24 +6340,72 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAnalysisSummaryUi();
     }
 
+
     async function setMembershipTier(tier) {
-        const nextTier = ['gold', 'platinum', 'master'].includes(String(tier || '').toLowerCase())
-            ? String(tier).toLowerCase()
-            : 'free';
-        localStorage.setItem('lotto_membership_tier', nextTier);
+        const nextTier = normalizeMembershipTier(tier);
+        const currentState = getMembershipState();
+        const currentPlan = getMembershipPlanMeta(currentState.membershipTier);
+        const targetPlan = getMembershipPlanMeta(nextTier);
+        const changeMode = getMembershipChangeMode(currentPlan.id, nextTier, currentState.scheduledMembershipTier);
+        const now = new Date();
+        let nextState = currentState;
+
+        if (changeMode === 'current') {
+            persistLocalMembershipState(currentState);
+            return {
+                changed: false,
+                mode: 'current',
+                currentPlan,
+                targetPlan,
+                effectiveAt: '',
+                state: currentState
+            };
+        }
+
+        if (changeMode === 'retain') {
+            nextState = {
+                ...currentState,
+                subscriptionStatus: 'active',
+                scheduledMembershipTier: '',
+                scheduledMembershipApplyAt: '',
+                subscriptionUpdatedAt: now.toISOString()
+            };
+        } else if (changeMode === 'downgrade') {
+            const effectiveAt = serializeMembershipDate(currentState.subscriptionEndsAt)
+                || (addMonthsPreserveClock(now, 1)?.toISOString() || now.toISOString());
+            nextState = {
+                ...currentState,
+                subscriptionStatus: 'scheduled_downgrade',
+                scheduledMembershipTier: targetPlan.id,
+                scheduledMembershipApplyAt: effectiveAt,
+                subscriptionUpdatedAt: now.toISOString()
+            };
+        } else {
+            nextState = createPaidMembershipState(targetPlan.id, now, {
+                subscriptionStatus: 'active',
+                subscriptionUpdatedAt: now
+            });
+        }
+
+        persistLocalMembershipState(nextState);
+        localStorage.setItem('lotto_membership_tier', nextState.membershipTier);
         if (currentUserProfile) {
             currentUserProfile = {
                 ...currentUserProfile,
-                membershipTier: nextTier,
-                subscriptionUpdatedAt: new Date().toISOString()
+                ...nextState
             };
         }
         if (firebaseDb && currentUser) {
             try {
                 await firebaseDb.collection('users').doc(currentUser.uid).set({
-                    membershipTier: nextTier,
-                    subscriptionStatus: nextTier === 'free' ? 'inactive' : 'active',
-                    subscriptionUpdatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
+                    membershipTier: nextState.membershipTier,
+                    subscriptionStatus: nextState.subscriptionStatus,
+                    subscriptionStartedAt: nextState.subscriptionStartedAt || '',
+                    subscriptionEndsAt: nextState.subscriptionEndsAt || '',
+                    scheduledMembershipTier: nextState.scheduledMembershipTier || '',
+                    scheduledMembershipApplyAt: nextState.scheduledMembershipApplyAt || '',
+                    subscriptionUpdatedAt: nextState.subscriptionUpdatedAt || now.toISOString(),
+                    updatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
                 await ensureUserProfile();
             } catch (error) {
@@ -6083,9 +6413,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         updatePremiumMembershipUi();
+        return {
+            changed: true,
+            mode: changeMode,
+            currentPlan,
+            targetPlan,
+            effectiveAt: changeMode === 'downgrade' ? nextState.scheduledMembershipApplyAt : nextState.subscriptionStartedAt,
+            state: nextState
+        };
     }
 
     function generatePremiumRecommendations(count) {
+
         return generateStrategyRecommendations(count);
     }
 
@@ -7273,6 +7612,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await changeNickname(nicknameModalInputEl.value);
     }
 
+
     async function ensureUserProfile() {
         if (!firebaseDb || !currentUser) {
             return;
@@ -7284,11 +7624,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!snap.exists) {
             const nickname = createRandomNickname8();
+            const membershipState = getMembershipStatePayload(getMembershipState());
             const initialProfile = {
                 uid: currentUser.uid,
                 email: currentUser.email || '',
                 nickname,
-                membershipTier: getMembershipTier() || 'free',
+                ...membershipState,
                 createdAt: serverNow,
                 updatedAt: serverNow,
                 nicknameUpdatedAt: serverNow,
@@ -7297,6 +7638,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             await profileRef.set(initialProfile);
             currentUserProfile = initialProfile;
+            persistLocalMembershipState(initialProfile);
             if (nicknameStatusEl) {
                 nicknameStatusEl.textContent = `가입이 완료됐어요. 자동 닉네임 '${nickname}'이 만들어졌습니다.`;
             }
@@ -7313,14 +7655,28 @@ document.addEventListener('DOMContentLoaded', () => {
             updates.nicknameChangeMonth = nowMonthKey;
             updates.nicknameChangeCount = 0;
         }
+
+        const resolvedMembership = getMembershipStatePayload(resolveMembershipState(profile));
+        Object.entries(resolvedMembership).forEach(([key, value]) => {
+            const currentValue = key.includes('At')
+                ? (serializeMembershipDate(profile[key]) || '')
+                : String(profile[key] || '');
+            const nextValue = String(value || '');
+            if (currentValue !== nextValue) {
+                updates[key] = value;
+            }
+        });
+
         if (Object.keys(updates).length) {
             updates.updatedAt = serverNow;
             await profileRef.update(updates);
         }
         currentUserProfile = { ...profile, ...updates };
+        persistLocalMembershipState(currentUserProfile);
     }
 
     function renderNicknameUi() {
+
         const member = isMember();
         const authPending = isAuthStatePending();
         const nicknameText = authPending

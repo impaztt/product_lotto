@@ -22871,3 +22871,126 @@ body[data-theme="dark"] #tab-store .locker-copy-btn-mini--panel {
     }
 }
 
+/* Membership schedule + locker label stability */
+#tab-store .locker-entry-row,
+#tab-store .locker-session-preview .locker-entry-row:first-child,
+#tab-store .locker-session-content .locker-entry-row:first-child {
+    grid-template-columns: max-content minmax(0, 1fr) !important;
+}
+
+#tab-store .locker-entry-label {
+    min-width: 0 !important;
+    padding: 0 7px !important;
+    white-space: nowrap !important;
+}
+
+#tab-mypage .mypage-plan-details {
+    display: grid !important;
+    gap: 10px !important;
+    margin-top: 12px !important;
+}
+
+#tab-mypage .mypage-plan-note {
+    margin: 0 !important;
+    color: #667085 !important;
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+}
+
+#tab-mypage .mypage-plan-meta-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+}
+
+#tab-mypage .mypage-plan-meta-card {
+    padding: 12px 14px !important;
+    border-radius: 16px !important;
+    background: #f7f9fc !important;
+    border: 1px solid rgba(15, 23, 42, 0.06) !important;
+}
+
+#tab-mypage .mypage-plan-meta-card--wide {
+    grid-column: 1 / -1 !important;
+}
+
+#tab-mypage .mypage-plan-meta-card span {
+    display: block !important;
+    margin-bottom: 6px !important;
+    color: #8a94a6 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+}
+
+#tab-mypage .mypage-plan-meta-card strong {
+    display: block !important;
+    color: #111827 !important;
+    font-size: 13px !important;
+    line-height: 1.45 !important;
+}
+
+#tab-mypage #mypage-plan-copy-access {
+    font-size: 15px !important;
+    white-space: nowrap !important;
+    letter-spacing: -0.02em !important;
+}
+
+#tab-mypage .mypage-plan-actions {
+    display: flex !important;
+    gap: 10px !important;
+    margin-top: 4px !important;
+}
+
+#tab-mypage .mypage-plan-actions .mypage-plan-cta {
+    width: auto !important;
+    flex: 1 1 0 !important;
+}
+
+#tab-mypage .mypage-plan-offer-card.is-scheduled {
+    border-color: rgba(249, 115, 22, 0.28) !important;
+    box-shadow: 0 12px 24px rgba(249, 115, 22, 0.08) !important;
+}
+
+body[data-theme='dark'] #tab-mypage .mypage-plan-note,
+body[data-theme='dark'] #tab-mypage .mypage-plan-meta-card span {
+    color: #94a3b8 !important;
+}
+
+body[data-theme='dark'] #tab-mypage .mypage-plan-meta-card {
+    background: rgba(15, 23, 42, 0.9) !important;
+    border-color: rgba(148, 163, 184, 0.18) !important;
+}
+
+body[data-theme='dark'] #tab-mypage .mypage-plan-meta-card strong {
+    color: #f8fafc !important;
+}
+
+body[data-theme='dark'] #tab-mypage .mypage-plan-offer-card.is-scheduled {
+    border-color: rgba(251, 146, 60, 0.34) !important;
+    box-shadow: 0 14px 28px rgba(2, 6, 23, 0.34) !important;
+}
+
+@media (max-width: 760px) {
+    #tab-mypage .mypage-plan-meta-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    #tab-mypage .mypage-plan-meta-card--wide {
+        grid-column: auto !important;
+    }
+}
+
+@media (max-width: 640px) {
+    #tab-mypage .mypage-plan-actions {
+        flex-direction: column !important;
+    }
+
+    #tab-mypage .mypage-plan-actions .mypage-plan-cta {
+        width: 100% !important;
+    }
+
+    #tab-mypage #mypage-plan-copy-access {
+        font-size: 14px !important;
+    }
+}
+
