@@ -289,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         PRESETS,
         PRESETS_LABEL,
         RULE_DETAILS,
+        RULE_NARRATIVES,
         RULE_SAMPLE_MAP,
         RULE_STATS,
         RULES,
@@ -539,6 +540,12 @@ document.addEventListener('DOMContentLoaded', () => {
         plan: '플랜 차이 알려줘',
         dashboard: '대시보드는 뭐야?',
         locker: '보관함은 뭐야?'
+    };
+    const DRAW_WIZARD_PLAN_LABELS = {
+        free: "무료",
+        gold: "골드",
+        platinum: "플래티넘",
+        master: "마스터"
     };
     let googleRedirectFlowPending = readGoogleRedirectPendingState();
     let drawWizardScrollHintSeen = readDrawWizardScrollHintSeen();
@@ -4292,27 +4299,121 @@ document.addEventListener('DOMContentLoaded', () => {
             : '<span class="draw-funnel-chip is-empty">아직 선택 없음</span>';
     }
 
+    function getDrawWizardTierLabel(tier) {
+        const normalized = String(tier || "free").trim().toLowerCase();
+        return DRAW_WIZARD_PLAN_LABELS[normalized] || String(tier || "").toUpperCase();
+    }
+
+    function getDrawWizardRuleUnlockInfo(rank = 0) {
+        if (rank === 1) {
+            return { requiredLevel: 3, requiredTier: "master", tierKey: "MASTER", tierLabel: "마스터" };
+        }
+        if (rank === 2) {
+            return { requiredLevel: 2, requiredTier: "platinum", tierKey: "PLATINUM", tierLabel: "플래티넘" };
+        }
+        if (rank === 3) {
+            return { requiredLevel: 1, requiredTier: "gold", tierKey: "GOLD", tierLabel: "골드" };
+        }
+        return { requiredLevel: 0, requiredTier: "free", tierKey: "FREE", tierLabel: "무료" };
+    }
+
+    function getDrawWizardRuleStrengthMeta(ruleId) {
+        const ratio = Math.max(0, Math.min(0.95, Number(RULE_STATS?.[ruleId]?.ratio) || 0));
+        if (ratio >= 0.25) {
+            return { tone: "strong", label: "강한 정리", note: "후보를 크게 줄이는 핵심 필터입니다." };
+        }
+        if (ratio >= 0.08) {
+            return { tone: "medium", label: "중간 정리", note: "자주 쓰는 중심 필터입니다." };
+        }
+        if (ratio > 0) {
+            return { tone: "light", label: "미세 정리", note: "세부 취향을 다듬는 보정 필터입니다." };
+        }
+        return { tone: "light", label: "미세 조정", note: "후보 변화가 크지 않은 보조 필터입니다." };
+    }
+
+    function getDrawWizardRuleNarrative(ruleId) {
+        return String(RULE_NARRATIVES?.[ruleId]?.why || "원치 않는 패턴을 먼저 걷어내며 후보를 정리하는 필터입니다.").trim();
+    }
+
+    function getDrawWizardRulePlanNarrative({ unlockInfo, currentPlan }) {
+        const currentPlanLabel = getDrawWizardTierLabel(currentPlan?.id);
+        if (!unlockInfo || unlockInfo.requiredLevel === 0) {
+            return currentPlan?.level > 0
+                ? {
+                    heading: "무료 기본 필터",
+                    body: "현재 플랜에서도 바로 사용할 수 있는 기본 필터입니다. 상위 플랜 규칙과 함께 묶을수록 후보를 더 촘촘하게 정리할 수 있습니다."
+                }
+                : {
+                    heading: "무료로 바로 사용 가능",
+                    body: "무료에서 먼저 필터 감각을 익히기 좋은 시작 규칙입니다."
+                };
+        }
+
+        let body = "";
+        if (unlockInfo.requiredLevel === 1) {
+            body = "이 단계의 상위 3위 필터라 무료 기본 규칙보다 더 넓은 후보를 한 번에 정리할 수 있습니다.";
+        } else if (unlockInfo.requiredLevel === 2) {
+            body = "이 단계의 상위 2위 핵심 필터라 골드보다 한 단계 더 깊게 후보를 압축할 수 있습니다.";
+        } else {
+            body = "이 단계에서 가장 영향이 큰 1위 핵심 필터라 가장 강한 수준의 후보 정리가 가능합니다.";
+        }
+
+        if ((currentPlan?.level || 0) >= unlockInfo.requiredLevel) {
+            return {
+                heading: `${unlockInfo.tierLabel}에서 사용 중`,
+                body: `${body} 현재 ${currentPlanLabel} 플랜에서 바로 사용할 수 있습니다.`
+            };
+        }
+
+        return {
+            heading: `${unlockInfo.tierLabel} 해금 포인트`,
+            body: `현재 ${currentPlanLabel}에서는 잠겨 있습니다. ${body}`
+        };
+    }
+
+    function getDrawWizardPlanCalloutMarkup(currentPlan) {
+        const currentPlanLabel = getDrawWizardTierLabel(currentPlan?.id);
+        const chips = [
+            { tier: "free", label: "무료", note: "기본 필터" },
+            { tier: "gold", label: "골드", note: "상위 3위 필터" },
+            { tier: "platinum", label: "플래티넘", note: "상위 2위 필터" },
+            { tier: "master", label: "마스터", note: "1위 핵심 필터" }
+        ].map(item => `
+            <span class="draw-funnel-plan-callout-chip${currentPlan?.id === item.tier ? " is-current" : ""}" data-tier="${escapeHtml(item.tier)}">
+                <strong>${escapeHtml(item.label)}</strong>
+                <em>${escapeHtml(item.note)}</em>
+            </span>
+        `).join("");
+
+        return `
+            <article class="draw-funnel-plan-callout">
+                <span class="draw-funnel-plan-callout-kicker">플랜별 필터 범위</span>
+                <strong>상위 플랜일수록 이 단계에서 영향이 큰 제외 규칙까지 열립니다.</strong>
+                <p>현재 <b>${escapeHtml(currentPlanLabel)}</b> 플랜 기준으로 보이는 카드가 정해집니다. 무료는 기본 필터부터 시작하고, 골드는 상위 3위, 플래티넘은 상위 2위, 마스터는 1위 핵심 필터까지 사용할 수 있습니다. 당첨을 보장하지는 않지만 후보를 더 세밀하게 정리하고 싶은 사용자일수록 체감 차이가 큽니다.</p>
+                <div class="draw-funnel-plan-callout-chips">${chips}</div>
+            </article>
+        `;
+    }
+
     function getDrawWizardRuleImpactMeta(ruleId, { active = false } = {}) {
         const stat = RULE_STATS?.[ruleId];
         const ratio = Math.max(0, Math.min(0.95, Number(stat?.ratio) || 0));
+        const strength = getDrawWizardRuleStrengthMeta(ruleId);
         if (!ratio) {
             return {
-                label: active ? '현재 제외' : '선택 시 제외',
-                value: '변화 적음',
-                bulletPrimary: active ? '현재 반영 유지' : '효과는 크지 않음',
-                bulletSecondary: active ? '이미 적용됨' : '탭해서 적용'
+                label: active ? "현재 정리" : "정리 규모",
+                value: strength.label,
+                bulletPrimary: "후보 변화가 작은 보조 필터",
+                bulletSecondary: strength.note
             };
         }
-        const gainPct = ((1 / (1 - ratio)) - 1) * 100;
-        const currentCombos = Math.max(1, Math.round(Number(currentRemainingCombos) || TOTAL_COMBOS));
-        const affectedCombos = active
-            ? Math.round(currentCombos * (ratio / (1 - ratio)))
-            : Math.round(currentCombos * ratio);
+        const affectedCombos = Math.max(1, Math.round(Number(stat?.excluded) || (TOTAL_COMBOS * ratio)));
+        const affectedPct = formatDisplayPercent(ratio * 100);
         return {
-            label: active ? '현재 제외' : '선택 시 제외',
+            label: active ? "현재 정리" : "정리 규모",
             value: formatDrawWizardCompactCount(affectedCombos),
-            bulletPrimary: `1등 기대 +${Math.max(1, Math.round(gainPct))}%`,
-            bulletSecondary: active ? '이미 적용됨' : '탭해서 적용'
+            bulletPrimary: `전체 후보 약 ${affectedPct}% 정리`,
+            bulletSecondary: strength.note
         };
     }
 
@@ -4359,46 +4460,44 @@ document.addEventListener('DOMContentLoaded', () => {
             return { rule, ratio };
         }).sort((a, b) => b.ratio - a.ratio);
 
-        drawWizardDetailGroupsEl.innerHTML = rulesWithStats.map((item, index) => {
+        drawWizardDetailGroupsEl.innerHTML = `${getDrawWizardPlanCalloutMarkup(currentPlan)}${rulesWithStats.map((item, index) => {
             const rule = item.rule;
-            const rank = index + 1; // 1-based rank
+            const rank = index + 1;
             const active = selectedIds.has(rule.id);
-            const description = rule.desc || rule.detail || '선택 시 이 패턴을 제외합니다.';
+            const description = rule.desc || rule.detail || "선택 시 이 패턴을 제외합니다.";
             const impact = getDrawWizardRuleImpactMeta(rule.id, { active });
-            
-            // Access check:
-            // Rank 1 -> Master (Level 3)
-            // Rank 2 -> Platinum (Level 2)
-            // Rank 3+ -> All (Level 0+)
-            let restricted = false;
-            let requiredTier = '';
-            
-            if (rank === 1 && userLevel < 3) {
-                restricted = true;
-                requiredTier = 'MASTER';
-            } else if (rank === 2 && userLevel < 2) {
-                restricted = true;
-                requiredTier = 'PLATINUM';
-            } else if (rank === 3 && userLevel < 1) {
-                restricted = true;
-                requiredTier = 'GOLD';
-            }
-
-            const restrictedClass = restricted ? ' is-restricted' : '';
+            const unlockInfo = getDrawWizardRuleUnlockInfo(rank);
+            const restricted = userLevel < unlockInfo.requiredLevel;
+            const requiredTier = unlockInfo.tierKey;
+            const restrictedClass = restricted ? " is-restricted" : "";
+            const tierChipLabel = unlockInfo.requiredLevel > 0 ? `${unlockInfo.tierLabel} 해금` : "무료 공개";
+            const narrative = getDrawWizardRuleNarrative(rule.id);
+            const planNarrative = getDrawWizardRulePlanNarrative({ unlockInfo, currentPlan });
 
             return `
-                <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}${restrictedClass}" 
-                        type="button" 
-                        data-wizard-rule="${escapeHtml(rule.id)}" 
+                <button class="draw-funnel-rule-card${active ? " is-selected" : ""}${restrictedClass}"
+                        type="button"
+                        data-wizard-rule="${escapeHtml(rule.id)}"
                         data-rule-rank="${rank}"
                         data-restricted="${restricted}"
                         data-required-tier="${requiredTier}"
                         aria-pressed="${String(active)}">
+                    ${restricted ? `<span class="rule-restricted-badge" data-tier="${escapeHtml(unlockInfo.requiredTier)}">${escapeHtml(unlockInfo.tierLabel)} 전용</span>` : ""}
                     <div class="draw-funnel-rule-main">
                         <div class="draw-funnel-rule-copy">
-                            <strong>${escapeHtml(rule.title)}</strong>
+                            <div class="draw-funnel-rule-copy-head">
+                                <strong>${escapeHtml(rule.title)}</strong>
+                                <span class="draw-funnel-rule-tier" data-tier="${escapeHtml(unlockInfo.requiredTier)}">${escapeHtml(tierChipLabel)}</span>
+                            </div>
                             <p>${escapeHtml(description)}</p>
-                            ${restricted ? `<span class="rule-restricted-badge" data-tier="${escapeHtml(requiredTier.toLowerCase())}">${requiredTier} 전용</span>` : ''}
+                            <div class="draw-funnel-rule-story">
+                                <span class="draw-funnel-rule-story-label">왜 제외하나요</span>
+                                <p>${escapeHtml(narrative)}</p>
+                            </div>
+                            <div class="draw-funnel-rule-plan" data-tier="${escapeHtml(unlockInfo.requiredTier)}">
+                                <span class="draw-funnel-rule-plan-label">${escapeHtml(planNarrative.heading)}</span>
+                                <p>${escapeHtml(planNarrative.body)}</p>
+                            </div>
                         </div>
                         <div class="draw-funnel-rule-impact">
                             <span class="draw-funnel-rule-impact-label">${escapeHtml(impact.label)}</span>
@@ -4412,10 +4511,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </button>
             `;
-        }).join('');
+        }).join("")}`;
         drawWizardDetailNoteEl.textContent = selectedCount
-            ? `${selectedCount}개 선택됨`
-            : '아직 선택 전';
+            ? `${selectedCount}개 선택됨 · 영향 큰 규칙일수록 상위 플랜에서 해금됩니다.`
+            : "영향 큰 규칙일수록 상위 플랜에서 해금됩니다.";
     }
 
     function renderDrawWizardReview() {

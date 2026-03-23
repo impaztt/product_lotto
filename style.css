@@ -19839,7 +19839,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-restricted {
-    opacity: 0.7;
+    opacity: 0.82;
     background: #f8fafc;
     border-style: dashed;
     padding-top: 28px;
@@ -19925,7 +19925,164 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     grid-area: copy;
     min-width: 0;
     display: grid;
-    gap: 6px;
+    gap: 8px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-plan-callout {
+    grid-column: 1 / -1;
+    padding: 16px 18px;
+    border-radius: 22px;
+    display: grid;
+    gap: 8px;
+    border: 1px solid rgba(236, 159, 51, 0.22);
+    background: linear-gradient(135deg, rgba(255, 248, 236, 0.98), rgba(241, 247, 255, 0.94));
+    box-shadow: 0 18px 32px rgba(28, 56, 92, 0.08);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-plan-callout-kicker {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #9a5b08;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-plan-callout strong {
+    font-size: 18px;
+    line-height: 1.2;
+    color: #10233a;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-plan-callout p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #566b81;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-plan-callout p b {
+    color: #10233a;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-plan-callout-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-plan-callout-chip {
+    min-height: 38px;
+    padding: 0 12px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(19, 38, 61, 0.08);
+    background: rgba(255, 255, 255, 0.85);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-plan-callout-chip strong {
+    font-size: 11px;
+    line-height: 1;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-plan-callout-chip em {
+    font-style: normal;
+    font-size: 10px;
+    font-weight: 700;
+    color: #61758d;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-plan-callout-chip.is-current {
+    border-color: rgba(234, 77, 42, 0.28);
+    background: linear-gradient(180deg, rgba(255, 243, 232, 0.98), rgba(255, 255, 255, 0.94));
+    box-shadow: 0 10px 20px rgba(234, 77, 42, 0.1);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-copy-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-tier {
+    flex: 0 0 auto;
+    min-height: 24px;
+    padding: 0 9px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    background: rgba(19, 38, 61, 0.06);
+    color: #2b4562;
+    white-space: nowrap;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-tier[data-tier="gold"] {
+    background: rgba(245, 158, 11, 0.14);
+    color: #a16207;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-tier[data-tier="platinum"] {
+    background: rgba(37, 99, 235, 0.12);
+    color: #1d4ed8;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-tier[data-tier="master"] {
+    background: rgba(15, 23, 42, 0.92);
+    color: #f8fafc;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-story,
+#tab-draw.draw-wizard-tab .draw-funnel-rule-plan {
+    padding: 10px 12px;
+    border-radius: 16px;
+    display: grid;
+    gap: 4px;
+    border: 1px solid rgba(19, 38, 61, 0.08);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-story {
+    background: rgba(248, 250, 252, 0.92);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-plan {
+    background: linear-gradient(180deg, rgba(255, 248, 236, 0.96), rgba(255, 255, 255, 0.94));
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-plan[data-tier="free"] {
+    background: rgba(241, 245, 249, 0.9);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-plan[data-tier="gold"] {
+    border-color: rgba(245, 158, 11, 0.18);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-plan[data-tier="platinum"] {
+    border-color: rgba(37, 99, 235, 0.18);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-plan[data-tier="master"] {
+    border-color: rgba(15, 23, 42, 0.14);
+    background: linear-gradient(180deg, rgba(255, 248, 236, 0.98), rgba(240, 245, 255, 0.96));
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-story-label,
+#tab-draw.draw-wizard-tab .draw-funnel-rule-plan-label {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-story p,
+#tab-draw.draw-wizard-tab .draw-funnel-rule-plan p {
+    font-size: 11px;
+    line-height: 1.5;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card p {
@@ -20860,9 +21017,30 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
         border-radius: 18px;
     }
 
+    #tab-draw.draw-wizard-tab .draw-funnel-plan-callout {
+        padding: 12px;
+        border-radius: 18px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-plan-callout strong {
+        font-size: 15px;
+    }
+
     #tab-draw.draw-wizard-tab .draw-funnel-rule-main {
-        grid-template-columns: minmax(0, 1fr) 98px;
-        gap: 9px 10px;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            "copy"
+            "impact"
+            "preview";
+        gap: 8px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-rule-copy-head {
+        gap: 6px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-funnel-rule-tier {
+        font-size: 9px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-impact {
