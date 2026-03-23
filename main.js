@@ -531,6 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const GOOGLE_REDIRECT_PENDING_TTL_MS = 10 * 60 * 1000;
     const KAKAO_INAPP_NOTICE_DISMISSED_KEY = 'lotto_kakao_inapp_notice_dismissed';
     const MEMBERSHIP_STATE_LOCAL_KEY = 'lotto_membership_state_v1';
+    const PLAN_DAILY_USAGE_KEY = 'lotto_plan_daily_usage_v1';
     const HELP_CHAT_PROMPTS = {
         app: '이 앱이 뭐야?',
         draw: '번호는 어떻게 생성해?',
@@ -1075,9 +1076,9 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
             const plan = String(button.dataset.premiumPlan || '').toLowerCase();
             const planMetaMap = {
-                starter: { name: 'STARTER', price: '월 4,900원' },
-                standard: { name: 'STANDARD', price: '월 9,900원' },
-                master: { name: 'MASTER', price: '월 19,900원' }
+                gold: { name: 'GOLD', price: '첫 달 0원 · 2개월차부터 월 9,900원 자동결제' },
+                platinum: { name: 'PLATINUM', price: '첫 달 0원 · 2개월차부터 월 14,900원 자동결제' },
+                master: { name: 'MASTER', price: '첫 달 0원 · 2개월차부터 월 19,900원 자동결제' }
             };
             const planMeta = planMetaMap[plan] || { name: '선택 플랜', price: '가격 정보 준비 중' };
             if (!isMember()) {
@@ -1782,14 +1783,14 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (changeMode === 'downgrade') {
             const scheduledDate = formatMembershipDate(membershipState.subscriptionEndsAt);
             confirmBody = `${currentPlan.label} 플랜은 ${scheduledDate}까지 이용하고, ${plan.label} 플랜은 ${scheduledDate}부터 적용됩니다.
-다운그레이드는 다음 결제일부터 반영됩니다.`;
+다운그레이드는 다음 자동결제일부터 반영됩니다.`;
             confirmAction = '예약하기';
         } else {
-            const previewStart = new Date();
-            const previewEnd = addMonthsPreserveClock(previewStart, 1);
-            confirmBody = `${plan.label} 멤버십(월 ${formatNumber(plan.price || 0)}원)으로 ${changeMode === 'upgrade' ? '즉시 업그레이드' : '시작'}하시겠습니까?
-이용 기간은 ${formatMembershipPeriod(previewStart, previewEnd)}입니다.`;
-            confirmAction = changeMode === 'upgrade' ? '즉시 업그레이드' : '시작하기';
+            const previewEnd = addMonthsPreserveClock(new Date(), 1) || new Date();
+            confirmBody = `${plan.label} 멤버십으로 ${changeMode === 'upgrade' ? '즉시 업그레이드' : '시작'}하시겠습니까?
+첫 달 결제는 0원이며, ${formatMembershipDate(previewEnd)}부터 ${formatMembershipRecurringPrice(plan)} 자동결제됩니다.
+현재 오픈이벤트가는 정가 ${formatNumber(plan.originalPrice || 0)}원에서 ${formatNumber(plan.price || 0)}원으로 적용됩니다.`;
+            confirmAction = changeMode === 'upgrade' ? '첫 달 0원 업그레이드' : '첫 달 0원 시작';
         }
 
         const confirmed = await showActionConfirm(
@@ -1806,7 +1807,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (result.mode === 'downgrade') {
                 showActionPopup(`${plan.label} 변경을 예약했습니다. ${formatMembershipDate(result.effectiveAt)}부터 적용됩니다.`);
             } else if (result.changed) {
-                showActionPopup(`${plan.label} 멤버십이 즉시 적용되었습니다. 이용 기간: ${formatMembershipPeriod(result.state.subscriptionStartedAt, result.state.subscriptionEndsAt)}`);
+                showActionPopup(`${plan.label} 멤버십이 시작되었습니다. 첫 달 결제는 0원이며 ${formatMembershipDate(result.state.subscriptionEndsAt)}부터 ${formatMembershipRecurringPrice(plan)} 자동결제됩니다.`);
             }
             if (mypagePlanOffersSectionEl) {
                 mypagePlanOffersSectionEl.hidden = true;
@@ -2189,7 +2190,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         applyRulePickerFilter();
         if (guestLimitEl) {
-            guestLimitEl.textContent = '미로그인 사용자는 하루 50회까지 가능 (1회 1세트).';
+            guestLimitEl.textContent = 'FREE는 하루 5조합까지 가능합니다.';
             refreshGuestLimitMessage();
         }
         updatePremiumMembershipUi();
@@ -2257,8 +2258,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 return false;
             }
             if (!canGuestGenerate()) {
-                showActionPopup('로그인 후 2세트 이상 생성과 제한 해제를 사용할 수 있습니다.');
-                openAuthModal();
+                const snapshot = getGenerationLimitSnapshot();
+                if (!isMember()) {
+                    showActionPopup(`FREE는 하루 ${snapshot.limit}조합까지 가능합니다. 로그인 후 첫 달 0원으로 유료 플랜을 시작하면 더 많이 생성할 수 있습니다.`);
+                    openAuthModal();
+                } else if (snapshot.plan.id === 'free') {
+                    showActionPopup(`FREE는 하루 ${snapshot.limit}조합까지 가능합니다. GOLD / PLATINUM / MASTER는 첫 달 0원으로 바로 시작할 수 있습니다.`);
+                } else {
+                    const remainingText = snapshot.remaining > 0
+                        ? ` 지금은 최대 ${snapshot.remaining}조합까지 생성할 수 있습니다.`
+                        : ' 오늘 한도를 모두 사용했습니다.';
+                    showActionPopup(`${snapshot.plan.label}는 하루 ${snapshot.limit}조합까지 가능합니다.${remainingText}`);
+                }
                 return false;
             }
             const generatedCount = generateAndDisplayNumbers({
@@ -2274,7 +2285,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 return false;
             }
-            incrementGuestCount();
+            incrementGuestCount(generatedCount);
             if (source === 'cta') {
                 focusGeneratedNumbers({
                     collapseFilters: true
@@ -2311,7 +2322,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generateNumbersWithRules(activeRules, options = {}) {
         const randomFn = typeof options.randomFn === 'function' ? options.randomFn : Math.random;
-        const excludedNumbers = options.excludedNumbers instanceof Set ? options.excludedNumbers : excludeNumberValues;
+        const baseExcludedNumbers = options.excludedNumbers instanceof Set ? options.excludedNumbers : excludeNumberValues;
+        const excludedNumbers = hasExcludeNumberAccess() ? baseExcludedNumbers : new Set();
         const maxAttempts = 5000;
         for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
             const numbers = generateUniqueNumbers(6, 1, 45, randomFn).sort((a, b) => a - b);
@@ -3371,43 +3383,108 @@ document.addEventListener('DOMContentLoaded', () => {
                 label: 'FREE',
                 level: 0,
                 price: 0,
+                originalPrice: 0,
+                dailyGenerationLimit: 5,
                 recommendedSetCount: 0,
                 weeklyLockerCount: 0,
-                description: '기본적인 분석 기능과 최근 번호 보관함을 제공합니다.',
-                note: 'FREE 사용 중'
+                description: '번호 추출 하루 5조합을 제공하는 기본 플랜입니다.',
+                note: 'FREE · 하루 5조합'
             },
             gold: {
                 id: 'gold',
                 label: 'GOLD',
                 level: 1,
-                price: 4900,
+                price: 9900,
+                originalPrice: 14900,
+                dailyGenerationLimit: 15,
                 recommendedSetCount: 5,
                 weeklyLockerCount: 5,
-                description: '상위권 필터링과 함께 매주 월요일 5세트 추천이 보관함에 채워집니다.',
-                note: 'GOLD 멤버십 · 주간 5세트'
+                description: '하루 15조합과 골드 전용 제외수, 스튜디오 추천 5조합을 제공합니다.',
+                note: '첫 달 0원 · 이후 월 9,900원 자동결제'
             },
             platinum: {
                 id: 'platinum',
                 label: 'PLATINUM',
                 level: 2,
-                price: 11900,
+                price: 14900,
+                originalPrice: 21900,
+                dailyGenerationLimit: 30,
                 recommendedSetCount: 15,
                 weeklyLockerCount: 15,
-                description: '프리미엄 필터링과 매주 월요일 15세트 주간 추천을 제공합니다.',
-                note: 'PLATINUM 멤버십 · 주간 15세트'
+                description: '하루 30조합과 골드 전용 제외수, 일주일 15조합 추천을 제공합니다.',
+                note: '첫 달 0원 · 이후 월 14,900원 자동결제'
             },
             master: {
                 id: 'master',
                 label: 'MASTER',
                 level: 3,
                 price: 19900,
+                originalPrice: 34900,
+                dailyGenerationLimit: Number.POSITIVE_INFINITY,
                 recommendedSetCount: 30,
                 weeklyLockerCount: 30,
-                description: '최상위 분석 기능과 매주 월요일 30세트 주간 추천을 제공합니다.',
-                note: 'MASTER 멤버십 · 주간 30세트'
+                description: '조합 무제한과 골드 전용 제외수, 일주일 30조합 추천을 제공합니다.',
+                note: '첫 달 0원 · 이후 월 19,900원 자동결제'
             }
         };
         return planMap[normalized] || planMap.free;
+    }
+
+    function formatMembershipRecurringPrice(planOrTier = getMembershipPlanMeta()) {
+        const plan = typeof planOrTier === 'string' ? getMembershipPlanMeta(planOrTier) : planOrTier;
+        if (!plan || plan.id === 'free') {
+            return '월 0원';
+        }
+        return `월 ${formatNumber(plan.price || 0)}원`;
+    }
+
+    function formatMembershipLaunchOffer(planOrTier = getMembershipPlanMeta()) {
+        const plan = typeof planOrTier === 'string' ? getMembershipPlanMeta(planOrTier) : planOrTier;
+        if (!plan || plan.id === 'free') {
+            return '무료';
+        }
+        return `첫 달 0원 · 2개월차부터 ${formatMembershipRecurringPrice(plan)} 자동결제`;
+    }
+
+    function getGenerationAccessPlanMeta() {
+        return isMember() ? getMembershipPlanMeta() : getMembershipPlanMeta('free');
+    }
+
+    function getMembershipDailyGenerationLimit(tier = getGenerationAccessPlanMeta().id) {
+        const value = getMembershipPlanMeta(tier).dailyGenerationLimit;
+        return Number.isFinite(value) ? Math.max(0, Number(value) || 0) : Number.POSITIVE_INFINITY;
+    }
+
+    function getDailyGenerationUsageKey(ownerKey = getHistoryOwnerKey(), dateKey = getTodayKey()) {
+        return `${PLAN_DAILY_USAGE_KEY}:${ownerKey}:${dateKey}`;
+    }
+
+    function getDailyGenerationUsageCount(ownerKey = getHistoryOwnerKey(), dateKey = getTodayKey()) {
+        try {
+            return Math.max(0, Number(localStorage.getItem(getDailyGenerationUsageKey(ownerKey, dateKey)) || 0) || 0);
+        } catch (error) {
+            console.warn('일일 조합 사용량 로드 실패', error);
+            return 0;
+        }
+    }
+
+    function getGenerationLimitSnapshot(requestedCount = Math.max(1, parseInt(drawCountSelect?.value || '1', 10) || 1)) {
+        const plan = getGenerationAccessPlanMeta();
+        const limit = getMembershipDailyGenerationLimit(plan.id);
+        const used = getDailyGenerationUsageCount();
+        const remaining = Number.isFinite(limit) ? Math.max(0, limit - used) : Number.POSITIVE_INFINITY;
+        return {
+            plan,
+            requestedCount: Math.max(1, Number(requestedCount) || 1),
+            limit,
+            used,
+            remaining,
+            allowed: !Number.isFinite(limit) || requestedCount <= remaining
+        };
+    }
+
+    function hasExcludeNumberAccess(tier = getGenerationAccessPlanMeta().id) {
+        return getMembershipPlanMeta(tier).level >= 1;
     }
 
     function getRecommendedSetCount(tier = getMembershipTier()) {
@@ -3441,7 +3518,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ? options.strategyOrder
             : RECOMMENDATION_STRATEGY_ORDER;
         const randomFn = typeof options.randomFn === 'function' ? options.randomFn : Math.random;
-        const excludedNumbers = options.excludedNumbers instanceof Set ? options.excludedNumbers : excludeNumberValues;
+        const baseExcludedNumbers = options.excludedNumbers instanceof Set ? options.excludedNumbers : excludeNumberValues;
+        const excludedNumbers = hasExcludeNumberAccess() ? baseExcludedNumbers : new Set();
         const draws = [];
         const usedSignatures = new Set();
 
@@ -3680,11 +3758,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (authPending) {
                 drawMembershipNoteEl.textContent = '저장된 로그인 상태를 확인하고 있습니다.';
             } else if (!isMember()) {
-                drawMembershipNoteEl.textContent = '로그인 후 추천 플랜 구성을 고르면 세트를 바로 확인할 수 있습니다.';
+                drawMembershipNoteEl.textContent = '로그인 후 첫 달 0원으로 GOLD / PLATINUM / MASTER를 시작하고 추천 조합을 바로 확인할 수 있습니다.';
             } else if (isPremiumMember()) {
-                drawMembershipNoteEl.textContent = `${plan.label} 기준 추천 ${getRecommendedSetCount(plan.id)}세트와 전체 복사를 바로 사용할 수 있습니다.`;
+                drawMembershipNoteEl.textContent = `${plan.label} 기준 추천 ${getRecommendedSetCount(plan.id)}세트와 전체 복사를 바로 사용할 수 있습니다. ${formatMembershipLaunchOffer(plan)} 플랜입니다.`;
             } else {
-                drawMembershipNoteEl.textContent = '현재는 직접 선택으로 기준을 정리하는 상태입니다. 필요할 때 추천 플랜으로 넘어갈 수 있습니다.';
+                drawMembershipNoteEl.textContent = 'FREE는 하루 5조합까지 가능합니다. 필요할 때 첫 달 0원으로 유료 플랜으로 올릴 수 있습니다.';
             }
         }
         const selectedCount = ruleInputs.filter(input => input.checked).length;
@@ -4152,7 +4230,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function syncDrawWizardExcludeNumbersFromControl(options = {}) {
         const { commit = true } = options;
-        const normalized = Array.from(excludeNumberValues).sort((left, right) => left - right);
+        const normalized = hasExcludeNumberAccess()
+            ? Array.from(excludeNumberValues).sort((left, right) => left - right)
+            : [];
         if (!drawWizardState) {
             return normalized;
         }
@@ -5247,12 +5327,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const flowLabel = authPending
             ? '플랜 정보를 확인하는 중입니다.'
             : !member
-            ? '로그인 후 월간 플랜을 선택할 수 있습니다.'
+            ? '로그인 후 유료 플랜을 첫 달 0원으로 시작할 수 있습니다.'
             : scheduledPlan
             ? `${formatMembershipDate(membershipState.scheduledMembershipApplyAt)}부터 ${scheduledPlan.label}로 변경 예약됨`
             : premiumActive
-            ? `업그레이드는 즉시 적용되고, 다운그레이드는 다음 결제일(${nextBillingLabel})부터 적용됩니다.`
-            : 'FREE에서 GOLD, PLATINUM, MASTER로 즉시 업그레이드할 수 있습니다.';
+            ? `첫 달 결제는 0원이며 ${nextBillingLabel}부터 ${formatMembershipRecurringPrice(plan)} 자동결제됩니다. 다운그레이드는 다음 자동결제일부터 적용됩니다.`
+            : 'FREE는 하루 5조합입니다. GOLD / PLATINUM / MASTER는 첫 달 0원으로 바로 시작할 수 있습니다.';
         const planHeading = authPending
             ? '확인 중'
             : premiumActive
@@ -5299,7 +5379,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mypagePlanNoteEl) {
             mypagePlanNoteEl.textContent = authPending
                 ? '확인 중'
-                : '플랜 순서: FREE < GOLD < PLATINUM < MASTER';
+                : '플랜 순서: FREE < GOLD < PLATINUM < MASTER · 유료 플랜 첫 달 0원';
         }
         if (mypagePlanSetCountEl) {
             mypagePlanSetCountEl.textContent = authPending
@@ -5332,7 +5412,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mypagePlanCancelBtn.disabled = authPending || freeScheduled;
             mypagePlanCancelBtn.textContent = freeScheduled
                 ? `${formatMembershipDate(membershipState.scheduledMembershipApplyAt)} FREE 예약됨`
-                : '다음 결제일부터 FREE';
+                : '다음 자동결제일부터 FREE';
         }
         mypagePlanOfferCards.forEach(card => {
             const tier = String(card.dataset.premiumPlanCard || '').toLowerCase();
@@ -5353,7 +5433,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!member) {
                 const tierLabel = tier.toUpperCase();
                 actionButton.disabled = false;
-                actionButton.textContent = `${tierLabel} 로그인 후 시작`;
+                actionButton.textContent = `${tierLabel} 로그인 후 첫 달 0원 시작`;
                 actionButton.className = 'cta premium-plan-buy';
                 return;
             }
@@ -5381,13 +5461,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const tierLabel = tier.toUpperCase();
             actionButton.disabled = false;
             if (changeMode === 'downgrade') {
-                actionButton.textContent = '다음 결제일부터 변경';
+                actionButton.textContent = '다음 자동결제일부터 변경';
                 actionButton.className = 'ghost premium-plan-buy';
             } else if (changeMode === 'upgrade') {
-                actionButton.textContent = `${tierLabel} 즉시 업그레이드`;
+                actionButton.textContent = `${tierLabel} 첫 달 0원 업그레이드`;
                 actionButton.className = 'cta premium-plan-buy';
             } else {
-                actionButton.textContent = `${tierLabel} 시작하기`;
+                actionButton.textContent = `${tierLabel} 첫 달 0원 시작`;
                 actionButton.className = 'cta premium-plan-buy';
             }
         });
@@ -5900,11 +5980,11 @@ document.addEventListener('DOMContentLoaded', () => {
             : premiumActive
             ? '잠시 후 다시 열면 최근 6주 주간 추천 번호가 표시됩니다.'
             : member
-            ? 'GOLD는 5세트, PLATINUM은 15세트, MASTER는 30세트를 매주 월요일 자동으로 보관합니다.'
-            : 'GOLD 5세트, PLATINUM 15세트, MASTER 30세트가 최근 6주까지 자동 보관됩니다.';
+            ? 'GOLD는 5조합, PLATINUM은 15조합, MASTER는 30조합을 매주 자동으로 보관합니다.'
+            : 'GOLD 5조합, PLATINUM 15조합, MASTER 30조합이 최근 6주까지 자동 보관됩니다.';
         const badges = authPending
             ? ['플랜 확인 중']
-            : ['GOLD 5세트', 'PLATINUM 15세트', 'MASTER 30세트', '최근 6주 보관'];
+            : ['GOLD 5조합', 'PLATINUM 15조합', 'MASTER 30조합', '최근 6주 보관'];
         return `
             <article class="locker-history-empty locker-history-empty--plan">
                 <strong>${escapeHtml(headline)}</strong>
@@ -6011,9 +6091,9 @@ document.addEventListener('DOMContentLoaded', () => {
             lockerPlanNoteEl.textContent = authPending
                 ? '로그인과 플랜 상태를 확인하는 중입니다.'
                 : premiumActive
-                ? `${plan.label} 플랜은 매주 월요일 ${formatNumber(weeklySetCount)}세트씩, 최근 6주까지만 보관합니다.`
+                ? `${plan.label} 플랜은 매주 ${formatNumber(weeklySetCount)}조합씩, 최근 6주까지만 자동 보관합니다.`
                 : member
-                ? 'FREE 플랜입니다. GOLD 5세트, PLATINUM 15세트, MASTER 30세트를 최근 6주까지 보관합니다.'
+                ? 'FREE 플랜입니다. GOLD 5조합, PLATINUM 15조합, MASTER 30조합을 최근 6주까지 보관합니다.'
                 : '로그인 후 플랜을 선택하면 매주 월요일 추천 번호가 최근 6주까지 자동 보관됩니다.';
         }
         if (authPending || !premiumActive) {
@@ -7659,9 +7739,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 ].filter(Boolean)
             };
         }
-        if (matchesHelpChatQuery(compact, ['플랜', '유료', '추천플랜', 'starter', 'standard', 'master', '결제', '구매'])) {
+        if (matchesHelpChatQuery(compact, ['플랜', '유료', '추천플랜', 'gold', 'platinum', 'master', '결제', '구매'])) {
             return {
-                text: 'STARTER는 추천 3세트, STANDARD는 5세트, MASTER는 7세트를 바로 볼 수 있습니다.\n균형은 STANDARD가 가장 좋고, 추천 세트는 전략별로 엄선해서 보여줍니다.',
+                text: 'FREE는 하루 5조합, GOLD는 하루 15조합과 추천 5조합, PLATINUM은 하루 30조합과 주간 추천 15조합, MASTER는 무제한과 주간 추천 30조합입니다.\n유료 플랜은 첫 달 0원이고 2개월차부터 이벤트가로 자동결제됩니다.',
                 actions: [
                     { kind: 'premium', label: '추천 플랜 보기', value: 'compare' },
                     { kind: 'tab', label: '마이페이지 플랜 보기', value: 'mypage', toast: '마이페이지로 이동했습니다.' },
@@ -8088,64 +8168,61 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function canGuestGenerate() {
-        if (!guestLimitEl) {
-            return true;
-        }
         if (isAuthStatePending()) {
-            guestLimitEl.textContent = '상태 확인 중';
+            if (guestLimitEl) {
+                guestLimitEl.textContent = '상태 확인 중';
+            }
             if (guestBannerEl) {
                 guestBannerEl.textContent = '확인 중';
             }
             return false;
         }
-        const drawCount = parseInt(drawCountSelect.value, 10);
-        if (isMember()) {
-            guestLimitEl.textContent = '로그인 · 제한 없음';
+        const snapshot = getGenerationLimitSnapshot();
+        if (!Number.isFinite(snapshot.limit)) {
+            if (guestLimitEl) {
+                guestLimitEl.textContent = `${snapshot.plan.label} 무제한`;
+            }
             if (guestBannerEl) {
-                guestBannerEl.textContent = '로그인 완료';
+                guestBannerEl.textContent = `${snapshot.plan.label} 무제한`;
             }
             return true;
         }
-        const limit = 50;
-        const todayKey = getTodayKey();
-        const countKey = `guest_count_${todayKey}`;
-        const current = Number(localStorage.getItem(countKey) || 0);
-        if (drawCount > 1) {
-            guestLimitEl.textContent = '비회원 1세트만';
-            if (guestBannerEl) {
-                guestBannerEl.textContent = '로그인 시 다중 생성';
-            }
-            return false;
+
+        if (guestLimitEl) {
+            guestLimitEl.textContent = snapshot.remaining > 0
+                ? `${snapshot.plan.label} 오늘 ${snapshot.remaining}조합 남음`
+                : `${snapshot.plan.label} 오늘 한도 도달`;
         }
-        if (current >= limit) {
-            guestLimitEl.textContent = '비회원 한도 초과';
-            if (guestBannerEl) {
-                guestBannerEl.textContent = '로그인 후 계속';
-            }
-            return false;
-        }
-        guestLimitEl.textContent = `비회원 ${limit - current}회 남음`;
         if (guestBannerEl) {
-            guestBannerEl.textContent = '비회원 바로 생성';
+            guestBannerEl.textContent = `${snapshot.plan.label} ${snapshot.limit}조합/일`;
         }
-        return true;
+
+        return snapshot.allowed;
     }
 
-    function incrementGuestCount() {
-        if (!guestLimitEl) {
+    function incrementGuestCount(amount = 1) {
+        const plan = getGenerationAccessPlanMeta();
+        const limit = getMembershipDailyGenerationLimit(plan.id);
+        if (!Number.isFinite(limit)) {
+            if (guestLimitEl) {
+                guestLimitEl.textContent = `${plan.label} 무제한`;
+            }
+            if (guestBannerEl) {
+                guestBannerEl.textContent = `${plan.label} 무제한`;
+            }
             return;
         }
-        if (isMember()) {
-            return;
-        }
-        const todayKey = getTodayKey();
-        const countKey = `guest_count_${todayKey}`;
-        const current = Number(localStorage.getItem(countKey) || 0);
-        const next = current + 1;
+
+        const countKey = getDailyGenerationUsageKey();
+        const current = getDailyGenerationUsageCount();
+        const next = current + Math.max(1, Number(amount) || 1);
         localStorage.setItem(countKey, String(next));
-        guestLimitEl.textContent = `비회원 ${Math.max(0, 50 - next)}회 남음`;
+
+        if (guestLimitEl) {
+            guestLimitEl.textContent = `${plan.label} 오늘 ${Math.max(0, limit - next)}조합 남음`;
+        }
         if (guestBannerEl) {
-            guestBannerEl.textContent = '비회원 바로 생성';
+            guestBannerEl.textContent = `${plan.label} ${limit}조합/일`;
         }
     }
 
@@ -9216,8 +9293,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateExcludeNumberLabel() {
-        const count = excludeNumberValues.size;
-        const label = count ? `제외수 ${count}` : '없음';
+        const count = hasExcludeNumberAccess() ? excludeNumberValues.size : 0;
+        const label = hasExcludeNumberAccess()
+            ? (count ? `제외수 ${count}` : '없음')
+            : 'GOLD 이상 전용';
         if (excludeNumberTitle) {
             excludeNumberTitle.textContent = label;
         }
@@ -9225,7 +9304,7 @@ document.addEventListener('DOMContentLoaded', () => {
             excludeNumberCard.dataset.title = label;
         }
         if (excludeNumberRule) {
-            excludeNumberRule.checked = count > 0;
+            excludeNumberRule.checked = hasExcludeNumberAccess() && count > 0;
         }
     }
 
@@ -9299,6 +9378,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        if (!hasExcludeNumberAccess() && excludeNumberValues.size) {
+            clearExcludeNumberSelection({ clearStorage: true });
+        }
+
         excludeNumberGrid.querySelectorAll('button').forEach(button => {
             const num = Number(button.dataset.number);
             if (excludeNumberValues.has(num)) {
@@ -9308,6 +9391,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Buttons are rendered inside a <label>; prevent label toggle side-effects.
                 event.preventDefault();
                 event.stopPropagation();
+                if (!hasExcludeNumberAccess()) {
+                    if (!isMember()) {
+                        showActionPopup('직접 제외수는 GOLD 이상 플랜 전용입니다. 로그인 후 첫 달 0원으로 시작할 수 있습니다.');
+                        openAuthModal();
+                    } else {
+                        showActionPopup('직접 제외수는 GOLD 이상 플랜 전용입니다. 마이페이지에서 첫 달 0원으로 업그레이드할 수 있습니다.');
+                    }
+                    return;
+                }
                 if (excludeNumberValues.has(num)) {
                     excludeNumberValues.delete(num);
                     button.classList.remove('is-active');

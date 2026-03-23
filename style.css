@@ -16707,7 +16707,7 @@ body[data-theme="dark"] #tab-dashboard .dashboard-signal-card p {
 #tab-mypage .mypage-plan-offer-top {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
 }
 
 #tab-mypage .mypage-plan-offer-top strong {
@@ -16738,8 +16738,46 @@ body[data-theme="dark"] #tab-dashboard .dashboard-signal-card p {
     color: #f8fafc;
 }
 
+#tab-mypage .mypage-plan-offer-pricing {
+    display: grid;
+    gap: 4px;
+}
+
+#tab-mypage .mypage-plan-offer-trial {
+    width: fit-content;
+    padding: 6px 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(255, 182, 87, 0.2), rgba(249, 115, 22, 0.16));
+    color: #9a3412;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+}
+
+#tab-mypage .mypage-plan-offer-trial.is-free {
+    background: rgba(15, 23, 42, 0.06);
+    color: #334155;
+}
+
+#tab-mypage .mypage-plan-offer-price-regular {
+    font-size: 12px;
+    color: #94a3b8;
+    text-decoration: line-through;
+    text-decoration-thickness: 1.5px;
+    text-decoration-color: rgba(148, 163, 184, 0.8);
+}
+
 #tab-mypage .mypage-plan-offer-price {
-    font-size: 15px;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: #0f172a;
+}
+
+#tab-mypage .mypage-plan-offer-billing {
+    font-size: 12px;
     font-weight: 800;
     color: #475569;
 }
@@ -16845,7 +16883,22 @@ body[data-theme="dark"] #tab-mypage .mypage-plan-highlight-item span {
 }
 
 body[data-theme="dark"] #tab-mypage .mypage-plan-offer-price {
-    color: #8bb8ff;
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-plan-offer-trial {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.24), rgba(249, 115, 22, 0.2));
+    color: #fde68a;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-plan-offer-trial.is-free {
+    background: rgba(148, 163, 184, 0.16);
+    color: #e2e8f0;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-plan-offer-price-regular,
+body[data-theme="dark"] #tab-mypage .mypage-plan-offer-billing {
+    color: #cbd5e1;
 }
 
 @media (max-width: 640px) {
