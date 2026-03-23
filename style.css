@@ -23432,11 +23432,8 @@ body[data-theme='dark'] #tab-mypage .mypage-plan-offer-card.is-scheduled {
 
 /* Shared bottom tab offset */
 :root {
-    --site-header-height: 0px;
-    --app-viewport-height: 100vh;
     --app-bottom-nav-height: 0px;
     --app-bottom-nav-offset: 0px;
-    --app-tab-available-height: calc(var(--app-viewport-height, 100vh) - var(--site-header-height, 0px) - var(--app-bottom-nav-offset, 0px));
 }
 
 main {
@@ -23458,17 +23455,4 @@ main {
 #tab-dashboard .container-box,
 #tab-dashboard .dashboard-shell {
     padding-bottom: 0 !important;
-}
-
-
-@media (max-width: 768px) {
-    :is(#tab-dashboard, #tab-mypage, #tab-qr, #tab-store).app-shell {
-        height: var(--app-tab-available-height) !important;
-        max-height: var(--app-tab-available-height) !important;
-        min-height: 0 !important;
-        padding-bottom: 0 !important;
-        overflow-y: auto !important;
-        overscroll-behavior: contain;
-        -webkit-overflow-scrolling: touch;
-    }
 }
