@@ -1701,10 +1701,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mypagePlanManageBtn) {
         mypagePlanManageBtn.addEventListener('click', () => {
             if (!mypagePlanOffersSectionEl) return;
-            
+
             const isHidden = mypagePlanOffersSectionEl.hidden;
             mypagePlanOffersSectionEl.hidden = !isHidden;
-            
+
             if (isHidden) {
                 // Scroll to plans
                 window.requestAnimationFrame(() => {
@@ -2203,7 +2203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('초기화 오류', error);
         }
-        
+
         initializeDrawWizard();
         updateScenarioMetrics();
     fetchLatestDraw();
@@ -4406,9 +4406,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const restrictedClass = restricted ? ' is-restricted' : '';
 
             return `
-                <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}${restrictedClass}" 
-                        type="button" 
-                        data-wizard-rule="${escapeHtml(rule.id)}" 
+                <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}${restrictedClass}"
+                        type="button"
+                        data-wizard-rule="${escapeHtml(rule.id)}"
                         data-rule-rank="${rank}"
                         data-restricted="${restricted}"
                         data-required-tier="${requiredTier}"
@@ -5026,7 +5026,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const draft = authStateResolved && isMember() ? loadDrawWizardDraft() : null;
         drawWizardResumeState = draft ? { ...draft } : null;
-        
+
         syncDrawWizardSelections();
         renderDrawWizard();
 
@@ -5042,7 +5042,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isRestricted = button.getAttribute('data-restricted') === 'true';
                 if (isRestricted) {
                     const requiredTier = button.getAttribute('data-required-tier') || 'PREMIUM';
-                    
+
                     if (!isMember()) {
                         const confirmed = await showActionConfirm(
                             '멤버십 전용 기능',
@@ -6627,7 +6627,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.firebase.initializeApp(config);
                 console.log('[Auth] Firebase app initialized');
             }
-            
+
             if (typeof window.firebase.auth !== 'function') {
                 throw new Error('Firebase Auth module not loaded');
             }
@@ -6638,7 +6638,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('[Auth] Auth & Firestore ready');
 
             googleRedirectFlowPending = readGoogleRedirectPendingState();
-            
+
             if (window.firebase.auth.Auth && window.firebase.auth.Auth.Persistence) {
                 const { Persistence } = window.firebase.auth.Auth;
                 authPersistenceReady = firebaseAuth.setPersistence(Persistence.LOCAL).catch(async error => {
@@ -6659,7 +6659,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             void handleGoogleRedirectResult();
-            
+
             if (firebaseAuthStatusEl) {
                 firebaseAuthStatusEl.textContent = hasGoogleRedirectPending()
                     ? '구글 로그인 결과를 확인하는 중입니다...'
