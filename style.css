@@ -3173,8 +3173,6 @@ main {
     border-radius: 0;
     box-shadow: none;
     backdrop-filter: none;
-    overscroll-behavior: contain;
-    touch-action: none;
     transform: translateZ(0);
 }
 
@@ -3206,7 +3204,6 @@ body[data-theme="light"] .bottom-tab-bar::before {
     justify-content: center;
     gap: 6px;
     min-height: 54px;
-    touch-action: none;
     transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 

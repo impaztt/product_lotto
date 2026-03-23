@@ -1,7 +1,4 @@
 (function initLottoTabs(global) {
-    const TAB_BUTTON_DRAG_THRESHOLD_PX = 10;
-    const TAB_BUTTON_CLICK_SUPPRESS_MS = 240;
-
     function createTabController(options) {
         const {
             tabButtons = [],
@@ -77,62 +74,7 @@
 
         function bind() {
             tabButtons.forEach(button => {
-                let pointerState = null;
-                let suppressClickUntil = 0;
-
-                const suppressDraggedClick = () => {
-                    suppressClickUntil = Date.now() + TAB_BUTTON_CLICK_SUPPRESS_MS;
-                };
-
-                const clearPointerState = pointerId => {
-                    if (!pointerState) {
-                        return;
-                    }
-                    if (pointerId == null || pointerState.pointerId === pointerId) {
-                        pointerState = null;
-                    }
-                };
-
-                button.addEventListener('pointerdown', event => {
-                    if (event.pointerType === 'mouse' && event.button !== 0) {
-                        return;
-                    }
-                    pointerState = {
-                        pointerId: event.pointerId,
-                        startX: event.clientX,
-                        startY: event.clientY
-                    };
-                });
-
-                button.addEventListener('pointermove', event => {
-                    if (!pointerState || event.pointerId !== pointerState.pointerId) {
-                        return;
-                    }
-                    const deltaX = Math.abs(event.clientX - pointerState.startX);
-                    const deltaY = Math.abs(event.clientY - pointerState.startY);
-                    if (deltaX < TAB_BUTTON_DRAG_THRESHOLD_PX && deltaY < TAB_BUTTON_DRAG_THRESHOLD_PX) {
-                        return;
-                    }
-                    suppressDraggedClick();
-                    clearPointerState(event.pointerId);
-                });
-
-                button.addEventListener('pointerup', event => {
-                    clearPointerState(event.pointerId);
-                });
-
-                button.addEventListener('pointercancel', event => {
-                    suppressDraggedClick();
-                    clearPointerState(event.pointerId);
-                });
-
-                // Ignore drag gestures on the tab bar so vertical swipes do not switch tabs.
-                button.addEventListener('click', event => {
-                    if (Date.now() < suppressClickUntil) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        return;
-                    }
+                button.addEventListener('click', () => {
                     setActiveTab(button.dataset.tab, true);
                 });
             });
