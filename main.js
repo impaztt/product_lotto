@@ -478,6 +478,54 @@ document.addEventListener('DOMContentLoaded', () => {
         rounds: []
     };
     let mainInfoInflight = null;
+    // Keep the dashboard populated when hosting rewrites return HTML for API routes.
+    const EMBEDDED_DRAW_FALLBACKS = {
+        1215: {
+            returnValue: 'success',
+            drwNo: 1215,
+            drwNoDate: '2026-03-14',
+            drwtNo1: 13,
+            drwtNo2: 15,
+            drwtNo3: 19,
+            drwtNo4: 21,
+            drwtNo5: 44,
+            drwtNo6: 45,
+            bnusNo: 39,
+            firstPrzwnerCo: 16,
+            firstWinamnt: 1998542133,
+            firstAccumamnt: 31976674128
+        },
+        1214: {
+            returnValue: 'success',
+            drwNo: 1214,
+            drwNoDate: '2026-03-07',
+            drwtNo1: 10,
+            drwtNo2: 15,
+            drwtNo3: 19,
+            drwtNo4: 27,
+            drwtNo5: 30,
+            drwtNo6: 33,
+            bnusNo: 14,
+            firstPrzwnerCo: 12,
+            firstWinamnt: 2431577188,
+            firstAccumamnt: 29178926256
+        },
+        1213: {
+            returnValue: 'success',
+            drwNo: 1213,
+            drwNoDate: '2026-02-28',
+            drwtNo1: 5,
+            drwtNo2: 11,
+            drwtNo3: 25,
+            drwtNo4: 27,
+            drwtNo5: 36,
+            drwtNo6: 38,
+            bnusNo: 2,
+            firstPrzwnerCo: 18,
+            firstWinamnt: 1740011646,
+            firstAccumamnt: 31320209628
+        }
+    };
     let lastWeeklyRenderedAt = 0;
     let lastWeeklyRenderMode = 'live';
     let lastWeeklyRenderSource = 'proxy';
@@ -3713,7 +3761,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (dashSyncTimeEl) {
             if (lastWeeklyRenderedAt) {
-                const sourceLabel = lastWeeklyRenderSource === 'main-info' ? '메인 정보' : '공식 데이터';
+                let sourceLabel = '공식 데이터';
+                if (lastWeeklyRenderSource === 'main-info') {
+                    sourceLabel = '메인 정보';
+                } else if (lastWeeklyRenderSource === 'embedded-fallback') {
+                    sourceLabel = '내장 안내 데이터';
+                }
                 dashSyncTimeEl.textContent = `${formatRelativeTime(lastWeeklyRenderedAt)} · ${sourceLabel} 기준`;
             } else {
                 dashSyncTimeEl.textContent = '공식 기준 정리 중';
@@ -8919,6 +8972,77 @@ document.addEventListener('DOMContentLoaded', () => {
         return Number.isFinite(amount) ? amount : null;
     }
 
+    async function readJsonResponse(response, contextLabel = 'response') {
+        const rawText = await response.text();
+        const trimmed = String(rawText || '').trim();
+        if (!trimmed) {
+            throw new Error(`${contextLabel} returned empty body`);
+        }
+        const contentType = String(response.headers.get('content-type') || '').toLowerCase();
+        if (!contentType.includes('json') && trimmed.startsWith('<')) {
+            throw new Error(`${contextLabel} returned html`);
+        }
+        try {
+            return JSON.parse(trimmed);
+        } catch (error) {
+            throw new Error(`${contextLabel} returned invalid json`);
+        }
+    }
+
+    function getEmbeddedDrawFallback(round, { exact = false } = {}) {
+        const targetRound = Number(round);
+        if (!Number.isInteger(targetRound) || targetRound <= 0) {
+            return null;
+        }
+        const knownRounds = Object.keys(EMBEDDED_DRAW_FALLBACKS)
+            .map(Number)
+            .sort((a, b) => b - a);
+        const matchedRound = exact
+            ? (EMBEDDED_DRAW_FALLBACKS[targetRound] ? targetRound : null)
+            : knownRounds.find(value => value <= targetRound);
+        if (!matchedRound) {
+            return null;
+        }
+        return annotateDrawDataSource({ ...EMBEDDED_DRAW_FALLBACKS[matchedRound] }, 'embedded-fallback');
+    }
+
+    function getEmbeddedRecentDraws() {
+        return Object.values(EMBEDDED_DRAW_FALLBACKS)
+            .map(item => annotateDrawDataSource({ ...item }, 'embedded-fallback'))
+            .sort((a, b) => Number(b.drwNo) - Number(a.drwNo));
+    }
+
+    function formatCompactKstDate(value) {
+        if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
+            return '';
+        }
+        const year = String(value.getFullYear());
+        const month = String(value.getMonth() + 1).padStart(2, '0');
+        const day = String(value.getDate()).padStart(2, '0');
+        return `${year}${month}${day}`;
+    }
+
+    function buildLocalIntroFallback() {
+        const estimatedLatestRound = estimateLatestRound();
+        const embeddedLatest = getEmbeddedDrawFallback(Number.MAX_SAFE_INTEGER);
+        const baselineRound = Math.max(
+            estimatedLatestRound,
+            Number(currentWeeklyData?.drwNo || 0),
+            Number(embeddedLatest?.drwNo || 0)
+        );
+        const nextRound = Math.max(1, baselineRound + 1);
+        const nextDraw = getNextSaturdayDrawTime(getKstNow());
+        return {
+            expected: null,
+            current: {
+                ltEpsd: nextRound,
+                ltRflYmd: formatCompactKstDate(nextDraw),
+                ltRflHh: nextDraw.getHours(),
+                ltRflMm: nextDraw.getMinutes()
+            }
+        };
+    }
+
     async function fetchIntroMirrorResult(path) {
         const targetUrl = `https://www.dhlottery.co.kr${path}`;
         const proxyUrl = `/mirror/proxy?url=${encodeURIComponent(targetUrl)}`;
@@ -8926,7 +9050,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!response.ok) {
             throw new Error(`mirror response ${response.status}`);
         }
-        const payload = await response.json();
+        const payload = await readJsonResponse(response, 'intro mirror');
         return payload?.data?.result || null;
     }
 
@@ -8949,7 +9073,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('/api/lt645-intro', { cache: 'no-store' });
             if (response.ok) {
-                const payload = await response.json();
+                const payload = await readJsonResponse(response, 'intro api');
                 if (payload && payload.returnValue === 'success') {
                     expected = payload.expected || null;
                     current = payload.current || null;
@@ -8972,14 +9096,25 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        if (!current) {
+            const localFallback = buildLocalIntroFallback();
+            expected = expected || localFallback.expected;
+            current = localFallback.current;
+        }
+
         const expectedAmount = normalizeAmount(expected?.rnk1ExpcAmt);
         if (expectedAmount != null) {
             weeklyExpectedOverride = expectedAmount;
             weeklyExpectedUpdatedAt = Date.now();
             applyWeeklyExpectedAmount(weeklyExpectedOverride, '공식 예상');
+        } else if (weeklyExpectedOverride == null) {
+            applyWeeklyExpectedAmount(null, '공식 연결 지연');
         }
-        if (expectedAmount != null && dashExpectedAmountEl) {
-            dashExpectedAmountEl.textContent = formatCurrency(expectedAmount);
+        const amountToDisplay = expectedAmount != null ? expectedAmount : weeklyExpectedOverride;
+        if (amountToDisplay != null && dashExpectedAmountEl) {
+            dashExpectedAmountEl.textContent = formatCurrency(amountToDisplay);
+        } else if (dashExpectedAmountEl) {
+            dashExpectedAmountEl.textContent = '-';
         }
         if (current?.ltEpsd && weeklyThisRoundEl) {
             weeklyThisRoundEl.textContent = `${current.ltEpsd}회`;
@@ -9070,11 +9205,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!response.ok) {
                     throw new Error(`main info ${response.status}`);
                 }
-                const payload = await response.json();
+                const payload = await readJsonResponse(response, 'main info');
                 const list = payload?.data?.result?.pstLtEpstInfo?.lt645;
-                const rounds = Array.isArray(list)
+                let rounds = Array.isArray(list)
                     ? list.map(mapMainInfoItemToDrawData).filter(Boolean)
                     : [];
+                if (!rounds.length) {
+                    rounds = getEmbeddedRecentDraws();
+                }
+                mainInfoCache = {
+                    ts: Date.now(),
+                    rounds
+                };
+                return rounds;
+            })
+            .catch(error => {
+                console.warn('main info fallback using embedded rounds', error);
+                const rounds = getEmbeddedRecentDraws();
                 mainInfoCache = {
                     ts: Date.now(),
                     rounds
@@ -9108,7 +9255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) {
                 throw new Error(`응답 실패: ${response.status}`);
             }
-            const payload = await response.json();
+            const payload = await readJsonResponse(response, 'lotto proxy');
             if (payload && payload.returnValue === 'success') {
                 return annotateDrawDataSource(payload, 'proxy');
             }
@@ -9122,6 +9269,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (fallback) {
             return fallback;
+        }
+        const embeddedFallback = getEmbeddedDrawFallback(round);
+        if (embeddedFallback) {
+            return embeddedFallback;
         }
         throw lastError || new Error('회차 데이터를 불러오지 못했습니다.');
     }
@@ -9213,7 +9364,11 @@ document.addEventListener('DOMContentLoaded', () => {
             dashExpectedAmountEl.textContent = '-';
         }
         if (weeklyStatusEl) {
-            weeklyStatusEl.textContent = `${data.drwNo}회차 당첨 정보가 반영되었습니다.${cached ? ' (캐시)' : ''}`;
+            if (data._source === 'embedded-fallback') {
+                weeklyStatusEl.textContent = `${data.drwNo}회차 안내 데이터를 표시합니다. 공식 연결이 복구되면 자동으로 최신값으로 바뀝니다.${cached ? ' (캐시)' : ''}`;
+            } else {
+                weeklyStatusEl.textContent = `${data.drwNo}회차 당첨 정보가 반영되었습니다.${cached ? ' (캐시)' : ''}`;
+            }
         }
         loadLastWeekWinDashboard(data);
 
