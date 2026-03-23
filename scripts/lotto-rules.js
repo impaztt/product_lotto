@@ -270,57 +270,10 @@
         exclude_number: '선택한 번호가 포함된 조합을 모두 제외합니다.'
     };
 
-    const RULE_NARRATIVES = {
-        all_odd: '홀짝이 한쪽으로 완전히 쏠린 극단 패턴이라 먼저 정리하는 기본 제외입니다.',
-        all_even: '짝수만 몰린 극단 패턴을 빠르게 덜어낼 때 가장 먼저 쓰는 기본 제외입니다.',
-        five_odd_one_even: '홀수 쏠림을 줄여 보다 균형적인 후보만 남기고 싶을 때 체감이 큰 제외입니다.',
-        five_even_one_odd: '짝수 편중을 줄여 한쪽으로 기운 후보를 빠르게 정리할 때 자주 씁니다.',
-        four_odd_two_even: '홀수 우세 패턴까지 줄여 분포 편향을 한 단계 더 정리하고 싶을 때 유용합니다.',
-        four_even_two_odd: '짝수 우세 패턴을 덜어내 홀짝 밸런스를 더 깔끔하게 맞추는 제외입니다.',
-        multiples_of_2_4_plus: '짝수가 과하게 많은 조합을 크게 줄여 후보 압축 체감이 큰 대표 필터입니다.',
-        multiples_of_2_5_plus: '짝수가 거의 대부분인 조합만 한 번 더 걷어내는 보강 제외입니다.',
-        multiples_of_3_3_plus: '3의 배수 쏠림을 줄여 특정 배수 패턴 반복을 싫어할 때 쓰는 제외입니다.',
-        multiples_of_4_3_plus: '4의 배수 편중까지 줄여 배수 몰림을 더 세밀하게 관리하고 싶을 때 적합합니다.',
-        multiples_of_5_3_plus: '끝자리 0·5가 많이 겹치는 흐름을 부담스러워할 때 가볍게 정리하는 제외입니다.',
-        multiples_of_6_3_plus: '2와 3 성질이 겹친 숫자 몰림을 줄여 더 다양한 결의 후보를 남기는 제외입니다.',
-        multiples_of_7_3_plus: '7의 배수 편중을 마지막에 세밀하게 다듬고 싶을 때 쓰는 미세 제외입니다.',
-        consecutive_3_plus: '연속수가 길게 붙는 조합을 싫어하는 사용자에게 가장 체감이 큰 대표 제외입니다.',
-        consecutive_4_plus: '연속수가 아주 길게 붙은 강한 패턴만 골라내는 정밀 제외입니다.',
-        same_last_digit_3_plus: '끝자리가 여러 개 겹쳐 시각적으로 몰린 조합을 먼저 덜어내는 제외입니다.',
-        same_last_digit_4_plus: '끝자리 반복이 아주 심한 패턴만 강하게 정리하는 끝자리 제외입니다.',
-        last_digit_2_plus: '끝자리 중복 자체를 크게 싫어할 때 후보를 강하게 압축하는 고강도 제외입니다.',
-        last_digit_zero_2_plus: '0으로 끝나는 숫자 몰림을 따로 피하고 싶을 때 취향을 반영하기 좋습니다.',
-        last_digit_five_2_plus: '5로 끝나는 숫자 몰림을 따로 줄이고 싶을 때 쓰는 세부 제외입니다.',
-        same_decade_4_plus: '한 구간에 숫자가 몰리는 패턴을 줄여 구간 분산을 넓게 가져가고 싶을 때 적합합니다.',
-        same_decade_5_plus: '거의 한 구간에 쏠린 조합만 마지막으로 걷어내는 미세 제외입니다.',
-        all_low_or_high: '낮은 번호대나 높은 번호대 한쪽에만 몰린 극단 분포를 먼저 정리하는 기본 제외입니다.',
-        low_or_high_5_plus: '저구간 또는 고구간 한쪽으로 심하게 기운 조합을 줄여 전체 밸런스를 맞춥니다.',
-        low_1_15_4_plus: '초반 번호대 쏠림을 줄여 너무 낮은 숫자 중심 후보를 피하고 싶을 때 유용합니다.',
-        mid_16_30_4_plus: '중간 구간 과밀을 덜어내 특정 구간 편중을 세밀하게 관리하는 제외입니다.',
-        high_31_45_4_plus: '후반 번호대 과밀을 줄여 높은 숫자 위주 후보를 정리할 때 효과적입니다.',
-        tight_range: '숫자 폭이 좁은 조합을 빼고 더 넓게 퍼진 조합만 보고 싶을 때 가장 직관적입니다.',
-        extreme_sum: '합계가 너무 낮거나 높은 극단 조합을 한 번에 걷어내는 대표 합계 제외입니다.',
-        sum_low_100: '합계가 낮은 조합을 덜어내 낮은 번호 쏠림까지 함께 정리하고 싶을 때 잘 맞습니다.',
-        sum_high_180: '합계가 높은 조합을 줄여 높은 번호 위주 흐름을 마지막으로 다듬는 제외입니다.',
-        prime_4_plus: '소수가 지나치게 많은 패턴을 줄여 숫자 성질이 한쪽으로 기운 조합을 정리합니다.',
-        prime_5_plus: '소수 편중이 매우 심한 조합만 별도로 걷어내는 정밀 제외입니다.',
-        prime_1_or_less: '소수가 거의 없는 조합을 강하게 줄여 숫자 성격을 더 고르게 맞추는 제외입니다.',
-        prime_0: '소수가 하나도 없는 조합만 마지막에 세밀하게 덜어내는 보정 제외입니다.',
-        exclude_number: '자동 규칙과 별개로 이번 회차에 개인적으로 빼고 싶은 번호를 직접 반영하는 제외입니다.'
-    };
-
-    Object.keys(RULE_NARRATIVES).forEach(ruleId => {
-        const narrative = RULE_NARRATIVES[ruleId];
-        if (narrative && RULE_DETAILS[ruleId]) {
-            RULE_DETAILS[ruleId] = RULE_DETAILS[ruleId] + ' ' + narrative;
-        }
-    });
-
     global.LottoRules = {
         PRESETS,
         PRESETS_LABEL,
         RULE_DETAILS,
-        RULE_NARRATIVES,
         RULE_SAMPLE_MAP,
         RULE_STATS,
         RULES,

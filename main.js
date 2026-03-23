@@ -289,7 +289,6 @@ document.addEventListener('DOMContentLoaded', () => {
         PRESETS,
         PRESETS_LABEL,
         RULE_DETAILS,
-        RULE_NARRATIVES,
         RULE_SAMPLE_MAP,
         RULE_STATS,
         RULES,
@@ -1701,10 +1700,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mypagePlanManageBtn) {
         mypagePlanManageBtn.addEventListener('click', () => {
             if (!mypagePlanOffersSectionEl) return;
-
+            
             const isHidden = mypagePlanOffersSectionEl.hidden;
             mypagePlanOffersSectionEl.hidden = !isHidden;
-
+            
             if (isHidden) {
                 // Scroll to plans
                 window.requestAnimationFrame(() => {
@@ -2203,7 +2202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('초기화 오류', error);
         }
-
+        
         initializeDrawWizard();
         updateScenarioMetrics();
     fetchLatestDraw();
@@ -4293,56 +4292,27 @@ document.addEventListener('DOMContentLoaded', () => {
             : '<span class="draw-funnel-chip is-empty">아직 선택 없음</span>';
     }
 
-    function getDrawWizardRuleUnlockInfo(rank = 0) {
-        if (rank === 1) {
-            return { requiredLevel: 3, requiredTier: 'master', tierKey: 'MASTER', tierLabel: '마스터' };
-        }
-        if (rank === 2) {
-            return { requiredLevel: 2, requiredTier: 'platinum', tierKey: 'PLATINUM', tierLabel: '플래티넘' };
-        }
-        if (rank === 3) {
-            return { requiredLevel: 1, requiredTier: 'gold', tierKey: 'GOLD', tierLabel: '골드' };
-        }
-        return { requiredLevel: 0, requiredTier: 'free', tierKey: 'FREE', tierLabel: '무료' };
-    }
-
-    function getDrawWizardRuleNarrative(ruleId) {
-        return String(RULE_NARRATIVES?.[ruleId] || '').trim();
-    }
-
-    function getDrawWizardRulePlanHint({ unlockInfo, currentPlan }) {
-        const unlocked = (currentPlan?.level || 0) >= (unlockInfo?.requiredLevel || 0);
-        if (!unlockInfo || unlockInfo.requiredLevel === 0) {
-            return currentPlan?.level > 0
-                ? '무료 공개 · 상위 플랜 규칙과 함께 쓸수록 후보 정리가 더 촘촘해집니다.'
-                : '무료 공개 · 먼저 필터 감각을 익히기 좋은 기본 제외입니다.';
-        }
-        if (unlockInfo.requiredLevel === 1) {
-            return (unlocked ? '골드 필터' : '골드 해금') + ' · 무료보다 넓은 후보를 한 번 더 줄이는 상위 3위 제외입니다.';
-        }
-        if (unlockInfo.requiredLevel === 2) {
-            return (unlocked ? '플래티넘 필터' : '플래티넘 해금') + ' · 골드보다 더 깊게 후보를 압축하는 상위 2위 제외입니다.';
-        }
-        return (unlocked ? '마스터 필터' : '마스터 해금') + ' · 이 단계에서 가장 영향이 큰 1위 핵심 제외입니다.';
-    }
-
-    function getDrawWizardRuleImpactMeta(ruleId, { active = false, planHint = '' } = {}) {
+    function getDrawWizardRuleImpactMeta(ruleId, { active = false } = {}) {
         const stat = RULE_STATS?.[ruleId];
         const ratio = Math.max(0, Math.min(0.95, Number(stat?.ratio) || 0));
         if (!ratio) {
             return {
-                label: active ? '현재 정리' : '정리 규모',
+                label: active ? '현재 제외' : '선택 시 제외',
                 value: '변화 적음',
-                bulletPrimary: '후보 변화가 크지 않은 보조 필터',
-                bulletSecondary: planHint || (active ? '현재 반영 유지' : '탭해서 적용')
+                bulletPrimary: active ? '현재 반영 유지' : '효과는 크지 않음',
+                bulletSecondary: active ? '이미 적용됨' : '탭해서 적용'
             };
         }
-        const affectedCombos = Math.max(1, Math.round(Number(stat?.excluded) || (TOTAL_COMBOS * ratio)));
+        const gainPct = ((1 / (1 - ratio)) - 1) * 100;
+        const currentCombos = Math.max(1, Math.round(Number(currentRemainingCombos) || TOTAL_COMBOS));
+        const affectedCombos = active
+            ? Math.round(currentCombos * (ratio / (1 - ratio)))
+            : Math.round(currentCombos * ratio);
         return {
-            label: active ? '현재 정리' : '정리 규모',
+            label: active ? '현재 제외' : '선택 시 제외',
             value: formatDrawWizardCompactCount(affectedCombos),
-            bulletPrimary: '전체 후보 약 ' + formatDisplayPercent(ratio * 100) + '% 정리',
-            bulletSecondary: planHint || (active ? '이미 적용됨' : '탭해서 적용')
+            bulletPrimary: `1등 기대 +${Math.max(1, Math.round(gainPct))}%`,
+            bulletSecondary: active ? '이미 적용됨' : '탭해서 적용'
         };
     }
 
@@ -4391,24 +4361,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         drawWizardDetailGroupsEl.innerHTML = rulesWithStats.map((item, index) => {
             const rule = item.rule;
-            const rank = index + 1;
+            const rank = index + 1; // 1-based rank
             const active = selectedIds.has(rule.id);
             const description = rule.desc || rule.detail || '선택 시 이 패턴을 제외합니다.';
-            const unlockInfo = getDrawWizardRuleUnlockInfo(rank);
-            const impact = getDrawWizardRuleImpactMeta(rule.id, {
-                active,
-                planHint: getDrawWizardRulePlanHint({ unlockInfo, currentPlan })
-            });
-            const narrative = getDrawWizardRuleNarrative(rule.id);
-            const descriptionText = narrative ? description + ' ' + narrative : description;
-            const restricted = userLevel < unlockInfo.requiredLevel;
-            const requiredTier = unlockInfo.tierKey;
+            const impact = getDrawWizardRuleImpactMeta(rule.id, { active });
+            
+            // Access check:
+            // Rank 1 -> Master (Level 3)
+            // Rank 2 -> Platinum (Level 2)
+            // Rank 3+ -> All (Level 0+)
+            let restricted = false;
+            let requiredTier = '';
+            
+            if (rank === 1 && userLevel < 3) {
+                restricted = true;
+                requiredTier = 'MASTER';
+            } else if (rank === 2 && userLevel < 2) {
+                restricted = true;
+                requiredTier = 'PLATINUM';
+            } else if (rank === 3 && userLevel < 1) {
+                restricted = true;
+                requiredTier = 'GOLD';
+            }
+
             const restrictedClass = restricted ? ' is-restricted' : '';
 
             return `
-                <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}${restrictedClass}"
-                        type="button"
-                        data-wizard-rule="${escapeHtml(rule.id)}"
+                <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}${restrictedClass}" 
+                        type="button" 
+                        data-wizard-rule="${escapeHtml(rule.id)}" 
                         data-rule-rank="${rank}"
                         data-restricted="${restricted}"
                         data-required-tier="${requiredTier}"
@@ -4416,8 +4397,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="draw-funnel-rule-main">
                         <div class="draw-funnel-rule-copy">
                             <strong>${escapeHtml(rule.title)}</strong>
-                            <p>${escapeHtml(descriptionText)}</p>
-                            ${restricted ? `<span class="rule-restricted-badge" data-tier="${escapeHtml(unlockInfo.requiredTier)}">${escapeHtml(unlockInfo.tierLabel)} 전용</span>` : ''}
+                            <p>${escapeHtml(description)}</p>
+                            ${restricted ? `<span class="rule-restricted-badge" data-tier="${escapeHtml(requiredTier.toLowerCase())}">${requiredTier} 전용</span>` : ''}
                         </div>
                         <div class="draw-funnel-rule-impact">
                             <span class="draw-funnel-rule-impact-label">${escapeHtml(impact.label)}</span>
@@ -4433,8 +4414,8 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }).join('');
         drawWizardDetailNoteEl.textContent = selectedCount
-            ? `${selectedCount}개 선택됨 · 영향 큰 규칙은 상위 플랜에서 열립니다.`
-            : '영향 큰 규칙은 상위 플랜에서 열립니다.';
+            ? `${selectedCount}개 선택됨`
+            : '아직 선택 전';
     }
 
     function renderDrawWizardReview() {
@@ -5026,7 +5007,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const draft = authStateResolved && isMember() ? loadDrawWizardDraft() : null;
         drawWizardResumeState = draft ? { ...draft } : null;
-
+        
         syncDrawWizardSelections();
         renderDrawWizard();
 
@@ -5042,7 +5023,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isRestricted = button.getAttribute('data-restricted') === 'true';
                 if (isRestricted) {
                     const requiredTier = button.getAttribute('data-required-tier') || 'PREMIUM';
-
+                    
                     if (!isMember()) {
                         const confirmed = await showActionConfirm(
                             '멤버십 전용 기능',
@@ -6627,7 +6608,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.firebase.initializeApp(config);
                 console.log('[Auth] Firebase app initialized');
             }
-
+            
             if (typeof window.firebase.auth !== 'function') {
                 throw new Error('Firebase Auth module not loaded');
             }
@@ -6638,7 +6619,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('[Auth] Auth & Firestore ready');
 
             googleRedirectFlowPending = readGoogleRedirectPendingState();
-
+            
             if (window.firebase.auth.Auth && window.firebase.auth.Auth.Persistence) {
                 const { Persistence } = window.firebase.auth.Auth;
                 authPersistenceReady = firebaseAuth.setPersistence(Persistence.LOCAL).catch(async error => {
@@ -6659,7 +6640,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             void handleGoogleRedirectResult();
-
+            
             if (firebaseAuthStatusEl) {
                 firebaseAuthStatusEl.textContent = hasGoogleRedirectPending()
                     ? '구글 로그인 결과를 확인하는 중입니다...'
