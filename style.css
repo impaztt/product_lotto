@@ -18966,6 +18966,15 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     overflow: hidden;
 }
 
+#tab-draw.draw-wizard-tab .draw-funnel-header,
+#tab-draw.draw-wizard-tab .draw-funnel-dashboard,
+#tab-draw.draw-wizard-tab .draw-funnel-nav {
+    overscroll-behavior: none;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
 #tab-draw.draw-wizard-tab.is-draw-intro-view .draw-funnel-stage {
     background: linear-gradient(180deg, rgba(250, 245, 236, 0.96), rgba(247, 244, 238, 0.94));
     box-shadow: 0 24px 60px rgba(28, 56, 92, 0.1);
@@ -19295,9 +19304,9 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="exclude"] {
-    overflow: auto;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 10px;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="result"] {
@@ -19738,6 +19747,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     padding-bottom: 54px;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
 }
 
 #tab-draw.draw-wizard-tab .draw-wizard-scroll-guide {
@@ -20035,6 +20045,13 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     gap: 8px;
 }
 
+#tab-draw.draw-wizard-tab .draw-funnel-exclude-shell {
+    min-height: 0;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-content: stretch;
+    overflow: hidden;
+}
+
 #tab-draw.draw-wizard-tab .draw-funnel-result-shell .numbers-container {
     grid-template-columns: 1fr;
     gap: 8px;
@@ -20214,6 +20231,11 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     padding: 12px;
     border-radius: 20px;
     background: linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(255, 255, 255, 0.94));
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="exclude"] .draw-funnel-copy {

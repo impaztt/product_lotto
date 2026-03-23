@@ -3499,6 +3499,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function preventDrawWizardChromeScroll(event) {
+        if (event.cancelable) {
+            event.preventDefault();
+        }
+    }
+
+    function bindDrawWizardChromeScrollLock(element) {
+        if (!element) {
+            return;
+        }
+        element.addEventListener('wheel', preventDrawWizardChromeScroll, { passive: false });
+        element.addEventListener('touchmove', preventDrawWizardChromeScroll, { passive: false });
+    }
+
+    bindDrawWizardChromeScrollLock(drawWizardDashboardEl);
+    bindDrawWizardChromeScrollLock(drawWizardNavEl);
+
     function openPremiumPlanWorkspace(options = {}) {
         const { focusResults = false } = options;
         setActiveTab('draw', true);
