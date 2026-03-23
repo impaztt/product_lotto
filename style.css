@@ -19831,6 +19831,8 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     gap: 0;
     text-align: left;
     overflow: hidden;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 249, 252, 0.94));
+    box-shadow: 0 16px 30px rgba(28, 56, 92, 0.07);
     transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
@@ -19898,16 +19900,18 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-selected {
-    border-color: rgba(233, 93, 53, 0.5);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 244, 233, 0.98));
-    box-shadow: 0 22px 40px rgba(233, 93, 53, 0.12);
+    border-color: rgba(214, 118, 60, 0.28);
+    background:
+        radial-gradient(circle at top right, rgba(236, 159, 51, 0.12), transparent 42%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(255, 247, 240, 0.96));
+    box-shadow: 0 18px 32px rgba(184, 101, 51, 0.1);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card strong,
  #tab-draw.draw-wizard-tab .draw-funnel-review-card strong {
     color: #0f2137;
-    font-size: 15px;
-    line-height: 1.22;
+    font-size: 14px;
+    line-height: 1.24;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-main {
@@ -19930,9 +19934,9 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card p {
     margin: 0;
-    font-size: 12px;
-    color: #61758d;
-    line-height: 1.36;
+    font-size: 11px;
+    color: #556b82;
+    line-height: 1.4;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-subtitle {
@@ -19944,37 +19948,43 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-subtitle-accent,
 #tab-draw.draw-wizard-tab .draw-funnel-rule-tag {
-    min-height: 22px;
-    padding: 0 8px;
+    min-height: 20px;
+    padding: 0 7px;
     border-radius: 999px;
     display: inline-flex;
     align-items: center;
-    font-size: inherit;
+    border: 1px solid transparent;
+    font-size: 10px;
     line-height: 1;
+    letter-spacing: -0.01em;
     white-space: nowrap;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-subtitle-accent {
-    background: linear-gradient(135deg, rgba(235, 107, 63, 0.16), rgba(236, 159, 51, 0.2));
-    color: #a33717;
+    background: linear-gradient(135deg, rgba(235, 107, 63, 0.12), rgba(236, 159, 51, 0.18));
+    border-color: rgba(214, 118, 60, 0.18);
+    color: #8f3615;
     font-weight: 900;
     letter-spacing: -0.02em;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-tag {
-    background: rgba(19, 38, 61, 0.06);
-    color: #4f6479;
+    background: rgba(19, 38, 61, 0.04);
+    border-color: rgba(19, 38, 61, 0.08);
+    color: #445a70;
     font-weight: 800;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-selected .draw-funnel-rule-subtitle-accent {
-    background: linear-gradient(135deg, rgba(233, 93, 53, 0.2), rgba(236, 159, 51, 0.24));
-    color: #92260d;
+    background: linear-gradient(135deg, rgba(233, 93, 53, 0.16), rgba(236, 159, 51, 0.2));
+    border-color: rgba(207, 98, 51, 0.24);
+    color: #832c0d;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-selected .draw-funnel-rule-tag {
-    background: rgba(233, 93, 53, 0.1);
-    color: #924018;
+    background: rgba(233, 93, 53, 0.06);
+    border-color: rgba(207, 98, 51, 0.14);
+    color: #71462b;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-restricted .draw-funnel-rule-subtitle-accent,
@@ -19985,27 +19995,40 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 #tab-draw.draw-wizard-tab .draw-funnel-rule-impact {
     grid-area: impact;
     min-width: 0;
-    padding: 8px;
-    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+    padding: 9px 9px 8px;
+    border-radius: 15px;
     display: grid;
-    gap: 5px;
+    gap: 4px;
     align-content: start;
-    background: linear-gradient(180deg, rgba(244, 248, 252, 0.98), rgba(237, 244, 250, 0.92));
-    border: 1px solid rgba(19, 38, 61, 0.08);
+    background: linear-gradient(180deg, rgba(249, 251, 253, 0.98), rgba(241, 246, 251, 0.95));
+    border: 1px solid rgba(19, 38, 61, 0.07);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-impact::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, #23405d 0%, #5f7f99 100%);
+    opacity: 0.88;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-label {
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: 0.01em;
-    color: rgba(19, 38, 61, 0.56);
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    color: #60758a;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-value {
-    color: #10233a;
-    font-size: 16px;
-    line-height: 1.05;
-    letter-spacing: -0.04em;
+    color: #0f2238;
+    font-size: 15px;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-list {
@@ -20018,21 +20041,23 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-list li {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 6px;
-    font-size: 9px;
-    line-height: 1.18;
-    color: #5f738a;
+    font-size: 8.5px;
+    line-height: 1.32;
+    color: #4b6278;
+    font-weight: 700;
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-list li::before {
     content: "";
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
     flex: 0 0 auto;
-    background: linear-gradient(135deg, #13263d 0%, #2f6df6 100%);
-    box-shadow: 0 0 0 3px rgba(47, 109, 246, 0.08);
+    margin-top: 3px;
+    background: #27415f;
+    box-shadow: 0 0 0 2px rgba(39, 65, 95, 0.12);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-preview {
@@ -20049,13 +20074,14 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     display: inline-flex;
     align-items: center;
     justify-self: start;
-    min-height: 22px;
-    padding: 0 8px;
-    font-size: 10px;
-    font-weight: 700;
-    color: #4c6176;
+    min-height: 20px;
+    padding: 0 7px;
+    font-size: 9px;
+    font-weight: 800;
+    color: #42586e;
     border-radius: 999px;
-    background: rgba(19, 38, 61, 0.06);
+    border: 1px solid rgba(19, 38, 61, 0.08);
+    background: rgba(19, 38, 61, 0.04);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-preview-balls {
@@ -20075,13 +20101,17 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-selected .draw-funnel-rule-impact {
-    background: linear-gradient(180deg, rgba(255, 243, 232, 0.98), rgba(255, 235, 216, 0.92));
-    border-color: rgba(233, 93, 53, 0.18);
+    background: linear-gradient(180deg, rgba(255, 245, 236, 0.98), rgba(255, 237, 220, 0.94));
+    border-color: rgba(207, 98, 51, 0.18);
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-selected .draw-funnel-rule-impact::before {
+    background: linear-gradient(90deg, #cf6233 0%, #eca03a 100%);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-rule-card.is-selected .draw-funnel-rule-impact-list li::before {
-    background: linear-gradient(135deg, #ec9f33 0%, #eb6b3f 100%);
-    box-shadow: 0 0 0 3px rgba(233, 93, 53, 0.1);
+    background: #cf6233;
+    box-shadow: 0 0 0 2px rgba(207, 98, 51, 0.14);
 }
 
 #tab-draw.draw-wizard-tab .draw-funnel-exclude-shell,
@@ -20403,11 +20433,12 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-funnel-review-overview-badge {
     padding: 2px 8px;
-    background: rgba(20, 38, 64, 0.05);
+    background: rgba(19, 38, 61, 0.04);
+    border: 1px solid rgba(19, 38, 61, 0.08);
     border-radius: 99px;
-    font-size: 10px;
-    font-weight: 700;
-    color: #475569;
+    font-size: 9px;
+    font-weight: 800;
+    color: #41566b;
     white-space: nowrap;
 }
 
@@ -20580,9 +20611,10 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     border-radius: 999px;
     display: inline-flex;
     align-items: center;
-    background: rgba(19, 38, 61, 0.07);
-    color: #27415f;
-    font-size: 10px;
+    background: rgba(19, 38, 61, 0.05);
+    border: 1px solid rgba(19, 38, 61, 0.08);
+    color: #31495f;
+    font-size: 9px;
     font-weight: 800;
     white-space: nowrap;
 }
@@ -20913,17 +20945,17 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-impact {
-        padding: 7px;
+        padding: 8px 7px 7px;
         border-radius: 12px;
         gap: 4px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-label {
-        font-size: 9px;
+        font-size: 8px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-value {
-        font-size: 15px;
+        font-size: 14px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-list li {
@@ -20942,8 +20974,9 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-subtitle-accent,
     #tab-draw.draw-wizard-tab .draw-funnel-rule-tag {
-        min-height: 20px;
+        min-height: 19px;
         padding: 0 7px;
+        font-size: 9px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-exclude-shell,
@@ -21277,15 +21310,15 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-impact {
-        padding: 6px;
+        padding: 7px 6px 6px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-value {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-impact-list li {
-        font-size: 8px;
+        font-size: 7.5px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-rule-card strong {
@@ -21300,6 +21333,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
     #tab-draw.draw-wizard-tab .draw-funnel-rule-tag {
         min-height: 19px;
         padding: 0 6px;
+        font-size: 8.5px;
     }
 
     #tab-draw.draw-wizard-tab .draw-funnel-progress {
