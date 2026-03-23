@@ -21838,8 +21838,146 @@ body[data-theme="dark"] #tab-store .locker-history-more-sets {
 #tab-mypage .mypage-shell-footer {
     grid-column: 1 / -1;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
     padding-top: 2px;
+}
+
+#tab-mypage .mypage-support-card {
+    display: grid;
+    gap: 14px;
+    padding: 18px;
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 248, 255, 0.98));
+    border: 1px solid rgba(27, 100, 218, 0.12);
+    box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+}
+
+#tab-mypage .mypage-support-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+#tab-mypage .mypage-support-head h3 {
+    margin: 4px 0 6px;
+    color: #101828;
+    font-size: 20px;
+    line-height: 1.2;
+}
+
+#tab-mypage .mypage-support-head p {
+    margin: 0;
+    color: #667085;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+#tab-mypage .mypage-support-badge {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(27, 100, 218, 0.08);
+    color: #1b64da;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+#tab-mypage .mypage-support-form {
+    display: grid;
+    gap: 12px;
+}
+
+#tab-mypage .mypage-support-sender {
+    display: grid;
+    gap: 4px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: rgba(17, 24, 39, 0.03);
+    border: 1px solid rgba(17, 24, 39, 0.06);
+}
+
+#tab-mypage .mypage-support-sender span,
+#tab-mypage .mypage-support-field span {
+    color: #667085;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#tab-mypage .mypage-support-sender strong {
+    color: #111827;
+    font-size: 14px;
+    word-break: break-all;
+}
+
+#tab-mypage .mypage-support-field {
+    display: grid;
+    gap: 6px;
+}
+
+#tab-mypage .mypage-support-field input,
+#tab-mypage .mypage-support-field textarea {
+    width: 100%;
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    border-radius: 16px;
+    background: #ffffff;
+    color: #111827;
+    font: inherit;
+    padding: 13px 14px;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+#tab-mypage .mypage-support-field textarea {
+    min-height: 144px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+#tab-mypage .mypage-support-field input:focus,
+#tab-mypage .mypage-support-field textarea:focus {
+    outline: none;
+    border-color: rgba(27, 100, 218, 0.7);
+    box-shadow: 0 0 0 4px rgba(27, 100, 218, 0.12);
+}
+
+#tab-mypage .mypage-support-field input:disabled,
+#tab-mypage .mypage-support-field textarea:disabled {
+    background: #f8fafc;
+    color: #98a2b3;
+    cursor: not-allowed;
+}
+
+#tab-mypage .mypage-support-status {
+    min-height: 19px;
+    margin: 0;
+    color: #667085;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+#tab-mypage .mypage-support-status[data-state="success"] {
+    color: #027a48;
+}
+
+#tab-mypage .mypage-support-status[data-state="error"] {
+    color: #b42318;
+}
+
+#tab-mypage .mypage-support-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#tab-mypage .mypage-support-actions .cta {
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: 14px;
 }
 
 #tab-mypage .mypage-shell-logout {
@@ -21866,6 +22004,55 @@ body[data-theme="dark"] #tab-mypage .mypage-account-list-row strong {
     color: #f8fafc !important;
 }
 
+body[data-theme="dark"] #tab-mypage .mypage-support-card {
+    background: linear-gradient(180deg, rgba(10, 16, 28, 0.94), rgba(16, 24, 40, 0.96));
+    border-color: rgba(96, 165, 250, 0.2);
+    box-shadow: 0 22px 40px rgba(0, 0, 0, 0.3);
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-support-head h3,
+body[data-theme="dark"] #tab-mypage .mypage-support-sender strong {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-support-head p,
+body[data-theme="dark"] #tab-mypage .mypage-support-sender span,
+body[data-theme="dark"] #tab-mypage .mypage-support-field span,
+body[data-theme="dark"] #tab-mypage .mypage-support-status {
+    color: #b7c5d8;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-support-badge {
+    background: rgba(96, 165, 250, 0.14);
+    color: #8ec5ff;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-support-sender {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(148, 163, 184, 0.16);
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-support-field input,
+body[data-theme="dark"] #tab-mypage .mypage-support-field textarea {
+    background: rgba(15, 23, 42, 0.92);
+    border-color: rgba(148, 163, 184, 0.28);
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-support-field input:disabled,
+body[data-theme="dark"] #tab-mypage .mypage-support-field textarea:disabled {
+    background: rgba(15, 23, 42, 0.6);
+    color: #8a97ab;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-support-status[data-state="success"] {
+    color: #6ce9a6;
+}
+
+body[data-theme="dark"] #tab-mypage .mypage-support-status[data-state="error"] {
+    color: #fda29b;
+}
+
 @media (max-width: 760px) {
     #tab-mypage .mypage-account-bullets {
         grid-template-columns: 1fr !important;
@@ -21883,6 +22070,12 @@ body[data-theme="dark"] #tab-mypage .mypage-account-list-row strong {
         justify-content: stretch;
     }
 
+    #tab-mypage .mypage-support-head {
+        flex-direction: column;
+    }
+
+    #tab-mypage .mypage-support-badge,
+    #tab-mypage .mypage-support-actions .cta,
     #tab-mypage .mypage-shell-logout {
         width: 100%;
     }
@@ -22994,3 +23187,69 @@ body[data-theme='dark'] #tab-mypage .mypage-plan-offer-card.is-scheduled {
     }
 }
 
+
+/* Dashboard trim + locker collapse fix */
+#tab-dashboard.app-shell {
+    padding-bottom: 0 !important;
+}
+
+#tab-dashboard .container-box {
+    padding-bottom: 0 !important;
+}
+
+#tab-dashboard .dashboard-shell {
+    padding-bottom: 0 !important;
+}
+
+#tab-dashboard .dashboard-hero {
+    margin-top: 10px !important;
+    padding: 18px 20px !important;
+}
+
+#tab-dashboard .dashboard-hero-copy {
+    gap: 8px !important;
+}
+
+#tab-dashboard .dashboard-hero-side {
+    gap: 10px !important;
+}
+
+#tab-dashboard .dashboard-signal-card {
+    min-height: 0 !important;
+    padding: 16px 18px !important;
+}
+
+#tab-dashboard .dashboard-section--essentials .dashboard-method-strip {
+    margin-bottom: 12px !important;
+}
+
+#tab-dashboard .dashboard-note-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+#tab-store .locker-session-toggle.is-static {
+    cursor: default !important;
+    padding-right: 0 !important;
+}
+
+#tab-store .locker-session-toggle.is-static::after {
+    display: none !important;
+}
+
+#tab-store .locker-session-card.is-expanded .locker-session-more {
+    display: none !important;
+}
+
+#tab-store .locker-session-content {
+    display: grid !important;
+}
+
+#tab-store .locker-session-content[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 900px) {
+    #tab-dashboard .dashboard-note-grid {
+        grid-template-columns: 1fr !important;
+    }
+}

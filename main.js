@@ -264,6 +264,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const mypagePlanManageBtn = document.getElementById('mypage-plan-manage-btn');
     const mypagePlanCancelBtn = document.getElementById('mypage-plan-cancel-btn');
     const mypageShellFooterEl = document.querySelector('#tab-mypage .mypage-shell-footer');
+    const mypageSupportFormEl = document.getElementById('mypage-support-form');
+    const mypageSupportSenderEl = document.getElementById('mypage-support-sender');
+    const mypageSupportSubjectEl = document.getElementById('mypage-support-subject');
+    const mypageSupportMessageEl = document.getElementById('mypage-support-message');
+    const mypageSupportStatusEl = document.getElementById('mypage-support-status');
+    const mypageSupportSubmitBtn = document.getElementById('mypage-support-submit');
     const mypagePlanOfferCards = Array.from(document.querySelectorAll('.mypage-plan-offer-card[data-premium-plan-card]'));
     const mypageStatsGeneratedEl = document.getElementById('mypage-stats-generated');
     const mypageStatsRoundEl = document.getElementById('mypage-stats-round');
@@ -301,8 +307,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const { createTabController } = window.LottoTabs;
     const drawHorizontalTracks = [scenarioGrid, slotGrid].filter(Boolean);
     const PLAN_WEEKLY_HISTORY_LIMIT = 6;
-    const LOCKER_PREVIEW_ENTRY_LIMIT = 2;
-    const PLAN_LOCKER_PREVIEW_ENTRY_LIMIT = 3;
+    const LOCKER_PREVIEW_ENTRY_LIMIT = 1;
+    const PLAN_LOCKER_PREVIEW_ENTRY_LIMIT = 1;
     const RECOMMENDATION_STRATEGY_ORDER = ['balanced', 'expanded', 'sum_balance', 'digit_focus', 'light', 'aggressive', 'range_focus', 'prime_focus', 'conservative'];
     const excludeNumberValues = new Set();
     let lastGeneratedDraws = [];
@@ -485,6 +491,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let authActionInFlight = false;
     let googleRedirectResultChecked = false;
     let nicknameSaveInFlight = false;
+    let mypageSupportSubmitInFlight = false;
+    let mypageSupportStatusTone = 'default';
+    let mypageSupportStatusMessage = '';
     let qrStream = null;
     let qrScanRafId = null;
     let qrCanvasCtx = null;
@@ -1673,6 +1682,18 @@ document.addEventListener('DOMContentLoaded', () => {
     authLogoutButtons.forEach(button => {
         button.addEventListener('click', async () => {
             await signOutFirebaseUser();
+        });
+    });
+
+    if (mypageSupportFormEl) {
+        mypageSupportFormEl.addEventListener('submit', submitMypageSupportInquiry);
+    }
+
+    [mypageSupportSubjectEl, mypageSupportMessageEl].filter(Boolean).forEach(field => {
+        field.addEventListener('input', () => {
+            if (mypageSupportStatusTone !== 'default' || mypageSupportStatusMessage) {
+                resetMypageSupportStatus();
+            }
         });
     });
 
@@ -5706,33 +5727,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const previewLimit = tone === 'plan' ? PLAN_LOCKER_PREVIEW_ENTRY_LIMIT : LOCKER_PREVIEW_ENTRY_LIMIT;
         const previewEntries = entries.slice(0, previewLimit);
         const hiddenEntries = entries.slice(previewLimit);
+        const canExpand = hiddenEntries.length > 0;
         const tags = Array.isArray(options.tags)
-            ? options.tags.map(value => String(value || '').trim()).filter(Boolean).slice(0, 4)
+            ? options.tags.map(value => String(value || "").trim()).filter(Boolean).slice(0, 4)
             : [];
-        const expanded = Boolean(options.expanded || !hiddenEntries.length);
+        const expanded = canExpand ? Boolean(options.expanded) : true;
         return `
-            <article class="locker-session-card locker-session-card--${tone}${expanded ? ' is-expanded' : ''}">
+            <article class="locker-session-card locker-session-card--${tone}${expanded ? " is-expanded" : ""}">
                 <div class="locker-session-head">
-                    <button type="button" class="locker-session-toggle" data-locker-toggle aria-expanded="${String(expanded)}">
-                        <span class="locker-session-kicker">${escapeHtml(String(options.kicker || ''))}</span>
-                        <strong>${escapeHtml(String(options.title || '번호 세션'))}</strong>
-                        <p>${escapeHtml(String(options.subtitle || ''))}</p>
-                        ${tags.length ? `<div class="locker-session-tags">${tags.map(tag => `<span class="locker-session-tag">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
+                    <button type="button" class="locker-session-toggle${canExpand ? "" : " is-static"}" ${canExpand ? "data-locker-toggle" : ""} aria-expanded="${String(expanded)}">
+                        <span class="locker-session-kicker">${escapeHtml(String(options.kicker || ""))}</span>
+                        <strong>${escapeHtml(String(options.title || "번호 세션"))}</strong>
+                        <p>${escapeHtml(String(options.subtitle || ""))}</p>
+                        ${tags.length ? `<div class="locker-session-tags">${tags.map(tag => `<span class="locker-session-tag">${escapeHtml(tag)}</span>`).join("")}</div>` : ""}
                     </button>
-                    <button type="button" class="ghost locker-copy-btn-mini locker-copy-btn-mini--panel" data-locker-copy="${escapeHtml(String(session.generationId || ''))}">
+                    <button type="button" class="ghost locker-copy-btn-mini locker-copy-btn-mini--panel" data-locker-copy="${escapeHtml(String(session.generationId || ""))}">
                         <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                         <span>복사</span>
                     </button>
                 </div>
                 <div class="locker-session-preview">
                     ${renderLockerEntryRows(previewEntries)}
-                    ${hiddenEntries.length ? `<div class="locker-session-more">+${formatNumber(hiddenEntries.length)}세트 더 보기</div>` : ''}
+                    ${canExpand ? `<div class="locker-session-more" data-locker-more${expanded ? " hidden" : ""}>+${formatNumber(hiddenEntries.length)}세트 더 보기</div>` : ""}
                 </div>
-                ${hiddenEntries.length ? `<div class="locker-session-content">${renderLockerEntryRows(hiddenEntries)}</div>` : ''}
+                ${canExpand ? `<div class="locker-session-content"${expanded ? "" : " hidden"}>${renderLockerEntryRows(hiddenEntries)}</div>` : ""}
             </article>
         `;
     }
-
     function bindLockerSectionUi(rootEl) {
         if (!rootEl) {
             return;
@@ -5743,8 +5764,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!card) {
                     return;
                 }
+                const content = card.querySelector('.locker-session-content');
+                const more = card.querySelector('[data-locker-more]');
+                if (!content) {
+                    return;
+                }
                 const expanded = !card.classList.contains('is-expanded');
                 card.classList.toggle('is-expanded', expanded);
+                content.hidden = !expanded;
+                if (more) {
+                    more.hidden = expanded;
+                }
                 button.setAttribute('aria-expanded', String(expanded));
             };
         });
@@ -5752,11 +5782,10 @@ document.addEventListener('DOMContentLoaded', () => {
             button.onclick = event => {
                 event.preventDefault();
                 event.stopPropagation();
-                copyLockerSession(String(button.dataset.lockerCopy || ''));
+                copyLockerSession(String(button.dataset.lockerCopy || ""));
             };
         });
     }
-
     function renderLockerPlanEmptyState(options = {}) {
         const authPending = Boolean(options.authPending);
         const member = Boolean(options.member);
@@ -5839,13 +5868,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         lockerHistoryListEl.innerHTML = sessions
-            .map((session, index) => {
+            .map(session => {
                 const roundText = Number(session.round || 0) > 0 ? `${Number(session.round)}회` : '회차 미정';
                 const entries = Array.isArray(session.entries) ? session.entries : [];
                 const strategySummary = getLockerStrategySummary(entries);
                 return renderLockerSessionCard(session, {
                     tone: 'manual',
-                    expanded: index === 0,
+                    expanded: false,
                     kicker: 'MANUAL',
                     title: `${roundText} 직접 추첨`,
                     subtitle: `${formatHistoryDateTime(session.createdAt)} 저장`,
@@ -5908,12 +5937,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         lockerPlanHistoryListEl.innerHTML = sessions
-            .map((session, index) => {
+            .map(session => {
                 const roundText = Number(session.round || 0) > 0 ? `${Number(session.round)}회` : '회차 미정';
                 const strategySummary = getLockerStrategySummary(session.entries);
                 return renderLockerSessionCard(session, {
                     tone: 'plan',
-                    expanded: index === 0,
+                    expanded: false,
                     kicker: `${session.membershipLabel || plan.label} WEEKLY`,
                     title: `${roundText} 주간 추천`,
                     subtitle: `${session.releaseDateLabel || formatShortDate(new Date(session.releaseAt || session.createdAt))} 배포 · ${session.drawDateLabel || estimateRoundDateLabel(session.round)} 추첨`,
@@ -6651,6 +6680,156 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function getMypageSupportDefaultStatus() {
+        if (isAuthStatePending()) {
+            return '로그인 상태를 확인하고 있습니다.';
+        }
+        if (!isMember()) {
+            return '로그인한 계정의 이메일로 문의를 접수합니다.';
+        }
+        return '관리자 메일 주소는 공개하지 않고, 로그인한 이메일 기준으로 문의를 접수합니다.';
+    }
+
+    function renderMypageSupportStatus() {
+        if (!mypageSupportStatusEl) {
+            return;
+        }
+        const message = mypageSupportStatusMessage || getMypageSupportDefaultStatus();
+        mypageSupportStatusEl.textContent = message;
+        if (mypageSupportStatusTone && mypageSupportStatusTone !== 'default') {
+            mypageSupportStatusEl.dataset.state = mypageSupportStatusTone;
+        } else {
+            mypageSupportStatusEl.removeAttribute('data-state');
+        }
+    }
+
+    function setMypageSupportStatus(message, tone = 'default') {
+        mypageSupportStatusMessage = String(message || '').trim();
+        mypageSupportStatusTone = tone;
+        renderMypageSupportStatus();
+    }
+
+    function resetMypageSupportStatus() {
+        mypageSupportStatusMessage = '';
+        mypageSupportStatusTone = 'default';
+        renderMypageSupportStatus();
+    }
+
+    function getMypageSupportSenderEmail() {
+        if (!currentUser || !currentUser.email) {
+            return '';
+        }
+        return String(currentUser.email || '').trim();
+    }
+
+    function updateMypageSupportUi() {
+        const member = isMember();
+        const authPending = isAuthStatePending();
+        const senderEmail = getMypageSupportSenderEmail();
+        const disabled = !member || authPending || mypageSupportSubmitInFlight;
+
+        if (mypageSupportSenderEl) {
+            mypageSupportSenderEl.textContent = authPending ? '확인 중...' : (senderEmail || '로그인 필요');
+        }
+        if (mypageSupportSubjectEl) {
+            mypageSupportSubjectEl.disabled = disabled;
+        }
+        if (mypageSupportMessageEl) {
+            mypageSupportMessageEl.disabled = disabled;
+        }
+        if (mypageSupportSubmitBtn) {
+            mypageSupportSubmitBtn.disabled = disabled;
+            mypageSupportSubmitBtn.textContent = mypageSupportSubmitInFlight ? '보내는 중...' : '문의 보내기';
+        }
+        if (!member && !authPending) {
+            if (mypageSupportFormEl) {
+                mypageSupportFormEl.reset();
+            }
+            resetMypageSupportStatus();
+            return;
+        }
+        renderMypageSupportStatus();
+    }
+
+    async function submitMypageSupportInquiry(event) {
+        if (event) {
+            event.preventDefault();
+        }
+        if (!isMember()) {
+            openAuthModal();
+            return;
+        }
+
+        const subject = String(mypageSupportSubjectEl ? mypageSupportSubjectEl.value : '').trim();
+        const message = String(mypageSupportMessageEl ? mypageSupportMessageEl.value : '').trim();
+        const senderEmail = getMypageSupportSenderEmail();
+
+        if (!senderEmail) {
+            setMypageSupportStatus('로그인한 이메일 정보를 확인할 수 없습니다. 다시 로그인해 주세요.', 'error');
+            return;
+        }
+        if (subject.length < 2) {
+            setMypageSupportStatus('문의 제목을 2자 이상 입력해 주세요.', 'error');
+            if (mypageSupportSubjectEl) {
+                mypageSupportSubjectEl.focus();
+            }
+            return;
+        }
+        if (message.length < 10) {
+            setMypageSupportStatus('문의 내용은 10자 이상 입력해 주세요.', 'error');
+            if (mypageSupportMessageEl) {
+                mypageSupportMessageEl.focus();
+            }
+            return;
+        }
+
+        mypageSupportSubmitInFlight = true;
+        setMypageSupportStatus('문의 내용을 보내는 중입니다.');
+        updateMypageSupportUi();
+
+        try {
+            const response = await fetch('/api/support-inquiry', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    subject,
+                    message,
+                    senderEmail,
+                    senderUid: currentUser && currentUser.uid ? currentUser.uid : '',
+                    nickname: currentUserProfile && currentUserProfile.nickname ? currentUserProfile.nickname : ''
+                })
+            });
+
+            let payload = null;
+            try {
+                payload = await response.json();
+            } catch (error) {
+                payload = null;
+            }
+
+            if (!response.ok || !payload || payload.returnValue !== 'success') {
+                throw new Error(payload && payload.message ? payload.message : '문의 전송에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+            }
+
+            if (mypageSupportFormEl) {
+                mypageSupportFormEl.reset();
+            }
+            setMypageSupportStatus('문의가 접수되었습니다. 확인 후 답변드리겠습니다.', 'success');
+            showActionPopup('문의가 접수되었습니다.');
+        } catch (error) {
+            console.error('문의 전송 실패', error);
+            setMypageSupportStatus(
+                error && error.message ? String(error.message) : '문의 전송에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+                'error'
+            );
+        } finally {
+            mypageSupportSubmitInFlight = false;
+            updateMypageSupportUi();
+        }
+    }
+
     function updateAuthUi() {
         const member = isMember();
         const authPending = isAuthStatePending();
@@ -6691,6 +6870,7 @@ document.addEventListener('DOMContentLoaded', () => {
             closeNicknameModal(true);
         }
         renderNicknameUi();
+        updateMypageSupportUi();
         updatePremiumMembershipUi();
         loadMypageDrawHistory();
         if (!firebaseAuthStatusEl) {
