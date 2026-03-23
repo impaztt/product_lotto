@@ -4316,6 +4316,83 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    function getDrawWizardRuleFamilyTag(ruleId = '') {
+        const id = String(ruleId || '');
+        if (
+            id === 'all_odd' ||
+            id === 'all_even' ||
+            id === 'five_odd_one_even' ||
+            id === 'five_even_one_odd' ||
+            id === 'four_odd_two_even' ||
+            id === 'four_even_two_odd'
+        ) {
+            return '홀짝 편향';
+        }
+        if (id === 'multiples_of_2_4_plus' || id === 'multiples_of_2_5_plus') {
+            return '짝수 과밀';
+        }
+        if (id.startsWith('multiples_of_')) {
+            return '배수 편향';
+        }
+        if (id.startsWith('consecutive_')) {
+            return '연속 패턴';
+        }
+        if (id.startsWith('same_last_digit_') || id.startsWith('last_digit_')) {
+            return '끝수 반복';
+        }
+        if (id.startsWith('same_decade_')) {
+            return '구간 편중';
+        }
+        if (
+            id === 'all_low_or_high' ||
+            id === 'low_or_high_5_plus' ||
+            id === 'low_1_15_4_plus' ||
+            id === 'mid_16_30_4_plus' ||
+            id === 'high_31_45_4_plus'
+        ) {
+            return '구간 편향';
+        }
+        if (id === 'tight_range') {
+            return '범위 압축';
+        }
+        if (id === 'extreme_sum' || id.startsWith('sum_')) {
+            return '합계 편향';
+        }
+        if (id.startsWith('prime_')) {
+            return '소수 편향';
+        }
+        return '패턴 필터';
+    }
+
+    function getDrawWizardRuleStrengthTag(ruleId = '', ratio = 0) {
+        if (ruleId === 'tight_range' || ruleId.startsWith('sum_') || ruleId === 'extreme_sum') {
+            return ratio >= 0.08 ? '극단 분포' : '정밀 필터';
+        }
+        if (ratio >= 0.2) {
+            return '고빈도 패턴';
+        }
+        if (ratio >= 0.08) {
+            return '반복 패턴';
+        }
+        if (ratio >= 0.03) {
+            return '정밀 압축';
+        }
+        return '고급 필터';
+    }
+
+    function getDrawWizardRuleSubtitleMeta(ruleId) {
+        const stat = RULE_STATS?.[ruleId];
+        const ratio = Math.max(0, Math.min(0.95, Number(stat?.ratio) || 0));
+        const gainPct = ratio ? Math.max(1, Math.round(((1 / (1 - ratio)) - 1) * 100)) : 0;
+        return {
+            accent: `1등 기대 +${gainPct}%`,
+            tags: [
+                getDrawWizardRuleFamilyTag(ruleId),
+                getDrawWizardRuleStrengthTag(ruleId, ratio)
+            ]
+        };
+    }
+
     function renderDrawWizardRuleStep() {
         if (!drawWizardDetailGroupsEl || !drawWizardDetailNoteEl || !drawWizardState) {
             return;
@@ -4365,6 +4442,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const active = selectedIds.has(rule.id);
             const description = rule.desc || rule.detail || '선택 시 이 패턴을 제외합니다.';
             const impact = getDrawWizardRuleImpactMeta(rule.id, { active });
+            const subtitleMeta = getDrawWizardRuleSubtitleMeta(rule.id);
             
             // Access check:
             // Rank 1 -> Master (Level 3)
@@ -4397,7 +4475,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="draw-funnel-rule-main">
                         <div class="draw-funnel-rule-copy">
                             <strong>${escapeHtml(rule.title)}</strong>
-                            <p>${escapeHtml(description)}</p>
+                            <p class="draw-funnel-rule-subtitle" title="${escapeHtml(description)}">
+                                <span class="draw-funnel-rule-subtitle-accent">${escapeHtml(subtitleMeta.accent)}</span>
+                                ${subtitleMeta.tags.map(tag => `<span class="draw-funnel-rule-tag">${escapeHtml(tag)}</span>`).join('')}
+                            </p>
                             ${restricted ? `<span class="rule-restricted-badge" data-tier="${escapeHtml(requiredTier.toLowerCase())}">${requiredTier} 전용</span>` : ''}
                         </div>
                         <div class="draw-funnel-rule-impact">
