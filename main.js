@@ -606,50 +606,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     const DRAW_WIZARD_RULE_OVERRIDES = {
-        all_odd: { title: '6개 모두 홀수', desc: '극단 홀짝 패턴을 먼저 덜어냅니다' },
-        all_even: { title: '6개 모두 짝수', desc: '짝수만 몰린 극단 조합을 걸러냅니다' },
-        five_odd_one_even: { title: '5개 홀수 + 1개 짝수', desc: '홀수 쏠림을 줄여 균형형 후보를 더 남깁니다' },
-        five_even_one_odd: { title: '5개 짝수 + 1개 홀수', desc: '짝수 쏠림을 줄여 균형형 후보를 더 남깁니다' },
-        four_odd_two_even: { title: '4개 홀수 + 2개 짝수', desc: '홀수 우세를 덜어 균형형 후보를 더 남깁니다' },
-        four_even_two_odd: { title: '4개 짝수 + 2개 홀수', desc: '짝수 우세를 덜어 균형형 후보를 더 남깁니다' },
-        multiples_of_2_4_plus: { desc: '짝수 쏠림을 크게 줄여 후보 압축 체감이 큽니다' },
-        multiples_of_2_5_plus: { desc: '짝수 과밀 조합만 한 번 더 강하게 걷어냅니다' },
-        multiples_of_3_3_plus: { desc: '3의 배수 몰림을 줄여 특정 패턴 반복을 낮춥니다' },
-        multiples_of_4_3_plus: { desc: '4의 배수 편중까지 덜어 더 세밀하게 정리합니다' },
-        multiples_of_5_3_plus: { desc: '0·5 끝자리 흐름이 과한 조합을 눌러줍니다' },
-        multiples_of_6_3_plus: { desc: '2·3 성질이 겹친 몰림을 줄여 다양성을 남깁니다' },
-        multiples_of_7_3_plus: { desc: '7의 배수 쏠림을 마지막에 미세 조정합니다' },
-        consecutive_3_plus: { desc: '연속수가 붙는 조합을 싫어할 때 체감이 큽니다' },
-        consecutive_4_plus: { desc: '긴 연속수 패턴만 따로 정밀하게 제외합니다' },
-        same_last_digit_3_plus: { desc: '끝자리 몰림을 줄여 시각적 편중을 낮춥니다' },
-        same_last_digit_4_plus: { desc: '끝자리 반복이 심한 조합만 강하게 정리합니다' },
-        last_digit_2_plus: { desc: '끝자리 중복 자체를 크게 줄여 후보를 강하게 압축합니다' },
-        last_digit_zero_2_plus: { desc: '0으로 끝나는 수 몰림을 따로 피하고 싶을 때 맞습니다' },
-        last_digit_five_2_plus: { desc: '5로 끝나는 수 몰림을 따로 줄이고 싶을 때 좋습니다' },
-        same_decade_4_plus: { desc: '한 구간 과밀을 줄여 번호대 분산을 넓혀줍니다' },
-        same_decade_5_plus: { desc: '거의 한 구간에 쏠린 조합만 마지막에 걷어냅니다' },
-        all_low_or_high: { desc: '낮은 수나 높은 수 한쪽 몰림을 먼저 정리합니다' },
-        low_or_high_5_plus: { desc: '저구간·고구간 한쪽 과밀을 줄여 균형을 맞춥니다' },
-        low_1_15_4_plus: { desc: '초반 번호 쏠림을 줄여 낮은 수 편중을 낮춥니다' },
-        mid_16_30_4_plus: { desc: '중간 구간 과밀을 덜어 구간 편중을 낮춥니다' },
-        high_31_45_4_plus: { desc: '후반 번호 과밀을 줄여 높은 수 편중을 낮춥니다' },
-        tight_range: { desc: '숫자 폭이 좁은 조합을 빼고 더 퍼진 조합을 남깁니다' },
-        extreme_sum: { desc: '합계가 극단인 조합을 한 번에 정리하는 기준입니다' },
-        sum_low_100: { desc: '낮은 합계 조합을 덜어 낮은 수 흐름까지 함께 줄입니다' },
-        sum_high_180: { desc: '높은 합계 조합을 덜어 높은 수 흐름을 차분히 정리합니다' },
-        prime_4_plus: { desc: '소수 편중을 줄여 숫자 성격이 한쪽으로 치우치지 않게 합니다' },
-        prime_5_plus: { desc: '소수 몰림이 강한 조합만 정밀하게 걷어냅니다' },
-        prime_1_or_less: { desc: '소수가 너무 적은 조합을 줄여 구성을 더 고르게 만듭니다' },
-        prime_0: { desc: '소수가 전혀 없는 조합만 따로 정리합니다' }
+        all_odd: {
+            title: '6개 모두 홀수',
+            desc: '홀수만 6개로 구성된 조합 제외'
+        },
+        all_even: {
+            title: '6개 모두 짝수',
+            desc: '짝수만 6개로 구성된 조합 제외'
+        },
+        five_odd_one_even: {
+            title: '5개 홀수 + 1개 짝수',
+            desc: '홀수 편중 조합 제외'
+        },
+        five_even_one_odd: {
+            title: '5개 짝수 + 1개 홀수',
+            desc: '짝수 편중 조합 제외'
+        },
+        four_odd_two_even: {
+            title: '4개 홀수 + 2개 짝수',
+            desc: '홀수가 더 많은 조합 제외'
+        },
+        four_even_two_odd: {
+            title: '4개 짝수 + 2개 홀수',
+            desc: '짝수가 더 많은 조합 제외'
+        }
     };
     const DRAW_WIZARD_STATIC_GROUP_RULES = {
         '홀짝 비율': [
-            { id: 'all_odd', title: '6개 모두 홀수', desc: '극단 홀짝 패턴을 먼저 덜어냅니다' },
-            { id: 'all_even', title: '6개 모두 짝수', desc: '짝수만 몰린 극단 조합을 걸러냅니다' },
-            { id: 'five_odd_one_even', title: '5개 홀수 + 1개 짝수', desc: '홀수 쏠림을 줄여 균형형 후보를 더 남깁니다' },
-            { id: 'five_even_one_odd', title: '5개 짝수 + 1개 홀수', desc: '짝수 쏠림을 줄여 균형형 후보를 더 남깁니다' },
-            { id: 'four_odd_two_even', title: '4개 홀수 + 2개 짝수', desc: '홀수 우세를 덜어 균형형 후보를 더 남깁니다' },
-            { id: 'four_even_two_odd', title: '4개 짝수 + 2개 홀수', desc: '짝수 우세를 덜어 균형형 후보를 더 남깁니다' }
+            { id: 'all_odd', title: '6개 모두 홀수', desc: '홀수만 6개로 구성된 조합 제외' },
+            { id: 'all_even', title: '6개 모두 짝수', desc: '짝수만 6개로 구성된 조합 제외' },
+            { id: 'five_odd_one_even', title: '5개 홀수 + 1개 짝수', desc: '홀수 편중 조합 제외' },
+            { id: 'five_even_one_odd', title: '5개 짝수 + 1개 홀수', desc: '짝수 편중 조합 제외' },
+            { id: 'four_odd_two_even', title: '4개 홀수 + 2개 짝수', desc: '홀수가 더 많은 조합 제외' },
+            { id: 'four_even_two_odd', title: '4개 짝수 + 2개 홀수', desc: '짝수가 더 많은 조합 제외' }
         ]
     };
     let drawWizardState = null;
@@ -4303,61 +4292,27 @@ document.addEventListener('DOMContentLoaded', () => {
             : '<span class="draw-funnel-chip is-empty">아직 선택 없음</span>';
     }
 
-    function getDrawWizardRuleUnlockInfo(rank = 0) {
-        if (rank === 1) {
-            return { requiredLevel: 3, requiredTier: 'MASTER', tierLabel: '마스터' };
-        }
-        if (rank === 2) {
-            return { requiredLevel: 2, requiredTier: 'PLATINUM', tierLabel: '플래티넘' };
-        }
-        if (rank === 3) {
-            return { requiredLevel: 1, requiredTier: 'GOLD', tierLabel: '골드' };
-        }
-        return { requiredLevel: 0, requiredTier: 'FREE', tierLabel: '무료' };
-    }
-
-    function getDrawWizardRulePlanCopy(unlockInfo, currentPlan) {
-        const currentLevel = Number(currentPlan?.level || 0);
-        if (!unlockInfo || unlockInfo.requiredLevel === 0) {
-            return currentLevel > 0
-                ? '무료 공개 · 상위 플랜 제외와 함께 쓰면 정리가 더 촘촘해집니다'
-                : '무료 공개 · 시작용 기본 필터입니다';
-        }
-        if (unlockInfo.requiredLevel === 1) {
-            return currentLevel >= 1
-                ? '골드 핵심 · 무료에서 못 거르는 후보까지 더 줄입니다'
-                : '골드 전용 · 무료보다 한 단계 깊게 후보를 정리합니다';
-        }
-        if (unlockInfo.requiredLevel === 2) {
-            return currentLevel >= 2
-                ? '플래티넘 핵심 · 골드보다 더 정교하게 압축합니다'
-                : '플래티넘 전용 · 골드보다 더 정교하게 압축합니다';
-        }
-        return currentLevel >= 3
-            ? '마스터 핵심 · 이 단계에서 가장 큰 정리 효과를 냅니다'
-            : '마스터 전용 · 이 단계에서 가장 강한 핵심 제외입니다';
-    }
-
-    function getDrawWizardRuleImpactMeta(ruleId, { active = false, planCopy = '' } = {}) {
+    function getDrawWizardRuleImpactMeta(ruleId, { active = false } = {}) {
         const stat = RULE_STATS?.[ruleId];
         const ratio = Math.max(0, Math.min(0.95, Number(stat?.ratio) || 0));
         if (!ratio) {
             return {
-                label: active ? '현재 정리' : '정리 규모',
+                label: active ? '현재 제외' : '선택 시 제외',
                 value: '변화 적음',
-                bulletPrimary: '후보 변화가 작은 보조 필터',
-                bulletSecondary: planCopy || (active ? '현재 반영 유지' : '탭해서 적용')
+                bulletPrimary: active ? '현재 반영 유지' : '효과는 크지 않음',
+                bulletSecondary: active ? '이미 적용됨' : '탭해서 적용'
             };
         }
+        const gainPct = ((1 / (1 - ratio)) - 1) * 100;
         const currentCombos = Math.max(1, Math.round(Number(currentRemainingCombos) || TOTAL_COMBOS));
         const affectedCombos = active
             ? Math.round(currentCombos * (ratio / (1 - ratio)))
             : Math.round(currentCombos * ratio);
         return {
-            label: active ? '현재 정리' : '정리 규모',
+            label: active ? '현재 제외' : '선택 시 제외',
             value: formatDrawWizardCompactCount(affectedCombos),
-            bulletPrimary: '전체 후보 약 ' + formatDisplayPercent(ratio * 100) + '% 정리',
-            bulletSecondary: planCopy || (active ? '이미 적용됨' : '탭해서 적용')
+            bulletPrimary: `1등 기대 +${Math.max(1, Math.round(gainPct))}%`,
+            bulletSecondary: active ? '이미 적용됨' : '탭해서 적용'
         };
     }
 
@@ -4409,15 +4364,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const rank = index + 1; // 1-based rank
             const active = selectedIds.has(rule.id);
             const description = rule.desc || rule.detail || '선택 시 이 패턴을 제외합니다.';
-            const unlockInfo = getDrawWizardRuleUnlockInfo(rank);
-            const impact = getDrawWizardRuleImpactMeta(rule.id, {
-                active,
-                planCopy: getDrawWizardRulePlanCopy(unlockInfo, currentPlan)
-            });
-
+            const impact = getDrawWizardRuleImpactMeta(rule.id, { active });
+            
+            // Access check:
+            // Rank 1 -> Master (Level 3)
+            // Rank 2 -> Platinum (Level 2)
+            // Rank 3+ -> All (Level 0+)
             let restricted = false;
             let requiredTier = '';
-
+            
             if (rank === 1 && userLevel < 3) {
                 restricted = true;
                 requiredTier = 'MASTER';
@@ -4432,9 +4387,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const restrictedClass = restricted ? ' is-restricted' : '';
 
             return `
-                <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}${restrictedClass}"
-                        type="button"
-                        data-wizard-rule="${escapeHtml(rule.id)}"
+                <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}${restrictedClass}" 
+                        type="button" 
+                        data-wizard-rule="${escapeHtml(rule.id)}" 
                         data-rule-rank="${rank}"
                         data-restricted="${restricted}"
                         data-required-tier="${requiredTier}"
@@ -4443,7 +4398,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="draw-funnel-rule-copy">
                             <strong>${escapeHtml(rule.title)}</strong>
                             <p>${escapeHtml(description)}</p>
-                            ${restricted ? `<span class="rule-restricted-badge" data-tier="${escapeHtml(unlockInfo.requiredTier.toLowerCase())}">${escapeHtml(unlockInfo.tierLabel)} 전용</span>` : ''}
+                            ${restricted ? `<span class="rule-restricted-badge" data-tier="${escapeHtml(requiredTier.toLowerCase())}">${requiredTier} 전용</span>` : ''}
                         </div>
                         <div class="draw-funnel-rule-impact">
                             <span class="draw-funnel-rule-impact-label">${escapeHtml(impact.label)}</span>
@@ -4459,8 +4414,8 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }).join('');
         drawWizardDetailNoteEl.textContent = selectedCount
-            ? `${selectedCount}개 선택됨 · 영향 큰 제외일수록 상위 플랜에서 열립니다.`
-            : '영향 큰 제외일수록 상위 플랜에서 열립니다.';
+            ? `${selectedCount}개 선택됨`
+            : '아직 선택 전';
     }
 
     function renderDrawWizardReview() {
