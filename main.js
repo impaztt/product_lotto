@@ -1866,6 +1866,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('orientationchange', () => {
         window.setTimeout(scheduleDrawHorizontalWidthSync, 120);
     }, { passive: true });
+    scheduleDrawHorizontalWidthSync();
 
     if (authClose) {
         authClose.addEventListener('click', () => {
@@ -8292,17 +8293,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function syncDrawViewportLayout(forcedViewportWidth) {
-        if (!drawTabPanel) {
-            return;
-        }
         const viewportWidth = Number.isFinite(forcedViewportWidth) && forcedViewportWidth > 0
             ? forcedViewportWidth
             : Math.floor(getViewportWidth());
         const viewportHeight = Math.max(320, Math.round(getViewportHeight()));
         const headerHeight = siteHeaderEl ? Math.ceil(siteHeaderEl.getBoundingClientRect().height || 0) : 0;
-        const bottomTabHeight = viewportWidth <= 768 && bottomTabBarEl
+        const bottomTabHeight = bottomTabBarEl && window.getComputedStyle(bottomTabBarEl).display !== 'none'
             ? Math.ceil(bottomTabBarEl.getBoundingClientRect().height || 0)
             : 0;
+        const rootEl = document.documentElement;
+
+        if (rootEl) {
+            rootEl.style.setProperty('--site-header-height', `${headerHeight}px`);
+            rootEl.style.setProperty('--app-bottom-nav-height', `${bottomTabHeight}px`);
+            rootEl.style.setProperty('--app-bottom-nav-offset', `${bottomTabHeight}px`);
+        }
+
+        if (!drawTabPanel) {
+            return;
+        }
 
         drawTabPanel.style.setProperty('--draw-tab-viewport-height', `${viewportHeight}px`);
         drawTabPanel.style.setProperty('--site-header-height', `${headerHeight}px`);

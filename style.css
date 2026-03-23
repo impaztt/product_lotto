@@ -23428,3 +23428,31 @@ body[data-theme='dark'] #tab-mypage .mypage-plan-offer-card.is-scheduled {
         grid-template-columns: 1fr !important;
     }
 }
+
+
+/* Shared bottom tab offset */
+:root {
+    --app-bottom-nav-height: 0px;
+    --app-bottom-nav-offset: 0px;
+}
+
+main {
+    padding-bottom: 0 !important;
+}
+
+#tab-weekly .container-box {
+    padding-bottom: var(--app-bottom-nav-offset) !important;
+}
+
+#tab-dashboard.app-shell,
+#tab-draw.app-shell,
+#tab-mypage.app-shell,
+#tab-qr.app-shell,
+#tab-store.app-shell {
+    padding-bottom: var(--app-bottom-nav-offset) !important;
+}
+
+#tab-dashboard .container-box,
+#tab-dashboard .dashboard-shell {
+    padding-bottom: 0 !important;
+}
