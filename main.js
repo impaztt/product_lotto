@@ -8301,12 +8301,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const bottomTabHeight = bottomTabBarEl && window.getComputedStyle(bottomTabBarEl).display !== 'none'
             ? Math.ceil(bottomTabBarEl.getBoundingClientRect().height || 0)
             : 0;
+        const availableTabHeight = Math.max(320, viewportHeight - headerHeight - bottomTabHeight);
         const rootEl = document.documentElement;
 
         if (rootEl) {
             rootEl.style.setProperty('--site-header-height', `${headerHeight}px`);
+            rootEl.style.setProperty('--app-viewport-height', `${viewportHeight}px`);
             rootEl.style.setProperty('--app-bottom-nav-height', `${bottomTabHeight}px`);
             rootEl.style.setProperty('--app-bottom-nav-offset', `${bottomTabHeight}px`);
+            rootEl.style.setProperty('--app-tab-available-height', `${availableTabHeight}px`);
         }
 
         if (!drawTabPanel) {
