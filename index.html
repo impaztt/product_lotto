@@ -1940,6 +1940,14 @@
 	                                            </span>
 	                                        </button>
 	                                    </div>
+	                                    <div class="draw-wizard-preset-shell">
+	                                        <div class="draw-wizard-preset-head">
+	                                            <span class="draw-funnel-step-kicker">빠른 시작</span>
+	                                            <strong>전략 프리셋부터 고르기</strong>
+	                                            <p id="draw-wizard-preset-note">프리셋을 고른 뒤 세부 단계에서 직접 미세 조정할 수 있습니다.</p>
+	                                        </div>
+	                                        <div id="draw-wizard-preset-list" class="draw-wizard-preset-list"></div>
+	                                    </div>
 	                                </div>
 	                                <div class="draw-wizard-resume-card" id="draw-wizard-resume-card" hidden>
 	                                    <div>
@@ -1965,6 +1973,13 @@
 	                                    <div class="draw-screen-step-meta">
 	                                        <p id="draw-wizard-rule-copy" class="draw-screen-step-note">빼고 싶은 패턴만 눌러보세요.</p>
 	                                        <p class="draw-funnel-inline-note" id="draw-wizard-detail-note">현재 그룹 선택 없음</p>
+	                                    </div>
+	                                    <div class="draw-wizard-intensity-wrap" id="draw-wizard-intensity-wrap">
+	                                        <div class="draw-wizard-intensity-head">
+	                                            <strong>한 번에 적용</strong>
+	                                            <span id="draw-wizard-intensity-note">가볍게, 균형, 강하게 중 하나를 바로 적용할 수 있습니다.</span>
+	                                        </div>
+	                                        <div id="draw-wizard-intensity-list" class="draw-wizard-intensity-list"></div>
 	                                    </div>
 	                                    <div id="draw-wizard-detail-groups" class="draw-funnel-rule-grid">
 	                                        <button class="draw-funnel-rule-card" type="button" data-wizard-rule="all_odd" aria-pressed="false">
@@ -2077,6 +2092,24 @@
 	                                    </label>
 	                                </div>
 	                            </section>
+	                            <section class="draw-funnel-panel" data-draw-wizard-step="include" hidden>
+	                                <div class="draw-screen draw-screen--step">
+	                                    <div class="draw-screen-step-head">
+	                                        <span class="draw-funnel-step-kicker" id="draw-wizard-include-kicker">8단계</span>
+	                                        <div class="draw-screen-step-title-row">
+	                                            <h3>포함수 고정하기</h3>
+	                                            <strong class="draw-screen-step-progress" id="draw-wizard-include-progress">8 / 10</strong>
+	                                        </div>
+	                                    </div>
+	                                    <div class="draw-screen-step-meta">
+	                                        <p class="draw-screen-step-note">꼭 넣고 싶은 번호가 있으면 최대 5개까지 고정할 수 있습니다.</p>
+	                                        <p class="draw-funnel-inline-note" id="draw-wizard-include-summary">필요 없다면 건너뛰어도 됩니다.</p>
+	                                    </div>
+	                                    <div id="draw-wizard-include-counts" class="draw-wizard-include-counts"></div>
+	                                    <p class="draw-funnel-inline-note draw-wizard-include-guide" id="draw-wizard-include-guide">먼저 고정 개수를 고른 뒤 번호를 눌러도 되고, 바로 번호를 누르면 1개 고정으로 시작됩니다.</p>
+	                                    <div id="draw-wizard-include-grid" class="draw-wizard-include-grid" aria-label="포함할 번호 선택"></div>
+	                                </div>
+	                            </section>
                             <section class="draw-funnel-panel" data-draw-wizard-step="review" hidden>
                                 <div class="draw-funnel-review-unified">
                                     <div id="draw-wizard-review-overview" class="draw-funnel-review-overview"></div>
@@ -2084,10 +2117,14 @@
                                         <div class="draw-funnel-review-row draw-funnel-review-row--metrics">
                                             <div id="draw-wizard-review-summary" class="draw-funnel-review-metrics"></div>
                                         </div>
-                                        <div class="draw-funnel-review-row draw-funnel-review-row--split">
+                                        <div class="draw-funnel-review-row draw-funnel-review-row--split draw-funnel-review-row--triple">
                                             <div class="draw-funnel-review-col">
                                                 <span class="draw-funnel-review-label">선택한 규칙</span>
                                                 <div id="draw-wizard-review-groups" class="draw-funnel-review-groups"></div>
+                                            </div>
+                                            <div class="draw-funnel-review-col">
+                                                <span class="draw-funnel-review-label">포함수</span>
+                                                <div id="draw-wizard-review-includes" class="draw-funnel-review-excludes"></div>
                                             </div>
                                             <div class="draw-funnel-review-col">
                                                 <span class="draw-funnel-review-label">제외수</span>
@@ -2123,6 +2160,12 @@
                                             <div class="draw-funnel-review-col draw-funnel-review-guest-wrap">
                                                 <div class="draw-funnel-review-guest" id="guest-banner">비회원 바로 생성</div>
                                                 <p class="draw-funnel-review-limit" id="guest-limit">비회원 1세트</p>
+                                            </div>
+                                        </div>
+                                        <div class="draw-funnel-review-row">
+                                            <div class="draw-funnel-review-col draw-funnel-review-col--full">
+                                                <span class="draw-funnel-review-label">세트 간 겹침 조절</span>
+                                                <div id="draw-wizard-review-overlap" class="draw-wizard-overlap-options"></div>
                                             </div>
                                         </div>
                                     </div>

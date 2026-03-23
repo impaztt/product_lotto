@@ -186,6 +186,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawWizardRuleProgressEl = document.getElementById('draw-wizard-rule-progress');
     const drawWizardRuleTitleEl = document.getElementById('draw-wizard-rule-title');
     const drawWizardRuleCopyEl = document.getElementById('draw-wizard-rule-copy');
+    const drawWizardPresetListEl = document.getElementById('draw-wizard-preset-list');
+    const drawWizardPresetNoteEl = document.getElementById('draw-wizard-preset-note');
+    const drawWizardIntensityWrapEl = document.getElementById('draw-wizard-intensity-wrap');
+    const drawWizardIntensityListEl = document.getElementById('draw-wizard-intensity-list');
+    const drawWizardIntensityNoteEl = document.getElementById('draw-wizard-intensity-note');
     const drawWizardWarningTitleEl = document.getElementById('draw-wizard-warning-title');
     const drawWizardWarningBodyEl = document.getElementById('draw-wizard-warning-body');
     const drawWizardNavEl = document.getElementById('draw-wizard-nav');
@@ -202,12 +207,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawWizardDetailGroupsEl = document.getElementById('draw-wizard-detail-groups');
     const drawWizardDetailNoteEl = document.getElementById('draw-wizard-detail-note');
     const drawWizardScrollGuideEl = document.getElementById('draw-wizard-scroll-guide');
+    const drawWizardIncludeKickerEl = document.getElementById('draw-wizard-include-kicker');
+    const drawWizardIncludeProgressEl = document.getElementById('draw-wizard-include-progress');
+    const drawWizardIncludeSummaryEl = document.getElementById('draw-wizard-include-summary');
+    const drawWizardIncludeCountsEl = document.getElementById('draw-wizard-include-counts');
+    const drawWizardIncludeGuideEl = document.getElementById('draw-wizard-include-guide');
+    const drawWizardIncludeGridEl = document.getElementById('draw-wizard-include-grid');
     const drawWizardExcludeKickerEl = document.getElementById('draw-wizard-exclude-kicker');
     const drawWizardExcludeSummaryEl = document.getElementById('draw-wizard-exclude-summary');
     const drawWizardReviewOverviewEl = document.getElementById('draw-wizard-review-overview');
     const drawWizardReviewSummaryEl = document.getElementById('draw-wizard-review-summary');
     const drawWizardReviewGroupsEl = document.getElementById('draw-wizard-review-groups');
+    const drawWizardReviewIncludesEl = document.getElementById('draw-wizard-review-includes');
     const drawWizardReviewExcludesEl = document.getElementById('draw-wizard-review-excludes');
+    const drawWizardReviewOverlapEl = document.getElementById('draw-wizard-review-overlap');
     const drawWizardResultTitleEl = document.getElementById('draw-wizard-result-title');
     const drawWizardResultCopyEl = document.getElementById('draw-wizard-result-copy');
     const drawWizardSelfResultShellEl = document.getElementById('draw-wizard-self-result-shell');
@@ -565,27 +578,33 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const DRAW_WIZARD_STEP_META = {
         start: {
-            title: '규칙 라이브러리를 단계별로 고르고 마지막에 바로 추첨합니다',
-            copy: '복잡한 설정 화면 대신, 규칙 라이브러리 항목을 그룹별 스텝으로 나눠서 하나씩 선택합니다.',
+            title: '전략 프리셋을 고르고 단계별 필터를 이어서 조절합니다',
+            copy: '프리셋으로 빠르게 시작한 뒤 규칙, 포함수, 제외수를 차례대로 다듬을 수 있습니다.',
             navTitle: '소개',
-            navNote: '시작하기를 누르면 첫 번째 규칙 그룹부터 바로 보여줍니다.',
+            navNote: '프리셋을 먼저 고르거나 바로 첫 규칙 단계로 넘어갈 수 있습니다.',
             nextLabel: '시작하기'
         },
         rules: {
             title: '규칙 라이브러리 선택',
-            copy: '현재 그룹에서 제외할 규칙을 골라주세요. 필요 없다면 선택 없이 다음으로 넘어가도 됩니다.',
+            copy: '현재 그룹에서 제외할 규칙을 고르거나 아래 강도 버튼으로 한 번에 적용할 수 있습니다.',
             navTitle: '규칙 선택',
             navNote: '규칙 라이브러리 항목을 그룹별로 순서대로 고릅니다.'
         },
+        include: {
+            title: '포함수를 고정합니다',
+            copy: '꼭 넣고 싶은 번호를 최대 5개까지 고정할 수 있습니다.',
+            navTitle: '포함수',
+            navNote: '고정수는 선택 사항이며 플랜에 따라 최대 개수가 달라집니다.'
+        },
         exclude: {
-            title: '8단계에서 직접 제외수를 추가합니다',
-            copy: '규칙 라이브러리 선택이 끝났다면 마지막 8단계에서 직접 제외할 숫자를 고를 수 있습니다.',
-            navTitle: '8단계',
+            title: '직접 제외수를 추가합니다',
+            copy: '빼고 싶은 숫자가 있으면 마지막으로 직접 제외해 마무리합니다.',
+            navTitle: '직접 제외',
             navNote: '직접 제외수는 선택 사항이지만 생성 직전에 바로 반영됩니다.'
         },
         review: {
             title: '추첨 전 확인',
-            copy: '조건을 보고 바로 추첨합니다.',
+            copy: '조건과 세트 간 겹침 설정을 보고 바로 추첨합니다.',
             navTitle: '추첨 전 확인',
             navNote: '조건 확인 후 추첨'
         },
@@ -632,6 +651,27 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'four_even_two_odd', title: '4개 짝수 + 2개 홀수', desc: '짝수가 더 많은 조합 제외' }
         ]
     };
+    const DRAW_WIZARD_PRESET_ORDER = ['balanced', 'light', 'expanded', 'sum_balance', 'digit_focus', 'prime_focus', 'aggressive'];
+    const DRAW_WIZARD_PRESET_INFO = {
+        balanced: { headline: '처음 쓰기 좋은 기본형', desc: '홀짝, 구간, 연속 패턴을 균형 있게 정리합니다.' },
+        light: { headline: '극단 패턴만 빠르게 정리', desc: '너무 튀는 조합만 먼저 덜어냅니다.' },
+        expanded: { headline: '분포를 넓게 다듬기', desc: '구간, 끝자리, 연속수를 함께 정리합니다.' },
+        sum_balance: { headline: '합계 안정 우선', desc: '합계가 과하게 낮거나 높은 조합을 먼저 덜어냅니다.' },
+        digit_focus: { headline: '끝자리 몰림 정리', desc: '끝자리 반복이 강한 조합을 빠르게 제외합니다.' },
+        prime_focus: { headline: '소수 균형 맞추기', desc: '소수 쏠림을 기준으로 후보를 다듬습니다.' },
+        aggressive: { headline: '후보를 강하게 압축', desc: '제외 폭이 큰 패턴까지 함께 반영합니다.' }
+    };
+    const DRAW_WIZARD_RULE_LEVELS = [
+        { id: 'skip', level: 0, label: '건너뛰기', desc: '이 그룹은 그대로 둡니다.' },
+        { id: 'light', level: 1, label: '가볍게', desc: '핵심 패턴만 먼저 정리합니다.' },
+        { id: 'balanced', level: 2, label: '균형', desc: '핵심 규칙을 넓게 반영합니다.' },
+        { id: 'strong', level: 3, label: '강하게', desc: '이 그룹 규칙을 강하게 적용합니다.' }
+    ];
+    const DRAW_WIZARD_OVERLAP_OPTIONS = [
+        { id: 'balanced', label: '균형형', desc: '기본 생성' },
+        { id: 'spread', label: '분산형', desc: '겹침 줄이기' },
+        { id: 'distinct', label: '최소 겹침', desc: '세트별 차이 강화' }
+    ];
     let drawWizardState = null;
     let drawWizardResumeState = null;
     let drawWizardLastViewKey = '';
@@ -2178,7 +2218,12 @@ document.addEventListener('DOMContentLoaded', () => {
             updateDashboardSummaryUi();
             updateMypageSummaryUi();
             updateAnalysisSummaryUi();
-        } catch (error) {
+
+            // Ensure Draw Wizard reflects membership changes (e.g., unlocking restricted rules)
+            if (typeof renderDrawWizard === 'function' && drawTabPanel && drawTabPanel.dataset.wizardInitialized === 'true') {
+                renderDrawWizard();
+            }
+            } catch (error) {
             console.error('초기화 오류', error);
         }
         
@@ -2221,12 +2266,19 @@ document.addEventListener('DOMContentLoaded', () => {
         window.requestAnimationFrame(scrollToGeneratedRow);
     }
 
-    function handleDrawGenerationRequest(source = 'panel') {
-        const activeRules = getActiveRules();
-        if (!activeRules.length) {
-            updateRulesStatus('필터를 하나 이상 선택한 뒤 번호를 생성해 주세요.');
-            setDrawCopyStatus('선택된 필터가 없습니다. 필터를 먼저 선택해 주세요.', true);
-            showActionPopup('필터를 먼저 선택해 주세요.');
+    function handleDrawGenerationRequest(source = 'panel', options = {}) {
+        const activeRules = Array.isArray(options.activeRules) ? options.activeRules : getActiveRules();
+        const includedNumbers = normalizeDrawWizardIncludeNumbers(options.includedNumbers);
+        const excludedNumbers = normalizeDrawWizardExcludeNumbers(
+            options.excludedNumbers instanceof Set
+                ? Array.from(options.excludedNumbers)
+                : options.excludedNumbers
+        );
+        const hasAnyCondition = activeRules.length || includedNumbers.length || excludedNumbers.length;
+        if (!hasAnyCondition) {
+            updateRulesStatus('필터, 포함수 또는 제외수를 하나 이상 선택한 뒤 번호를 생성해 주세요.');
+            setDrawCopyStatus('선택된 조건이 없습니다. 필터, 포함수 또는 제외수를 먼저 골라 주세요.', true);
+            showActionPopup('조건을 먼저 선택해 주세요.');
             return false;
         }
         try {
@@ -2242,7 +2294,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const generatedCount = generateAndDisplayNumbers({
                 source,
-                activeRules
+                activeRules,
+                includedNumbers,
+                excludedNumbers,
+                overlapMode: options.overlapMode,
+                ruleIds: Array.isArray(options.ruleIds) ? options.ruleIds : activeRules.map(rule => rule.id)
             });
             if (!generatedCount) {
                 if (source === 'cta') {
@@ -2258,7 +2314,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 focusGeneratedNumbers({
                     collapseFilters: true
                 });
-                showActionPopup(`${generatedCount}세트 생성 완료`);
+                showActionPopup(generatedCount + '세트 생성 완료');
             }
             return true;
         } catch (error) {
@@ -2272,14 +2328,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function generateAndDisplayNumbers(options = {}) {
         const drawCount = parseInt(drawCountSelect.value, 10);
         const activeRules = Array.isArray(options.activeRules) ? options.activeRules : getActiveRules();
-        const draws = [];
-        for (let i = 0; i < drawCount; i += 1) {
-            const numbers = generateNumbersWithRules(activeRules);
-            draws.push(numbers);
-        }
+        const includedNumbers = normalizeDrawWizardIncludeNumbers(options.includedNumbers);
+        const excludedNumbers = normalizeDrawWizardExcludeNumbers(options.excludedNumbers);
+        const draws = generateDrawBatch(Math.max(1, drawCount || 1), activeRules, {
+            includedNumbers,
+            excludedNumbers,
+            overlapMode: options.overlapMode
+        });
         return displayNumbers(draws, {
             source: options.source || 'panel',
-            ruleIds: activeRules.map(rule => rule.id)
+            ruleIds: Array.isArray(options.ruleIds) ? options.ruleIds : activeRules.map(rule => rule.id)
         });
     }
 
@@ -2288,13 +2346,126 @@ document.addEventListener('DOMContentLoaded', () => {
         return RULES.filter(rule => activeIds.has(rule.id));
     }
 
+    function getDrawOverlapConfig(mode, drawCount) {
+        if (drawCount <= 1) {
+            return { enabled: false, sampleCount: 1, weight: 1 };
+        }
+        const normalizedMode = normalizeDrawWizardOverlapMode(mode);
+        if (normalizedMode === 'spread') {
+            return { enabled: true, sampleCount: 12, weight: 14 };
+        }
+        if (normalizedMode === 'distinct') {
+            return { enabled: true, sampleCount: 24, weight: 40 };
+        }
+        return { enabled: false, sampleCount: 1, weight: 1 };
+    }
+
+    function countSharedNumbers(left, right) {
+        const target = new Set(Array.isArray(right) ? right : []);
+        return (Array.isArray(left) ? left : []).filter(number => target.has(number)).length;
+    }
+
+    function scoreCandidateOverlap(candidate, existingDraws, options = {}) {
+        const baseline = Math.max(0, Number(options.baseline) || 0);
+        const weight = Math.max(1, Number(options.weight) || 1);
+        return (Array.isArray(existingDraws) ? existingDraws : []).reduce((score, previous) => {
+            const shared = countSharedNumbers(candidate, previous);
+            const extra = Math.max(0, shared - baseline);
+            return score + (extra * weight) + shared;
+        }, 0);
+    }
+
+    function generateDrawBatch(drawCount, activeRules, options = {}) {
+        const totalCount = Math.max(1, Number(drawCount) || 1);
+        const draws = [];
+        const usedSignatures = new Set();
+        const includedNumbers = normalizeDrawWizardIncludeNumbers(options.includedNumbers);
+        const excludedNumbers = normalizeDrawWizardExcludeNumbers(options.excludedNumbers);
+        const overlapConfig = getDrawOverlapConfig(options.overlapMode, totalCount);
+        const excludedSet = new Set(excludedNumbers);
+
+        for (let index = 0; index < totalCount; index += 1) {
+            let bestNumbers = [];
+            let bestSignature = '';
+            let bestScore = Number.POSITIVE_INFINITY;
+
+            for (let sampleIndex = 0; sampleIndex < overlapConfig.sampleCount; sampleIndex += 1) {
+                const candidate = generateNumbersWithRules(activeRules, {
+                    includedNumbers,
+                    excludedNumbers: excludedSet
+                });
+                if (!candidate.length) {
+                    continue;
+                }
+                const signature = candidate.join('-');
+                if (usedSignatures.has(signature)) {
+                    continue;
+                }
+                const score = overlapConfig.enabled
+                    ? scoreCandidateOverlap(candidate, draws, {
+                        baseline: includedNumbers.length,
+                        weight: overlapConfig.weight
+                    })
+                    : 0;
+                if (!bestNumbers.length || score < bestScore) {
+                    bestNumbers = candidate;
+                    bestSignature = signature;
+                    bestScore = score;
+                }
+                if (score === 0) {
+                    break;
+                }
+            }
+
+            if (!bestNumbers.length) {
+                for (let retry = 0; retry < 24 && !bestNumbers.length; retry += 1) {
+                    const fallbackCandidate = generateNumbersWithRules(activeRules, {
+                        includedNumbers,
+                        excludedNumbers: excludedSet
+                    });
+                    if (!fallbackCandidate.length) {
+                        continue;
+                    }
+                    const signature = fallbackCandidate.join('-');
+                    if (usedSignatures.has(signature)) {
+                        continue;
+                    }
+                    bestNumbers = fallbackCandidate;
+                    bestSignature = signature;
+                }
+            }
+
+            if (bestNumbers.length) {
+                usedSignatures.add(bestSignature);
+                draws.push(bestNumbers);
+            } else {
+                draws.push([]);
+            }
+        }
+
+        return draws;
+    }
+
     function generateNumbersWithRules(activeRules, options = {}) {
         const randomFn = typeof options.randomFn === 'function' ? options.randomFn : Math.random;
-        const excludedNumbers = options.excludedNumbers instanceof Set ? options.excludedNumbers : excludeNumberValues;
+        const includedNumbers = normalizeDrawWizardIncludeNumbers(options.includedNumbers);
+        const excludedSet = options.excludedNumbers instanceof Set
+            ? new Set(normalizeDrawWizardExcludeNumbers(Array.from(options.excludedNumbers)))
+            : new Set(normalizeDrawWizardExcludeNumbers(options.excludedNumbers));
+        if (includedNumbers.some(number => excludedSet.has(number))) {
+            return [];
+        }
         const maxAttempts = 5000;
         for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-            const numbers = generateUniqueNumbers(6, 1, 45, randomFn).sort((a, b) => a - b);
-            if (!shouldExclude(numbers, activeRules, excludedNumbers)) {
+            const numbers = generateCandidateNumbers({
+                includedNumbers,
+                excludedNumbers: excludedSet,
+                randomFn
+            });
+            if (!numbers.length) {
+                return [];
+            }
+            if (!shouldExclude(numbers, activeRules, excludedSet)) {
                 return numbers;
             }
         }
@@ -2307,6 +2478,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const rules = Array.isArray(activeRules) ? activeRules : [];
         return rules.some(rule => rule.exclude(numbers, excludedNumbers));
+    }
+
+    function generateCandidateNumbers({ includedNumbers = [], excludedNumbers = new Set(), randomFn = Math.random } = {}) {
+        const locked = normalizeDrawWizardIncludeNumbers(includedNumbers);
+        const blocked = excludedNumbers instanceof Set
+            ? excludedNumbers
+            : new Set(normalizeDrawWizardExcludeNumbers(excludedNumbers));
+        if (locked.some(number => blocked.has(number))) {
+            return [];
+        }
+        const remainingNeeded = 6 - locked.length;
+        if (remainingNeeded < 0) {
+            return [];
+        }
+        const pool = [];
+        for (let number = 1; number <= 45; number += 1) {
+            if (!blocked.has(number) && !locked.includes(number)) {
+                pool.push(number);
+            }
+        }
+        if (pool.length < remainingNeeded) {
+            return [];
+        }
+        const picked = locked.slice();
+        while (picked.length < 6) {
+            const nextRandom = Number(randomFn());
+            const normalizedRandom = Number.isFinite(nextRandom)
+                ? Math.min(0.999999999, Math.max(0, nextRandom))
+                : Math.random();
+            const randomIndex = Math.floor(normalizedRandom * pool.length);
+            picked.push(pool.splice(randomIndex, 1)[0]);
+        }
+        return picked.sort((left, right) => left - right);
     }
 
     function generateUniqueNumbers(count, min, max, randomFn = Math.random) {
@@ -2404,10 +2608,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getDrawWizardResultStatusText(drawCount = lastGeneratedDraws.length) {
+        const selectedRuleCount = Array.isArray(drawWizardState?.selectedRuleIds) ? drawWizardState.selectedRuleIds.length : 0;
+        const includeCount = normalizeDrawWizardIncludeNumbers(drawWizardState?.includeNumbers).length;
         const excludeCount = normalizeDrawWizardExcludeNumbers(drawWizardState?.excludeNumbers).length;
-        return excludeCount
-            ? `제외수 ${excludeCount}개 반영 · ${drawCount}세트`
-            : `${drawCount}세트 추첨 완료`;
+        const parts = [];
+        if (selectedRuleCount) {
+            parts.push(`규칙 ${selectedRuleCount}개`);
+        }
+        if (includeCount) {
+            parts.push(`고정수 ${includeCount}개`);
+        }
+        if (excludeCount) {
+            parts.push(`제외수 ${excludeCount}개`);
+        }
+        parts.push(`${Math.max(1, Number(drawCount) || 1)}세트`);
+        return parts.join(' · ');
     }
 
     function renderDrawWizardResultStage(draws = lastGeneratedDraws) {
@@ -3721,17 +3936,53 @@ document.addEventListener('DOMContentLoaded', () => {
             currentStep: 'start',
             currentGroupIndex: 0,
             selectedRuleIds: [],
+            includeTargetCount: 0,
+            includeNumbers: [],
             excludeNumbers: [],
+            overlapMode: 'balanced',
             completed: false,
             updatedAt: Date.now()
         };
     }
 
+    function normalizeDrawWizardNumberSelection(values, maxCount = 45) {
+        return Array.from(new Set(
+            (Array.isArray(values) ? values : [])
+                .map(value => Number(value))
+                .filter(value => Number.isInteger(value) && value >= 1 && value <= 45)
+        ))
+            .sort((left, right) => left - right)
+            .slice(0, Math.max(0, Number(maxCount) || 0));
+    }
+
+    function normalizeDrawWizardExcludeNumbers(values) {
+        return normalizeDrawWizardNumberSelection(values, 45);
+    }
+
+    function normalizeDrawWizardIncludeNumbers(values) {
+        return normalizeDrawWizardNumberSelection(values, 5);
+    }
+
+    function normalizeDrawWizardIncludeTargetCount(value, includeNumbers = []) {
+        const normalizedNumbers = normalizeDrawWizardIncludeNumbers(includeNumbers);
+        const safeCount = Math.max(0, Math.min(5, Math.round(Number(value) || 0)));
+        return normalizedNumbers.length
+            ? Math.max(normalizedNumbers.length, safeCount)
+            : safeCount;
+    }
+
+    function normalizeDrawWizardOverlapMode(value) {
+        const normalized = String(value || '').trim().toLowerCase();
+        return DRAW_WIZARD_OVERLAP_OPTIONS.some(option => option.id === normalized)
+            ? normalized
+            : 'balanced';
+    }
+
     function getDrawWizardRuleSteps() {
         return ruleGroups.map((groupEl, index) => {
-            const groupLabel = String(groupEl?.dataset.group || '').trim() || `규칙 그룹 ${index + 1}`;
+            const groupLabel = String(groupEl?.dataset.group || '').trim() || ('규칙 그룹 ' + (index + 1));
             const info = DRAW_WIZARD_RULE_GROUP_INFO[groupLabel] || {
-                title: `${groupLabel} 제외하기`,
+                title: groupLabel + ' 제외하기',
                 copy: '이 단계에서 제외하고 싶은 패턴을 고른 뒤 다음으로 넘어가면 됩니다.'
             };
             const staticRules = Array.isArray(DRAW_WIZARD_STATIC_GROUP_RULES[groupLabel])
@@ -3739,7 +3990,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     id: String(rule.id || '').trim(),
                     title: String(rule.title || rule.id || '').trim(),
                     desc: String(rule.desc || '').trim(),
-                    detail: String(RULE_DETAILS[rule.id] || '').trim()
+                    detail: String(RULE_DETAILS[rule.id] || '').trim(),
+                    advanced: Boolean(rule.advanced)
                 })).filter(rule => rule.id)
                 : null;
             const domRules = Array.from(groupEl.querySelectorAll('.rule-card')).map(card => {
@@ -3765,44 +4017,54 @@ document.addEventListener('DOMContentLoaded', () => {
                         || card.querySelector('.rule-desc')?.textContent
                         || ''
                     ).trim(),
-                    detail: String(RULE_DETAILS[id] || '').trim()
+                    detail: String(RULE_DETAILS[id] || '').trim(),
+                    advanced: card.classList.contains('is-advanced')
                 };
             }).filter(Boolean);
             const rules = staticRules && staticRules.length ? staticRules : domRules;
             return rules.length ? {
-                key: `wizard-group-${index + 1}`,
+                key: 'wizard-group-' + (index + 1),
                 stepNumber: index + 1,
                 groupLabel,
-                kicker: `${index + 1}단계`,
-                title: info.title || `${groupLabel} 제외하기`,
+                kicker: (index + 1) + '단계',
+                title: info.title || (groupLabel + ' 제외하기'),
                 copy: info.copy,
                 rules
             } : null;
         }).filter(Boolean);
     }
 
-    function getDrawWizardTotalSteps() {
+    function getDrawWizardFlowStepCount() {
         return getDrawWizardRuleSteps().length + 3;
     }
 
-    function normalizeDrawWizardExcludeNumbers(values) {
-        return Array.from(new Set(
-            (Array.isArray(values) ? values : [])
-                .map(value => Number(value))
-                .filter(value => Number.isInteger(value) && value >= 1 && value <= 45)
-        )).sort((left, right) => left - right);
+    function getDrawWizardTotalSteps() {
+        return getDrawWizardFlowStepCount();
+    }
+
+    function getDrawWizardIncludeStepNumber() {
+        return getDrawWizardRuleSteps().length + 1;
+    }
+
+    function getDrawWizardExcludeStepNumber() {
+        return getDrawWizardRuleSteps().length + 2;
+    }
+
+    function getDrawWizardReviewStepNumber() {
+        return getDrawWizardRuleSteps().length + 3;
     }
 
     function sanitizeDrawWizardState(raw) {
         const defaults = getDrawWizardDefaultState();
         const ruleSteps = getDrawWizardRuleSteps();
         const validRuleIds = new Set(ruleSteps.flatMap(step => step.rules.map(rule => rule.id)));
-        const validSteps = new Set(['start', 'rules', 'exclude', 'review']);
+        const validSteps = new Set(['start', 'rules', 'include', 'exclude', 'review', 'result']);
         if (!raw || typeof raw !== 'object') {
             return defaults;
         }
-        const currentStep = validSteps.has(String(raw.currentStep || '').trim())
-            ? String(raw.currentStep || '').trim()
+        const requestedStep = String(raw.currentStep || '').trim();
+        const currentStep = validSteps.has(requestedStep)
+            ? (requestedStep === 'result' ? 'review' : requestedStep)
             : 'start';
         const currentGroupIndex = Math.max(0, Math.min(
             ruleSteps.length ? ruleSteps.length - 1 : 0,
@@ -3813,11 +4075,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 .map(value => String(value || '').trim())
                 .filter(value => validRuleIds.has(value))
         ));
+        const includeNumbers = normalizeDrawWizardIncludeNumbers(raw.includeNumbers);
         return {
             currentStep,
             currentGroupIndex,
             selectedRuleIds,
+            includeTargetCount: normalizeDrawWizardIncludeTargetCount(raw.includeTargetCount, includeNumbers),
+            includeNumbers,
             excludeNumbers: normalizeDrawWizardExcludeNumbers(raw.excludeNumbers),
+            overlapMode: normalizeDrawWizardOverlapMode(raw.overlapMode),
             completed: false,
             updatedAt: Number(raw.updatedAt) || Date.now()
         };
@@ -3829,6 +4095,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return Boolean(
             (Array.isArray(state.selectedRuleIds) && state.selectedRuleIds.length)
+            || (Array.isArray(state.includeNumbers) && state.includeNumbers.length)
             || (Array.isArray(state.excludeNumbers) && state.excludeNumbers.length)
         );
     }
@@ -3949,21 +4216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!drawWizardState) {
             return;
         }
-        if (!DRAW_WIZARD_RESUME_ENABLED) {
-            drawWizardResumeState = null;
-            if (getDrawWizardCurrentStep() === 'start') {
-                renderDrawWizard();
-            }
-            return;
-        }
-        if (!authStateResolved) {
-            drawWizardResumeState = null;
-            if (getDrawWizardCurrentStep() === 'start') {
-                renderDrawWizard();
-            }
-            return;
-        }
-        if (!isMember()) {
+        if (!DRAW_WIZARD_RESUME_ENABLED || !authStateResolved || !isMember()) {
             drawWizardResumeState = null;
             if (getDrawWizardCurrentStep() === 'start') {
                 renderDrawWizard();
@@ -3973,7 +4226,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (getDrawWizardCurrentStep() !== 'start' || hasMeaningfulDrawWizardState(drawWizardState)) {
             return;
         }
-        const draft = authStateResolved && isMember() ? loadDrawWizardDraft() : null;
+        const draft = loadDrawWizardDraft();
         drawWizardResumeState = draft ? { ...draft } : null;
         renderDrawWizard();
     }
@@ -3982,16 +4235,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!drawWizardState) {
             return 'start';
         }
-        const validSteps = new Set(['start', 'rules', 'exclude', 'review', 'result']);
-        if (!validSteps.has(drawWizardState.currentStep)) {
-            drawWizardState.currentStep = 'start';
+        const validSteps = new Set(['start', 'rules', 'include', 'exclude', 'review', 'result']);
+        let currentStep = validSteps.has(String(drawWizardState.currentStep || '').trim())
+            ? String(drawWizardState.currentStep || '').trim()
+            : 'start';
+        if (currentStep === 'rules' && !getDrawWizardRuleSteps().length) {
+            currentStep = 'include';
         }
-        return drawWizardState.currentStep;
+        if (currentStep === 'result' && !drawWizardState.completed && !lastGeneratedDraws.length) {
+            currentStep = 'review';
+        }
+        drawWizardState.currentStep = currentStep;
+        return currentStep;
     }
 
     function getDrawWizardCurrentRuleStep() {
         const ruleSteps = getDrawWizardRuleSteps();
         if (!ruleSteps.length) {
+            if (drawWizardState && drawWizardState.currentStep === 'rules') {
+                drawWizardState.currentStep = 'include';
+            }
             return null;
         }
         const index = Math.max(0, Math.min(ruleSteps.length - 1, Number(drawWizardState?.currentGroupIndex || 0) || 0));
@@ -4001,11 +4264,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return ruleSteps[index] || null;
     }
 
-    function getDrawWizardExcludeStepNumber() {
-        return getDrawWizardRuleSteps().length + 1;
-    }
-
     function getDrawWizardViewMeta(stepKey = getDrawWizardCurrentStep()) {
+        const flowStepCount = getDrawWizardFlowStepCount();
         if (stepKey === 'rules') {
             const currentRuleStep = getDrawWizardCurrentRuleStep();
             const ruleSteps = getDrawWizardRuleSteps();
@@ -4013,15 +4273,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: currentRuleStep.title,
                 copy: currentRuleStep.copy,
                 navTitle: currentRuleStep.kicker,
-                navNote: `${Math.min(ruleSteps.length, drawWizardState.currentGroupIndex + 1)} / ${ruleSteps.length} 단계`
+                navNote: currentRuleStep.stepNumber + ' / ' + flowStepCount + ' 단계 · 규칙 그룹 ' + Math.min(ruleSteps.length, drawWizardState.currentGroupIndex + 1) + ' / ' + ruleSteps.length
             } : DRAW_WIZARD_STEP_META.rules;
+        }
+        if (stepKey === 'include') {
+            const includeStepNumber = getDrawWizardIncludeStepNumber();
+            return {
+                ...DRAW_WIZARD_STEP_META.include,
+                navTitle: includeStepNumber + '단계',
+                navNote: includeStepNumber + ' / ' + flowStepCount + ' 단계 · 꼭 넣을 번호를 고를 수 있습니다.'
+            };
         }
         if (stepKey === 'exclude') {
             const excludeStepNumber = getDrawWizardExcludeStepNumber();
             return {
                 ...DRAW_WIZARD_STEP_META.exclude,
-                navTitle: `${excludeStepNumber}단계`,
-                navNote: `${excludeStepNumber} / ${excludeStepNumber} 단계 · 선택 사항이지만 생성 직전에 바로 반영됩니다.`
+                navTitle: excludeStepNumber + '단계',
+                navNote: excludeStepNumber + ' / ' + flowStepCount + ' 단계 · 직접 제외수는 마지막에 한 번 더 반영됩니다.'
+            };
+        }
+        if (stepKey === 'review') {
+            const reviewStepNumber = getDrawWizardReviewStepNumber();
+            return {
+                ...DRAW_WIZARD_STEP_META.review,
+                navTitle: reviewStepNumber + '단계',
+                navNote: reviewStepNumber + ' / ' + flowStepCount + ' 단계 · 조건 확인 후 추첨합니다.'
             };
         }
         return DRAW_WIZARD_STEP_META[stepKey] || DRAW_WIZARD_STEP_META.start;
@@ -4030,6 +4306,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function getDrawWizardProgressInfo(stepKey = getDrawWizardCurrentStep()) {
         const ruleSteps = getDrawWizardRuleSteps();
         const currentIndex = Math.max(0, Math.min(ruleSteps.length - 1, Number(drawWizardState?.currentGroupIndex || 0) || 0));
+        const flowStepCount = getDrawWizardFlowStepCount();
         if (stepKey === 'result') {
             return { label: 'RESULT', count: 'DONE' };
         }
@@ -4038,18 +4315,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (stepKey === 'rules') {
             return {
-                label: `${currentIndex + 1}단계`,
-                count: `${currentIndex + 1} / ${ruleSteps.length}`
+                label: (currentIndex + 1) + '단계',
+                count: (currentIndex + 1) + ' / ' + flowStepCount
+            };
+        }
+        if (stepKey === 'include') {
+            const includeStepNumber = getDrawWizardIncludeStepNumber();
+            return {
+                label: includeStepNumber + '단계',
+                count: includeStepNumber + ' / ' + flowStepCount
             };
         }
         if (stepKey === 'exclude') {
             const excludeStepNumber = getDrawWizardExcludeStepNumber();
             return {
-                label: `${excludeStepNumber}단계`,
-                count: `${excludeStepNumber} / ${excludeStepNumber}`
+                label: excludeStepNumber + '단계',
+                count: excludeStepNumber + ' / ' + flowStepCount
             };
         }
-        return { label: 'CHECK', count: 'REVIEW' };
+        const reviewStepNumber = getDrawWizardReviewStepNumber();
+        return {
+            label: reviewStepNumber + '단계',
+            count: reviewStepNumber + ' / ' + flowStepCount
+        };
     }
 
     function getDrawWizardRulePreviewHtml(ruleId) {
@@ -4114,7 +4402,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function syncDrawWizardExcludeNumbersFromControl(options = {}) {
         const { commit = true } = options;
-        const normalized = Array.from(excludeNumberValues).sort((left, right) => left - right);
+        const normalized = normalizeDrawWizardExcludeNumbers(Array.from(excludeNumberValues));
         if (!drawWizardState) {
             return normalized;
         }
@@ -4139,7 +4427,10 @@ document.addEventListener('DOMContentLoaded', () => {
         setRulesByIds(getDrawWizardDerivedRuleIds());
         applyDrawWizardExcludeNumbers(drawWizardState.excludeNumbers);
         updateSelectionCount();
-        updateCombinedEstimates();
+        updateCombinedEstimates({
+            includeNumbers: drawWizardState.includeNumbers,
+            excludeNumbers: drawWizardState.excludeNumbers
+        });
         updateScenarioMetrics();
     }
 
@@ -4148,6 +4439,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const { syncRules = true, persist = true } = options;
+        drawWizardState.includeNumbers = normalizeDrawWizardIncludeNumbers(drawWizardState.includeNumbers);
+        drawWizardState.includeTargetCount = normalizeDrawWizardIncludeTargetCount(drawWizardState.includeTargetCount, drawWizardState.includeNumbers);
+        if (drawWizardState.includeTargetCount > 0 && drawWizardState.includeNumbers.length > drawWizardState.includeTargetCount) {
+            drawWizardState.includeNumbers = drawWizardState.includeNumbers.slice(0, drawWizardState.includeTargetCount);
+        }
+        drawWizardState.excludeNumbers = normalizeDrawWizardExcludeNumbers(drawWizardState.excludeNumbers);
+        drawWizardState.overlapMode = normalizeDrawWizardOverlapMode(drawWizardState.overlapMode);
         drawWizardState.updatedAt = Date.now();
         if (syncRules) {
             syncDrawWizardSelections();
@@ -4160,12 +4458,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getDrawWizardRestrictionState() {
         const derivedRuleIds = getDrawWizardDerivedRuleIds();
-        const excludeCount = Array.isArray(drawWizardState?.excludeNumbers) ? drawWizardState.excludeNumbers.length : 0;
-        if (!derivedRuleIds.length) {
+        const includeNumbers = normalizeDrawWizardIncludeNumbers(drawWizardState?.includeNumbers);
+        const excludeNumbers = normalizeDrawWizardExcludeNumbers(drawWizardState?.excludeNumbers);
+        const includeCount = includeNumbers.length;
+        const excludeCount = excludeNumbers.length;
+        const hasAnyCondition = derivedRuleIds.length || includeCount;
+        if (!hasAnyCondition) {
             return {
                 kind: 'info',
-                title: '최소 1개 규칙 또는 직접 제외수를 선택해 주세요.',
-                body: '규칙 라이브러리 항목이나 직접 제외수를 하나 이상 고르면 추첨을 시작할 수 있습니다.',
+                title: '최소 1개 규칙, 고정수 또는 직접 제외수를 선택해 주세요.',
+                body: '규칙을 고르지 않아도 포함수나 직접 제외수만으로 번호를 생성할 수 있습니다.',
+                blocked: true
+            };
+        }
+        if (includeNumbers.some(number => excludeNumbers.includes(number))) {
+            return {
+                kind: 'danger',
+                title: '같은 번호를 고정수와 제외수에 동시에 넣을 수 없습니다.',
+                body: '포함수와 제외수에 겹치는 번호를 정리한 뒤 다시 시도해 주세요.',
                 blocked: true
             };
         }
@@ -4181,7 +4491,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return {
                 kind: 'danger',
                 title: '조건이 너무 강해서 추첨이 어려울 수 있습니다.',
-                body: '선택한 규칙을 조금 줄이거나 직접 제외수를 완화한 뒤 다시 시도해 주세요.',
+                body: '규칙, 고정수, 직접 제외수를 조금 완화한 뒤 다시 시도해 주세요.',
                 blocked: true
             };
         }
@@ -4189,14 +4499,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return {
                 kind: 'warn',
                 title: '후보가 많이 줄었습니다.',
-                body: '추첨은 가능하지만 몇 개 규칙을 덜 선택하면 더 넓은 후보에서 생성할 수 있습니다.',
+                body: '추첨은 가능하지만 몇 개 조건을 덜 적용하면 더 넓은 후보에서 생성할 수 있습니다.',
                 blocked: false
             };
         }
         return {
             kind: 'good',
             title: '바로 추첨하기 좋은 상태입니다.',
-            body: '선택한 규칙이 반영됐고 남은 후보 수도 안정적입니다.',
+            body: '선택한 규칙, 고정수, 제외수가 반영됐고 남은 후보 수도 안정적입니다.',
             blocked: false
         };
     }
@@ -4223,8 +4533,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const ruleSteps = getDrawWizardRuleSteps();
             const lastIndex = Math.max(0, ruleSteps.length - 1);
             return drawWizardState.currentGroupIndex >= lastIndex
-                ? `${getDrawWizardExcludeStepNumber()}단계로`
-                : `${drawWizardState.currentGroupIndex + 2}단계로`;
+                ? (getDrawWizardIncludeStepNumber() + '단계로')
+                : ((drawWizardState.currentGroupIndex + 2) + '단계로');
+        }
+        if (stepKey === 'include') {
+            return getDrawWizardExcludeStepNumber() + '단계로';
         }
         if (stepKey === 'exclude') {
             return '최종 확인';
@@ -4234,19 +4547,194 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return '다음';
     }
+    function getWizardTierRequirementForRank(rank) {
+        if (rank === 1) {
+            return 'MASTER';
+        }
+        if (rank === 2) {
+            return 'PLATINUM';
+        }
+        if (rank === 3) {
+            return 'GOLD';
+        }
+        return '';
+    }
+
+    function getWizardAccessMap(items = [], getKey = item => item.id, getScore = item => item.score) {
+        const ranked = (Array.isArray(items) ? items : [])
+            .map(item => ({
+                item,
+                score: Math.max(0, Number(getScore(item)) || 0)
+            }))
+            .filter(entry => entry.score > 0)
+            .sort((left, right) => right.score - left.score);
+        const map = new Map();
+        ranked.forEach((entry, index) => {
+            const requiredTier = getWizardTierRequirementForRank(index + 1);
+            if (requiredTier) {
+                map.set(String(getKey(entry.item)), requiredTier);
+            }
+        });
+        return map;
+    }
+
+    function isDrawWizardTierLocked(requiredTier = '') {
+        const requiredPlan = getMembershipPlanMeta(String(requiredTier || '').trim().toLowerCase());
+        return Boolean(requiredPlan.level && (getMembershipPlanMeta().level || 0) < requiredPlan.level);
+    }
+
+    async function requestDrawWizardTierAccess(requiredTier = '') {
+        const requiredLabel = String(requiredTier || '').trim().toUpperCase();
+        if (!requiredLabel || !isDrawWizardTierLocked(requiredLabel)) {
+            return true;
+        }
+        const currentPlan = getMembershipPlanMeta();
+        if (!isMember()) {
+            const confirmed = await showActionConfirm(
+                '멤버십 전용 기능',
+                `${requiredLabel} 멤버십 이상에서 사용할 수 있는 조건입니다.\n로그인 후 더 강한 필터를 확인해 볼까요?`,
+                '로그인하기',
+                '닫기'
+            );
+            if (confirmed) {
+                openAuthModal();
+            }
+            return false;
+        }
+        const confirmed = await showActionConfirm(
+            '플랜 업그레이드',
+            `고객님은 현재 ${currentPlan.label} 등급입니다. ${requiredLabel} 멤버십으로 올리면 이 조건을 바로 사용할 수 있습니다.`,
+            '플랜 보기',
+            '닫기'
+        );
+        if (confirmed) {
+            setActiveTab('mypage');
+            const planBtn = document.getElementById('mypage-plan-manage-btn');
+            if (planBtn) {
+                setTimeout(() => {
+                    planBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 150);
+            }
+        }
+        return false;
+    }
+
+    function getActiveDrawWizardPresetId() {
+        if (!drawWizardState) {
+            return '';
+        }
+        const currentKey = Array.from(new Set(drawWizardState.selectedRuleIds)).sort().join('|');
+        return DRAW_WIZARD_PRESET_ORDER.find(presetId => {
+            const presetKey = Array.from(new Set(PRESETS[presetId] || [])).sort().join('|');
+            return presetKey && presetKey === currentKey;
+        }) || '';
+    }
+
+    function getDrawWizardPresetCards() {
+        const presetIds = DRAW_WIZARD_PRESET_ORDER.filter(presetId => Array.isArray(PRESETS[presetId]) && PRESETS[presetId].length);
+        const accessMap = getWizardAccessMap(
+            presetIds,
+            presetId => presetId,
+            presetId => Math.max(0, TOTAL_COMBOS - Math.round(TOTAL_COMBOS * getEstimatedRatioByIds(PRESETS[presetId])))
+        );
+        return presetIds.map(presetId => {
+            const ratio = getEstimatedRatioByIds(PRESETS[presetId]);
+            const excludedCombos = Math.max(0, TOTAL_COMBOS - Math.round(TOTAL_COMBOS * ratio));
+            const info = DRAW_WIZARD_PRESET_INFO[presetId] || {};
+            return {
+                id: presetId,
+                label: PRESETS_LABEL[presetId] || presetId,
+                headline: String(info.headline || '').trim(),
+                desc: String(info.desc || '').trim(),
+                ruleCount: (PRESETS[presetId] || []).length,
+                excludedCombos,
+                excludedPct: formatDisplayPercent((1 - ratio) * 100),
+                requiredTier: accessMap.get(presetId) || ''
+            };
+        });
+    }
+
+    function getDrawWizardLevelRuleIds(step, level) {
+        const rules = Array.isArray(step && step.rules) ? step.rules : [];
+        const essential = rules.filter(rule => !rule.advanced);
+        const advanced = rules.filter(rule => rule.advanced);
+        const orderedIds = essential.concat(advanced).map(rule => rule.id);
+        let targetCount = 0;
+        if (level === 1) {
+            targetCount = Math.max(1, Math.ceil(essential.length * 0.35));
+        } else if (level === 2) {
+            targetCount = Math.max(1, Math.ceil(essential.length * 0.7));
+        } else if (level >= 3) {
+            targetCount = orderedIds.length;
+        }
+        return orderedIds.slice(0, Math.min(targetCount, orderedIds.length));
+    }
+
+    function getDrawWizardIntensityOptions(step) {
+        const options = DRAW_WIZARD_RULE_LEVELS.map(levelMeta => {
+            const ruleIds = getDrawWizardLevelRuleIds(step, levelMeta.level);
+            const remainingRatio = ruleIds.length ? getEstimatedRatioByIds(ruleIds) : 1;
+            const excludedCombos = ruleIds.length
+                ? Math.max(0, TOTAL_COMBOS - Math.round(TOTAL_COMBOS * remainingRatio))
+                : 0;
+            return {
+                ...levelMeta,
+                ruleIds,
+                excludedCombos
+            };
+        });
+        const accessMap = getWizardAccessMap(
+            options.filter(option => option.ruleIds.length),
+            option => option.id,
+            option => option.excludedCombos
+        );
+        return options.map(option => ({
+            ...option,
+            requiredTier: accessMap.get(option.id) || ''
+        }));
+    }
+
+    function getDrawWizardCurrentIntensityId(step, selectedIds = new Set()) {
+        const selectedGroupKey = (Array.isArray(step && step.rules) ? step.rules : [])
+            .filter(rule => selectedIds.has(rule.id))
+            .map(rule => rule.id)
+            .sort()
+            .join('|');
+        if (!selectedGroupKey) {
+            return 'skip';
+        }
+        const matched = getDrawWizardIntensityOptions(step).find(option => option.ruleIds.slice().sort().join('|') === selectedGroupKey);
+        return matched ? matched.id : 'custom';
+    }
 
     function renderDrawWizardSelectionChips() {
         if (!drawWizardSelectionChipsEl || !drawWizardState) {
             return;
         }
-        const chips = getDrawWizardGroupedSelections().map(group => ({
-            tone: 'group',
-            label: `${group.groupLabel} ${group.rules.length}개`
-        }));
+        const chips = [];
+        const activePresetId = getActiveDrawWizardPresetId();
+        if (activePresetId) {
+            chips.push({
+                tone: 'preset',
+                label: (PRESETS_LABEL[activePresetId] || activePresetId) + ' 시작'
+            });
+        }
+        getDrawWizardGroupedSelections().forEach(group => {
+            chips.push({
+                tone: 'group',
+                label: group.groupLabel + ' ' + group.rules.length + '개'
+            });
+        });
+        if (drawWizardState.includeNumbers.length) {
+            chips.push({
+                tone: 'include',
+                label: '고정수 ' + drawWizardState.includeNumbers.length + '개'
+            });
+        }
         if (drawWizardState.excludeNumbers.length) {
             chips.push({
                 tone: 'exclude',
-                label: `직접 제외 ${drawWizardState.excludeNumbers.length}개`
+                label: '직접 제외 ' + drawWizardState.excludeNumbers.length + '개'
             });
         }
         drawWizardSelectionChipsEl.innerHTML = chips.length
@@ -4273,9 +4761,38 @@ document.addEventListener('DOMContentLoaded', () => {
         return {
             label: active ? '현재 제외' : '선택 시 제외',
             value: formatDrawWizardCompactCount(affectedCombos),
-            bulletPrimary: `1등 기대 +${Math.max(1, Math.round(gainPct))}%`,
+            bulletPrimary: '1등 기대 +' + Math.max(1, Math.round(gainPct)) + '%',
             bulletSecondary: active ? '이미 적용됨' : '탭해서 적용'
         };
+    }
+
+    function renderDrawWizardStart() {
+        if (!drawWizardPresetListEl || !drawWizardPresetNoteEl || !drawWizardState) {
+            return;
+        }
+        const activePresetId = getActiveDrawWizardPresetId();
+        const cards = getDrawWizardPresetCards();
+        drawWizardPresetListEl.innerHTML = cards.map(card => {
+            const active = card.id === activePresetId;
+            const locked = isDrawWizardTierLocked(card.requiredTier);
+            return `
+                <button class="draw-wizard-preset-card${active ? ' is-selected' : ''}${locked ? ' is-restricted' : ''}" type="button" data-wizard-preset="${escapeHtml(card.id)}" data-required-tier="${escapeHtml(card.requiredTier)}" aria-pressed="${String(active)}">
+                    <span class="draw-wizard-preset-top">
+                        <span class="draw-wizard-preset-code">${escapeHtml(card.id.toUpperCase())}</span>
+                        ${card.requiredTier ? `<span class="rule-restricted-badge" data-tier="${escapeHtml(card.requiredTier.toLowerCase())}">${escapeHtml(card.requiredTier)} 전용</span>` : ''}
+                    </span>
+                    <strong>${escapeHtml(card.label)}</strong>
+                    <p>${escapeHtml(card.headline || card.desc || '빠르게 시작할 수 있는 전략 프리셋입니다.')}</p>
+                    <div class="draw-wizard-preset-meta">
+                        <span>규칙 ${escapeHtml(String(card.ruleCount))}개</span>
+                        <span>제외 ${escapeHtml(card.excludedPct)}%</span>
+                    </div>
+                </button>
+            `;
+        }).join('');
+        drawWizardPresetNoteEl.textContent = activePresetId
+            ? (PRESETS_LABEL[activePresetId] || activePresetId) + ' 프리셋이 적용되어 있습니다. 다음 단계에서 세부 조정할 수 있습니다.'
+            : '프리셋을 고른 뒤 세부 단계에서 직접 미세 조정할 수 있습니다.';
     }
 
     function renderDrawWizardRuleStep() {
@@ -4283,84 +4800,83 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const currentRuleStep = getDrawWizardCurrentRuleStep();
-        const ruleSteps = getDrawWizardRuleSteps();
+        const selectedIds = new Set(drawWizardState.selectedRuleIds);
         if (!currentRuleStep) {
             drawWizardDetailGroupsEl.innerHTML = '<div class="draw-funnel-empty-state">표시할 규칙 그룹이 없습니다.</div>';
             drawWizardDetailNoteEl.textContent = '규칙 라이브러리를 불러오지 못했습니다.';
+            if (drawWizardIntensityWrapEl) {
+                drawWizardIntensityWrapEl.hidden = true;
+            }
             return;
         }
-        const selectedIds = new Set(drawWizardState.selectedRuleIds);
         const selectedCount = currentRuleStep.rules.filter(rule => selectedIds.has(rule.id)).length;
         const compactRuleHeadline = (() => {
-            const baseLabel = String(currentRuleStep.groupLabel || currentRuleStep.title || '')
-                .replace(/\s*제외하기$/, '')
-                .trim();
-            return baseLabel ? `${baseLabel}만 고르세요` : '빼고 싶은 패턴만 고르세요';
+            const baseLabel = String(currentRuleStep.groupLabel || currentRuleStep.title || '').replace(/\s*제외하기$/, '').trim();
+            return baseLabel ? baseLabel + '만 고르세요' : '빼고 싶은 패턴만 고르세요';
         })();
+        const intensityOptions = getDrawWizardIntensityOptions(currentRuleStep);
+        const currentIntensityId = getDrawWizardCurrentIntensityId(currentRuleStep, selectedIds);
+        const activeIntensity = intensityOptions.find(option => option.id === currentIntensityId) || null;
         if (drawWizardRuleKickerEl) {
             drawWizardRuleKickerEl.textContent = currentRuleStep.kicker;
         }
         if (drawWizardRuleProgressEl) {
-            drawWizardRuleProgressEl.textContent = `${drawWizardState.currentGroupIndex + 1} / ${ruleSteps.length}`;
+            drawWizardRuleProgressEl.textContent = currentRuleStep.stepNumber + ' / ' + getDrawWizardFlowStepCount();
         }
         if (drawWizardRuleTitleEl) {
             drawWizardRuleTitleEl.textContent = compactRuleHeadline;
         }
         if (drawWizardRuleCopyEl) {
             drawWizardRuleCopyEl.textContent = selectedCount
-                ? `${selectedCount}개 선택됨`
+                ? (selectedCount + '개 선택됨' + (activeIntensity ? ' · ' + activeIntensity.label : ''))
                 : '선택 없이 다음 단계로 넘어가도 됩니다.';
         }
-        const currentPlan = getMembershipPlanMeta();
-        const userLevel = currentPlan.level || 0;
-
-        // Rank rules in this step by ratio (descending)
-        const rulesWithStats = currentRuleStep.rules.map(rule => {
-            const stat = RULE_STATS?.[rule.id];
-            const ratio = Number(stat?.ratio) || 0;
-            return { rule, ratio };
-        }).sort((a, b) => b.ratio - a.ratio);
-
-        drawWizardDetailGroupsEl.innerHTML = rulesWithStats.map((item, index) => {
-            const rule = item.rule;
-            const rank = index + 1; // 1-based rank
+        if (drawWizardIntensityWrapEl) {
+            drawWizardIntensityWrapEl.hidden = false;
+        }
+        if (drawWizardIntensityListEl) {
+            drawWizardIntensityListEl.innerHTML = intensityOptions.map(option => {
+                const locked = isDrawWizardTierLocked(option.requiredTier);
+                const active = option.id === currentIntensityId;
+                return `
+                    <button class="draw-wizard-intensity-card${active ? ' is-selected' : ''}${locked ? ' is-restricted' : ''}" type="button" data-wizard-intensity="${escapeHtml(option.id)}" data-required-tier="${escapeHtml(option.requiredTier)}" aria-pressed="${String(active)}">
+                        <span class="draw-wizard-intensity-top">
+                            <strong>${escapeHtml(option.label)}</strong>
+                            ${option.requiredTier ? `<span class="rule-restricted-badge" data-tier="${escapeHtml(option.requiredTier.toLowerCase())}">${escapeHtml(option.requiredTier)} 전용</span>` : ''}
+                        </span>
+                        <p>${escapeHtml(option.desc)}</p>
+                        <span class="draw-wizard-intensity-meta">${option.ruleIds.length ? ('규칙 ' + option.ruleIds.length + '개 · 제외 ' + formatDisplayPercent((option.excludedCombos / TOTAL_COMBOS) * 100) + '%') : '이 그룹은 건너뜁니다.'}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+        if (drawWizardIntensityNoteEl) {
+            drawWizardIntensityNoteEl.textContent = currentIntensityId === 'custom'
+                ? '현재는 직접 조정된 상태입니다.'
+                : (activeIntensity ? activeIntensity.desc : '가볍게, 균형, 강하게 중 하나를 바로 적용할 수 있습니다.');
+        }
+        const accessMap = getWizardAccessMap(
+            currentRuleStep.rules,
+            rule => rule.id,
+            rule => Number(RULE_STATS?.[rule.id]?.excluded) || 0
+        );
+        const rulesWithStats = currentRuleStep.rules.map(rule => ({
+            rule,
+            excluded: Number(RULE_STATS?.[rule.id]?.excluded) || 0
+        })).sort((left, right) => right.excluded - left.excluded);
+        drawWizardDetailGroupsEl.innerHTML = rulesWithStats.map(({ rule }) => {
             const active = selectedIds.has(rule.id);
             const description = rule.desc || rule.detail || '선택 시 이 패턴을 제외합니다.';
             const impact = getDrawWizardRuleImpactMeta(rule.id, { active });
-            
-            // Access check:
-            // Rank 1 -> Master (Level 3)
-            // Rank 2 -> Platinum (Level 2)
-            // Rank 3+ -> All (Level 0+)
-            let restricted = false;
-            let requiredTier = '';
-            
-            if (rank === 1 && userLevel < 3) {
-                restricted = true;
-                requiredTier = 'MASTER';
-            } else if (rank === 2 && userLevel < 2) {
-                restricted = true;
-                requiredTier = 'PLATINUM';
-            } else if (rank === 3 && userLevel < 1) {
-                restricted = true;
-                requiredTier = 'GOLD';
-            }
-
-            const restrictedClass = restricted ? ' is-restricted' : '';
-
+            const requiredTier = accessMap.get(rule.id) || '';
+            const locked = isDrawWizardTierLocked(requiredTier);
             return `
-                <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}${restrictedClass}" 
-                        type="button" 
-                        data-wizard-rule="${escapeHtml(rule.id)}" 
-                        data-rule-rank="${rank}"
-                        data-restricted="${restricted}"
-                        data-required-tier="${requiredTier}"
-                        aria-pressed="${String(active)}">
+                <button class="draw-funnel-rule-card${active ? ' is-selected' : ''}${locked ? ' is-restricted' : ''}" type="button" data-wizard-rule="${escapeHtml(rule.id)}" data-required-tier="${escapeHtml(requiredTier)}" aria-pressed="${String(active)}">
                     <div class="draw-funnel-rule-main">
                         <div class="draw-funnel-rule-copy">
                             <strong>${escapeHtml(rule.title)}</strong>
                             <p>${escapeHtml(description)}</p>
-                            ${restricted ? `<span class="rule-restricted-badge" data-tier="${escapeHtml(requiredTier.toLowerCase())}">${requiredTier} 전용</span>` : ''}
+                            ${requiredTier ? `<span class="rule-restricted-badge" data-tier="${escapeHtml(requiredTier.toLowerCase())}">${escapeHtml(requiredTier)} 전용</span>` : ''}
                         </div>
                         <div class="draw-funnel-rule-impact">
                             <span class="draw-funnel-rule-impact-label">${escapeHtml(impact.label)}</span>
@@ -4376,8 +4892,91 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }).join('');
         drawWizardDetailNoteEl.textContent = selectedCount
-            ? `${selectedCount}개 선택됨`
-            : '아직 선택 전';
+            ? selectedCount + '개 선택됨 · 규칙 그룹 ' + currentRuleStep.stepNumber + '/' + getDrawWizardRuleSteps().length
+            : '아직 선택 전 · 강도 버튼으로 한 번에 적용할 수 있습니다.';
+    }
+
+    function getDrawWizardFixedCountOptions() {
+        const baseOptions = Array.from({ length: 6 }, (_, count) => {
+            if (count === 0) {
+                return {
+                    count,
+                    label: '건너뛰기',
+                    desc: '고정수 없이 진행',
+                    remainingCombos: TOTAL_COMBOS,
+                    excludedCombos: 0
+                };
+            }
+            const remainingCombos = combination(45 - count, 6 - count);
+            return {
+                count,
+                label: count + '개 고정',
+                desc: count + '개 번호를 반드시 포함',
+                remainingCombos,
+                excludedCombos: Math.max(0, TOTAL_COMBOS - remainingCombos)
+            };
+        });
+        const accessMap = getWizardAccessMap(
+            baseOptions.filter(option => option.count > 0),
+            option => String(option.count),
+            option => option.excludedCombos
+        );
+        return baseOptions.map(option => ({
+            ...option,
+            requiredTier: accessMap.get(String(option.count)) || ''
+        }));
+    }
+
+    function renderDrawWizardIncludeStep() {
+        if (!drawWizardState || !drawWizardIncludeCountsEl || !drawWizardIncludeGridEl) {
+            return;
+        }
+        const flowStepCount = getDrawWizardFlowStepCount();
+        const includeStepNumber = getDrawWizardIncludeStepNumber();
+        const targetCount = Math.max(0, Number(drawWizardState.includeTargetCount) || 0);
+        const includeNumbers = normalizeDrawWizardIncludeNumbers(drawWizardState.includeNumbers).slice(0, targetCount || drawWizardState.includeNumbers.length || 5);
+        const selectedSet = new Set(includeNumbers);
+        const countOptions = getDrawWizardFixedCountOptions();
+        if (drawWizardIncludeKickerEl) {
+            drawWizardIncludeKickerEl.textContent = includeStepNumber + '단계';
+        }
+        if (drawWizardIncludeProgressEl) {
+            drawWizardIncludeProgressEl.textContent = includeStepNumber + ' / ' + flowStepCount;
+        }
+        drawWizardIncludeCountsEl.innerHTML = countOptions.map(option => {
+            const active = option.count === targetCount;
+            const locked = isDrawWizardTierLocked(option.requiredTier);
+            return `
+                <button class="draw-wizard-include-count-card${active ? ' is-selected' : ''}${locked ? ' is-restricted' : ''}" type="button" data-include-count="${escapeHtml(String(option.count))}" data-required-tier="${escapeHtml(option.requiredTier)}" aria-pressed="${String(active)}">
+                    <span class="draw-wizard-include-count-top">
+                        <strong>${escapeHtml(option.label)}</strong>
+                        ${option.requiredTier ? `<span class="rule-restricted-badge" data-tier="${escapeHtml(option.requiredTier.toLowerCase())}">${escapeHtml(option.requiredTier)} 전용</span>` : ''}
+                    </span>
+                    <p>${escapeHtml(option.desc)}</p>
+                    <span class="draw-wizard-include-count-meta">${escapeHtml(option.count ? ('남는 후보 ' + formatDrawWizardCompactCount(option.remainingCombos)) : '고정 없이 진행')}</span>
+                </button>
+            `;
+        }).join('');
+        if (drawWizardIncludeSummaryEl) {
+            drawWizardIncludeSummaryEl.textContent = includeNumbers.length
+                ? ('고정수 ' + includeNumbers.length + '개 · ' + includeNumbers.join(' · '))
+                : targetCount
+                ? ('최대 ' + targetCount + '개까지 고를 수 있습니다.')
+                : '필요 없다면 건너뛰어도 됩니다.';
+        }
+        if (drawWizardIncludeGuideEl) {
+            drawWizardIncludeGuideEl.textContent = targetCount
+                ? ('최대 ' + targetCount + '개까지 꼭 포함할 번호를 누르세요.')
+                : '먼저 고정 개수를 고르거나 바로 번호를 눌러 1개 고정으로 시작할 수 있습니다.';
+        }
+        drawWizardIncludeGridEl.innerHTML = Array.from({ length: 45 }, (_, index) => {
+            const number = index + 1;
+            const active = selectedSet.has(number);
+            const blocked = !active && targetCount > 0 && includeNumbers.length >= targetCount;
+            return `
+                <button class="exclude-number-ball draw-wizard-include-ball ${escapeHtml(getExcludeRangeClass(number))}${active ? ' is-active' : ''}${blocked ? ' is-blocked' : ''}" type="button" data-include-number="${escapeHtml(String(number))}" data-ball-range="${escapeHtml(getBallRange(number))}" aria-pressed="${String(active)}">${escapeHtml(String(number))}</button>
+            `;
+        }).join('');
     }
 
     function renderDrawWizardReview() {
@@ -4386,6 +4985,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const restriction = getDrawWizardRestrictionState();
         const selectedRuleCount = drawWizardState.selectedRuleIds.length;
+        const includeNumbers = normalizeDrawWizardIncludeNumbers(drawWizardState.includeNumbers);
+        const includeCount = includeNumbers.length;
         const excludeNumbers = normalizeDrawWizardExcludeNumbers(drawWizardState.excludeNumbers);
         const excludeCount = excludeNumbers.length;
         const drawCount = Math.max(1, parseInt(drawCountSelect?.value, 10) || 1);
@@ -4395,26 +4996,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const remainPct = formatDisplayPercent(remainRatio * 100);
         const excludedPct = formatDisplayPercent((1 - remainRatio) * 100);
         const remainingCombos = Math.max(0, Math.round(Number(currentRemainingCombos) || TOTAL_COMBOS));
-        const excludedCombos = Math.max(0, Math.round(Number(currentExcludedCombos) || 0));
         const baseFirstOdds = Number(getBaseOddsMap()?.[1]) || TOTAL_COMBOS;
         const currentFirstOdds = Math.max(1, Math.round(baseFirstOdds * (remainRatio || 1)));
         const benefitPct = formatDisplayPercent((1 - remainRatio) * 100);
         const groupedSelections = getDrawWizardGroupedSelections();
-        const activeConditionCount = selectedRuleCount + (excludeCount ? 1 : 0);
+        const activeConditionCount = selectedRuleCount + (includeCount ? 1 : 0) + (excludeCount ? 1 : 0);
         const overviewState = restriction.blocked
             ? 'warning'
-            : (Number(benefitPct) > 0)
+            : Number(benefitPct) > 0
                 ? 'positive'
                 : 'neutral';
         const overviewStatus = restriction.blocked
             ? (activeConditionCount ? '조건 조정' : '선택 필요')
             : '추첨 전 확인';
-        const overviewHeadline = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)}`;
+        const overviewHeadline = '남은 후보 ' + formatDrawWizardCompactCount(remainingCombos);
         const overviewBadges = [
-            `1등 ${formatDrawWizardCompactOddsLabel(currentFirstOdds)}`,
-            `규칙 ${selectedRuleCount}`,
-            `제외 ${excludeCount}`,
-            `${drawCount}세트`
+            '1등 ' + formatDrawWizardCompactOddsLabel(currentFirstOdds),
+            '규칙 ' + selectedRuleCount,
+            '고정 ' + includeCount,
+            '제외 ' + excludeCount,
+            drawCount + '세트'
         ];
         if (drawWizardReviewOverviewEl) {
             const gaugeAngle = Math.max(0, Math.min(360, Math.round(Number(excludedPct) * 3.6)));
@@ -4429,7 +5030,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="draw-funnel-review-overview-gauge" style="--draw-review-angle:${gaugeAngle}deg;">
                     <div class="draw-funnel-review-overview-gauge-body">
-                        <strong>${escapeHtml(`${excludedPct}%`)}</strong>
+                        <strong>${escapeHtml(excludedPct + '%')}</strong>
                         <span>${escapeHtml(restriction.blocked ? '제외 과다' : '제외율')}</span>
                     </div>
                 </div>
@@ -4437,21 +5038,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (drawWizardReviewSummaryEl) {
             const summaryRows = [
-                {
-                    label: '남은',
-                    value: `${remainPct}%`,
-                    tone: 'range'
-                },
-                {
-                    label: '제외',
-                    value: `${excludedPct}%`,
-                    tone: 'exclude'
-                },
-                {
-                    label: '규칙',
-                    value: `${activeConditionCount}개`,
-                    tone: 'rules'
-                }
+                { label: '남은', value: remainPct + '%', tone: 'range' },
+                { label: '제외', value: excludedPct + '%', tone: 'exclude' },
+                { label: '규칙', value: selectedRuleCount + '개', tone: 'rules' },
+                { label: '고정', value: includeCount + '개', tone: 'group' }
             ];
             drawWizardReviewSummaryEl.innerHTML = summaryRows.map(row => `
                 <article class="draw-funnel-review-metric draw-funnel-review-metric--${escapeHtml(row.tone)}">
@@ -4464,25 +5054,42 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardReviewGroupsEl.innerHTML = groupedSelections.length
                 ? groupedSelections.map(group => `
                     <div class="draw-funnel-review-group-card">
-                        <strong>${escapeHtml(group.groupLabel)}</strong>
-                        <span>${escapeHtml(String(group.rules.length))}개</span>
+                        <div class="draw-funnel-review-group-head">
+                            <strong>${escapeHtml(group.groupLabel)}</strong>
+                            <span>${escapeHtml(String(group.rules.length))}개</span>
+                        </div>
+                        <p>${escapeHtml(group.rules.map(rule => rule.title).join(' · '))}</p>
                     </div>
                 `).join('')
                 : '<div class="draw-funnel-empty-state">선택 없음</div>';
         }
-        if (drawWizardReviewExcludesEl) {
-            drawWizardReviewExcludesEl.innerHTML = excludeNumbers.length
-                ? `
-                    <div class="draw-funnel-review-exclude-balls">
-                        ${excludeNumbers.map(number => `
-                            <span class="exclude-number-ball ${escapeHtml(getExcludeRangeClass(number))} is-active" data-ball-range="${escapeHtml(getBallRange(number))}">${escapeHtml(String(number))}</span>
-                        `).join('')}
-                    </div>
-                `
+        if (drawWizardReviewIncludesEl) {
+            drawWizardReviewIncludesEl.innerHTML = includeNumbers.length
+                ? `<div class="draw-funnel-review-exclude-balls">${includeNumbers.map(number => `<span class="exclude-number-ball draw-wizard-include-ball ${escapeHtml(getExcludeRangeClass(number))} is-active" data-ball-range="${escapeHtml(getBallRange(number))}">${escapeHtml(String(number))}</span>`).join('')}</div>`
                 : '<div class="draw-funnel-empty-state">없음</div>';
         }
+        if (drawWizardReviewExcludesEl) {
+            drawWizardReviewExcludesEl.innerHTML = excludeNumbers.length
+                ? `<div class="draw-funnel-review-exclude-balls">${excludeNumbers.map(number => `<span class="exclude-number-ball ${escapeHtml(getExcludeRangeClass(number))} is-active" data-ball-range="${escapeHtml(getBallRange(number))}">${escapeHtml(String(number))}</span>`).join('')}</div>`
+                : '<div class="draw-funnel-empty-state">없음</div>';
+        }
+        if (drawWizardReviewOverlapEl) {
+            drawWizardReviewOverlapEl.innerHTML = `
+                <div class="draw-wizard-overlap-grid">
+                    ${DRAW_WIZARD_OVERLAP_OPTIONS.map(option => {
+                        const active = option.id === normalizeDrawWizardOverlapMode(drawWizardState.overlapMode);
+                        return `
+                            <button class="draw-wizard-overlap-card${active ? ' is-selected' : ''}" type="button" data-overlap-mode="${escapeHtml(option.id)}" aria-pressed="${String(active)}">
+                                <strong>${escapeHtml(option.label)}</strong>
+                                <span>${escapeHtml(option.desc)}</span>
+                            </button>
+                        `;
+                    }).join('')}
+                </div>
+                <p class="draw-wizard-overlap-note">${escapeHtml(drawCount > 1 ? '세트 수가 많을수록 분산형과 최소 겹침 효과가 커집니다.' : '1세트 생성에서는 차이가 거의 없습니다.')}</p>
+            `;
+        }
     }
-
     function formatDrawWizardOddsLabel(value) {
         return `1 / ${formatNumber(Math.max(1, Math.round(Number(value) || 1)))}`;
     }
@@ -4592,6 +5199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         viewMeta,
         restriction,
         selectedCount,
+        includeCount,
         excludeCount
     }) {
         const showDashboard = Boolean(drawWizardDashboardEl && currentStep !== 'start' && currentStep !== 'review');
@@ -4611,35 +5219,46 @@ document.addEventListener('DOMContentLoaded', () => {
             : 1;
         const remainingCombos = Number.isFinite(currentRemainingCombos) ? currentRemainingCombos : TOTAL_COMBOS;
         const remainingPct = formatDisplayPercent(remainingRatio * 100);
+        const remainingPctValue = Number(remainingPct) || 0;
         const baseOddsMap = getBaseOddsMap();
         const baseFirstOdds = Number(baseOddsMap?.[1]) || TOTAL_COMBOS;
         const currentFirstOdds = Math.max(1, Math.round(baseFirstOdds * remainingRatio));
         const totalBenefitPct = formatDisplayPercent((1 - remainingRatio) * 100);
-        const selectionTotalCount = selectedCount + excludeCount;
+        const totalBenefitPctValue = Number(totalBenefitPct) || 0;
+        const selectionTotalCount = selectedCount + includeCount + excludeCount;
         const selectionExcludeVisualCount = excludeCount;
-        const cumulativeReducedCombos = Number.isFinite(currentExcludedCombos) ? currentExcludedCombos : 0;
 
         let dashboardStep = '누적 현황';
         let dashboardTitle = `남은 후보 ${formatDrawWizardCompactCount(remainingCombos)}`;
         let dashboardCopy = selectionTotalCount
-            ? `규칙 ${selectedCount}개 · 제외수 ${excludeCount}개 반영`
+            ? `규칙 ${selectedCount}개 · 고정수 ${includeCount}개 · 제외수 ${excludeCount}개 반영`
             : '아직 선택 전 · 기본 범위 유지';
-        let oddsNote = (Number(totalBenefitPct) > 0)
+        let oddsNote = totalBenefitPctValue > 0
             ? `1등 기대 +${totalBenefitPct}%`
             : '1등 기준 기본';
-        let impactValue = (Number(totalBenefitPct) > 0) ? `+${totalBenefitPct}%` : '기본';
+        let impactValue = totalBenefitPctValue > 0 ? `+${totalBenefitPct}%` : '기본';
         let impactNote = '1등 기대';
         let selectionValue = `${remainingPct}%`;
         let selectionNote = '남은 범위';
-        let visualLabel = cumulativeReducedCombos ? formatDrawWizardCompactCount(cumulativeReducedCombos) : '0개';
-        let visualNote = selectionTotalCount ? '누적 제외' : '선택 없음';
+        let visualLabel = selectionTotalCount ? `${selectionTotalCount}개 선택` : '선택 없음';
+        let visualNote = selectionTotalCount
+            ? `규칙 ${selectedCount} · 고정 ${includeCount} · 제외 ${excludeCount}`
+            : '지금 고른 항목 수';
 
         if (progressInfo?.label) {
             dashboardStep = `${progressInfo.label} · 누적 현황`;
         }
-        if (currentStep === 'exclude') {
+        if (currentStep === 'rules') {
             dashboardCopy = selectionTotalCount
-                ? `규칙 ${selectedCount}개 · 제외수 ${excludeCount}개 반영`
+                ? `규칙 ${selectedCount}개 · 고정수 ${includeCount}개 · 제외수 ${excludeCount}개 반영`
+                : '강도 버튼이나 규칙 카드로 후보 범위를 좁혀보세요';
+        } else if (currentStep === 'include') {
+            dashboardCopy = includeCount
+                ? `규칙 ${selectedCount}개 · 고정수 ${includeCount}개 · 제외수 ${excludeCount}개 반영`
+                : '꼭 넣을 번호를 고르면 후보가 즉시 다시 계산됩니다';
+        } else if (currentStep === 'exclude') {
+            dashboardCopy = selectionTotalCount
+                ? `규칙 ${selectedCount}개 · 고정수 ${includeCount}개 · 제외수 ${excludeCount}개 반영`
                 : '직접 제외수까지 더해 범위를 줄여보세요';
         } else if (currentStep === 'review') {
             dashboardCopy = restriction.blocked
@@ -4647,7 +5266,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 : '이 누적 기준으로 바로 번호를 만들 수 있습니다';
         } else if (currentStep === 'result') {
             dashboardStep = '최종 결과 · 누적 현황';
-            dashboardCopy = (Number(totalBenefitPct) > 0)
+            dashboardCopy = totalBenefitPctValue > 0
                 ? '누적 기준이 반영된 범위에서 생성 완료'
                 : '기본 범위에 가깝게 생성 완료';
         }
@@ -4668,7 +5287,7 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardDashboardOddsNoteEl.textContent = oddsNote;
         }
         if (drawWizardDashboardGaugeEl) {
-            const gaugeAngle = Math.max(0, Math.min(360, Math.round(Number(totalBenefitPct) * 3.6)));
+            const gaugeAngle = Math.max(0, Math.min(360, Math.round(totalBenefitPctValue * 3.6)));
             drawWizardDashboardGaugeEl.style.setProperty('--draw-dashboard-gauge-angle', `${gaugeAngle}deg`);
         }
         if (drawWizardDashboardImpactEl) {
@@ -4678,7 +5297,7 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardDashboardImpactNoteEl.textContent = impactNote;
         }
         if (drawWizardDashboardMeterFillEl) {
-            drawWizardDashboardMeterFillEl.style.width = `${Math.max(8, remainingPct)}%`;
+            drawWizardDashboardMeterFillEl.style.width = `${Math.max(8, remainingPctValue)}%`;
         }
         if (drawWizardDashboardSelectionEl) {
             drawWizardDashboardSelectionEl.textContent = selectionValue;
@@ -4725,7 +5344,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const viewMeta = getDrawWizardViewMeta(currentStep);
         const restriction = getDrawWizardRestrictionState();
         const selectedCount = drawWizardState.selectedRuleIds.length;
-        const excludeCount = drawWizardState.excludeNumbers.length;
+        const includeCount = normalizeDrawWizardIncludeNumbers(drawWizardState.includeNumbers).length;
+        const excludeCount = normalizeDrawWizardExcludeNumbers(drawWizardState.excludeNumbers).length;
+        const hasAnySelection = Boolean(selectedCount || includeCount || excludeCount);
 
         drawWizardPanels.forEach(panel => {
             const active = panel.dataset.drawWizardStep === currentStep;
@@ -4771,14 +5392,14 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardNextBtn.disabled = !getDrawWizardCanProceed(currentStep);
         }
         if (drawSelectionSummaryEl) {
-            drawSelectionSummaryEl.textContent = selectedCount || excludeCount
-                ? `선택된 규칙 ${selectedCount}개 · 직접 제외 ${excludeCount}개`
-                : '아직 선택된 규칙이 없습니다.';
+            drawSelectionSummaryEl.textContent = hasAnySelection
+                ? `선택된 규칙 ${selectedCount}개 · 고정수 ${includeCount}개 · 직접 제외 ${excludeCount}개`
+                : '프리셋을 고른 뒤 규칙, 고정수, 제외수를 이어서 조정할 수 있습니다.';
         }
         if (drawFilterDetailEl) {
-            drawFilterDetailEl.textContent = selectedCount || excludeCount
+            drawFilterDetailEl.textContent = hasAnySelection
                 ? `남은 후보 ${formatNumber(currentRemainingCombos || TOTAL_COMBOS)}개 · 제외 ${formatNumber(currentExcludedCombos || 0)}개`
-                : '규칙 라이브러리 항목을 그룹별로 고르고 마지막에 바로 추첨합니다.';
+                : '프리셋으로 시작하거나 규칙, 고정수, 제외수를 조합해 원하는 흐름을 만들 수 있습니다.';
         }
         if (drawWizardWarningTitleEl) {
             drawWizardWarningTitleEl.textContent = restriction.title;
@@ -4792,6 +5413,7 @@ document.addEventListener('DOMContentLoaded', () => {
             viewMeta,
             restriction,
             selectedCount,
+            includeCount,
             excludeCount
         });
         if (drawWizardExcludeSummaryEl) {
@@ -4800,12 +5422,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 : '없음';
         }
         renderDrawWizardSelectionChips();
+        renderDrawWizardStart();
         renderDrawWizardRuleStep();
+        renderDrawWizardIncludeStep();
+        renderDrawWizardReview();
         if (currentStep === 'rules' && drawWizardDetailGroupsEl && drawWizardLastViewKey !== currentViewKey) {
             drawWizardDetailGroupsEl.scrollTop = 0;
         }
         syncDrawWizardScrollGuide(currentStep);
-        renderDrawWizardReview();
         const showResumeOverlay = DRAW_WIZARD_RESUME_ENABLED
             && currentStep === 'start'
             && authStateResolved
@@ -4824,9 +5448,17 @@ document.addEventListener('DOMContentLoaded', () => {
             drawWizardResumeTitleEl.textContent = '지난번에 보던 단계가 남아 있습니다.';
         }
         if (drawWizardResumeNoteEl && drawWizardResumeState) {
-            drawWizardResumeNoteEl.textContent = drawWizardResumeState.currentStep === 'rules'
-                ? `규칙 그룹 ${Number(drawWizardResumeState.currentGroupIndex || 0) + 1}부터 그대로 이어서 진행할 수 있습니다.`
-                : '이전 선택을 그대로 불러올 수 있습니다.';
+            if (drawWizardResumeState.currentStep === 'rules') {
+                drawWizardResumeNoteEl.textContent = `규칙 그룹 ${Number(drawWizardResumeState.currentGroupIndex || 0) + 1}부터 그대로 이어서 진행할 수 있습니다.`;
+            } else if (drawWizardResumeState.currentStep === 'include') {
+                drawWizardResumeNoteEl.textContent = '포함수 단계부터 그대로 이어서 진행할 수 있습니다.';
+            } else if (drawWizardResumeState.currentStep === 'exclude') {
+                drawWizardResumeNoteEl.textContent = '직접 제외수 단계부터 그대로 이어서 진행할 수 있습니다.';
+            } else if (drawWizardResumeState.currentStep === 'review') {
+                drawWizardResumeNoteEl.textContent = '최종 확인 단계부터 그대로 이어서 진행할 수 있습니다.';
+            } else {
+                drawWizardResumeNoteEl.textContent = '이전 선택을 그대로 불러올 수 있습니다.';
+            }
         }
         if (drawWizardResultCopyEl) {
             const showWizardCopy = currentStep === 'result' && lastGeneratedDraws.length > 0;
@@ -4852,10 +5484,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const ruleSteps = getDrawWizardRuleSteps();
         const lastRuleIndex = Math.max(0, ruleSteps.length - 1);
         const currentStep = getDrawWizardCurrentStep();
+        const firstFlowStep = ruleSteps.length ? 'rules' : 'include';
 
         if (currentStep === 'start') {
             if (direction > 0) {
-                drawWizardState.currentStep = ruleSteps.length ? 'rules' : 'exclude';
+                drawWizardState.currentStep = firstFlowStep;
                 drawWizardState.currentGroupIndex = 0;
             }
             commitDrawWizardState({ syncRules: false });
@@ -4867,7 +5500,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (drawWizardState.currentGroupIndex < lastRuleIndex) {
                     drawWizardState.currentGroupIndex += 1;
                 } else {
-                    drawWizardState.currentStep = 'exclude';
+                    drawWizardState.currentStep = 'include';
                 }
             } else if (drawWizardState.currentGroupIndex > 0) {
                 drawWizardState.currentGroupIndex -= 1;
@@ -4878,13 +5511,19 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (currentStep === 'exclude') {
-            if (direction > 0) {
-                drawWizardState.currentStep = 'review';
-            } else {
-                drawWizardState.currentStep = ruleSteps.length ? 'rules' : 'start';
+        if (currentStep === 'include') {
+            drawWizardState.currentStep = direction > 0
+                ? 'exclude'
+                : (ruleSteps.length ? 'rules' : 'start');
+            if (direction < 0 && ruleSteps.length) {
                 drawWizardState.currentGroupIndex = lastRuleIndex;
             }
+            commitDrawWizardState({ syncRules: false });
+            return;
+        }
+
+        if (currentStep === 'exclude') {
+            drawWizardState.currentStep = direction > 0 ? 'review' : 'include';
             commitDrawWizardState({ syncRules: false });
             return;
         }
@@ -4901,7 +5540,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const restriction = getDrawWizardRestrictionState();
         if (restriction.blocked) {
-            showActionPopup('규칙을 최소 1개 고르거나 조건을 조금 완화해 주세요.');
+            showActionPopup('규칙, 고정수 또는 직접 제외수를 보완한 뒤 다시 시도해 주세요.');
             renderDrawWizard();
             return false;
         }
@@ -4909,7 +5548,14 @@ document.addEventListener('DOMContentLoaded', () => {
             commit: false
         });
         syncDrawWizardSelections();
-        const generated = handleDrawGenerationRequest('wizard');
+        const activeRules = getActiveRules();
+        const generated = handleDrawGenerationRequest('wizard', {
+            activeRules,
+            includedNumbers: drawWizardState.includeNumbers,
+            excludedNumbers: drawWizardState.excludeNumbers,
+            overlapMode: drawWizardState.overlapMode,
+            ruleIds: getDrawWizardDerivedRuleIds()
+        });
         if (!generated) {
             renderDrawWizard();
             return false;
@@ -4930,7 +5576,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const currentStep = getDrawWizardCurrentStep();
         if (!getDrawWizardCanProceed(currentStep)) {
-            showActionPopup('추첨을 시작하려면 규칙 또는 직접 제외수를 하나 이상 선택해 주세요.');
+            showActionPopup('추첨을 시작하려면 규칙, 고정수 또는 직접 제외수를 하나 이상 선택해 주세요.');
             return;
         }
         if (currentStep === 'review') {
@@ -4963,60 +5609,75 @@ document.addEventListener('DOMContentLoaded', () => {
         if (drawTabPanel && drawTabPanel.dataset.wizardInitialized === 'true') {
             return;
         }
-        // Initialize Wizard State (Ensure it exists even for non-members)
         if (!drawWizardState) {
             drawWizardState = getDrawWizardDefaultState();
         }
         const draft = authStateResolved && isMember() ? loadDrawWizardDraft() : null;
         drawWizardResumeState = draft ? { ...draft } : null;
-        
+
         syncDrawWizardSelections();
         renderDrawWizard();
 
+        if (drawWizardPresetListEl) {
+            drawWizardPresetListEl.onclick = async event => {
+                const button = event.target instanceof Element ? event.target.closest('[data-wizard-preset]') : null;
+                if (!button || !drawWizardState) {
+                    return;
+                }
+                const requiredTier = String(button.dataset.requiredTier || '').trim();
+                if (!(await requestDrawWizardTierAccess(requiredTier))) {
+                    return;
+                }
+                const presetId = String(button.dataset.wizardPreset || '').trim();
+                if (!presetId) {
+                    return;
+                }
+                drawWizardState.selectedRuleIds = Array.from(new Set(
+                    (Array.isArray(PRESETS[presetId]) ? PRESETS[presetId] : [])
+                        .map(value => String(value || '').trim())
+                        .filter(Boolean)
+                ));
+                commitDrawWizardState();
+            };
+        }
+
+        if (drawWizardIntensityListEl) {
+            drawWizardIntensityListEl.onclick = async event => {
+                const button = event.target instanceof Element ? event.target.closest('[data-wizard-intensity]') : null;
+                if (!button || !drawWizardState || getDrawWizardCurrentStep() !== 'rules') {
+                    return;
+                }
+                const requiredTier = String(button.dataset.requiredTier || '').trim();
+                if (!(await requestDrawWizardTierAccess(requiredTier))) {
+                    return;
+                }
+                const currentRuleStep = getDrawWizardCurrentRuleStep();
+                if (!currentRuleStep) {
+                    return;
+                }
+                const optionId = String(button.dataset.wizardIntensity || '').trim();
+                const option = getDrawWizardIntensityOptions(currentRuleStep).find(item => item.id === optionId);
+                if (!option) {
+                    return;
+                }
+                const groupRuleIds = new Set(currentRuleStep.rules.map(rule => rule.id));
+                const next = drawWizardState.selectedRuleIds.filter(id => !groupRuleIds.has(id));
+                option.ruleIds.forEach(id => next.push(id));
+                drawWizardState.selectedRuleIds = Array.from(new Set(next));
+                commitDrawWizardState();
+            };
+        }
+
         if (drawWizardDetailGroupsEl) {
-            // Use onclick to ensure only one listener exists and it's easier to verify
-            drawWizardDetailGroupsEl.onclick = async (event) => {
+            drawWizardDetailGroupsEl.onclick = async event => {
                 const button = event.target instanceof Element ? event.target.closest('[data-wizard-rule]') : null;
-                if (!button) {
+                if (!button || !drawWizardState) {
                     return;
                 }
-
-                // Plan Restriction Check
-                const isRestricted = button.getAttribute('data-restricted') === 'true';
-                if (isRestricted) {
-                    const requiredTier = button.getAttribute('data-required-tier') || 'PREMIUM';
-                    
-                    if (!isMember()) {
-                        const confirmed = await showActionConfirm(
-                            '멤버십 전용 기능',
-                            `이 필터는 ${requiredTier} 멤버십 이상 이용 가능한 프리미엄 기능입니다.\n로그인 후 더 강력한 필터 혜택을 확인해 보세요.`,
-                            '로그인하기',
-                            '닫기'
-                        );
-                        if (confirmed) {
-                            openAuthModal();
-                        }
-                    } else {
-                        const confirmed = await showActionConfirm(
-                            '플랜 업그레이드',
-                            `고객님은 현재 FREE 등급입니다. ${requiredTier} 멤버십으로 업그레이드하고 최상위 필터 기능을 이용해 보세요.`,
-                            '플랜 구매하기',
-                            '닫기'
-                        );
-                        if (confirmed) {
-                            setActiveTab('mypage');
-                            const planBtn = document.getElementById('mypage-plan-manage-btn');
-                            if (planBtn) {
-                                setTimeout(() => {
-                                    planBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                }, 150);
-                            }
-                        }
-                    }
+                const requiredTier = String(button.dataset.requiredTier || '').trim();
+                if (!(await requestDrawWizardTierAccess(requiredTier))) {
                     return;
                 }
-
-                if (!drawWizardState) return;
                 const ruleId = String(button.dataset.wizardRule || '').trim();
                 if (!ruleId) {
                     return;
@@ -5031,6 +5692,89 @@ document.addEventListener('DOMContentLoaded', () => {
                 commitDrawWizardState();
             };
         }
+
+        if (drawWizardIncludeCountsEl) {
+            drawWizardIncludeCountsEl.onclick = async event => {
+                const button = event.target instanceof Element ? event.target.closest('[data-include-count]') : null;
+                if (!button || !drawWizardState) {
+                    return;
+                }
+                const requiredTier = String(button.dataset.requiredTier || '').trim();
+                if (!(await requestDrawWizardTierAccess(requiredTier))) {
+                    return;
+                }
+                const nextCount = Math.max(0, Math.min(5, Number(button.dataset.includeCount || 0) || 0));
+                drawWizardState.includeTargetCount = nextCount;
+                drawWizardState.includeNumbers = nextCount
+                    ? normalizeDrawWizardIncludeNumbers(drawWizardState.includeNumbers).slice(0, nextCount)
+                    : [];
+                commitDrawWizardState({ syncRules: true });
+            };
+        }
+
+        if (drawWizardIncludeGridEl) {
+            drawWizardIncludeGridEl.onclick = async event => {
+                const button = event.target instanceof Element ? event.target.closest('[data-include-number]') : null;
+                if (!button || !drawWizardState) {
+                    return;
+                }
+                const number = Number(button.dataset.includeNumber || 0);
+                if (!Number.isInteger(number) || number < 1 || number > 45) {
+                    return;
+                }
+                const countOptions = getDrawWizardFixedCountOptions();
+                const nextSet = new Set(normalizeDrawWizardIncludeNumbers(drawWizardState.includeNumbers));
+                if (nextSet.has(number)) {
+                    nextSet.delete(number);
+                    drawWizardState.includeNumbers = normalizeDrawWizardIncludeNumbers(Array.from(nextSet));
+                    commitDrawWizardState({ syncRules: true });
+                    return;
+                }
+
+                let targetCount = normalizeDrawWizardIncludeTargetCount(drawWizardState.includeTargetCount, drawWizardState.includeNumbers);
+                if (!targetCount) {
+                    const firstOption = countOptions.find(option => option.count == 1);
+                    if (!(await requestDrawWizardTierAccess(firstOption?.requiredTier || ''))) {
+                        return;
+                    }
+                    targetCount = 1;
+                    drawWizardState.includeTargetCount = 1;
+                }
+
+                if (nextSet.size >= targetCount) {
+                    const expandedCount = Math.min(5, nextSet.size + 1);
+                    if (expandedCount > targetCount) {
+                        const expandOption = countOptions.find(option => option.count === expandedCount);
+                        if (!(await requestDrawWizardTierAccess(expandOption?.requiredTier || ''))) {
+                            return;
+                        }
+                        targetCount = expandedCount;
+                        drawWizardState.includeTargetCount = expandedCount;
+                    }
+                }
+
+                if (nextSet.size >= targetCount) {
+                    showActionPopup('고정수 개수만큼 이미 선택했습니다. 먼저 개수를 늘리거나 기존 번호를 해제해 주세요.');
+                    return;
+                }
+
+                nextSet.add(number);
+                drawWizardState.includeNumbers = normalizeDrawWizardIncludeNumbers(Array.from(nextSet));
+                commitDrawWizardState({ syncRules: true });
+            };
+        }
+
+        if (drawWizardReviewOverlapEl) {
+            drawWizardReviewOverlapEl.onclick = event => {
+                const button = event.target instanceof Element ? event.target.closest('[data-overlap-mode]') : null;
+                if (!button || !drawWizardState) {
+                    return;
+                }
+                drawWizardState.overlapMode = normalizeDrawWizardOverlapMode(button.dataset.overlapMode);
+                commitDrawWizardState({ syncRules: false });
+            };
+        }
+
         if (drawWizardResumeBtn) {
             drawWizardResumeBtn.addEventListener('click', () => {
                 if (!drawWizardResumeState) {
@@ -6338,6 +7082,11 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDashboardSummaryUi();
         updateMypageSummaryUi();
         updateAnalysisSummaryUi();
+
+        // Ensure Draw Wizard reflects membership changes (e.g., unlocking restricted rules)
+        if (typeof renderDrawWizard === 'function' && drawTabPanel && drawTabPanel.dataset.wizardInitialized === 'true') {
+            renderDrawWizard();
+        }
     }
 
 
@@ -8657,6 +9406,11 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDashboardSummaryUi();
         updateMypageSummaryUi();
         updateAnalysisSummaryUi();
+
+        // Ensure Draw Wizard reflects membership changes (e.g., unlocking restricted rules)
+        if (typeof renderDrawWizard === 'function' && drawTabPanel && drawTabPanel.dataset.wizardInitialized === 'true') {
+            renderDrawWizard();
+        }
     }
 
     function annotateDrawDataSource(data, source) {
@@ -9782,37 +10536,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function updateCombinedEstimates() {
-        const activeRules = getActiveRules();
-        const remainingRatio = getEstimatedRemainingRatio(activeRules);
-        const remainingCombos = Math.max(1, Math.round(TOTAL_COMBOS * remainingRatio));
+    function applyRemainingEstimateSnapshot(remainingRatio) {
+        const safeRatio = Math.max(0.000001, Math.min(1, Number(remainingRatio) || 1));
+        const remainingCombos = Math.max(1, Math.round(TOTAL_COMBOS * safeRatio));
         const excludedCombos = Math.max(0, TOTAL_COMBOS - remainingCombos);
-        currentRemainingRatio = remainingRatio;
+        currentRemainingRatio = safeRatio;
         currentRemainingCombos = remainingCombos;
         currentExcludedCombos = excludedCombos;
         if (remainingCombosEl) {
-            remainingCombosEl.textContent = `${formatNumber(remainingCombos)}개`;
+            remainingCombosEl.textContent = formatNumber(remainingCombos) + '개';
         }
         if (excludedCombosEl) {
-            excludedCombosEl.textContent = `제외: ${formatNumber(excludedCombos)}개`;
+            excludedCombosEl.textContent = '제외: ' + formatNumber(excludedCombos) + '개';
         }
         if (remainingMeterFill) {
-            const pct = Math.max(0, Math.min(100, Math.round(remainingRatio * 1000) / 10));
-            remainingMeterFill.style.width = `${pct}%`;
+            const pct = Math.max(0, Math.min(100, Math.round(safeRatio * 1000) / 10));
+            remainingMeterFill.style.width = pct + '%';
         }
         if (remainingMeterLabel) {
-            const pctLabel = Math.max(0, Math.min(100, Math.round(remainingRatio * 1000) / 10));
-            remainingMeterLabel.textContent = `남은 조합 비중: ${pctLabel}%`;
+            const pctLabel = Math.max(0, Math.min(100, Math.round(safeRatio * 1000) / 10));
+            remainingMeterLabel.textContent = '남은 조합 비중: ' + pctLabel + '%';
         }
-        updateAdjustedOdds(remainingRatio);
+        updateAdjustedOdds(safeRatio);
         updateDrawContextUi();
+    }
+
+    function updateCombinedEstimates(options = {}) {
+        const activeRules = getActiveRules();
+        const remainingRatio = getEstimatedRemainingRatio(activeRules, options);
+        applyRemainingEstimateSnapshot(remainingRatio);
     }
 
     function computeBaseOdds() {
         const odds = getBaseOddsMap();
         Object.entries(odds).forEach(([rank, value]) => {
             if (oddsBaseEls[rank]) {
-                oddsBaseEls[rank].textContent = `1 / ${formatNumber(Math.round(value))}`;
+                oddsBaseEls[rank].textContent = '1 / ' + formatNumber(Math.round(value));
             }
         });
         updateAdjustedOdds(1);
@@ -9823,16 +10582,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const baseOdds = getBaseOddsMap();
         if (oddsBenefitSummaryEl) {
             const benefitPct = Math.round((1 - clampRatio) * 100);
-            oddsBenefitSummaryEl.textContent = benefitPct > 0 ? `유리 ${benefitPct}%` : '변화 없음';
+            oddsBenefitSummaryEl.textContent = benefitPct > 0 ? '유리 ' + benefitPct + '%' : '변화 없음';
         }
         Object.entries(baseOdds).forEach(([rank, value]) => {
             const adjusted = Math.max(1, Math.round(value * clampRatio));
             if (oddsAdjEls[rank]) {
-                oddsAdjEls[rank].textContent = `1 / ${formatNumber(adjusted)}`;
+                oddsAdjEls[rank].textContent = '1 / ' + formatNumber(adjusted);
             }
             if (oddsBarEls[rank]) {
                 const width = Math.max(2, Math.round(clampRatio * 1000) / 10);
-                oddsBarEls[rank].style.width = `${width}%`;
+                oddsBarEls[rank].style.width = width + '%';
             }
             if (oddsDeltaEls[rank]) {
                 if (clampRatio === 1) {
@@ -9840,42 +10599,51 @@ document.addEventListener('DOMContentLoaded', () => {
                     oddsDeltaEls[rank].dataset.trend = 'neutral';
                 } else {
                     const betterPct = Math.round((1 - clampRatio) * 100);
-                    oddsDeltaEls[rank].textContent = `제외수 ${betterPct}%`;
+                    oddsDeltaEls[rank].textContent = '제외수 ' + betterPct + '%';
                     oddsDeltaEls[rank].dataset.trend = 'up';
                 }
             }
         });
     }
 
-    function getEstimatedRemainingRatio(activeRules) {
-        if (!activeRules.length) {
-            return 1;
-        }
-        let ratio = 1;
-        activeRules.forEach(rule => {
-            if (rule.id === 'exclude_number') {
-                ratio *= getExcludeNumberRemainingRatio();
-                return;
-            }
-            const stat = RULE_STATS[rule.id];
-            if (stat) {
-                ratio *= (1 - stat.ratio);
-            }
+    function getEstimatedRemainingRatio(activeRules, options = {}) {
+        const rules = Array.isArray(activeRules) ? activeRules : [];
+        const ruleIds = rules.map(rule => rule && rule.id).filter(id => id && id !== 'exclude_number');
+        const includeNumbers = normalizeDrawWizardIncludeNumbers(options.includeNumbers);
+        const excludeSource = options.excludeNumbers !== undefined
+            ? (Array.isArray(options.excludeNumbers) ? options.excludeNumbers : Array.from(options.excludeNumbers || []))
+            : Array.from(excludeNumberValues);
+        const excludeNumbers = normalizeDrawWizardExcludeNumbers(excludeSource);
+        const ruleRatio = getEstimatedRatioByIds(ruleIds);
+        const poolRatio = getSelectedNumberPoolRemainingRatio({
+            includeNumbers,
+            excludeNumbers
         });
-        return Math.max(0.000001, ratio);
+        return Math.max(0.000001, ruleRatio * poolRatio);
+    }
+
+    function getSelectedNumberPoolRemainingRatio({ includeNumbers = [], excludeNumbers = [] } = {}) {
+        const includes = normalizeDrawWizardIncludeNumbers(includeNumbers);
+        const excludes = normalizeDrawWizardExcludeNumbers(excludeNumbers);
+        if (includes.some(number => excludes.includes(number))) {
+            return 0.000001;
+        }
+        const remainingPickCount = 6 - includes.length;
+        const availablePool = 45 - includes.length - excludes.length;
+        if (remainingPickCount < 0 || availablePool < remainingPickCount) {
+            return 0.000001;
+        }
+        if (remainingPickCount === 0) {
+            return Math.max(0.000001, 1 / TOTAL_COMBOS);
+        }
+        const remainingCombos = combination(availablePool, remainingPickCount);
+        return Math.max(0.000001, remainingCombos / TOTAL_COMBOS);
     }
 
     function getExcludeNumberRemainingRatio() {
-        const excludeCount = excludeNumberValues.size;
-        if (!excludeCount) {
-            return 1;
-        }
-        const remainingPool = 45 - excludeCount;
-        if (remainingPool < 6) {
-            return 0.000001;
-        }
-        const remainingCombos = combination(remainingPool, 6);
-        return Math.max(0.000001, remainingCombos / TOTAL_COMBOS);
+        return getSelectedNumberPoolRemainingRatio({
+            excludeNumbers: Array.from(excludeNumberValues)
+        });
     }
 
     function formatNumber(value) {
