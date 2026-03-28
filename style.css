@@ -26185,3 +26185,79 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--result .dashboard-round-
 body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-round-copy strong {
     color: #94a3b8 !important;
 }
+
+
+/* Dashboard Mobile Result Visibility Fix 2026.5 */
+@media (max-width: 640px) {
+    #tab-dashboard .dashboard-card--result {
+        gap: 8px;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-round-row {
+        display: flex !important;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 4px 6px;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-round-copy {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-result-balls {
+        width: 100%;
+        overflow: visible !important;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-result-layout {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        align-items: center;
+        gap: 6px !important;
+        overflow: visible !important;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-result-group--main,
+    #tab-dashboard .dashboard-card--result .dashboard-result-group--bonus {
+        min-width: 0;
+        overflow: visible !important;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-result-main-balls {
+        display: grid !important;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        align-items: center;
+        justify-items: center;
+        gap: 4px;
+        width: 100%;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-result-bonus-wrap {
+        display: grid !important;
+        grid-auto-flow: column;
+        align-items: center;
+        justify-content: end;
+        gap: 4px;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-result-bonus-ball {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard .dashboard-card--result .dashboard-result-layout {
+        grid-template-columns: minmax(0, 1fr) auto !important;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-result-main-balls {
+        gap: 3px;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-result-bonus-wrap {
+        gap: 3px;
+    }
+}
