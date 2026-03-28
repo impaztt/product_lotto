@@ -27030,3 +27030,37 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--result .dashboard-result
         font-size: 13px !important;
     }
 }
+
+
+/* Dashboard Result Header Polish 2026.16 */
+#tab-dashboard .dashboard-card--result .dashboard-card-head {
+    position: relative;
+    display: grid !important;
+    justify-items: center;
+    gap: 4px;
+    text-align: center;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-card-head-copy {
+    width: 100%;
+    justify-items: center;
+    text-align: center;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-card-kicker,
+#tab-dashboard .dashboard-card--result .dashboard-card-title {
+    text-align: center;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-card-meta {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard .dashboard-card--result .dashboard-card-head-copy {
+        padding-right: 40px !important;
+        padding-left: 40px !important;
+    }
+}
