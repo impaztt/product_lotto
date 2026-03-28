@@ -25109,3 +25109,154 @@ body[data-theme="dark"] #tab-dashboard .main-strctr-tbl .td-condition figure {
     background: rgba(148, 163, 184, 0.08);
 }
 
+/* Draw Intro Polish 2026 */
+#tab-draw.draw-wizard-tab {
+    background:
+        radial-gradient(circle at 0% 0%, rgba(132, 167, 232, 0.16), transparent 32rem),
+        radial-gradient(circle at 100% 10%, rgba(15, 23, 42, 0.04), transparent 20rem),
+        linear-gradient(180deg, #fbfdff 0%, #f4f8fc 100%) !important;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-stage {
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(247, 250, 254, 0.96)),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0)) !important;
+    box-shadow: 0 30px 72px rgba(22, 39, 61, 0.12) !important;
+}
+
+#tab-draw.draw-wizard-tab.is-draw-intro-view .draw-funnel-stage {
+    background:
+        radial-gradient(circle at top right, rgba(61, 125, 227, 0.08), transparent 28rem),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(247, 250, 254, 0.96)) !important;
+    box-shadow:
+        0 28px 68px rgba(22, 39, 61, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86) !important;
+}
+
+#tab-draw.draw-wizard-tab .draw-funnel-panel[data-draw-wizard-step="start"].has-resume-overlay::before {
+    background: rgba(250, 252, 255, 0.92) !important;
+}
+
+#tab-draw.draw-wizard-tab .draw-screen-intro-stage {
+    background:
+        radial-gradient(circle at top right, rgba(61, 125, 227, 0.1), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(148, 163, 184, 0.1), transparent 24%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(246, 249, 253, 0.96)) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88);
+}
+
+#tab-draw.draw-wizard-tab .draw-screen-intro-stage::before {
+    top: 44%;
+    width: min(100%, 120px);
+    background: linear-gradient(90deg, rgba(93, 124, 166, 0), rgba(93, 124, 166, 0.52), rgba(93, 124, 166, 0));
+}
+
+#tab-draw.draw-wizard-tab .draw-screen-intro-stage::after {
+    inset: 18px;
+    border-radius: 28px;
+    border: 1px solid rgba(227, 234, 243, 0.92);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+#tab-draw.draw-wizard-tab .draw-screen-intro-copy {
+    gap: 12px;
+}
+
+#tab-draw.draw-wizard-tab .draw-screen-intro-copy h2 {
+    max-width: 10ch;
+    color: #0f1b2d;
+    font-weight: 800;
+    white-space: normal;
+    text-wrap: balance;
+}
+
+#tab-draw.draw-wizard-tab .draw-screen-intro-copy p {
+    max-width: 32ch;
+    color: #5e6d7f;
+    font-size: clamp(13px, 1.8vw, 16px);
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-hero-cta {
+    min-height: 92px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #0f1b2d, #1c2c42) !important;
+    box-shadow:
+        0 24px 52px rgba(15, 27, 43, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-hero-cta::before {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0)) !important;
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-hero-cta::after {
+    content: "";
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 0;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(102, 165, 255, 0.42), rgba(102, 165, 255, 0));
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-hero-cta-copy strong {
+    font-size: 26px;
+}
+
+#tab-draw.draw-wizard-tab .draw-wizard-resume-card {
+    background: rgba(255, 255, 255, 0.97) !important;
+    border-color: rgba(20, 38, 64, 0.07) !important;
+    box-shadow: 0 30px 60px rgba(28, 56, 92, 0.14) !important;
+}
+
+@media (max-width: 640px) {
+    #tab-draw.draw-wizard-tab .draw-screen-intro-stage {
+        padding: 32px 24px;
+        gap: 20px;
+    }
+
+    #tab-draw.draw-wizard-tab .draw-screen-intro-copy h2 {
+        max-width: 11ch;
+        font-size: clamp(30px, 8vw, 38px);
+    }
+
+    #tab-draw.draw-wizard-tab .draw-wizard-hero-cta {
+        width: min(100%, 320px);
+        min-height: 80px;
+    }
+}
+
+body[data-theme="dark"] #tab-draw.draw-wizard-tab {
+    background:
+        radial-gradient(circle at 0% 0%, rgba(93, 160, 255, 0.14), transparent 30rem),
+        radial-gradient(circle at 100% 10%, rgba(148, 163, 184, 0.05), transparent 20rem),
+        linear-gradient(180deg, #0f131a 0%, #101720 100%) !important;
+}
+
+body[data-theme="dark"] #tab-draw.draw-wizard-tab.is-draw-intro-view .draw-funnel-stage,
+body[data-theme="dark"] #tab-draw.draw-wizard-tab .draw-screen-intro-stage,
+body[data-theme="dark"] #tab-draw.draw-wizard-tab .draw-wizard-resume-card {
+    background:
+        radial-gradient(circle at top right, rgba(93, 160, 255, 0.1), transparent 30%),
+        linear-gradient(180deg, rgba(20, 26, 34, 0.98), rgba(17, 24, 36, 0.94)) !important;
+    border-color: rgba(148, 163, 184, 0.14) !important;
+}
+
+body[data-theme="dark"] #tab-draw.draw-wizard-tab .draw-screen-intro-stage::before {
+    background: linear-gradient(90deg, rgba(143, 193, 255, 0), rgba(143, 193, 255, 0.46), rgba(143, 193, 255, 0));
+}
+
+body[data-theme="dark"] #tab-draw.draw-wizard-tab .draw-screen-intro-stage::after {
+    border-color: rgba(148, 163, 184, 0.16);
+    box-shadow: none;
+}
+
+body[data-theme="dark"] #tab-draw.draw-wizard-tab .draw-screen-intro-copy h2 {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] #tab-draw.draw-wizard-tab .draw-screen-intro-copy p {
+    color: #a8b4c7;
+}
+
