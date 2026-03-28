@@ -25260,3 +25260,422 @@ body[data-theme="dark"] #tab-draw.draw-wizard-tab .draw-screen-intro-copy p {
     color: #a8b4c7;
 }
 
+/* Dashboard Compact Polish 2026.2 */
+#tab-dashboard {
+    --dash-shadow: 0 18px 36px rgba(15, 23, 42, 0.06);
+    --dash-shadow-soft: 0 10px 22px rgba(15, 23, 42, 0.05);
+}
+
+#tab-dashboard .dashboard-shell {
+    gap: 16px;
+}
+
+#tab-dashboard .dashboard-card,
+#tab-dashboard .dashboard-win-summary,
+#tab-dashboard .dashboard-section,
+#tab-dashboard .dashboard-structure-card {
+    gap: 14px;
+    padding: 18px 16px !important;
+    border-radius: 24px !important;
+    box-shadow: var(--dash-shadow), var(--dash-shadow-inset) !important;
+}
+
+#tab-dashboard .dashboard-card-head,
+#tab-dashboard .dashboard-win-head,
+#tab-dashboard .dashboard-section-head {
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 0;
+}
+
+#tab-dashboard .dashboard-card-title,
+#tab-dashboard .dashboard-win-head h3,
+#tab-dashboard .dashboard-section-head h3 {
+    font-size: clamp(19px, 4.6vw, 24px) !important;
+    letter-spacing: -0.04em;
+}
+
+#tab-dashboard .dashboard-card-kicker,
+#tab-dashboard .dashboard-section-kicker,
+#tab-dashboard .dashboard-countdown-head {
+    font-size: 10px;
+}
+
+#tab-dashboard .dashboard-card-meta,
+#tab-dashboard .badge.muted {
+    min-height: 28px;
+    padding: 0 10px;
+    font-size: 11px;
+}
+
+#tab-dashboard .dashboard-round-row {
+    gap: 10px;
+    align-items: center;
+}
+
+#tab-dashboard .dashboard-round-badge {
+    min-width: 86px;
+    min-height: 72px;
+    padding: 10px 12px;
+    border-radius: 18px;
+    font-size: clamp(24px, 6vw, 30px) !important;
+}
+
+#tab-dashboard .dashboard-round-copy {
+    gap: 4px;
+    padding: 0;
+}
+
+#tab-dashboard .dashboard-round-copy strong {
+    font-size: clamp(18px, 4vw, 22px) !important;
+}
+
+#tab-dashboard .dashboard-round-copy p,
+#tab-dashboard .dashboard-win-head p,
+#tab-dashboard .dashboard-section-head p,
+#tab-dashboard .result-detail,
+#tab-dashboard .dashboard-prize-label,
+#tab-dashboard .dashboard-prize-note,
+#tab-dashboard .result-winnings-txt,
+#tab-dashboard .info-txt.fs-15,
+#tab-dashboard .dbchck-txt {
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+#tab-dashboard .dashboard-result-balls {
+    padding: 14px !important;
+    border-radius: 20px !important;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-layout {
+    gap: 10px;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-group {
+    padding: 12px !important;
+    gap: 10px;
+    border-radius: 18px !important;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-group--bonus {
+    min-width: 108px;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-group-note {
+    font-size: 11px;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-bonus-plus {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+}
+
+#tab-dashboard .dashboard-result-balls .result-ball {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 16px !important;
+    box-shadow: none !important;
+}
+
+#tab-dashboard .dashboard-result-prize,
+#tab-dashboard .dashboard-prize-strip {
+    gap: 4px;
+    padding: 14px 14px 12px !important;
+    border-radius: 18px !important;
+}
+
+#tab-dashboard .result-winnings-num,
+#tab-dashboard .dashboard-prize-value,
+#tab-dashboard .dashboard-win-kpi strong,
+#tab-dashboard .dashboard-win-ranks strong {
+    font-size: clamp(22px, 5vw, 28px) !important;
+}
+
+#tab-dashboard .dashboard-card-actions {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px !important;
+}
+
+#tab-dashboard .dashboard-card-actions--split {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#tab-dashboard .dashboard-card-actions > * {
+    min-height: 40px !important;
+    padding: 0 10px !important;
+    border-radius: 14px !important;
+    flex: none !important;
+    flex-basis: auto !important;
+    font-size: 13px !important;
+    line-height: 1.2;
+}
+
+#tab-dashboard .dashboard-primary-btn {
+    min-height: 44px !important;
+}
+
+#tab-dashboard .dashboard-countdown {
+    gap: 8px !important;
+}
+
+#tab-dashboard .dashboard-countdown .time-circle {
+    min-height: 62px;
+    padding: 8px 4px !important;
+    border-radius: 16px !important;
+}
+
+#tab-dashboard .dashboard-countdown .time-num {
+    font-size: clamp(20px, 4.5vw, 26px) !important;
+}
+
+#tab-dashboard .dashboard-countdown .time-txt {
+    font-size: 10px !important;
+}
+
+#tab-dashboard .dashboard-win-grid {
+    gap: 10px;
+}
+
+#tab-dashboard .dashboard-win-status {
+    padding: 10px 12px;
+    border-radius: 14px;
+    font-size: 13px;
+}
+
+#tab-dashboard .dashboard-win-kpis,
+#tab-dashboard .dashboard-win-ranks,
+#tab-dashboard .dashboard-facts-grid,
+#tab-dashboard .dashboard-note-grid {
+    gap: 8px;
+}
+
+#tab-dashboard .dashboard-win-kpi,
+#tab-dashboard .dashboard-win-ranks > div {
+    padding: 12px !important;
+    border-radius: 16px !important;
+    min-height: 0;
+}
+
+#tab-dashboard .dashboard-win-kpi {
+    gap: 6px;
+}
+
+#tab-dashboard .dashboard-win-ranks > div {
+    gap: 6px;
+    min-height: 82px;
+}
+
+#tab-dashboard .dashboard-win-ranks > div span {
+    min-height: 22px;
+    padding: 0 8px;
+    font-size: 10px;
+}
+
+#tab-dashboard .dashboard-win-breakdown {
+    gap: 10px;
+    padding: 12px;
+    border-radius: 18px;
+}
+
+#tab-dashboard .dashboard-win-breakdown-head strong {
+    font-size: 16px;
+}
+
+#tab-dashboard .dashboard-section-tags {
+    display: none !important;
+}
+
+#tab-dashboard .dashboard-method-strip {
+    gap: 8px;
+}
+
+#tab-dashboard .dashboard-method-step {
+    padding: 12px 12px 10px;
+    gap: 6px;
+    border-radius: 16px;
+}
+
+#tab-dashboard .dashboard-method-step strong {
+    width: 28px;
+    height: 28px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+#tab-dashboard .dashboard-method-step span {
+    font-size: 13px;
+}
+
+#tab-dashboard .dashboard-method-step::after {
+    display: none;
+}
+
+#tab-dashboard .dashboard-fact-card {
+    padding: 14px !important;
+    border-radius: 18px !important;
+}
+
+#tab-dashboard .dashboard-fact-card .info-cate {
+    margin-bottom: 8px;
+    font-size: 11px;
+}
+
+#tab-dashboard .dashboard-fact-card .info-flex {
+    gap: 10px;
+}
+
+#tab-dashboard .dashboard-fact-card .info-txtWrap {
+    gap: 4px;
+}
+
+#tab-dashboard .dashboard-fact-card .info-txt {
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+#tab-dashboard .dashboard-fact-card .img-bg {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+}
+
+#tab-dashboard .dashboard-fact-card .img-bg img {
+    width: 26px;
+    height: 26px;
+}
+
+#tab-dashboard .dashboard-table-frame {
+    border-radius: 18px;
+}
+
+#tab-dashboard .main-strctr-tbl-wrapper {
+    border-radius: 18px !important;
+}
+
+#tab-dashboard .main-strctr-tbl .tbl-tr > div {
+    padding: 14px 12px;
+}
+
+#tab-dashboard .dbchck-li {
+    padding: 14px !important;
+    border-radius: 18px !important;
+    gap: 8px;
+}
+
+#tab-dashboard .dbchck-li figure {
+    width: 28px;
+    height: 28px;
+    border-radius: 10px;
+}
+
+#tab-dashboard .dbchck-txt {
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+@media (min-width: 980px) {
+    #tab-dashboard .dashboard-shell {
+        gap: 18px;
+        padding: 20px 18px 0 !important;
+    }
+
+    #tab-dashboard .dashboard-card,
+    #tab-dashboard .dashboard-win-summary,
+    #tab-dashboard .dashboard-section,
+    #tab-dashboard .dashboard-structure-card {
+        padding: 20px 18px !important;
+    }
+}
+
+@media (max-width: 640px) {
+    #tab-dashboard .dashboard-shell {
+        gap: 12px;
+        padding: 10px 10px 0 !important;
+    }
+
+    #tab-dashboard .dashboard-card,
+    #tab-dashboard .dashboard-win-summary,
+    #tab-dashboard .dashboard-section,
+    #tab-dashboard .dashboard-structure-card {
+        gap: 12px;
+        padding: 16px 14px !important;
+        border-radius: 20px !important;
+    }
+
+    #tab-dashboard .dashboard-card-head,
+    #tab-dashboard .dashboard-win-head,
+    #tab-dashboard .dashboard-section-head {
+        gap: 8px;
+        padding-bottom: 8px;
+    }
+
+    #tab-dashboard .dashboard-round-row {
+        grid-template-columns: 80px 1fr;
+    }
+
+    #tab-dashboard .dashboard-round-copy p,
+    #tab-dashboard .dashboard-win-head p,
+    #tab-dashboard .dashboard-section-head p {
+        display: none;
+    }
+
+    #tab-dashboard .dashboard-card-actions--split {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #tab-dashboard .dashboard-card-actions--split > :last-child {
+        grid-column: 1 / -1;
+    }
+
+    #tab-dashboard .dashboard-card-actions > * {
+        min-height: 38px !important;
+        font-size: 12px !important;
+    }
+
+    #tab-dashboard .dashboard-win-kpis {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    #tab-dashboard .dashboard-win-ranks {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    #tab-dashboard .dashboard-method-strip {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    #tab-dashboard .dashboard-facts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard .dashboard-round-row {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-dashboard .dashboard-round-badge {
+        width: 100%;
+        min-height: 68px;
+    }
+
+    #tab-dashboard .dashboard-countdown {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    #tab-dashboard .dashboard-countdown .time-circle {
+        min-height: 58px;
+    }
+
+    #tab-dashboard .dashboard-countdown .time-num {
+        font-size: 18px !important;
+    }
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-section-tags {
+    display: none !important;
+}
+
