@@ -25679,3 +25679,453 @@ body[data-theme="dark"] #tab-dashboard .dashboard-section-tags {
     display: none !important;
 }
 
+/* Dashboard Minimal Calm 2026.3 */
+#tab-dashboard {
+    background: #f6f8fb !important;
+}
+
+#tab-dashboard .dashboard-shell {
+    gap: 12px;
+}
+
+#tab-dashboard .dashboard-card,
+#tab-dashboard .dashboard-win-summary,
+#tab-dashboard .dashboard-section,
+#tab-dashboard .dashboard-structure-card,
+#tab-dashboard .dashboard-card--result,
+#tab-dashboard .dashboard-card--next,
+#tab-dashboard .dashboard-section--premium,
+#tab-dashboard .dashboard-structure-card--premium {
+    background: #ffffff !important;
+    border-color: #e6edf5 !important;
+    box-shadow: none !important;
+}
+
+#tab-dashboard .dashboard-card::before,
+#tab-dashboard .dashboard-section::before,
+#tab-dashboard .dashboard-structure-card::before,
+#tab-dashboard .dash-ops-card::after,
+#tab-dashboard .dashboard-result-balls::before,
+#tab-dashboard .dashboard-result-prize::before,
+#tab-dashboard .dashboard-prize-strip::before,
+#tab-dashboard .dashboard-card--result .dashboard-result-group::before,
+#tab-dashboard .dashboard-countdown .time-circle::before,
+#tab-dashboard .dashboard-win-kpi::before,
+#tab-dashboard .dashboard-win-ranks > div::before,
+#tab-dashboard .dashboard-win-breakdown::before,
+#tab-dashboard .dashboard-fact-card::before,
+#tab-dashboard .dbchck-li::before,
+#tab-dashboard .dashboard-method-step::before {
+    display: none !important;
+}
+
+#tab-dashboard .dashboard-card-head,
+#tab-dashboard .dashboard-win-head,
+#tab-dashboard .dashboard-section-head {
+    gap: 8px;
+    padding-bottom: 0;
+}
+
+#tab-dashboard .dashboard-win-head p,
+#tab-dashboard .dashboard-section-head p,
+#tab-dashboard .dashboard-round-copy p,
+#tab-dashboard .dashboard-prize-note,
+#tab-dashboard .info-txt.fs-15 {
+    display: none !important;
+}
+
+#tab-dashboard .dashboard-card-kicker,
+#tab-dashboard .dashboard-section-kicker,
+#tab-dashboard .dashboard-countdown-head {
+    color: #64748b !important;
+    letter-spacing: 0.08em;
+}
+
+#tab-dashboard .dashboard-card-meta,
+#tab-dashboard .badge.muted,
+#tab-dashboard .dashboard-hero-pills span,
+#tab-dashboard .dashboard-inline-btn,
+#tab-dashboard .dash-intro-actions .ghost {
+    background: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+    color: #64748b !important;
+    box-shadow: none !important;
+}
+
+#tab-dashboard .dashboard-round-row {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+}
+
+#tab-dashboard .dashboard-round-badge {
+    min-width: 0;
+    min-height: 0;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0;
+    color: #334155 !important;
+    box-shadow: none !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.03em;
+}
+
+#tab-dashboard .dashboard-round-copy {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 0;
+}
+
+#tab-dashboard .dashboard-round-copy strong {
+    min-width: 0;
+    color: #475569 !important;
+    font-size: 14px !important;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#tab-dashboard .dashboard-result-balls {
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-layout {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-group,
+#tab-dashboard .dashboard-card--result .dashboard-result-group--bonus {
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    min-width: 0;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-group--main {
+    flex: 1 1 auto;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-group-head {
+    display: none !important;
+}
+
+#tab-dashboard .dashboard-result-balls .result-ballBox,
+#tab-dashboard .dashboard-card--result .dashboard-result-bonus-ball,
+#tab-dashboard .dashboard-card--result .dashboard-result-bonus-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-bonus-wrap {
+    flex: 0 0 auto;
+    justify-items: unset;
+}
+
+#tab-dashboard .dashboard-result-balls .result-ball {
+    width: clamp(30px, 8vw, 34px) !important;
+    height: clamp(30px, 8vw, 34px) !important;
+    font-size: clamp(12px, 3.4vw, 14px) !important;
+    box-shadow: none !important;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-bonus-plus {
+    width: auto;
+    height: auto;
+    min-height: 0;
+    padding: 0 2px;
+    border-radius: 0;
+    background: transparent !important;
+    color: #94a3b8 !important;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+#tab-dashboard .dashboard-result-prize,
+#tab-dashboard .dashboard-prize-strip {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 10px;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+#tab-dashboard .result-winnings-txt,
+#tab-dashboard .dashboard-prize-label {
+    color: #64748b !important;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#tab-dashboard .result-winnings-num,
+#tab-dashboard .dashboard-prize-value {
+    margin-left: auto;
+    color: #0f172a !important;
+    font-size: clamp(20px, 4.6vw, 24px) !important;
+}
+
+#tab-dashboard .result-detail {
+    flex: 0 0 100%;
+    color: #94a3b8 !important;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+#tab-dashboard .dashboard-card-actions {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 6px !important;
+}
+
+#tab-dashboard .dashboard-card-actions--split {
+    grid-template-columns: none;
+}
+
+#tab-dashboard .dashboard-card-actions > * {
+    flex: 1 1 96px;
+    min-height: 34px !important;
+    padding: 0 10px !important;
+    border-radius: 10px !important;
+    font-size: 12px !important;
+    box-shadow: none !important;
+}
+
+#tab-dashboard .dashboard-primary-btn,
+#tab-dashboard .dash-intro-actions .cta {
+    background: #0f172a !important;
+    border-color: #0f172a !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+}
+
+#tab-dashboard .dashboard-countdown {
+    gap: 6px !important;
+}
+
+#tab-dashboard .dashboard-countdown .time-circle {
+    min-height: 56px;
+    padding: 8px 4px !important;
+    border-radius: 12px !important;
+    background: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: none !important;
+}
+
+#tab-dashboard .dashboard-countdown .time-num {
+    color: #0f172a !important;
+    font-size: clamp(18px, 4vw, 22px) !important;
+}
+
+#tab-dashboard .dashboard-countdown .time-txt {
+    color: #94a3b8 !important;
+}
+
+#tab-dashboard .dashboard-win-status {
+    background: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+    color: #475569 !important;
+}
+
+#tab-dashboard .dashboard-win-status::before {
+    width: 6px;
+    height: 6px;
+    background: #94a3b8;
+    box-shadow: none;
+}
+
+#tab-dashboard .dashboard-win-kpi,
+#tab-dashboard .dashboard-win-breakdown,
+#tab-dashboard .dashboard-win-ranks > div,
+#tab-dashboard .dashboard-fact-card,
+#tab-dashboard .dbchck-li,
+#tab-dashboard .dashboard-method-step,
+#tab-dashboard .main-strctr-tbl-wrapper,
+#tab-dashboard .main-strctr-tbl .tbl-tr.tbody,
+#tab-dashboard .main-strctr-tbl .tbl-tr.thead {
+    background: #ffffff !important;
+    border-color: #e6edf5 !important;
+    box-shadow: none !important;
+}
+
+#tab-dashboard .dashboard-win-kpi,
+#tab-dashboard .dashboard-win-ranks > div {
+    background: #f8fafc !important;
+}
+
+#tab-dashboard .dashboard-win-ranks > div span {
+    background: transparent !important;
+    color: #94a3b8 !important;
+    padding: 0;
+    min-height: 0;
+}
+
+#tab-dashboard .dashboard-section-tags,
+#tab-dashboard .dashboard-method-strip {
+    display: none !important;
+}
+
+#tab-dashboard .dashboard-fact-card .img-bg {
+    background: #f8fafc !important;
+    box-shadow: none !important;
+}
+
+#tab-dashboard .dbchck-li figure {
+    background: transparent !important;
+}
+
+#tab-dashboard .main-strctr-tbl .tbl-tr.tbody:nth-child(odd) > div,
+#tab-dashboard .main-strctr-tbl .td-rank,
+#tab-dashboard .main-strctr-tbl .td-condition figure {
+    background: transparent !important;
+}
+
+#tab-dashboard .main-strctr-tbl .td-rank {
+    color: #475569 !important;
+}
+
+#tab-dashboard .main-strctr-tbl .td-probability {
+    color: #64748b !important;
+}
+
+@media (min-width: 980px) {
+    #tab-dashboard .dashboard-shell {
+        gap: 14px;
+    }
+
+    #tab-dashboard .dashboard-card,
+    #tab-dashboard .dashboard-win-summary,
+    #tab-dashboard .dashboard-section,
+    #tab-dashboard .dashboard-structure-card {
+        padding: 16px 14px !important;
+    }
+}
+
+@media (max-width: 640px) {
+    #tab-dashboard .dashboard-shell {
+        gap: 10px;
+        padding: 10px 10px 0 !important;
+    }
+
+    #tab-dashboard .dashboard-card,
+    #tab-dashboard .dashboard-win-summary,
+    #tab-dashboard .dashboard-section,
+    #tab-dashboard .dashboard-structure-card {
+        padding: 14px 12px !important;
+        gap: 10px;
+        border-radius: 18px !important;
+    }
+
+    #tab-dashboard .dashboard-round-row {
+        gap: 6px;
+    }
+
+    #tab-dashboard .dashboard-card-actions > * {
+        flex-basis: 48%;
+    }
+
+    #tab-dashboard .dashboard-win-kpis,
+    #tab-dashboard .dashboard-win-ranks {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard .dashboard-round-row {
+        align-items: center;
+    }
+
+    #tab-dashboard .dashboard-round-badge {
+        width: auto;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-result-layout {
+        gap: 4px;
+    }
+
+    #tab-dashboard .dashboard-countdown {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+body[data-theme="dark"] #tab-dashboard {
+    background: #0f131a !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-card,
+body[data-theme="dark"] #tab-dashboard .dashboard-win-summary,
+body[data-theme="dark"] #tab-dashboard .dashboard-section,
+body[data-theme="dark"] #tab-dashboard .dashboard-structure-card,
+body[data-theme="dark"] #tab-dashboard .dashboard-card--result,
+body[data-theme="dark"] #tab-dashboard .dashboard-card--next,
+body[data-theme="dark"] #tab-dashboard .dashboard-result-balls,
+body[data-theme="dark"] #tab-dashboard .dashboard-result-prize,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-strip,
+body[data-theme="dark"] #tab-dashboard .dashboard-card--result .dashboard-result-group,
+body[data-theme="dark"] #tab-dashboard .dashboard-win-kpi,
+body[data-theme="dark"] #tab-dashboard .dashboard-win-breakdown,
+body[data-theme="dark"] #tab-dashboard .dashboard-win-ranks > div,
+body[data-theme="dark"] #tab-dashboard .dashboard-fact-card,
+body[data-theme="dark"] #tab-dashboard .dbchck-li,
+body[data-theme="dark"] #tab-dashboard .dashboard-countdown .time-circle,
+body[data-theme="dark"] #tab-dashboard .main-strctr-tbl-wrapper,
+body[data-theme="dark"] #tab-dashboard .main-strctr-tbl .tbl-tr.tbody,
+body[data-theme="dark"] #tab-dashboard .main-strctr-tbl .tbl-tr.thead {
+    background: #141a22 !important;
+    border-color: rgba(148, 163, 184, 0.14) !important;
+    box-shadow: none !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-card-meta,
+body[data-theme="dark"] #tab-dashboard .badge.muted,
+body[data-theme="dark"] #tab-dashboard .dashboard-inline-btn,
+body[data-theme="dark"] #tab-dashboard .dashboard-round-badge,
+body[data-theme="dark"] #tab-dashboard .dashboard-win-status,
+body[data-theme="dark"] #tab-dashboard .dashboard-countdown .time-circle,
+body[data-theme="dark"] #tab-dashboard .dashboard-fact-card .img-bg {
+    background: #111924 !important;
+    border-color: rgba(148, 163, 184, 0.14) !important;
+    color: #cbd5e1 !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-round-copy strong,
+body[data-theme="dark"] #tab-dashboard .result-winnings-num,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-value,
+body[data-theme="dark"] #tab-dashboard .dashboard-win-kpi strong,
+body[data-theme="dark"] #tab-dashboard .dashboard-win-ranks strong,
+body[data-theme="dark"] #tab-dashboard .dashboard-card-title,
+body[data-theme="dark"] #tab-dashboard .main-strctr-tbl .td-condition,
+body[data-theme="dark"] #tab-dashboard .main-strctr-tbl .td-money {
+    color: #f8fafc !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-card-kicker,
+body[data-theme="dark"] #tab-dashboard .dashboard-section-kicker,
+body[data-theme="dark"] #tab-dashboard .dashboard-countdown-head,
+body[data-theme="dark"] #tab-dashboard .result-winnings-txt,
+body[data-theme="dark"] #tab-dashboard .result-detail,
+body[data-theme="dark"] #tab-dashboard .dashboard-win-ranks > div span,
+body[data-theme="dark"] #tab-dashboard .main-strctr-tbl .td-probability,
+body[data-theme="dark"] #tab-dashboard .main-strctr-tbl .td-rank,
+body[data-theme="dark"] #tab-dashboard .dbchck-txt {
+    color: #94a3b8 !important;
+}
+
