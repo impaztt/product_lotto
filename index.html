@@ -1452,49 +1452,17 @@
         <section id="tab-dashboard" class="tab-panel app-shell app-shell--dashboard is-active" role="tabpanel" aria-labelledby="tab-dashboard-btn" tabindex="0">
             <div class="container-box">
                 <div class="dashboard-shell">
-                    <section class="dashboard-hero dash-intro-head" aria-labelledby="dashboard-hero-title">
-                        <div class="dashboard-hero-copy">
-                            <span class="dash-intro-kicker">회차 브리프</span>
-                            <h2 class="content-tit" id="dashboard-hero-title">직전 결과와 이번 회차 준비를 가장 빠르게 확인하는 시작 화면</h2>
-                            <p class="dash-intro-sub">당첨 번호, 추첨 카운트다운, 내 생성 흐름만 정돈해서 바로 다음 행동으로 이어집니다.</p>
-                            <div class="dashboard-hero-pills" aria-label="핵심 확인 항목">
-                                <span>직전 결과</span>
-                                <span>카운트다운</span>
-                                <span>내 기록</span>
-                            </div>
-                            <div class="dash-intro-actions">
-                                <button class="cta" type="button" data-tab-link="draw">이번 회차 번호 만들기</button>
-                                <button class="ghost" type="button" data-tab-link="store">보관함 보기</button>
-                            </div>
-                        </div>
-                        <div class="dashboard-hero-side">
-                            <article class="dashboard-signal-card">
-                                <span class="dashboard-card-kicker">공식 회차</span>
-                                <strong id="dash-sync-status">최신 회차 확인 중</strong>
-                                <p id="dash-sync-time">공식 데이터 대기 중</p>
-                            </article>
-                            <article class="dashboard-signal-card dashboard-signal-card--accent">
-                                <span class="dashboard-card-kicker">내 준비 상태</span>
-                                <strong id="dash-membership-chip">FREE</strong>
-                                <p id="dash-activity-chip">생성 이력 없음</p>
-                            </article>
-                        </div>
-                    </section>
-
                     <section class="dashboard-spotlight-grid" aria-label="핵심 회차 카드">
-                        <article class="dashboard-card dashboard-card--result dash-ops-card dash-ops-card--primary">
+                        <article class="dashboard-card dashboard-card--result">
                             <div class="dashboard-card-head">
-                                <div>
-                                    <span class="dashboard-card-kicker">직전 회차</span>
-                                    <strong class="dashboard-card-title">당첨 결과</strong>
-                                </div>
-                                <span class="dashboard-card-meta">핵심 번호</span>
+                                <span class="dashboard-card-kicker">직전 회차</span>
+                                <span class="dashboard-card-meta">당첨 결과</span>
                             </div>
                             <div class="dashboard-round-row">
                                 <div class="result-round dashboard-round-badge" id="dash-pstLtEpsd"></div>
                                 <div class="dashboard-round-copy">
                                     <strong id="dash-pstLtRflYmd"></strong>
-                                    <p>직전 추첨 기준</p>
+                                    <p>직전 당첨 흐름만 빠르게 확인합니다.</p>
                                 </div>
                             </div>
                             <div class="result-ballWrapper dashboard-result-balls">
@@ -1517,7 +1485,7 @@
                                         <span class="dashboard-result-bonus-plus" aria-hidden="true">+</span>
                                         <div class="dashboard-result-group dashboard-result-group--bonus">
                                             <div class="dashboard-result-group-head">
-                                                <span class="dashboard-result-group-kicker">보너스</span>
+                                                <span class="dashboard-result-group-kicker">보너스번호</span>
                                                 <span class="dashboard-result-group-note">1개 번호</span>
                                             </div>
                                             <div class="dashboard-result-bonus-ball">
@@ -1532,7 +1500,9 @@
                                 <div class="result-winnings-num">
                                     <span class="fs-g7" id="dash-pstRnk1SumWnAmt"></span>
                                 </div>
-                                <div class="result-detail">(<span id="dash-pstRnk1WnAmt"></span>억 원 × <span id="dash-pstRnk1WnNope"></span>명)</div>
+                                <div class="result-detail">
+                                    (<span id="dash-pstRnk1WnAmt"></span>억 원 × <span id="dash-pstRnk1WnNope"></span>명)
+                                </div>
                             </div>
                             <div class="dashboard-card-actions dashboard-card-actions--split">
                                 <button class="dashboard-inline-btn" type="button" id="dash-btnWnStrc">당첨 구조</button>
@@ -1541,19 +1511,16 @@
                             </div>
                         </article>
 
-                        <article class="dashboard-card dashboard-card--next dash-ops-card dash-ops-card--action">
+                        <article class="dashboard-card dashboard-card--next">
                             <div class="dashboard-card-head">
-                                <div>
-                                    <span class="dashboard-card-kicker">이번 회차</span>
-                                    <strong class="dashboard-card-title">번호 준비</strong>
-                                </div>
-                                <span class="dashboard-card-meta">추첨 전 체크</span>
+                                <span class="dashboard-card-kicker">이번 회차</span>
+                                <span class="dashboard-card-meta">번호 준비</span>
                             </div>
                             <div class="dashboard-round-row">
                                 <div class="result-round dashboard-round-badge" id="dash-thsLtEpsd"></div>
                                 <div class="dashboard-round-copy">
                                     <strong><span id="dash-thsLtRflYmd"></span> 추첨 예정</strong>
-                                    <p>이번 회차 준비</p>
+                                    <p>이번 회차 일정과 예상 금액만 간단히 봅니다.</p>
                                 </div>
                             </div>
                             <div class="dashboard-countdown-head">남은 시간</div>
@@ -1587,54 +1554,68 @@
                         </article>
                     </section>
 
+                    <section class="dashboard-hero">
+                        <div class="dashboard-hero-copy">
+                            <span class="dash-intro-kicker">핵심 브리핑</span>
+                            <h2 class="content-tit">이번 회차와 직전 결과만 보고 바로 번호를 만듭니다</h2>
+                            <p class="dash-intro-sub">설명은 줄이고, 회차 상태와 내 준비 상태만 빠르게 확인할 수 있게 정리했습니다.</p>
+                            <div class="dash-intro-actions">
+                                <button class="cta" type="button" data-tab-link="draw">이번 회차 번호 만들기</button>
+                                <button class="ghost" type="button" data-tab-link="store">보관함 보기</button>
+                            </div>
+                        </div>
+                        <div class="dashboard-hero-side">
+                            <article class="dashboard-signal-card">
+                                <span class="dashboard-card-kicker">공식 회차</span>
+                                <strong id="dash-sync-status">최신 회차 확인 중</strong>
+                                <p id="dash-sync-time">공식 데이터 대기 중</p>
+                            </article>
+                            <article class="dashboard-signal-card dashboard-signal-card--accent">
+                                <span class="dashboard-card-kicker">내 준비 상태</span>
+                                <strong id="dash-membership-chip">FREE</strong>
+                                <p id="dash-activity-chip">생성 이력 없음</p>
+                            </article>
+                        </div>
+                    </section>
+
                     <section class="dashboard-win-summary dashboard-card" aria-labelledby="dash-win-summary-title">
                         <div class="dashboard-win-head">
                             <div>
                                 <span class="dashboard-card-kicker">생성 성과</span>
                                 <h3 id="dash-win-summary-title">앱에서 만든 번호의 지난 회차 결과</h3>
-                                <p>최근 기록만 조용하게 집계합니다.</p>
+                                <p>최근 생성 결과만 요약해서 보여줍니다.</p>
                             </div>
                             <span class="badge muted" id="dash-win-round-label">집계 대기</span>
                         </div>
-                        <div class="dashboard-win-grid">
-                            <div class="dashboard-win-overview">
-                                <p class="dashboard-win-status" id="dash-win-status">최근 회차 집계 중</p>
-                                <div class="dashboard-win-kpis">
-                                    <article class="dashboard-win-kpi">
-                                        <span>총 생성</span>
-                                        <strong id="dash-win-total-generated">-</strong>
-                                    </article>
-                                    <article class="dashboard-win-kpi">
-                                        <span>당첨 세트</span>
-                                        <strong id="dash-win-total-winners">-</strong>
-                                    </article>
-                                    <article class="dashboard-win-kpi">
-                                        <span>당첨 비율</span>
-                                        <strong id="dash-win-rate">-</strong>
-                                    </article>
-                                </div>
-                            </div>
-                            <div class="dashboard-win-breakdown">
-                                <div class="dashboard-win-breakdown-head">
-                                    <span class="dashboard-card-kicker">등수 분포</span>
-                                    <strong>당첨 단계별 집계</strong>
-                                </div>
-                                <div class="dashboard-win-ranks">
-                                    <div><span>1등</span><strong id="dash-win-rank-1">0</strong></div>
-                                    <div><span>2등</span><strong id="dash-win-rank-2">0</strong></div>
-                                    <div><span>3등</span><strong id="dash-win-rank-3">0</strong></div>
-                                    <div><span>4등</span><strong id="dash-win-rank-4">0</strong></div>
-                                    <div><span>5등</span><strong id="dash-win-rank-5">0</strong></div>
-                                </div>
-                            </div>
+                        <p class="dashboard-win-status" id="dash-win-status">최근 회차 집계 중</p>
+                        <div class="dashboard-win-kpis">
+                            <article class="dashboard-win-kpi">
+                                <span>총 생성</span>
+                                <strong id="dash-win-total-generated">-</strong>
+                            </article>
+                            <article class="dashboard-win-kpi">
+                                <span>당첨 세트</span>
+                                <strong id="dash-win-total-winners">-</strong>
+                            </article>
+                            <article class="dashboard-win-kpi">
+                                <span>당첨 비율</span>
+                                <strong id="dash-win-rate">-</strong>
+                            </article>
+                        </div>
+                        <div class="dashboard-win-ranks">
+                            <div><span>1등</span><strong id="dash-win-rank-1">0</strong></div>
+                            <div><span>2등</span><strong id="dash-win-rank-2">0</strong></div>
+                            <div><span>3등</span><strong id="dash-win-rank-3">0</strong></div>
+                            <div><span>4등</span><strong id="dash-win-rank-4">0</strong></div>
+                            <div><span>5등</span><strong id="dash-win-rank-5">0</strong></div>
                         </div>
                     </section>
 
                     <section class="dashboard-section dashboard-section--essentials" id="dash-prchsMthdDiv">
                         <div class="dashboard-section-head">
                             <span class="dashboard-section-kicker">구매 핵심</span>
-                            <h3>구매에 필요한 정보만 카드로 정리</h3>
-                            <p>판매처, 시간, 확률처럼 바로 필요한 항목만 남겼습니다.</p>
+                            <h3>구매 전에 필요한 정보만 빠르게 확인</h3>
+                            <p>판매처, 시간, 확률처럼 바로 필요한 정보만 남겼습니다.</p>
                         </div>
                         <div class="dashboard-method-strip" aria-label="게임 방식">
                             <div class="dashboard-method-step">
@@ -1651,45 +1632,53 @@
                             </div>
                         </div>
                         <div class="main-info-grid dashboard-facts-grid">
-                            <article class="info-box dashboard-fact-card">
-                                <div class="dashboard-fact-head">
-                                    <span class="dashboard-fact-icon" aria-hidden="true">판매</span>
-                                    <div>
-                                        <div class="info-cate">판매처</div>
+                            <article class="info-box">
+                                <div class="info-cate">판매처</div>
+                                <div class="info-flex">
+                                    <div class="info-txtWrap">
                                         <div class="info-txt">전국 로또 판매점 · 동행복권 홈페이지</div>
+                                        <div class="info-txt fs-15">오프라인과 공식 온라인 채널에서 구매할 수 있습니다.</div>
+                                    </div>
+                                    <div class="info-imgWrap">
+                                        <figure class="img-bg"><img src="/resources/img/icon/icon-draw-lt01.svg" alt=""></figure>
                                     </div>
                                 </div>
-                                <div class="info-txt fs-15">오프라인과 공식 온라인 채널에서 구매할 수 있습니다.</div>
                             </article>
-                            <article class="info-box dashboard-fact-card">
-                                <div class="dashboard-fact-head">
-                                    <span class="dashboard-fact-icon" aria-hidden="true">시간</span>
-                                    <div>
-                                        <div class="info-cate">판매 시간</div>
+                            <article class="info-box">
+                                <div class="info-cate">판매 시간</div>
+                                <div class="info-flex">
+                                    <div class="info-txtWrap">
                                         <div class="info-txt">일~금 06:00~24:00 · 토 06:00~20:00</div>
+                                        <div class="info-txt fs-15">인터넷 기준이며 판매점 운영 시간은 다를 수 있습니다.</div>
+                                    </div>
+                                    <div class="info-imgWrap">
+                                        <figure class="img-bg"><img src="/resources/img/icon/icon-draw-lt02.svg" alt=""></figure>
                                     </div>
                                 </div>
-                                <div class="info-txt fs-15">인터넷 기준이며 판매점 운영 시간은 다를 수 있습니다.</div>
                             </article>
-                            <article class="info-box dashboard-fact-card">
-                                <div class="dashboard-fact-head">
-                                    <span class="dashboard-fact-icon" aria-hidden="true">추첨</span>
-                                    <div>
-                                        <div class="info-cate">추첨 시간</div>
+                            <article class="info-box">
+                                <div class="info-cate">추첨 시간</div>
+                                <div class="info-flex">
+                                    <div class="info-txtWrap">
                                         <div class="info-txt">매주 토요일 20:35분경</div>
+                                        <div class="info-txt fs-15">방송 편성에 따라 조금 달라질 수 있습니다.</div>
+                                    </div>
+                                    <div class="info-imgWrap">
+                                        <figure class="img-bg"><img src="/resources/img/icon/icon-draw-lt03.svg" alt=""></figure>
                                     </div>
                                 </div>
-                                <div class="info-txt fs-15">방송 편성에 따라 조금 달라질 수 있습니다.</div>
                             </article>
-                            <article class="info-box dashboard-fact-card">
-                                <div class="dashboard-fact-head">
-                                    <span class="dashboard-fact-icon" aria-hidden="true">확률</span>
-                                    <div>
-                                        <div class="info-cate">핵심 수치</div>
+                            <article class="info-box">
+                                <div class="info-cate">핵심 수치</div>
+                                <div class="info-flex">
+                                    <div class="info-txtWrap">
                                         <div class="info-txt">1게임 1,000원 · 1등 확률 1 / 8,145,060</div>
+                                        <div class="info-txt fs-15">전체 당첨 확률은 1 / 45 수준입니다.</div>
+                                    </div>
+                                    <div class="info-imgWrap">
+                                        <figure class="img-bg"><img src="/resources/img/icon/icon-draw-lt05.svg" alt=""></figure>
                                     </div>
                                 </div>
-                                <div class="info-txt fs-15">전체 당첨 확률은 1 / 45 수준입니다.</div>
                             </article>
                         </div>
                     </section>
@@ -1697,8 +1686,8 @@
                     <section class="dashboard-structure-card" id="dash-wnStrcDiv">
                         <div class="dashboard-section-head">
                             <span class="dashboard-section-kicker">공식 당첨 구조</span>
-                            <h3>등수 조건과 지급 기준만 간단히 확인</h3>
-                            <p>모바일에서도 한눈에 읽히도록 핵심 기준만 남겼습니다.</p>
+                            <h3>당첨 조건만 빠르게 확인</h3>
+                            <p>등수별 조건과 핵심 지급 기준만 정리했습니다.</p>
                         </div>
                         <div class="dashboard-table-frame">
                             <div class="main-strctr-tbl-wrapper">
@@ -1759,15 +1748,15 @@
                         </div>
                         <ul class="dbchck-ul dashboard-note-grid">
                             <li class="dbchck-li">
-                                <span class="dashboard-note-chip" aria-hidden="true">체크</span>
+                                <figure><img src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
                                 <div class="dbchck-txt">총 당첨금은 전체 판매액의 50% 기준으로 편성됩니다.</div>
                             </li>
                             <li class="dbchck-li">
-                                <span class="dashboard-note-chip" aria-hidden="true">체크</span>
+                                <figure><img src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
                                 <div class="dbchck-txt">1~3등 금액은 회차 판매액과 당첨자 수에 따라 달라집니다.</div>
                             </li>
                             <li class="dbchck-li">
-                                <span class="dashboard-note-chip" aria-hidden="true">체크</span>
+                                <figure><img src="/resources/img/icon/icon-double-chck.svg" alt=""></figure>
                                 <div class="dbchck-txt">1등이 없으면 당첨금은 다음 회차로 이월됩니다.</div>
                             </li>
                         </ul>
