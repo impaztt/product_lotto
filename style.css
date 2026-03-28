@@ -26261,3 +26261,41 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-round-co
         gap: 3px;
     }
 }
+
+
+/* Dashboard Result Header Align 2026.6 */
+#tab-dashboard .dashboard-card--result .dashboard-card-head {
+    align-items: flex-start;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-card-head-copy {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-card-meta {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    min-height: 24px;
+    margin-left: auto;
+    padding: 0 9px;
+    border-radius: 999px;
+    font-size: 11px !important;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard .dashboard-card--result .dashboard-card-head {
+        flex-direction: row !important;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-card-meta {
+        margin-left: 0;
+        margin-top: 1px;
+    }
+}
