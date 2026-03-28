@@ -885,6 +885,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 dashPrchsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         }
+        if (currentWeeklyData) {
+            renderWeeklyData(currentWeeklyData, { cached: lastWeeklyRenderMode !== 'live' });
+        }
     }
 
     function getRecentRoundContainers() {
@@ -8765,13 +8768,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function fetchLatestDraw() {
-        const hasWeeklyUi = Boolean(
+        const hasResultUi = Boolean(
             weeklyLatestRoundEl ||
             weeklyThisRoundEl ||
             weeklyExpectedAmountEl ||
-            weeklyLatestNumbers.some(Boolean)
+            weeklyLatestNumbers.some(Boolean) ||
+            dashLatestRoundEl ||
+            dashThisRoundEl ||
+            dashExpectedAmountEl ||
+            dashLatestNumbers.some(Boolean)
         );
-        if (!hasWeeklyUi) {
+        if (!hasResultUi) {
             return;
         }
         if (weeklyStatusEl) {
