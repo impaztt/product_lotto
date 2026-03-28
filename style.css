@@ -26553,3 +26553,177 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--result .dashboard-card-m
         gap: 2px;
     }
 }
+
+
+/* Dashboard Latest Result Readability 2026.10 */
+#tab-dashboard .dashboard-card--result {
+    gap: 14px;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-card-head {
+    position: static;
+    display: flex !important;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    text-align: left;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-card-head-copy {
+    display: grid;
+    justify-items: start;
+    gap: 6px;
+    width: auto;
+    min-width: 0;
+    padding: 0 !important;
+    text-align: left;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-card-kicker,
+#tab-dashboard .dashboard-card--result .dashboard-card-title {
+    text-align: left;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-card-meta {
+    position: static;
+    flex: 0 0 auto;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-round-row {
+    display: grid !important;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    justify-items: start;
+    gap: 8px 14px;
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #e7edf5;
+    border-radius: 18px;
+    background: #f8fafc !important;
+    text-align: left;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-round-badge {
+    min-width: 0;
+    padding: 0 !important;
+    color: #0f172a !important;
+    font-size: 26px !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.05em;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-round-copy {
+    display: grid !important;
+    justify-items: start;
+    align-items: center;
+    gap: 2px;
+    width: 100%;
+    min-width: 0;
+    text-align: left;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-round-copy strong {
+    display: block;
+    width: 100%;
+    color: #334155 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-round-copy p {
+    display: block !important;
+    margin: 0;
+    color: #94a3b8 !important;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-balls {
+    width: 100%;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-layout {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    width: 100%;
+    margin: 0;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-group--main {
+    flex: 0 1 auto;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-main-balls {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 2px !important;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-bonus-wrap,
+#tab-dashboard .dashboard-card--result .dashboard-result-bonus-ball {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 2px !important;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-prize {
+    display: grid !important;
+    justify-items: start;
+    align-content: center;
+    gap: 4px;
+    padding-top: 12px !important;
+    border-top: 1px solid #edf2f7 !important;
+    text-align: left;
+}
+
+#tab-dashboard .dashboard-card--result .result-winnings-txt,
+#tab-dashboard .dashboard-card--result .result-winnings-num,
+#tab-dashboard .dashboard-card--result .result-detail {
+    text-align: left;
+}
+
+#tab-dashboard .dashboard-card--result .result-winnings-num {
+    margin-left: 0;
+}
+
+#tab-dashboard .dashboard-card--result .result-detail {
+    flex: none;
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard .dashboard-card--result .dashboard-card-head {
+        gap: 10px;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-round-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+        padding: 11px 12px;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-round-copy strong {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-result-layout {
+        gap: 3px;
+    }
+
+    #tab-dashboard .dashboard-card--result .dashboard-result-main-balls,
+    #tab-dashboard .dashboard-card--result .dashboard-result-bonus-wrap,
+    #tab-dashboard .dashboard-card--result .dashboard-result-bonus-ball {
+        gap: 1px !important;
+    }
+}
