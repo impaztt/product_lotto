@@ -26394,3 +26394,68 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-round-co
         flex-wrap: wrap;
     }
 }
+
+
+/* Dashboard Spotlight Center Fix 2026.8 */
+#tab-dashboard .dashboard-card--result .dashboard-card-head,
+#tab-dashboard .dashboard-card--next .dashboard-card-head {
+    position: relative;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    justify-items: center;
+    text-align: center;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-card-head-copy,
+#tab-dashboard .dashboard-card--next .dashboard-card-head-copy {
+    width: 100%;
+    justify-items: center;
+    text-align: center;
+    padding: 0 54px;
+    box-sizing: border-box;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-card-kicker,
+#tab-dashboard .dashboard-card--next .dashboard-card-kicker,
+#tab-dashboard .dashboard-card--result .dashboard-card-title,
+#tab-dashboard .dashboard-card--next .dashboard-card-title {
+    text-align: center;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-card-meta,
+#tab-dashboard .dashboard-card--next .dashboard-card-meta {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-left: 0;
+}
+
+#tab-dashboard .dashboard-card--result .dashboard-result-prize,
+#tab-dashboard .dashboard-card--next .dashboard-prize-strip {
+    display: grid !important;
+    justify-items: center;
+    align-content: center;
+    gap: 3px;
+    text-align: center;
+}
+
+#tab-dashboard .dashboard-card--result .result-winnings-num,
+#tab-dashboard .dashboard-card--next .dashboard-prize-value {
+    margin-left: 0;
+    text-align: center;
+}
+
+#tab-dashboard .dashboard-card--result .result-winnings-txt,
+#tab-dashboard .dashboard-card--result .result-detail,
+#tab-dashboard .dashboard-card--next .dashboard-prize-label,
+#tab-dashboard .dashboard-card--next .dashboard-prize-value,
+#tab-dashboard .dashboard-card--next .dashboard-countdown-head {
+    text-align: center;
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard .dashboard-card--result .dashboard-card-head-copy,
+    #tab-dashboard .dashboard-card--next .dashboard-card-head-copy {
+        padding: 0 44px;
+    }
+}
