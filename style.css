@@ -25163,11 +25163,12 @@ body[data-theme="dark"] #tab-dashboard .main-strctr-tbl .td-condition figure {
 }
 
 #tab-draw.draw-wizard-tab .draw-screen-intro-copy h2 {
-    max-width: 10ch;
+    max-width: none;
     color: #0f1b2d;
+    font-size: clamp(22px, 4.8vw, 42px);
     font-weight: 800;
-    white-space: normal;
-    text-wrap: balance;
+    letter-spacing: -0.07em;
+    white-space: nowrap;
 }
 
 #tab-draw.draw-wizard-tab .draw-screen-intro-copy p {
@@ -25212,13 +25213,13 @@ body[data-theme="dark"] #tab-dashboard .main-strctr-tbl .td-condition figure {
 
 @media (max-width: 640px) {
     #tab-draw.draw-wizard-tab .draw-screen-intro-stage {
-        padding: 32px 24px;
+        padding: 28px 20px;
         gap: 20px;
     }
 
     #tab-draw.draw-wizard-tab .draw-screen-intro-copy h2 {
-        max-width: 11ch;
-        font-size: clamp(30px, 8vw, 38px);
+        max-width: none;
+        font-size: clamp(19px, 5.8vw, 24px);
     }
 
     #tab-draw.draw-wizard-tab .draw-wizard-hero-cta {
