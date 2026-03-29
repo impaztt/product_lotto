@@ -27056,12 +27056,12 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--result .dashboard-result
 #tab-dashboard .dashboard-card--result .dashboard-card-meta {
     position: absolute;
     top: 0;
-    right: 0;
+    left: 0;
 }
 
 @media (max-width: 430px) {
     #tab-dashboard .dashboard-card--result .dashboard-card-head-copy {
-        padding-right: 40px !important;
         padding-left: 40px !important;
+        padding-right: 24px !important;
     }
 }
