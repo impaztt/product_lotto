@@ -23466,8 +23466,12 @@ body[data-theme='dark'] #tab-mypage .mypage-plan-offer-card.is-scheduled {
 }
 
 #tab-dashboard.app-shell {
-    padding: 0 0 calc(108px + env(safe-area-inset-bottom)) !important;
+    padding: 0 0 14px !important;
     overflow-x: clip;
+}
+
+body[data-active-tab="dashboard"] main.tab-layout {
+    padding-bottom: calc(74px + env(safe-area-inset-bottom));
 }
 
 #tab-dashboard .container-box {
