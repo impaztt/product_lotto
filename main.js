@@ -359,6 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let dashCountdownMinutesEl = null;
     let dashCountdownSecondsEl = null;
     let dashExpectedRankEls = [];
+    let dashExpectedRankMetaEls = [];
     let dashExpectedAmountEl = null;
     let dashBuyBtn = null;
     let recentRoundsEl = null;
@@ -891,6 +892,13 @@ document.addEventListener('DOMContentLoaded', () => {
             root.getElementById('dash-rnk3ExpcAmt'),
             root.getElementById('dash-rnk4ExpcAmt'),
             root.getElementById('dash-rnk5ExpcAmt')
+        ];
+        dashExpectedRankMetaEls = [
+            root.getElementById('dash-rnk1ExpcMeta'),
+            root.getElementById('dash-rnk2ExpcMeta'),
+            root.getElementById('dash-rnk3ExpcMeta'),
+            root.getElementById('dash-rnk4ExpcMeta'),
+            root.getElementById('dash-rnk5ExpcMeta')
         ];
         dashExpectedAmountEl = dashExpectedRankEls[0] || null;
         dashBuyBtn = root.getElementById('dash-btnBuyLt645');
@@ -9007,17 +9015,43 @@ document.addEventListener('DOMContentLoaded', () => {
         return Number.isFinite(amount) ? amount : null;
     }
 
-    function buildDashboardExpectedRankAmounts(firstAmount) {
+    function buildDashboardExpectedRankData(firstAmount) {
+        const averageFirstWinners = 11;
+        const averageSecondWinners = 85;
+        const averageThirdWinners = 3355;
         const normalizedFirstAmount = normalizeAmount(firstAmount);
-        const sharedPoolEstimate = normalizedFirstAmount == null
-            ? null
-            : Math.max(0, Math.round((normalizedFirstAmount / 6) / 10000) * 10000);
+        const firstPoolEstimate = normalizedFirstAmount == null ? null : normalizedFirstAmount * averageFirstWinners;
+        const sharedPoolEstimate = firstPoolEstimate == null ? null : firstPoolEstimate / 6;
+        const secondAmount = sharedPoolEstimate == null ? null : sharedPoolEstimate / averageSecondWinners;
+        const thirdAmount = sharedPoolEstimate == null ? null : sharedPoolEstimate / averageThirdWinners;
+
         return [
-            normalizedFirstAmount,
-            sharedPoolEstimate,
-            sharedPoolEstimate,
-            50000,
-            5000
+            {
+                amount: normalizedFirstAmount,
+                meta: firstPoolEstimate == null
+                    ? '평균 11명 기준 공식 예상 1인당 금액'
+                    : `평균 11명 · 총 ${formatKrwCompact(firstPoolEstimate)} 배분 예상`
+            },
+            {
+                amount: secondAmount,
+                meta: sharedPoolEstimate == null
+                    ? '평균 85명 기준 1인당 추산'
+                    : `평균 85명 · 총 ${formatKrwCompact(sharedPoolEstimate)} 배분 예상`
+            },
+            {
+                amount: thirdAmount,
+                meta: sharedPoolEstimate == null
+                    ? '평균 3,355명 기준 1인당 추산'
+                    : `평균 3,355명 · 총 ${formatKrwCompact(sharedPoolEstimate)} 배분 예상`
+            },
+            {
+                amount: 50000,
+                meta: '4개 번호 일치 · 고정 지급'
+            },
+            {
+                amount: 5000,
+                meta: '3개 번호 일치 · 고정 지급'
+            }
         ];
     }
 
@@ -9025,13 +9059,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!dashExpectedRankEls.length) {
             return;
         }
-        const amounts = buildDashboardExpectedRankAmounts(firstAmount);
+        const entries = buildDashboardExpectedRankData(firstAmount);
         dashExpectedRankEls.forEach((el, index) => {
             if (!el) {
                 return;
             }
-            const value = amounts[index];
+            const value = entries[index]?.amount;
             el.textContent = value == null ? '-' : formatKrwCompact(value);
+        });
+        dashExpectedRankMetaEls.forEach((el, index) => {
+            if (!el) {
+                return;
+            }
+            el.textContent = entries[index]?.meta || '';
         });
     }
 

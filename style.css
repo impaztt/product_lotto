@@ -28306,3 +28306,311 @@ body[data-theme="dark"] #tab-dashboard .dashboard-prize-item:first-child {
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-item:first-child .dashboard-prize-rank {
     color: #bfdbfe !important;
 }
+
+/* Dashboard Prize Infographic Refresh 2026.21 */
+#tab-dashboard .dashboard-prize-board {
+    gap: 16px;
+    padding: 20px !important;
+    border-radius: 28px;
+    border: 1px solid rgba(148, 163, 184, 0.18) !important;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 248, 255, 0.96)),
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.09), transparent 22rem) !important;
+    box-shadow: 0 18px 30px rgba(15, 23, 42, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+#tab-dashboard .dashboard-prize-board-head {
+    align-items: flex-start;
+}
+
+#tab-dashboard .dashboard-prize-board-copy {
+    display: grid;
+    gap: 4px;
+}
+
+#tab-dashboard .dashboard-prize-board-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.05);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    color: #475569;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+#tab-dashboard .dashboard-prize-sharebar {
+    display: grid;
+    grid-template-columns: 6fr 1fr 1fr;
+    gap: 8px;
+}
+
+#tab-dashboard .dashboard-prize-share {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: 999px;
+    color: #0f172a;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+#tab-dashboard .dashboard-prize-share--first {
+    background: linear-gradient(90deg, rgba(29, 78, 216, 0.18), rgba(56, 189, 248, 0.16));
+}
+
+#tab-dashboard .dashboard-prize-share--second,
+#tab-dashboard .dashboard-prize-share--third {
+    background: rgba(15, 23, 42, 0.06);
+}
+
+#tab-dashboard .dashboard-prize-infographic {
+    display: grid;
+    grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
+    gap: 12px;
+    align-items: stretch;
+}
+
+#tab-dashboard .dashboard-prize-card,
+#tab-dashboard .dashboard-prize-fixed-item {
+    position: relative;
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+    padding: 16px;
+    border-radius: 22px;
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    background: rgba(255, 255, 255, 0.86);
+    overflow: hidden;
+}
+
+#tab-dashboard .dashboard-prize-card::before,
+#tab-dashboard .dashboard-prize-fixed-item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.3), transparent 62%);
+    pointer-events: none;
+}
+
+#tab-dashboard .dashboard-prize-card--hero {
+    align-content: space-between;
+    min-height: 100%;
+    padding: 18px;
+    background:
+        linear-gradient(180deg, rgba(233, 243, 255, 0.98), rgba(220, 236, 255, 0.96)),
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.2), transparent 18rem);
+    border-color: rgba(59, 130, 246, 0.18);
+}
+
+#tab-dashboard .dashboard-prize-card-stack {
+    display: grid;
+    gap: 12px;
+}
+
+#tab-dashboard .dashboard-prize-card--second {
+    background: linear-gradient(180deg, rgba(239, 250, 255, 0.98), rgba(229, 247, 252, 0.96));
+}
+
+#tab-dashboard .dashboard-prize-card--third {
+    background: linear-gradient(180deg, rgba(255, 248, 236, 0.98), rgba(255, 241, 219, 0.96));
+}
+
+#tab-dashboard .dashboard-prize-card-headline,
+#tab-dashboard .dashboard-prize-fixed-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#tab-dashboard .dashboard-prize-board .dashboard-prize-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+    color: #1e3a5f;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+#tab-dashboard .dashboard-prize-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.06);
+    color: #475569;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+#tab-dashboard .dashboard-prize-board .dashboard-prize-amount {
+    margin: 0;
+    color: #0f172a !important;
+    font-size: clamp(24px, 4.8vw, 30px) !important;
+    font-weight: 900 !important;
+    line-height: 1.08;
+    letter-spacing: -0.05em;
+    text-align: left;
+}
+
+#tab-dashboard .dashboard-prize-card--hero .dashboard-prize-amount {
+    font-size: clamp(34px, 6vw, 48px) !important;
+}
+
+#tab-dashboard .dashboard-prize-fixed-amount {
+    color: #0f172a;
+    font-size: clamp(20px, 4vw, 24px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+}
+
+#tab-dashboard .dashboard-prize-card-note {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+#tab-dashboard .dashboard-prize-fixed {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+#tab-dashboard .dashboard-prize-fixed-item {
+    gap: 8px;
+    padding: 14px 16px;
+    background: rgba(248, 250, 252, 0.92);
+}
+
+#tab-dashboard .dashboard-prize-footnote {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+@media (max-width: 640px) {
+    #tab-dashboard .dashboard-prize-board {
+        padding: 18px !important;
+        border-radius: 24px;
+    }
+
+    #tab-dashboard .dashboard-prize-sharebar,
+    #tab-dashboard .dashboard-prize-infographic {
+        grid-template-columns: 1fr;
+    }
+
+    #tab-dashboard .dashboard-prize-card--hero,
+    #tab-dashboard .dashboard-prize-card-stack,
+    #tab-dashboard .dashboard-prize-fixed {
+        grid-column: auto;
+    }
+
+    #tab-dashboard .dashboard-prize-card--hero .dashboard-prize-amount {
+        font-size: clamp(30px, 8vw, 40px) !important;
+    }
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard .dashboard-prize-board {
+        gap: 14px;
+        padding: 16px !important;
+    }
+
+    #tab-dashboard .dashboard-prize-board-head {
+        gap: 8px;
+    }
+
+    #tab-dashboard .dashboard-prize-board-badge,
+    #tab-dashboard .dashboard-prize-chip,
+    #tab-dashboard .dashboard-prize-share {
+        font-size: 10px;
+    }
+
+    #tab-dashboard .dashboard-prize-card,
+    #tab-dashboard .dashboard-prize-fixed-item {
+        padding: 14px;
+        border-radius: 18px;
+    }
+
+    #tab-dashboard .dashboard-prize-fixed {
+        grid-template-columns: 1fr;
+    }
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-board {
+    border-color: rgba(96, 165, 250, 0.18) !important;
+    background:
+        linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(17, 28, 45, 0.94)),
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.18), transparent 22rem) !important;
+    box-shadow: none;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-board-badge,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-share--second,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-share--third,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-chip,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-card,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-fixed-item,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-board .dashboard-prize-rank {
+    background: rgba(15, 23, 42, 0.74) !important;
+    border-color: rgba(148, 163, 184, 0.16) !important;
+    color: #cbd5e1 !important;
+    box-shadow: none;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-card--hero {
+    background:
+        linear-gradient(180deg, rgba(29, 78, 216, 0.24), rgba(30, 64, 175, 0.18)),
+        radial-gradient(circle at top right, rgba(96, 165, 250, 0.2), transparent 18rem) !important;
+    border-color: rgba(96, 165, 250, 0.22) !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-card--second {
+    background: linear-gradient(180deg, rgba(8, 47, 73, 0.72), rgba(15, 23, 42, 0.74)) !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-card--third {
+    background: linear-gradient(180deg, rgba(92, 49, 14, 0.6), rgba(30, 41, 59, 0.72)) !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-share--first {
+    background: linear-gradient(90deg, rgba(29, 78, 216, 0.36), rgba(14, 165, 233, 0.24)) !important;
+    color: #dbeafe !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-board .dashboard-prize-amount,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-fixed-amount,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-board-title {
+    color: #f8fafc !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-card-note,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-footnote,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-board-kicker {
+    color: #94a3b8 !important;
+}

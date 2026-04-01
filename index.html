@@ -1538,34 +1538,64 @@
                                     </div>
                                 </div>
                             </section>
-                            <section class="dashboard-prize-board" aria-label="이번 회차 예상 당첨금 순위">
+                            <section class="dashboard-prize-board" aria-label="이번 회차 예상 당첨금 인포그래픽">
                                 <div class="dashboard-prize-board-head">
-                                    <span class="dashboard-prize-board-kicker">예상 당첨금</span>
-                                    <strong class="dashboard-prize-board-title">1위부터 5위까지</strong>
+                                    <div class="dashboard-prize-board-copy">
+                                        <span class="dashboard-prize-board-kicker">예상 당첨금</span>
+                                        <strong class="dashboard-prize-board-title">평균 당첨자 수 인포그래픽</strong>
+                                    </div>
+                                    <span class="dashboard-prize-board-badge">1등 공식 예상 기준</span>
                                 </div>
-                                <div class="dashboard-prize-list">
-                                    <div class="dashboard-prize-item">
-                                        <span class="dashboard-prize-rank">1위</span>
+                                <div class="dashboard-prize-sharebar" aria-hidden="true">
+                                    <span class="dashboard-prize-share dashboard-prize-share--first">1등 75%</span>
+                                    <span class="dashboard-prize-share dashboard-prize-share--second">2등 12.5%</span>
+                                    <span class="dashboard-prize-share dashboard-prize-share--third">3등 12.5%</span>
+                                </div>
+                                <div class="dashboard-prize-infographic">
+                                    <article class="dashboard-prize-card dashboard-prize-card--hero">
+                                        <div class="dashboard-prize-card-headline">
+                                            <span class="dashboard-prize-rank">1위</span>
+                                            <span class="dashboard-prize-chip">평균 11명</span>
+                                        </div>
                                         <strong class="dashboard-prize-amount" id="dash-rnk1ExpcAmt">-</strong>
+                                        <p class="dashboard-prize-card-note" id="dash-rnk1ExpcMeta">공식 예상 1인당 금액</p>
+                                    </article>
+                                    <div class="dashboard-prize-card-stack">
+                                        <article class="dashboard-prize-card dashboard-prize-card--second">
+                                            <div class="dashboard-prize-card-headline">
+                                                <span class="dashboard-prize-rank">2위</span>
+                                                <span class="dashboard-prize-chip">평균 85명</span>
+                                            </div>
+                                            <strong class="dashboard-prize-amount" id="dash-rnk2ExpcAmt">-</strong>
+                                            <p class="dashboard-prize-card-note" id="dash-rnk2ExpcMeta">평균 당첨자 수 기준 추산</p>
+                                        </article>
+                                        <article class="dashboard-prize-card dashboard-prize-card--third">
+                                            <div class="dashboard-prize-card-headline">
+                                                <span class="dashboard-prize-rank">3위</span>
+                                                <span class="dashboard-prize-chip">평균 3,355명</span>
+                                            </div>
+                                            <strong class="dashboard-prize-amount" id="dash-rnk3ExpcAmt">-</strong>
+                                            <p class="dashboard-prize-card-note" id="dash-rnk3ExpcMeta">평균 당첨자 수 기준 추산</p>
+                                        </article>
                                     </div>
-                                    <div class="dashboard-prize-item">
-                                        <span class="dashboard-prize-rank">2위</span>
-                                        <strong class="dashboard-prize-amount" id="dash-rnk2ExpcAmt">-</strong>
-                                    </div>
-                                    <div class="dashboard-prize-item">
-                                        <span class="dashboard-prize-rank">3위</span>
-                                        <strong class="dashboard-prize-amount" id="dash-rnk3ExpcAmt">-</strong>
-                                    </div>
-                                    <div class="dashboard-prize-item">
-                                        <span class="dashboard-prize-rank">4위</span>
-                                        <strong class="dashboard-prize-amount" id="dash-rnk4ExpcAmt">-</strong>
-                                    </div>
-                                    <div class="dashboard-prize-item">
-                                        <span class="dashboard-prize-rank">5위</span>
-                                        <strong class="dashboard-prize-amount" id="dash-rnk5ExpcAmt">-</strong>
+                                    <div class="dashboard-prize-fixed">
+                                        <article class="dashboard-prize-fixed-item">
+                                            <div class="dashboard-prize-fixed-top">
+                                                <span class="dashboard-prize-rank">4위</span>
+                                                <strong class="dashboard-prize-fixed-amount" id="dash-rnk4ExpcAmt">-</strong>
+                                            </div>
+                                            <p class="dashboard-prize-card-note" id="dash-rnk4ExpcMeta">4개 번호 일치 · 고정 지급</p>
+                                        </article>
+                                        <article class="dashboard-prize-fixed-item">
+                                            <div class="dashboard-prize-fixed-top">
+                                                <span class="dashboard-prize-rank">5위</span>
+                                                <strong class="dashboard-prize-fixed-amount" id="dash-rnk5ExpcAmt">-</strong>
+                                            </div>
+                                            <p class="dashboard-prize-card-note" id="dash-rnk5ExpcMeta">3개 번호 일치 · 고정 지급</p>
+                                        </article>
                                     </div>
                                 </div>
-                                <p class="dashboard-prize-footnote">2~3위는 1등 예상 총액 기준 추정, 4~5위는 고정 지급</p>
+                                <p class="dashboard-prize-footnote">1등 공식 예상 1인당 금액과 평균 당첨자 수 11명 · 85명 · 3,355명을 기준으로 1인당 추정액을 계산합니다.</p>
                             </section>
                             <div class="dashboard-card-actions">
                                 <button class="btn-butNow dashboard-primary-btn" type="button" id="dash-btnBuyLt645">추첨 탭 열기</button>
