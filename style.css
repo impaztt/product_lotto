@@ -28853,3 +28853,213 @@ body[data-theme="dark"] #tab-dashboard .dashboard-countdown-board {
         linear-gradient(135deg, rgba(2, 6, 23, 0.96) 0%, rgba(15, 23, 42, 0.96) 54%, rgba(17, 34, 58, 0.96) 100%) !important;
     box-shadow: 0 16px 30px rgba(2, 6, 23, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
 }
+
+/* Dashboard Next Polish 2026.24 */
+#tab-dashboard .dashboard-card--next {
+    gap: 24px;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-round-row--next {
+    margin-bottom: 2px;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-card-meta {
+    position: relative;
+    min-height: 32px;
+    padding: 0 12px 0 28px;
+    border-radius: 999px;
+    border: 1px solid rgba(239, 68, 68, 0.26) !important;
+    background: linear-gradient(180deg, rgba(254, 226, 226, 0.92), rgba(254, 202, 202, 0.9)) !important;
+    color: #b91c1c !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.1em !important;
+    box-shadow: 0 10px 20px rgba(239, 68, 68, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-card-meta::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    transform: translateY(-50%);
+    background: #ef4444;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.48);
+    animation: dashboard-live-pulse 1.8s infinite;
+}
+
+@keyframes dashboard-live-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.48);
+    }
+
+    70% {
+        box-shadow: 0 0 0 9px rgba(239, 68, 68, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+#tab-dashboard .dashboard-countdown-board {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 2px;
+    padding: 15px 18px !important;
+    border-radius: 22px !important;
+}
+
+#tab-dashboard .dashboard-countdown-board-head {
+    display: grid;
+    gap: 5px;
+    flex: 1 1 auto;
+}
+
+#tab-dashboard .dashboard-countdown-board-copy {
+    color: rgba(248, 250, 252, 0.94) !important;
+    font-size: clamp(15px, 2.6vw, 18px) !important;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    justify-content: flex-end;
+    gap: 0 !important;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    justify-content: flex-start !important;
+    gap: 0;
+    min-height: 0;
+    padding: 0 !important;
+    margin-right: 12px;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:last-child {
+    margin-right: 0;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:not(:last-child)::after {
+    content: none !important;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-num {
+    font-size: clamp(23px, 3.8vw, 30px) !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.05em;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-txt {
+    margin-left: 2px;
+    font-size: 0 !important;
+    letter-spacing: 0;
+    color: rgba(226, 232, 240, 0.92) !important;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-txt::before {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:nth-child(1) .time-txt::before {
+    content: "일";
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:nth-child(2) .time-txt::before {
+    content: "시간";
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:nth-child(3) .time-txt::before {
+    content: "분";
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:nth-child(4) .time-txt::before {
+    content: "초";
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-prize-board {
+    margin-top: 4px;
+}
+
+@media (max-width: 760px) {
+    #tab-dashboard .dashboard-card--next {
+        gap: 22px;
+    }
+
+    #tab-dashboard .dashboard-countdown-board {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px 16px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown {
+        justify-content: flex-start;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle {
+        margin-right: 10px;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-num {
+        font-size: clamp(18px, 4.6vw, 24px) !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-txt::before {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard .dashboard-card--next {
+        gap: 20px;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-card-meta {
+        min-height: 30px;
+        padding-left: 26px;
+        font-size: 10px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-card-meta::before {
+        left: 11px;
+        width: 7px;
+        height: 7px;
+    }
+
+    #tab-dashboard .dashboard-countdown-board {
+        padding: 12px 14px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle {
+        margin-right: 8px;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-num {
+        font-size: clamp(16px, 4.8vw, 19px) !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-txt::before {
+        font-size: 10px;
+    }
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-meta {
+    border-color: rgba(248, 113, 113, 0.28) !important;
+    background: linear-gradient(180deg, rgba(127, 29, 29, 0.86), rgba(153, 27, 27, 0.82)) !important;
+    color: #fee2e2 !important;
+    box-shadow: 0 12px 22px rgba(127, 29, 29, 0.3);
+}
