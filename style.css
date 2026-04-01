@@ -28706,3 +28706,150 @@ body[data-theme="dark"] #tab-dashboard .dashboard-prize-board-kicker {
         letter-spacing: 0.04em;
     }
 }
+
+/* Dashboard Countdown Banner 2026.23 */
+#tab-dashboard .dashboard-countdown-board {
+    display: grid !important;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 18px;
+    padding: 16px 18px !important;
+    border-radius: 24px !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    background:
+        linear-gradient(135deg, #0f172a 0%, #132238 52%, #173152 100%) !important;
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+#tab-dashboard .dashboard-countdown-board-head {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+
+#tab-dashboard .dashboard-countdown-head {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    min-height: 24px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(191, 219, 254, 0.9) !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.12em !important;
+}
+
+#tab-dashboard .dashboard-countdown-board-copy {
+    color: #f8fafc !important;
+    font-size: clamp(16px, 3vw, 20px) !important;
+    font-weight: 800 !important;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown {
+    justify-content: flex-end;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle {
+    flex: 0 0 auto;
+    gap: 7px;
+    padding: 0 18px 0 0 !important;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:not(:last-child)::after {
+    right: 5px;
+    color: rgba(226, 232, 240, 0.34);
+    font-size: 17px;
+    font-weight: 600;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-num {
+    color: #f8fafc !important;
+    font-size: clamp(24px, 4vw, 32px) !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.06em;
+    text-shadow: none;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-txt {
+    color: rgba(191, 219, 254, 0.74) !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.12em;
+}
+
+@media (max-width: 760px) {
+    #tab-dashboard .dashboard-countdown-board {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 14px 16px !important;
+    }
+
+    #tab-dashboard .dashboard-countdown-board-head {
+        gap: 6px;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown {
+        justify-content: space-between;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle {
+        gap: 5px;
+        padding-right: 12px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:not(:last-child)::after {
+        right: 2px;
+        font-size: 13px;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-num {
+        font-size: clamp(18px, 4.8vw, 24px) !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-txt {
+        font-size: 9px !important;
+        letter-spacing: 0.06em;
+    }
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard .dashboard-countdown-board {
+        padding: 12px 14px !important;
+        border-radius: 20px !important;
+    }
+
+    #tab-dashboard .dashboard-countdown-board-copy {
+        font-size: 15px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle {
+        gap: 4px;
+        padding-right: 10px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-num {
+        font-size: clamp(16px, 4.8vw, 20px) !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-txt {
+        font-size: 8px !important;
+    }
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-countdown-board {
+    border-color: rgba(96, 165, 250, 0.14) !important;
+    background:
+        linear-gradient(135deg, rgba(2, 6, 23, 0.96) 0%, rgba(15, 23, 42, 0.96) 54%, rgba(17, 34, 58, 0.96) 100%) !important;
+    box-shadow: 0 16px 30px rgba(2, 6, 23, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+}
