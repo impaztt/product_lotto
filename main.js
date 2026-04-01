@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const body = document.body;
     const siteHeaderEl = document.querySelector('.site-header');
     const bottomTabBarEl = document.querySelector('.bottom-tab-bar');
+    if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'manual';
+    }
     const ruleInputs = Array.from(document.querySelectorAll('.rule-input[type="checkbox"]'));
     const excludeNumberGrid = document.getElementById('exclude-number-grid');
     const excludeNumberCard = document.getElementById('exclude-number-card');
@@ -355,6 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let dashCountdownHoursEl = null;
     let dashCountdownMinutesEl = null;
     let dashCountdownSecondsEl = null;
+    let dashExpectedRankEls = [];
     let dashExpectedAmountEl = null;
     let dashBuyBtn = null;
     let recentRoundsEl = null;
@@ -715,6 +719,11 @@ document.addEventListener('DOMContentLoaded', () => {
             syncNavTabLinks(tabId);
             syncActiveTabState(tabId);
             refreshRevealMotion(targetPanel);
+            if (tabId === 'dashboard') {
+                window.requestAnimationFrame(() => {
+                    window.requestAnimationFrame(scrollDashboardViewportToTop);
+                });
+            }
             if (tabId === 'dashboard' && currentWeeklyData) {
                 loadLastWeekWinDashboard(currentWeeklyData);
             }
@@ -768,6 +777,22 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         body.dataset.activeTab = String(tabId || 'dashboard');
+    }
+
+    function scrollDashboardViewportToTop() {
+        if (getCurrentActiveTabId() !== 'dashboard') {
+            return;
+        }
+        const dashboardPanel = document.getElementById('tab-dashboard');
+        if (!dashboardPanel) {
+            return;
+        }
+        const headerHeight = siteHeaderEl ? Math.ceil(siteHeaderEl.getBoundingClientRect().height) : 0;
+        const top = window.scrollY + dashboardPanel.getBoundingClientRect().top - headerHeight - 8;
+        window.scrollTo({
+            top: Math.max(0, Math.round(top)),
+            behavior: 'auto'
+        });
     }
 
     function setupRevealMotion() {
@@ -860,7 +885,14 @@ document.addEventListener('DOMContentLoaded', () => {
         dashCountdownHoursEl = root.getElementById('dash-HH');
         dashCountdownMinutesEl = root.getElementById('dash-MM');
         dashCountdownSecondsEl = root.getElementById('dash-SS');
-        dashExpectedAmountEl = root.getElementById('dash-rnk1ExpcAmt');
+        dashExpectedRankEls = [
+            root.getElementById('dash-rnk1ExpcAmt'),
+            root.getElementById('dash-rnk2ExpcAmt'),
+            root.getElementById('dash-rnk3ExpcAmt'),
+            root.getElementById('dash-rnk4ExpcAmt'),
+            root.getElementById('dash-rnk5ExpcAmt')
+        ];
+        dashExpectedAmountEl = dashExpectedRankEls[0] || null;
         dashBuyBtn = root.getElementById('dash-btnBuyLt645');
         const dashWnStrcBtn = root.getElementById('dash-btnWnStrc');
         const dashPrchsBtn = root.getElementById('dash-btnPrchsMthd');
@@ -2217,6 +2249,11 @@ document.addEventListener('DOMContentLoaded', () => {
         syncInitialTab();
         syncNavTabLinks(getCurrentActiveTabId());
         syncActiveTabState(getCurrentActiveTabId());
+        if (getCurrentActiveTabId() === 'dashboard') {
+            window.requestAnimationFrame(() => {
+                window.requestAnimationFrame(scrollDashboardViewportToTop);
+            });
+        }
         setupRevealMotion();
         refreshRevealMotion(document.getElementById(`tab-${getCurrentActiveTabId()}`));
         setOnboardingSlide(0);
@@ -8970,6 +9007,34 @@ document.addEventListener('DOMContentLoaded', () => {
         return Number.isFinite(amount) ? amount : null;
     }
 
+    function buildDashboardExpectedRankAmounts(firstAmount) {
+        const normalizedFirstAmount = normalizeAmount(firstAmount);
+        const sharedPoolEstimate = normalizedFirstAmount == null
+            ? null
+            : Math.max(0, Math.round((normalizedFirstAmount / 6) / 10000) * 10000);
+        return [
+            normalizedFirstAmount,
+            sharedPoolEstimate,
+            sharedPoolEstimate,
+            50000,
+            5000
+        ];
+    }
+
+    function renderDashboardExpectedRanks(firstAmount) {
+        if (!dashExpectedRankEls.length) {
+            return;
+        }
+        const amounts = buildDashboardExpectedRankAmounts(firstAmount);
+        dashExpectedRankEls.forEach((el, index) => {
+            if (!el) {
+                return;
+            }
+            const value = amounts[index];
+            el.textContent = value == null ? '-' : formatKrwCompact(value);
+        });
+    }
+
     async function readJsonResponse(response, contextLabel = 'response') {
         const rawText = await response.text();
         const trimmed = String(rawText || '').trim();
@@ -9109,11 +9174,7 @@ document.addEventListener('DOMContentLoaded', () => {
             applyWeeklyExpectedAmount(null, '공식 연결 지연');
         }
         const amountToDisplay = expectedAmount != null ? expectedAmount : weeklyExpectedOverride;
-        if (amountToDisplay != null && dashExpectedAmountEl) {
-            dashExpectedAmountEl.textContent = formatCurrency(amountToDisplay);
-        } else if (dashExpectedAmountEl) {
-            dashExpectedAmountEl.textContent = '-';
-        }
+        renderDashboardExpectedRanks(amountToDisplay);
         if (current?.ltEpsd && weeklyThisRoundEl) {
             weeklyThisRoundEl.textContent = `${current.ltEpsd}회`;
         }
@@ -9356,11 +9417,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             applyWeeklyExpectedAmount(null, '공식 예상 조회중');
         }
-        if (dashExpectedAmountEl && weeklyExpectedOverride != null) {
-            dashExpectedAmountEl.textContent = formatCurrency(weeklyExpectedOverride);
-        } else if (dashExpectedAmountEl) {
-            dashExpectedAmountEl.textContent = '-';
-        }
+        renderDashboardExpectedRanks(weeklyExpectedOverride);
         if (weeklyStatusEl) {
             if (data._source === 'embedded-fallback') {
                 weeklyStatusEl.textContent = `${data.drwNo}회차 안내 데이터를 표시합니다. 공식 연결이 복구되면 자동으로 최신값으로 바뀝니다.${cached ? ' (캐시)' : ''}`;

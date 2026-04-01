@@ -27849,3 +27849,460 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--result .dashboard-card-m
     border-color: rgba(148, 163, 184, 0.22);
     background: linear-gradient(180deg, rgba(51, 65, 85, 0.9), rgba(30, 41, 59, 0.86)) !important;
 }
+
+/* Dashboard Next Card Refresh 2026.20 */
+body[data-active-tab="dashboard"] main.tab-layout {
+    min-height: 0;
+    gap: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#tab-dashboard.app-shell {
+    padding-bottom: 0 !important;
+}
+
+#tab-dashboard .dashboard-shell {
+    padding-bottom: 0 !important;
+}
+
+#tab-dashboard .dashboard-card--next {
+    gap: 18px;
+    padding: 22px 22px 18px !important;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(246, 250, 255, 0.98)),
+        radial-gradient(circle at top right, rgba(38, 103, 221, 0.11), transparent 24rem) !important;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-card-head {
+    position: relative;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center !important;
+    gap: 12px !important;
+    margin-bottom: 0;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-card-head-copy {
+    display: grid;
+    gap: 4px;
+    padding: 0 !important;
+    justify-items: start;
+    text-align: left;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-card-kicker {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(226, 238, 255, 0.98), rgba(214, 230, 255, 0.94));
+    border: 1px solid rgba(59, 130, 246, 0.16);
+    color: #2456b8 !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.08em !important;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-card-title {
+    margin: 0;
+    color: #0f172a !important;
+    font-size: clamp(26px, 5vw, 34px) !important;
+    font-weight: 900 !important;
+    line-height: 1.06;
+    letter-spacing: -0.05em;
+    text-align: left;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-card-meta {
+    position: static;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 0 12px;
+    margin: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: #4f5f79 !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.08em !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-round-row {
+    display: grid !important;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    justify-items: start;
+    gap: 14px;
+    width: 100%;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-round-badge {
+    min-width: 94px;
+    min-height: 52px;
+    padding: 0 16px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(236, 244, 255, 0.98), rgba(219, 233, 255, 0.96)) !important;
+    color: #1d4ed8 !important;
+    font-size: clamp(22px, 5vw, 28px) !important;
+    font-weight: 800 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-round-copy {
+    display: grid !important;
+    gap: 4px;
+    justify-items: start;
+    text-align: left;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-round-copy strong {
+    color: #0f172a !important;
+    font-size: clamp(18px, 4vw, 22px) !important;
+    font-weight: 800 !important;
+    line-height: 1.15;
+    text-align: left;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-round-copy p {
+    margin: 0;
+    display: block !important;
+    color: #64748b !important;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+#tab-dashboard .dashboard-countdown-board,
+#tab-dashboard .dashboard-prize-board {
+    display: grid;
+    gap: 12px;
+    width: 100%;
+    padding: 18px;
+    border-radius: 24px;
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 250, 255, 0.96));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+#tab-dashboard .dashboard-countdown-board-head,
+#tab-dashboard .dashboard-prize-board-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#tab-dashboard .dashboard-countdown-head,
+#tab-dashboard .dashboard-prize-board-kicker {
+    margin: 0;
+    color: #64748b !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase;
+}
+
+#tab-dashboard .dashboard-countdown-board-copy,
+#tab-dashboard .dashboard-prize-board-title {
+    color: #0f172a;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0 !important;
+    padding: 14px 10px !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(15, 23, 42, 0.4) !important;
+    background: linear-gradient(180deg, #0f172a, #111c31) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 12px 24px rgba(15, 23, 42, 0.18) !important;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle {
+    position: relative;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 6px;
+    min-height: 78px;
+    padding: 0 10px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:not(:last-child)::after {
+    content: ":";
+    position: absolute;
+    top: 50%;
+    right: -3px;
+    transform: translateY(-58%);
+    color: rgba(241, 245, 249, 0.36);
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-num {
+    color: #f8fafc !important;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    font-size: clamp(26px, 5vw, 36px) !important;
+    font-weight: 800 !important;
+    line-height: 1;
+    letter-spacing: -0.06em;
+    text-shadow: 0 0 14px rgba(56, 189, 248, 0.22);
+    font-variant-numeric: tabular-nums;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-txt {
+    color: rgba(191, 219, 254, 0.78) !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.18em;
+}
+
+#tab-dashboard .dashboard-prize-list {
+    display: grid;
+    gap: 10px;
+}
+
+#tab-dashboard .dashboard-prize-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 10px 16px;
+    padding: 13px 14px;
+    border-radius: 18px;
+    background: rgba(247, 250, 255, 0.96);
+    border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+#tab-dashboard .dashboard-prize-item:first-child {
+    background: linear-gradient(180deg, rgba(236, 243, 255, 0.98), rgba(224, 237, 255, 0.96));
+    border-color: rgba(59, 130, 246, 0.16);
+}
+
+#tab-dashboard .dashboard-prize-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    min-height: 32px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #31537d;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+#tab-dashboard .dashboard-prize-item:first-child .dashboard-prize-rank {
+    color: #1d4ed8;
+}
+
+#tab-dashboard .dashboard-prize-amount {
+    min-width: 0;
+    color: #0f172a;
+    font-size: clamp(20px, 4.4vw, 24px);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.04em;
+    text-align: right;
+}
+
+#tab-dashboard .dashboard-prize-footnote {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-card-actions {
+    width: 100%;
+    margin-top: 2px;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-card-actions > * {
+    flex: 1 1 auto;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-primary-btn {
+    min-height: 50px !important;
+    border-radius: 18px !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.02em;
+}
+
+@media (max-width: 640px) {
+    body[data-active-tab="dashboard"] main.tab-layout {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    #tab-dashboard .dashboard-card--next {
+        padding: 20px 18px 16px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-card-head {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: start;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-card-meta {
+        justify-self: start;
+    }
+
+    #tab-dashboard .dashboard-countdown-board,
+    #tab-dashboard .dashboard-prize-board {
+        padding: 16px;
+        border-radius: 20px;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown {
+        padding: 12px 6px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle {
+        min-height: 70px;
+        padding: 0 8px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:not(:last-child)::after {
+        right: -4px;
+        font-size: 22px;
+    }
+
+    #tab-dashboard .dashboard-prize-item {
+        padding: 12px;
+        gap: 8px 12px;
+    }
+
+    #tab-dashboard .dashboard-prize-amount {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard .dashboard-card--next {
+        gap: 14px;
+        padding: 18px 16px 14px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-round-row {
+        grid-template-columns: 1fr;
+        justify-items: start;
+        gap: 10px;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-round-copy strong,
+    #tab-dashboard .dashboard-card--next .dashboard-round-copy p,
+    #tab-dashboard .dashboard-card--next .dashboard-card-title {
+        text-align: left;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px !important;
+        padding: 10px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle {
+        min-height: 64px;
+        border-radius: 14px !important;
+        background: rgba(255, 255, 255, 0.03) !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:not(:last-child)::after {
+        content: none;
+    }
+
+    #tab-dashboard .dashboard-prize-item {
+        grid-template-columns: 1fr;
+        justify-items: start;
+    }
+
+    #tab-dashboard .dashboard-prize-amount {
+        text-align: left;
+    }
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-card--next {
+    background:
+        linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(18, 30, 49, 0.94)),
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.16), transparent 24rem) !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-kicker {
+    background: linear-gradient(180deg, rgba(29, 78, 216, 0.22), rgba(30, 64, 175, 0.18));
+    border-color: rgba(96, 165, 250, 0.24);
+    color: #bfdbfe !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-title,
+body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-round-copy strong,
+body[data-theme="dark"] #tab-dashboard .dashboard-countdown-board-copy,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-board-title,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-amount {
+    color: #f8fafc !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-meta,
+body[data-theme="dark"] #tab-dashboard .dashboard-countdown-board,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-board,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-item,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-rank {
+    background: rgba(15, 23, 42, 0.72) !important;
+    border-color: rgba(148, 163, 184, 0.16) !important;
+    color: #cbd5e1 !important;
+    box-shadow: none;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-round-badge {
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.94), rgba(15, 23, 42, 0.9)) !important;
+    border: 1px solid rgba(96, 165, 250, 0.16);
+    color: #bfdbfe !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-round-copy p,
+body[data-theme="dark"] #tab-dashboard .dashboard-countdown-head,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-board-kicker,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-footnote {
+    color: #94a3b8 !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-countdown {
+    border-color: rgba(96, 165, 250, 0.18) !important;
+    background: linear-gradient(180deg, rgba(2, 6, 23, 0.94), rgba(15, 23, 42, 0.96)) !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-countdown .time-num {
+    color: #e2f3ff !important;
+    text-shadow: 0 0 14px rgba(56, 189, 248, 0.18);
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-countdown .time-txt {
+    color: rgba(147, 197, 253, 0.72) !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-item:first-child {
+    background: linear-gradient(180deg, rgba(29, 78, 216, 0.22), rgba(30, 64, 175, 0.16)) !important;
+    border-color: rgba(96, 165, 250, 0.2) !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-item:first-child .dashboard-prize-rank {
+    color: #bfdbfe !important;
+}

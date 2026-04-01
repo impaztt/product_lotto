@@ -1503,41 +1503,70 @@
                             <div class="dashboard-card-head">
                                 <div class="dashboard-card-head-copy">
                                     <span class="dashboard-card-kicker">이번 회차</span>
-                                    <strong class="dashboard-card-title">번호 준비</strong>
+                                    <strong class="dashboard-card-title">예상 당첨금 보드</strong>
                                 </div>
-                                <span class="dashboard-card-meta">추첨 준비</span>
+                                <span class="dashboard-card-meta">실시간</span>
                             </div>
-                            <div class="dashboard-round-row">
+                            <div class="dashboard-round-row dashboard-round-row--next">
                                 <div class="result-round dashboard-round-badge" id="dash-thsLtEpsd"></div>
                                 <div class="dashboard-round-copy">
                                     <strong><span id="dash-thsLtRflYmd"></span> 추첨 예정</strong>
-                                    <p>일정과 기대 금액만 선명하게 표시</p>
+                                    <p>이번 회차 예상 흐름만 간결하게 정리했습니다.</p>
                                 </div>
                             </div>
-                            <div class="dashboard-countdown-head">남은 시간</div>
-                            <div class="timer-box dashboard-countdown">
-                                <div class="time-circle">
-                                    <div class="time-num" id="dash-DD"></div>
-                                    <div class="time-txt">일</div>
+                            <section class="dashboard-countdown-board" aria-label="이번 회차 남은 시간">
+                                <div class="dashboard-countdown-board-head">
+                                    <span class="dashboard-countdown-head">남은 시간</span>
+                                    <strong class="dashboard-countdown-board-copy">추첨까지 실시간 카운트</strong>
                                 </div>
-                                <div class="time-circle">
-                                    <div class="time-num" id="dash-HH"></div>
-                                    <div class="time-txt">시</div>
+                                <div class="timer-box dashboard-countdown" role="timer" aria-live="polite">
+                                    <div class="time-circle">
+                                        <div class="time-num" id="dash-DD"></div>
+                                        <div class="time-txt">DAY</div>
+                                    </div>
+                                    <div class="time-circle">
+                                        <div class="time-num" id="dash-HH"></div>
+                                        <div class="time-txt">HOUR</div>
+                                    </div>
+                                    <div class="time-circle">
+                                        <div class="time-num" id="dash-MM"></div>
+                                        <div class="time-txt">MIN</div>
+                                    </div>
+                                    <div class="time-circle">
+                                        <div class="time-num" id="dash-SS"></div>
+                                        <div class="time-txt">SEC</div>
+                                    </div>
                                 </div>
-                                <div class="time-circle">
-                                    <div class="time-num" id="dash-MM"></div>
-                                    <div class="time-txt">분</div>
+                            </section>
+                            <section class="dashboard-prize-board" aria-label="이번 회차 예상 당첨금 순위">
+                                <div class="dashboard-prize-board-head">
+                                    <span class="dashboard-prize-board-kicker">예상 당첨금</span>
+                                    <strong class="dashboard-prize-board-title">1위부터 5위까지</strong>
                                 </div>
-                                <div class="time-circle">
-                                    <div class="time-num" id="dash-SS"></div>
-                                    <div class="time-txt">초</div>
+                                <div class="dashboard-prize-list">
+                                    <div class="dashboard-prize-item">
+                                        <span class="dashboard-prize-rank">1위</span>
+                                        <strong class="dashboard-prize-amount" id="dash-rnk1ExpcAmt">-</strong>
+                                    </div>
+                                    <div class="dashboard-prize-item">
+                                        <span class="dashboard-prize-rank">2위</span>
+                                        <strong class="dashboard-prize-amount" id="dash-rnk2ExpcAmt">-</strong>
+                                    </div>
+                                    <div class="dashboard-prize-item">
+                                        <span class="dashboard-prize-rank">3위</span>
+                                        <strong class="dashboard-prize-amount" id="dash-rnk3ExpcAmt">-</strong>
+                                    </div>
+                                    <div class="dashboard-prize-item">
+                                        <span class="dashboard-prize-rank">4위</span>
+                                        <strong class="dashboard-prize-amount" id="dash-rnk4ExpcAmt">-</strong>
+                                    </div>
+                                    <div class="dashboard-prize-item">
+                                        <span class="dashboard-prize-rank">5위</span>
+                                        <strong class="dashboard-prize-amount" id="dash-rnk5ExpcAmt">-</strong>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="dashboard-prize-strip">
-                                <span class="dashboard-prize-label">예상 1등 당첨금</span>
-                                <strong class="winnings dashboard-prize-value" id="dash-rnk1ExpcAmt"></strong>
-                                <span class="dashboard-prize-note">공식 예상치 기준</span>
-                            </div>
+                                <p class="dashboard-prize-footnote">2~3위는 1등 예상 총액 기준 추정, 4~5위는 고정 지급</p>
+                            </section>
                             <div class="dashboard-card-actions">
                                 <button class="btn-butNow dashboard-primary-btn" type="button" id="dash-btnBuyLt645">추첨 탭 열기</button>
                             </div>
