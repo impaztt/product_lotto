@@ -28614,3 +28614,95 @@ body[data-theme="dark"] #tab-dashboard .dashboard-prize-footnote,
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-board-kicker {
     color: #94a3b8 !important;
 }
+
+/* Dashboard Countdown Inline 2026.22 */
+#tab-dashboard .dashboard-card--next .dashboard-countdown {
+    display: flex !important;
+    grid-template-columns: none !important;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 0 !important;
+    padding: 14px 16px !important;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    justify-content: flex-start !important;
+    align-content: unset;
+    gap: 6px;
+    min-height: 0;
+    padding: 0 16px 0 0 !important;
+    flex: 1 1 auto;
+    white-space: nowrap;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:last-child {
+    padding-right: 0 !important;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:not(:last-child)::after {
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-num {
+    font-size: clamp(24px, 4.2vw, 34px) !important;
+}
+
+#tab-dashboard .dashboard-card--next .dashboard-countdown .time-txt {
+    font-size: 11px !important;
+    letter-spacing: 0.06em;
+}
+
+@media (max-width: 640px) {
+    #tab-dashboard .dashboard-card--next .dashboard-countdown {
+        padding: 12px 14px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle {
+        gap: 5px;
+        padding-right: 12px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:not(:last-child)::after {
+        right: 2px;
+        font-size: 15px;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-num {
+        font-size: clamp(20px, 4.6vw, 26px) !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-txt {
+        font-size: 10px !important;
+    }
+}
+
+@media (max-width: 430px) {
+    #tab-dashboard .dashboard-card--next .dashboard-countdown {
+        padding: 10px 12px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle {
+        gap: 4px;
+        padding-right: 10px !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-circle:not(:last-child)::after {
+        right: 1px;
+        font-size: 12px;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-num {
+        font-size: clamp(16px, 4.8vw, 20px) !important;
+    }
+
+    #tab-dashboard .dashboard-card--next .dashboard-countdown .time-txt {
+        font-size: 8px !important;
+        letter-spacing: 0.04em;
+    }
+}
