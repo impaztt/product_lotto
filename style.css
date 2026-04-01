@@ -23471,6 +23471,7 @@ body[data-theme='dark'] #tab-mypage .mypage-plan-offer-card.is-scheduled {
 }
 
 body[data-active-tab="dashboard"] main.tab-layout {
+    min-height: 0;
     padding-bottom: calc(74px + env(safe-area-inset-bottom));
 }
 
