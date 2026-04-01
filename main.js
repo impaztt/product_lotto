@@ -9029,28 +9029,28 @@ document.addEventListener('DOMContentLoaded', () => {
             {
                 amount: normalizedFirstAmount,
                 meta: firstPoolEstimate == null
-                    ? '평균 11명 기준'
-                    : `11명 기준 · 총 ${formatKrwCompact(firstPoolEstimate)}`
+                    ? '평균 11명 기준 공식 예상 1인당 금액'
+                    : `평균 11명 · 총 ${formatKrwCompact(firstPoolEstimate)} 배분 예상`
             },
             {
                 amount: secondAmount,
                 meta: sharedPoolEstimate == null
-                    ? '평균 85명 기준'
-                    : `85명 기준 · 총 ${formatKrwCompact(sharedPoolEstimate)}`
+                    ? '평균 85명 기준 1인당 추산'
+                    : `평균 85명 · 총 ${formatKrwCompact(sharedPoolEstimate)} 배분 예상`
             },
             {
                 amount: thirdAmount,
                 meta: sharedPoolEstimate == null
-                    ? '평균 3,355명 기준'
-                    : `3,355명 기준 · 총 ${formatKrwCompact(sharedPoolEstimate)}`
+                    ? '평균 3,355명 기준 1인당 추산'
+                    : `평균 3,355명 · 총 ${formatKrwCompact(sharedPoolEstimate)} 배분 예상`
             },
             {
                 amount: 50000,
-                meta: '4개 일치 · 고정'
+                meta: '4개 번호 일치 · 고정 지급'
             },
             {
                 amount: 5000,
-                meta: '3개 일치 · 고정'
+                meta: '3개 번호 일치 · 고정 지급'
             }
         ];
     }
