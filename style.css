@@ -29144,60 +29144,67 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 #tab-dashboard .dashboard-next-hero .dashboard-card-meta {
     position: absolute;
     top: 14px;
-    left: -48px;
+    left: -54px;
     z-index: 4;
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    width: 178px;
-    min-height: 46px;
+    width: 192px;
+    min-height: 42px;
     padding: 0 28px;
     margin: 0;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.24) !important;
+    border-radius: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.24) !important;
+    border-bottom: 1px solid rgba(120, 18, 48, 0.44) !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
     background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.08) 26%, rgba(255, 255, 255, 0) 54%) top/100% 60% no-repeat,
-        linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.08) 24%, rgba(255, 255, 255, 0) 54%) top/100% 58% no-repeat,
+        linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 16%, rgba(127, 29, 29, 0.08) 84%, rgba(76, 5, 25, 0.16)),
         linear-gradient(135deg, #fb7185 0%, #f43f5e 22%, #be123c 56%, #881337 100%) !important;
     color: #fff7f8 !important;
-    font-size: 11px !important;
+    font-size: 10px !important;
     font-weight: 900 !important;
-    letter-spacing: 0.24em !important;
+    letter-spacing: 0.28em !important;
     text-transform: uppercase;
-    text-shadow: 0 1px 1px rgba(76, 5, 25, 0.42);
+    text-shadow: 0 1px 1px rgba(76, 5, 25, 0.38);
     transform: rotate(-45deg);
     transform-origin: center;
     box-shadow:
-        0 20px 32px rgba(127, 29, 29, 0.22),
-        0 8px 18px rgba(15, 23, 42, 0.16),
-        inset 0 1px 0 rgba(255, 255, 255, 0.26),
+        0 10px 18px rgba(127, 29, 29, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
         inset 0 -2px 0 rgba(103, 7, 37, 0.42);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    overflow: hidden;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    overflow: visible;
     isolation: isolate;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-card-meta::before {
     content: "";
     position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.34), transparent 18%),
-        linear-gradient(118deg, transparent 0 24%, rgba(255, 255, 255, 0.36) 39%, transparent 56%),
-        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 14px);
-    opacity: 0.84;
-    mix-blend-mode: screen;
+    left: -16px;
+    top: 9px;
+    width: 18px;
+    height: calc(100% - 18px);
+    background: linear-gradient(180deg, rgba(136, 19, 55, 0.98), rgba(103, 7, 37, 0.98));
+    clip-path: polygon(100% 0, 0 50%, 100% 100%);
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.12);
+    z-index: -1;
     pointer-events: none;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-card-meta::after {
     content: "";
     position: absolute;
-    inset: 6px 14px;
-    border-top: 1px solid rgba(255, 255, 255, 0.22);
-    border-bottom: 1px solid rgba(127, 29, 29, 0.36);
-    opacity: 0.72;
+    right: -16px;
+    top: 9px;
+    width: 18px;
+    height: calc(100% - 18px);
+    background: linear-gradient(180deg, rgba(136, 19, 55, 0.98), rgba(103, 7, 37, 0.98));
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    box-shadow: inset 1px 0 0 rgba(76, 5, 25, 0.22);
+    z-index: -1;
     pointer-events: none;
 }
 
@@ -29267,79 +29274,66 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown-board {
     display: grid !important;
-    gap: 16px;
-    align-content: space-between;
+    gap: 10px;
+    align-content: center;
     margin: 0 !important;
-    padding: 20px !important;
-    border-radius: 28px !important;
-    border: 1px solid rgba(191, 219, 254, 0.18) !important;
-    background:
-        radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 12rem),
-        linear-gradient(180deg, rgba(5, 16, 38, 0.48), rgba(15, 23, 42, 0.62)) !important;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown-board-head {
     display: grid;
-    gap: 6px;
+    gap: 4px;
     min-width: 0;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown-head {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     width: fit-content;
-    min-height: 24px;
-    padding: 0 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(191, 219, 254, 0.9) !important;
+    min-height: 0;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    color: rgba(191, 219, 254, 0.72) !important;
     font-size: 10px !important;
     font-weight: 800 !important;
-    letter-spacing: 0.14em !important;
+    letter-spacing: 0.18em !important;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown-board-copy {
     color: #f8fafc !important;
-    font-size: clamp(16px, 2.5vw, 20px) !important;
+    font-size: clamp(15px, 2.2vw, 19px) !important;
     font-weight: 800 !important;
-    line-height: 1.16;
+    line-height: 1.1;
     letter-spacing: -0.04em;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown {
     position: relative;
     display: flex !important;
-    align-items: center !important;
-    justify-content: space-between;
+    align-items: baseline !important;
+    justify-content: flex-start;
     flex-wrap: nowrap !important;
-    gap: clamp(10px, 1.8vw, 18px) !important;
-    width: 100%;
+    gap: clamp(8px, 1.4vw, 14px) !important;
+    width: auto;
     min-width: 0;
-    padding: 14px 18px !important;
-    border-radius: 22px;
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 46%) top/100% 54% no-repeat,
-        linear-gradient(135deg, rgba(8, 20, 46, 0.96), rgba(18, 36, 72, 0.88) 58%, rgba(8, 47, 73, 0.72)) !important;
-    border: 1px solid rgba(191, 219, 254, 0.18) !important;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        inset 0 -1px 0 rgba(15, 23, 42, 0.34),
-        0 16px 28px rgba(2, 6, 23, 0.18) !important;
+    padding: 0 !important;
+    border-radius: 0;
+    background: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
     white-space: nowrap;
-    overflow: hidden;
-    isolation: isolate;
+    overflow: visible;
+    isolation: auto;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown::before {
-    content: "";
-    position: absolute;
-    inset: 1px;
-    border-radius: inherit;
-    background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.04), transparent 24%, rgba(125, 211, 252, 0.08) 54%, transparent 78%, rgba(250, 204, 21, 0.05));
-    pointer-events: none;
+    content: none;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle {
@@ -29362,27 +29356,31 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle:not(:last-child)::after {
-    content: "";
+    content: "·";
     display: block;
-    width: 4px;
-    height: 4px;
+    width: auto;
+    height: auto;
     margin-left: clamp(4px, 0.8vw, 8px);
-    border-radius: 999px;
-    background: rgba(125, 211, 252, 0.78);
-    box-shadow: 0 0 0 4px rgba(125, 211, 252, 0.12);
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
     align-self: center;
     flex: 0 0 auto;
+    color: rgba(125, 211, 252, 0.58);
+    font-size: clamp(12px, 1.6vw, 14px);
+    font-weight: 900;
+    line-height: 1;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-num {
     color: #f8fafc !important;
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-    font-size: clamp(25px, 4vw, 34px) !important;
+    font-size: clamp(24px, 3.6vw, 32px) !important;
     font-weight: 800 !important;
-    line-height: 0.95;
+    line-height: 1;
     letter-spacing: -0.08em;
     font-variant-numeric: tabular-nums;
-    text-shadow: 0 8px 18px rgba(15, 23, 42, 0.2);
+    text-shadow: none;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt {
@@ -29390,7 +29388,7 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     align-items: center;
     margin-left: 0;
     color: rgba(226, 232, 240, 0.78) !important;
-    font-size: clamp(12px, 1.5vw, 14px) !important;
+    font-size: clamp(12px, 1.4vw, 13px) !important;
     font-weight: 800 !important;
     line-height: 1;
     letter-spacing: -0.03em;
@@ -29801,9 +29799,9 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 
     #tab-dashboard .dashboard-next-hero .dashboard-card-meta {
         top: 14px;
-        left: -44px;
-        width: 158px;
-        min-height: 40px;
+        left: -48px;
+        width: 176px;
+        min-height: 38px;
         font-size: 9px !important;
         letter-spacing: 0.2em !important;
     }
@@ -29816,13 +29814,13 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown-board {
-        gap: 12px;
-        padding: 18px !important;
-        overflow: hidden;
+        gap: 8px;
+        padding: 0 !important;
+        overflow: visible;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown-board-copy {
-        font-size: clamp(15px, 4.1vw, 18px) !important;
+        font-size: clamp(14px, 4.1vw, 17px) !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-round-copy {
@@ -29836,23 +29834,21 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown {
-        gap: 8px !important;
-        padding: 12px 14px !important;
+        gap: 6px !important;
+        padding: 0 !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle {
-        gap: 4px;
+        gap: 3px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle:not(:last-child)::after {
-        width: 3px;
-        height: 3px;
-        margin-left: 3px;
-        box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.1);
+        margin-left: 2px;
+        font-size: 10px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-num {
-        font-size: clamp(18px, 5.1vw, 24px) !important;
+        font-size: clamp(17px, 5.1vw, 23px) !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt {
@@ -29881,21 +29877,25 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 
     #tab-dashboard .dashboard-next-hero .dashboard-card-meta {
         top: 12px;
-        left: -42px;
-        width: 144px;
-        min-height: 36px;
-        padding: 0 18px;
+        left: -45px;
+        width: 162px;
+        min-height: 34px;
+        padding: 0 16px;
         font-size: 8px !important;
         letter-spacing: 0.18em !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-round-row--next,
-    #tab-dashboard .dashboard-next-hero .dashboard-countdown-board,
     #tab-dashboard .dashboard-prize-card,
     #tab-dashboard .dashboard-prize-fixed-item,
     #tab-dashboard .dashboard-prize-insight {
         padding: 14px;
         border-radius: 20px;
+    }
+
+    #tab-dashboard .dashboard-next-hero .dashboard-countdown-board {
+        padding: 0 !important;
+        border-radius: 0 !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-round-badge {
@@ -29907,24 +29907,22 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown {
-        gap: 6px !important;
-        padding: 10px 12px !important;
-        border-radius: 18px;
+        gap: 5px !important;
+        padding: 0 !important;
+        border-radius: 0;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle {
-        gap: 3px;
+        gap: 2px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle:not(:last-child)::after {
-        width: 3px;
-        height: 3px;
-        margin-left: 2px;
-        box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.08);
+        margin-left: 1px;
+        font-size: 10px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-num {
-        font-size: clamp(15px, 5.2vw, 18px) !important;
+        font-size: clamp(14px, 5.2vw, 18px) !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt,
@@ -29975,31 +29973,31 @@ body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-round-bad
 
 body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-card-meta {
     background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.05) 26%, rgba(255, 255, 255, 0) 54%) top/100% 60% no-repeat,
-        linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04) 24%, rgba(255, 255, 255, 0) 54%) top/100% 58% no-repeat,
+        linear-gradient(90deg, rgba(255, 255, 255, 0.06), transparent 18%, rgba(127, 29, 29, 0.1) 84%, rgba(2, 6, 23, 0.22)),
         linear-gradient(135deg, rgba(251, 113, 133, 0.96), rgba(225, 29, 72, 0.95) 42%, rgba(136, 19, 55, 0.98) 100%) !important;
     color: #fff1f2 !important;
+    border-top-color: rgba(255, 255, 255, 0.18) !important;
+    border-bottom-color: rgba(76, 5, 25, 0.5) !important;
     box-shadow:
-        0 20px 32px rgba(69, 10, 10, 0.28),
-        0 8px 18px rgba(2, 6, 23, 0.24),
+        0 12px 20px rgba(69, 10, 10, 0.24),
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
         inset 0 -2px 0 rgba(76, 5, 25, 0.44);
 }
 
+body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-card-meta::before,
+body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-card-meta::after {
+    background: linear-gradient(180deg, rgba(136, 19, 55, 0.98), rgba(88, 28, 41, 0.98));
+}
+
 body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-countdown {
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0) 44%) top/100% 54% no-repeat,
-        linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(17, 24, 39, 0.94) 58%, rgba(14, 116, 144, 0.18)) !important;
-    border-color: rgba(148, 163, 184, 0.18) !important;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        inset 0 -1px 0 rgba(15, 23, 42, 0.44),
-        0 18px 30px rgba(2, 6, 23, 0.24) !important;
+    background: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle:not(:last-child)::after {
-    background: rgba(125, 211, 252, 0.64);
-    box-shadow: 0 0 0 4px rgba(125, 211, 252, 0.1);
+    color: rgba(125, 211, 252, 0.52);
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt {
