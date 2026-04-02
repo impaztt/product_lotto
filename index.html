@@ -1452,6 +1452,32 @@
         <section id="tab-dashboard" class="tab-panel app-shell app-shell--dashboard is-active" role="tabpanel" aria-labelledby="tab-dashboard-btn" tabindex="0">
             <div class="container-box">
                 <div class="dashboard-shell">
+                    <section class="dashboard-countdown-ribbon" aria-label="이번 회차 추첨까지 남은 시간 배너">
+                        <div class="dashboard-countdown-ribbon-track">
+                            <div class="dashboard-countdown-ribbon-copy">
+                                <span class="dashboard-countdown-ribbon-kicker">추첨 카운트</span>
+                                <strong class="dashboard-countdown-ribbon-title"><span class="dashboard-countdown-ribbon-round" id="dash-ribbon-round">이번 회차</span> 추첨까지 남은 시간</strong>
+                            </div>
+                            <div class="dashboard-countdown-ribbon-timer">
+                                <div class="dashboard-countdown-ribbon-unit">
+                                    <span class="dashboard-countdown-ribbon-num" id="dash-ribbon-DD"></span>
+                                    <span class="dashboard-countdown-ribbon-txt">일</span>
+                                </div>
+                                <div class="dashboard-countdown-ribbon-unit">
+                                    <span class="dashboard-countdown-ribbon-num" id="dash-ribbon-HH"></span>
+                                    <span class="dashboard-countdown-ribbon-txt">시간</span>
+                                </div>
+                                <div class="dashboard-countdown-ribbon-unit">
+                                    <span class="dashboard-countdown-ribbon-num" id="dash-ribbon-MM"></span>
+                                    <span class="dashboard-countdown-ribbon-txt">분</span>
+                                </div>
+                                <div class="dashboard-countdown-ribbon-unit">
+                                    <span class="dashboard-countdown-ribbon-num" id="dash-ribbon-SS"></span>
+                                    <span class="dashboard-countdown-ribbon-txt">초</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                     <section class="dashboard-spotlight-grid" aria-label="핵심 회차 카드">
                         <article class="dashboard-card dashboard-card--result dash-ops-card dash-ops-card--result">
                             <div class="dashboard-card-head">

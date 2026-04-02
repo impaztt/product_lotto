@@ -347,6 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let weeklyExpectedNoteEl = null;
     let dashThisRoundEl = null;
     let dashThisDateEl = null;
+    let dashRibbonRoundEl = null;
     let dashLatestRoundEl = null;
     let dashLatestDateEl = null;
     let dashLatestNumbers = [];
@@ -358,6 +359,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let dashCountdownHoursEl = null;
     let dashCountdownMinutesEl = null;
     let dashCountdownSecondsEl = null;
+    let dashRibbonCountdownDaysEl = null;
+    let dashRibbonCountdownHoursEl = null;
+    let dashRibbonCountdownMinutesEl = null;
+    let dashRibbonCountdownSecondsEl = null;
     let dashExpectedRankEls = [];
     let dashExpectedRankMetaEls = [];
     let dashExpectedAmountEl = null;
@@ -868,6 +873,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function bindDashboardElements(root) {
         dashThisRoundEl = root.getElementById('dash-thsLtEpsd');
         dashThisDateEl = root.getElementById('dash-thsLtRflYmd');
+        dashRibbonRoundEl = root.getElementById('dash-ribbon-round');
         dashLatestRoundEl = root.getElementById('dash-pstLtEpsd');
         dashLatestDateEl = root.getElementById('dash-pstLtRflYmd');
         dashLatestNumbers = [
@@ -886,6 +892,10 @@ document.addEventListener('DOMContentLoaded', () => {
         dashCountdownHoursEl = root.getElementById('dash-HH');
         dashCountdownMinutesEl = root.getElementById('dash-MM');
         dashCountdownSecondsEl = root.getElementById('dash-SS');
+        dashRibbonCountdownDaysEl = root.getElementById('dash-ribbon-DD');
+        dashRibbonCountdownHoursEl = root.getElementById('dash-ribbon-HH');
+        dashRibbonCountdownMinutesEl = root.getElementById('dash-ribbon-MM');
+        dashRibbonCountdownSecondsEl = root.getElementById('dash-ribbon-SS');
         dashExpectedRankEls = [
             root.getElementById('dash-rnk1ExpcAmt'),
             root.getElementById('dash-rnk2ExpcAmt'),
@@ -8926,7 +8936,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateWeeklyCountdownDisplay() {
-        if (!weeklyCountdownEl && !weeklyCountdownDaysEl) {
+        if (!weeklyCountdownEl && !weeklyCountdownDaysEl && !analysisCountdownEl && !dashCountdownDaysEl && !dashRibbonCountdownDaysEl) {
             return;
         }
         const now = getKstNow();
@@ -8967,6 +8977,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (dashCountdownSecondsEl) {
             dashCountdownSecondsEl.textContent = pad(seconds);
+        }
+        if (dashRibbonCountdownDaysEl) {
+            dashRibbonCountdownDaysEl.textContent = String(days);
+        }
+        if (dashRibbonCountdownHoursEl) {
+            dashRibbonCountdownHoursEl.textContent = pad(hours);
+        }
+        if (dashRibbonCountdownMinutesEl) {
+            dashRibbonCountdownMinutesEl.textContent = pad(minutes);
+        }
+        if (dashRibbonCountdownSecondsEl) {
+            dashRibbonCountdownSecondsEl.textContent = pad(seconds);
         }
         if (weeklyCountdownSubEl) {
             weeklyCountdownSubEl.textContent = `다음 추첨: ${formatKstDateTime(nextDraw)} (KST)`;
@@ -9220,6 +9242,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (current?.ltEpsd && dashThisRoundEl) {
             dashThisRoundEl.textContent = `${current.ltEpsd}회`;
+        }
+        if (current?.ltEpsd && dashRibbonRoundEl) {
+            dashRibbonRoundEl.textContent = `${current.ltEpsd}회`;
         }
         if (current?.ltRflYmd && weeklyThisDateEl) {
             weeklyThisDateEl.textContent = formatShortDate(current.ltRflYmd);
@@ -9475,6 +9500,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (dashThisRoundEl && !dashThisRoundEl.textContent.trim()) {
             dashThisRoundEl.textContent = `${Number(data.drwNo) + 1}회`;
+        }
+        if (dashRibbonRoundEl && !dashRibbonRoundEl.textContent.trim()) {
+            dashRibbonRoundEl.textContent = `${Number(data.drwNo) + 1}회`;
         }
         if (dashThisDateEl && !dashThisDateEl.textContent.trim()) {
             dashThisDateEl.textContent = formatShortDate(getNextSaturdayDrawTime(getKstNow()));
