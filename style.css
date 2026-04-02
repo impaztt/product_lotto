@@ -29201,18 +29201,20 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-round-badge {
-    min-width: 116px;
-    min-height: 66px;
-    padding: 0 18px;
-    border-radius: 22px;
-    border: 1px solid rgba(191, 219, 254, 0.16);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(219, 234, 254, 0.9)) !important;
-    color: #0f3d8f !important;
-    font-size: clamp(28px, 5vw, 36px) !important;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    border-radius: 0;
+    border: 0;
+    background: none !important;
+    color: #f8fafc !important;
+    font-size: clamp(34px, 5.2vw, 42px) !important;
     font-weight: 900 !important;
     line-height: 1;
     letter-spacing: -0.07em;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+    box-shadow: none;
+    justify-self: center;
+    align-self: center;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-round-copy {
@@ -29754,22 +29756,60 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 
     #tab-dashboard .dashboard-next-hero .dashboard-round-row--next {
         grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+        gap: 12px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown-board {
         padding: 18px !important;
+        overflow: hidden;
+    }
+
+    #tab-dashboard .dashboard-next-hero .dashboard-round-copy {
+        justify-items: center;
+        text-align: center;
+    }
+
+    #tab-dashboard .dashboard-next-hero .dashboard-round-copy strong,
+    #tab-dashboard .dashboard-next-hero .dashboard-round-copy p {
+        text-align: center;
+    }
+
+    #tab-dashboard .dashboard-next-hero .dashboard-countdown {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: stretch !important;
+        gap: 12px !important;
+        width: 100%;
+        white-space: normal;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle {
-        margin-right: 10px;
+        margin-right: 0;
+        min-width: 0;
+        padding: 12px 10px !important;
+        border-radius: 18px;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-direction: column;
+        gap: 4px;
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 1px solid rgba(191, 219, 254, 0.12) !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-num {
-        font-size: clamp(22px, 5vw, 30px) !important;
+        font-size: clamp(24px, 6.2vw, 30px) !important;
+    }
+
+    #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt {
+        margin-left: 0;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt::before {
-        font-size: 12px;
+        display: block;
+        font-size: 11px;
+        line-height: 1;
     }
 
     #tab-dashboard .dashboard-prize-hero-stats,
@@ -29814,21 +29854,24 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-round-badge {
-        min-width: 96px;
-        min-height: 56px;
-        font-size: clamp(24px, 8vw, 30px) !important;
+        font-size: clamp(28px, 8.5vw, 34px) !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-round-copy strong {
         font-size: clamp(20px, 7vw, 24px) !important;
     }
 
+    #tab-dashboard .dashboard-next-hero .dashboard-countdown {
+        gap: 10px !important;
+    }
+
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle {
-        margin-right: 8px;
+        padding: 10px 8px !important;
+        border-radius: 16px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-num {
-        font-size: clamp(18px, 5.4vw, 22px) !important;
+        font-size: clamp(20px, 7vw, 24px) !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt::before,
@@ -29872,7 +29915,9 @@ body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-countdown
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-round-badge {
-    background: linear-gradient(180deg, rgba(225, 236, 255, 0.96), rgba(186, 214, 255, 0.92)) !important;
+    background: none !important;
+    box-shadow: none;
+    color: #f8fafc !important;
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-board {
