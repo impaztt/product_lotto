@@ -29317,12 +29317,12 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     position: relative;
     display: flex !important;
     align-items: baseline !important;
-    justify-content: flex-start;
+    justify-content: space-between;
     flex-wrap: nowrap !important;
-    gap: clamp(8px, 1.4vw, 14px) !important;
-    width: auto;
+    gap: clamp(4px, 0.8vw, 10px) !important;
+    width: 100%;
     min-width: 0;
-    padding: 0 !important;
+    padding: 2px 0 0 !important;
     border-radius: 0;
     background: none !important;
     border: 0 !important;
@@ -29342,8 +29342,8 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     display: inline-flex !important;
     align-items: baseline !important;
     justify-content: center !important;
-    flex: 0 1 auto;
-    gap: 6px;
+    flex: 1 1 0;
+    gap: 8px;
     min-width: 0;
     min-height: 0;
     padding: 0 !important;
@@ -29360,38 +29360,42 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     display: block;
     width: auto;
     height: auto;
-    margin-left: clamp(4px, 0.8vw, 8px);
+    margin-left: clamp(2px, 0.4vw, 6px);
     border-radius: 0;
     background: none;
     box-shadow: none;
     align-self: center;
     flex: 0 0 auto;
-    color: rgba(125, 211, 252, 0.58);
-    font-size: clamp(12px, 1.6vw, 14px);
+    color: rgba(125, 211, 252, 0.7);
+    font-size: clamp(16px, 1.9vw, 22px);
     font-weight: 900;
     line-height: 1;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.18);
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-num {
-    color: #f8fafc !important;
+    color: #dff7ff !important;
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-    font-size: clamp(24px, 3.6vw, 32px) !important;
-    font-weight: 800 !important;
-    line-height: 1;
-    letter-spacing: -0.08em;
+    font-size: clamp(34px, 5vw, 52px) !important;
+    font-weight: 900 !important;
+    line-height: 0.9;
+    letter-spacing: -0.1em;
     font-variant-numeric: tabular-nums;
-    text-shadow: none;
+    text-shadow:
+        0 0 10px rgba(96, 165, 250, 0.2),
+        0 0 22px rgba(34, 211, 238, 0.14);
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt {
     display: inline-flex !important;
     align-items: center;
     margin-left: 0;
-    color: rgba(226, 232, 240, 0.78) !important;
-    font-size: clamp(12px, 1.4vw, 13px) !important;
+    color: rgba(186, 230, 253, 0.82) !important;
+    font-size: clamp(12px, 1.2vw, 14px) !important;
     font-weight: 800 !important;
     line-height: 1;
-    letter-spacing: -0.03em;
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.08);
 }
 
 #tab-dashboard .dashboard-prize-board {
@@ -29834,25 +29838,25 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown {
-        gap: 6px !important;
+        gap: 3px !important;
         padding: 0 !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle {
-        gap: 3px;
+        gap: 5px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle:not(:last-child)::after {
-        margin-left: 2px;
-        font-size: 10px;
+        margin-left: 0;
+        font-size: 14px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-num {
-        font-size: clamp(17px, 5.1vw, 23px) !important;
+        font-size: clamp(22px, 6vw, 32px) !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt {
-        font-size: clamp(10px, 2.3vw, 12px) !important;
+        font-size: clamp(10px, 2vw, 12px) !important;
     }
 
     #tab-dashboard .dashboard-prize-hero-stats,
@@ -29907,22 +29911,22 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown {
-        gap: 5px !important;
+        gap: 2px !important;
         padding: 0 !important;
         border-radius: 0;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle {
-        gap: 2px;
+        gap: 4px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle:not(:last-child)::after {
-        margin-left: 1px;
-        font-size: 10px;
+        margin-left: 0;
+        font-size: 12px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-num {
-        font-size: clamp(14px, 5.2vw, 18px) !important;
+        font-size: clamp(18px, 5.8vw, 24px) !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt,
