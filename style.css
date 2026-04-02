@@ -29066,7 +29066,7 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 
 /* Dashboard Next Infographic Rebuild 2026.25 */
 #tab-dashboard .dashboard-card--next {
-    gap: 16px;
+    gap: 18px;
     padding: 0 !important;
     border: 0 !important;
     background: transparent !important;
@@ -29080,140 +29080,113 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 #tab-dashboard .dashboard-next-hero {
     position: relative;
     display: grid;
-    gap: 18px;
-    padding: 24px !important;
-    border-radius: 32px;
+    gap: 22px;
+    padding: 30px !important;
+    border-radius: 26px;
     overflow: hidden;
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    background:
-        radial-gradient(circle at top right, rgba(96, 165, 250, 0.38), transparent 22rem),
-        linear-gradient(140deg, #0f1f38 0%, #14315b 56%, #19517d 100%) !important;
-    box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    background: #ffffff !important;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
 }
 
 #tab-dashboard .dashboard-next-hero::before {
-    content: "";
-    position: absolute;
-    inset: auto auto -48px -48px;
-    width: 180px;
-    height: 180px;
-    border-radius: 999px;
-    background: radial-gradient(circle, rgba(56, 189, 248, 0.2), rgba(56, 189, 248, 0));
-    pointer-events: none;
+    content: none;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-card-head {
     position: relative;
     z-index: 1;
     display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 12px !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
     margin: 0 !important;
-    min-height: 48px;
-    text-align: center;
+    min-height: 0;
+    text-align: left;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-card-head-copy {
     display: grid !important;
-    gap: 0;
-    justify-items: center;
-    text-align: center;
-    width: 100%;
+    gap: 10px;
+    justify-items: start;
+    text-align: left;
+    width: auto;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-card-kicker {
-    display: inline-block;
-    width: auto;
-    min-height: 0;
-    padding: 0;
-    border-radius: 0;
-    background: none;
-    border: 0;
-    color: #f8fafc !important;
-    font-size: clamp(24px, 4vw, 30px) !important;
-    font-weight: 900 !important;
-    line-height: 1.04;
-    letter-spacing: -0.06em !important;
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    min-height: 32px;
+    padding: 0 13px;
+    border-radius: 999px;
+    background: #f8fafc;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: #475569 !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    line-height: 1;
+    letter-spacing: 0.08em !important;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-card-title {
-    display: none !important;
+    display: block !important;
+    color: #0f172a !important;
+    font-size: clamp(32px, 4.4vw, 40px) !important;
+    font-weight: 800 !important;
+    line-height: 1.06;
+    letter-spacing: -0.05em;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-card-meta {
-    position: absolute;
-    top: 14px;
-    left: -54px;
-    z-index: 4;
+    position: static;
+    top: auto;
+    left: auto;
+    z-index: 1;
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    width: 192px;
-    min-height: 42px;
-    padding: 0 28px;
+    gap: 7px;
+    width: auto;
+    min-height: 32px;
+    padding: 0 14px;
     margin: 0;
-    border-radius: 4px;
-    border-top: 1px solid rgba(255, 255, 255, 0.24) !important;
-    border-bottom: 1px solid rgba(120, 18, 48, 0.44) !important;
-    border-left: 0 !important;
-    border-right: 0 !important;
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.08) 24%, rgba(255, 255, 255, 0) 54%) top/100% 58% no-repeat,
-        linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 16%, rgba(127, 29, 29, 0.08) 84%, rgba(76, 5, 25, 0.16)),
-        linear-gradient(135deg, #fb7185 0%, #f43f5e 22%, #be123c 56%, #881337 100%) !important;
-    color: #fff7f8 !important;
-    font-size: 10px !important;
-    font-weight: 900 !important;
-    letter-spacing: 0.28em !important;
-    text-transform: uppercase;
-    text-shadow: 0 1px 1px rgba(76, 5, 25, 0.38);
-    transform: rotate(-45deg);
-    transform-origin: center;
-    box-shadow:
-        0 10px 18px rgba(127, 29, 29, 0.16),
-        inset 0 1px 0 rgba(255, 255, 255, 0.22),
-        inset 0 -2px 0 rgba(103, 7, 37, 0.42);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    overflow: visible;
-    isolation: isolate;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.22) !important;
+    background: rgba(248, 250, 252, 0.98) !important;
+    color: #334155 !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.04em !important;
+    text-shadow: none;
+    transform: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    overflow: hidden;
+    isolation: auto;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-card-meta::before {
     content: "";
-    position: absolute;
-    left: -16px;
-    top: 9px;
-    width: 18px;
-    height: calc(100% - 18px);
-    background: linear-gradient(180deg, rgba(136, 19, 55, 0.98), rgba(103, 7, 37, 0.98));
-    clip-path: polygon(100% 0, 0 50%, 100% 100%);
-    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.12);
-    z-index: -1;
-    pointer-events: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #0f766e;
+    box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.08);
+    flex: 0 0 auto;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-card-meta::after {
-    content: "";
-    position: absolute;
-    right: -16px;
-    top: 9px;
-    width: 18px;
-    height: calc(100% - 18px);
-    background: linear-gradient(180deg, rgba(136, 19, 55, 0.98), rgba(103, 7, 37, 0.98));
-    clip-path: polygon(0 0, 100% 50%, 0 100%);
-    box-shadow: inset 1px 0 0 rgba(76, 5, 25, 0.22);
-    z-index: -1;
-    pointer-events: none;
+    content: none;
 }
 
 #tab-dashboard .dashboard-next-hero-main {
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
-    gap: 14px;
+    grid-template-columns: minmax(0, 1.04fr) minmax(320px, 0.96fr);
+    gap: 20px;
     align-items: stretch;
 }
 
@@ -29221,13 +29194,13 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     display: grid !important;
     grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
-    gap: 16px;
+    gap: 22px;
     margin: 0;
-    padding: 20px;
-    border-radius: 28px;
-    border: 1px solid rgba(191, 219, 254, 0.16);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.08));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    padding: 26px;
+    border-radius: 18px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    background: #f8fafc;
+    box-shadow: none;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-round-badge {
@@ -29237,28 +29210,28 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     border-radius: 0;
     border: 0;
     background: none !important;
-    color: #f8fafc !important;
-    font-size: clamp(34px, 5.2vw, 42px) !important;
-    font-weight: 900 !important;
+    color: #0f172a !important;
+    font-size: clamp(48px, 6.2vw, 62px) !important;
+    font-weight: 800 !important;
     line-height: 1;
-    letter-spacing: -0.07em;
+    letter-spacing: -0.08em;
     box-shadow: none;
-    justify-self: center;
+    justify-self: start;
     align-self: center;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-round-copy {
     display: grid !important;
-    gap: 6px;
+    gap: 12px;
     justify-items: start;
     text-align: left;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-round-copy strong {
-    color: #f8fafc !important;
-    font-size: clamp(24px, 4vw, 30px) !important;
-    font-weight: 900 !important;
-    line-height: 1.04;
+    color: #0f172a !important;
+    font-size: clamp(30px, 4.3vw, 38px) !important;
+    font-weight: 800 !important;
+    line-height: 1.12;
     letter-spacing: -0.05em;
     text-align: left;
 }
@@ -29266,27 +29239,28 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 #tab-dashboard .dashboard-next-hero .dashboard-round-copy p {
     margin: 0;
     display: block !important;
-    color: rgba(226, 232, 240, 0.84) !important;
-    font-size: 13px;
-    line-height: 1.6;
+    color: #475569 !important;
+    font-size: 16px;
+    line-height: 1.65;
     text-align: left;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown-board {
     display: grid !important;
-    gap: 10px;
-    align-content: center;
+    gap: 14px;
+    align-content: start;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 6px 0 6px 22px !important;
     border-radius: 0 !important;
     border: 0 !important;
+    border-left: 1px solid rgba(226, 232, 240, 1) !important;
     background: none !important;
     box-shadow: none !important;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown-board-head {
     display: grid;
-    gap: 4px;
+    gap: 8px;
     min-width: 0;
 }
 
@@ -29299,17 +29273,17 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     padding: 0;
     border-radius: 0;
     background: none;
-    color: rgba(191, 219, 254, 0.72) !important;
-    font-size: 10px !important;
+    color: #64748b !important;
+    font-size: 12px !important;
     font-weight: 800 !important;
-    letter-spacing: 0.18em !important;
+    letter-spacing: 0.12em !important;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown-board-copy {
-    color: #f8fafc !important;
-    font-size: clamp(15px, 2.2vw, 19px) !important;
+    color: #0f172a !important;
+    font-size: clamp(20px, 2.7vw, 24px) !important;
     font-weight: 800 !important;
-    line-height: 1.1;
+    line-height: 1.24;
     letter-spacing: -0.04em;
 }
 
@@ -29319,13 +29293,14 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     align-items: baseline !important;
     justify-content: space-between;
     flex-wrap: nowrap !important;
-    gap: clamp(4px, 0.8vw, 10px) !important;
+    gap: clamp(8px, 1vw, 14px) !important;
     width: 100%;
     min-width: 0;
-    padding: 2px 0 0 !important;
+    padding: 18px 0 0 !important;
     border-radius: 0;
     background: none !important;
     border: 0 !important;
+    border-top: 1px solid rgba(226, 232, 240, 1) !important;
     box-shadow: none !important;
     white-space: nowrap;
     overflow: visible;
@@ -29343,7 +29318,7 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     align-items: baseline !important;
     justify-content: center !important;
     flex: 1 1 0;
-    gap: 8px;
+    gap: 10px;
     min-width: 0;
     min-height: 0;
     padding: 0 !important;
@@ -29356,59 +29331,50 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle:not(:last-child)::after {
-    content: "·";
+    content: "";
     display: block;
-    width: auto;
-    height: auto;
-    margin-left: clamp(2px, 0.4vw, 6px);
+    width: 1px;
+    height: 34px;
+    margin-left: clamp(8px, 1vw, 14px);
     border-radius: 0;
-    background: none;
+    background: linear-gradient(180deg, transparent, rgba(148, 163, 184, 0.5), transparent);
     box-shadow: none;
     align-self: center;
     flex: 0 0 auto;
-    color: rgba(125, 211, 252, 0.7);
-    font-size: clamp(16px, 1.9vw, 22px);
-    font-weight: 900;
-    line-height: 1;
-    text-shadow: 0 0 10px rgba(56, 189, 248, 0.18);
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-num {
-    color: #dff7ff !important;
+    color: #0f172a !important;
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-    font-size: clamp(34px, 5vw, 52px) !important;
-    font-weight: 900 !important;
-    line-height: 0.9;
-    letter-spacing: -0.1em;
+    font-size: clamp(36px, 5vw, 50px) !important;
+    font-weight: 800 !important;
+    line-height: 0.92;
+    letter-spacing: -0.08em;
     font-variant-numeric: tabular-nums;
-    text-shadow:
-        0 0 10px rgba(96, 165, 250, 0.2),
-        0 0 22px rgba(34, 211, 238, 0.14);
+    text-shadow: none;
 }
 
 #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt {
     display: inline-flex !important;
     align-items: center;
     margin-left: 0;
-    color: rgba(186, 230, 253, 0.82) !important;
-    font-size: clamp(12px, 1.2vw, 14px) !important;
-    font-weight: 800 !important;
+    color: #64748b !important;
+    font-size: clamp(15px, 1.5vw, 17px) !important;
+    font-weight: 700 !important;
     line-height: 1;
-    letter-spacing: 0.02em;
-    text-shadow: 0 0 10px rgba(56, 189, 248, 0.08);
+    letter-spacing: -0.01em;
+    text-shadow: none;
 }
 
 #tab-dashboard .dashboard-prize-board {
     position: relative;
     display: grid;
-    gap: 18px;
-    padding: 24px !important;
-    border-radius: 32px !important;
-    border: 1px solid rgba(15, 23, 42, 0.08) !important;
-    background:
-        radial-gradient(circle at top right, rgba(125, 211, 252, 0.26), transparent 18rem),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(244, 248, 255, 0.97)) !important;
-    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.82) !important;
+    gap: 22px;
+    padding: 30px !important;
+    border-radius: 26px !important;
+    border: 1px solid rgba(15, 23, 42, 0.06) !important;
+    background: #ffffff !important;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06) !important;
 }
 
 #tab-dashboard .dashboard-prize-board-head {
@@ -29421,21 +29387,21 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 
 #tab-dashboard .dashboard-prize-board-copy {
     display: grid;
-    gap: 6px;
+    gap: 10px;
 }
 
 #tab-dashboard .dashboard-prize-board-kicker {
-    color: #2563eb !important;
-    font-size: 11px !important;
+    color: #475569 !important;
+    font-size: 12px !important;
     font-weight: 800 !important;
-    letter-spacing: 0.14em !important;
+    letter-spacing: 0.12em !important;
 }
 
 #tab-dashboard .dashboard-prize-board-title {
     color: #0f172a !important;
-    font-size: clamp(24px, 4.4vw, 30px) !important;
-    font-weight: 900 !important;
-    line-height: 1.08;
+    font-size: clamp(30px, 4.2vw, 36px) !important;
+    font-weight: 800 !important;
+    line-height: 1.12;
     letter-spacing: -0.05em;
 }
 
@@ -29446,12 +29412,12 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     min-height: 34px;
     padding: 0 14px;
     border-radius: 999px;
-    background: rgba(37, 99, 235, 0.08);
-    border: 1px solid rgba(59, 130, 246, 0.16);
-    color: #1d4ed8;
-    font-size: 11px;
+    background: #f8fafc;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: #334155;
+    font-size: 12px;
     font-weight: 800;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     white-space: nowrap;
 }
 
@@ -29462,7 +29428,7 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
         "hero insight"
         "ladder insight"
         "fixed fixed";
-    gap: 14px;
+    gap: 18px;
     align-items: stretch;
 }
 
@@ -29472,37 +29438,31 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     position: relative;
     min-width: 0;
     overflow: hidden;
-    border-radius: 26px;
+    border-radius: 18px;
 }
 
 #tab-dashboard .dashboard-prize-card,
 #tab-dashboard .dashboard-prize-fixed-item {
     display: grid;
-    gap: 12px;
-    padding: 18px;
+    gap: 16px;
+    padding: 22px;
     border: 1px solid rgba(148, 163, 184, 0.16);
-    background: rgba(255, 255, 255, 0.88);
+    background: #ffffff;
 }
 
 #tab-dashboard .dashboard-prize-card::before,
 #tab-dashboard .dashboard-prize-fixed-item::before,
 #tab-dashboard .dashboard-prize-insight::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(150deg, rgba(255, 255, 255, 0.32), transparent 58%);
-    pointer-events: none;
+    content: none;
 }
 
 #tab-dashboard .dashboard-prize-card--hero {
     grid-area: hero;
     align-content: space-between;
     min-height: 100%;
-    padding: 22px;
-    background:
-        radial-gradient(circle at top right, rgba(14, 165, 233, 0.18), transparent 16rem),
-        linear-gradient(180deg, rgba(228, 241, 255, 0.98), rgba(243, 248, 255, 0.96));
-    border-color: rgba(59, 130, 246, 0.18);
+    padding: 24px;
+    background: #f8fafc;
+    border-color: rgba(148, 163, 184, 0.18);
 }
 
 #tab-dashboard .dashboard-prize-ladder {
@@ -29512,11 +29472,13 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 }
 
 #tab-dashboard .dashboard-prize-card--second {
-    background: linear-gradient(180deg, rgba(236, 253, 245, 0.98), rgba(225, 250, 239, 0.96));
+    background: #ffffff;
+    box-shadow: inset 3px 0 0 rgba(71, 85, 105, 0.1);
 }
 
 #tab-dashboard .dashboard-prize-card--third {
-    background: linear-gradient(180deg, rgba(255, 249, 235, 0.98), rgba(255, 243, 217, 0.96));
+    background: #ffffff;
+    box-shadow: inset 3px 0 0 rgba(148, 163, 184, 0.18);
 }
 
 #tab-dashboard .dashboard-prize-card-headline,
@@ -29533,7 +29495,7 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 #tab-dashboard .dashboard-prize-rank-group {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
@@ -29541,15 +29503,15 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 56px;
-    min-height: 32px;
+    min-width: 58px;
+    min-height: 36px;
     padding: 0 12px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.82);
-    color: #1e3a5f;
-    font-size: 12px;
+    background: #f8fafc;
+    color: #1e293b;
+    font-size: 14px;
     font-weight: 800;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.02em;
 }
 
 #tab-dashboard .dashboard-prize-chip,
@@ -29557,22 +29519,22 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 30px;
-    padding: 0 10px;
+    min-height: 32px;
+    padding: 0 12px;
     border-radius: 999px;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.04em;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
 }
 
 #tab-dashboard .dashboard-prize-chip {
-    background: rgba(15, 23, 42, 0.06);
-    color: #475569;
+    background: #f8fafc;
+    color: #64748b;
 }
 
 #tab-dashboard .dashboard-prize-share-tag {
-    background: rgba(37, 99, 235, 0.1);
-    color: #1d4ed8;
+    background: #f1f5f9;
+    color: #334155;
 }
 
 #tab-dashboard .dashboard-prize-board .dashboard-prize-amount,
@@ -29587,17 +29549,17 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 }
 
 #tab-dashboard .dashboard-prize-board .dashboard-prize-amount {
-    font-size: clamp(28px, 4.2vw, 34px) !important;
-    font-weight: 900 !important;
+    font-size: clamp(34px, 4.8vw, 42px) !important;
+    font-weight: 800 !important;
 }
 
 #tab-dashboard .dashboard-prize-card--hero .dashboard-prize-amount {
-    font-size: clamp(38px, 6vw, 52px) !important;
+    font-size: clamp(48px, 6.6vw, 60px) !important;
 }
 
 #tab-dashboard .dashboard-prize-fixed-amount {
-    font-size: clamp(24px, 4vw, 30px);
-    font-weight: 900;
+    font-size: clamp(30px, 4.4vw, 36px);
+    font-weight: 800;
 }
 
 #tab-dashboard .dashboard-prize-card-note {
@@ -29605,8 +29567,8 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     z-index: 1;
     margin: 0;
     color: #64748b;
-    font-size: 12px;
-    line-height: 1.6;
+    font-size: 15px;
+    line-height: 1.65;
 }
 
 #tab-dashboard .dashboard-prize-hero-stats {
@@ -29614,28 +29576,28 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     z-index: 1;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: 14px;
 }
 
 #tab-dashboard .dashboard-prize-mini-stat {
     display: grid;
     gap: 6px;
     padding: 14px;
-    border-radius: 18px;
-    border: 1px solid rgba(148, 163, 184, 0.16);
-    background: rgba(255, 255, 255, 0.68);
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    background: #ffffff;
 }
 
 #tab-dashboard .dashboard-prize-mini-label {
     color: #64748b;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.12em;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
 }
 
 #tab-dashboard .dashboard-prize-mini-stat strong {
     color: #0f172a;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 800;
     line-height: 1.4;
 }
@@ -29644,13 +29606,11 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     grid-area: insight;
     display: grid;
     align-content: start;
-    gap: 16px;
-    padding: 20px;
-    border: 1px solid rgba(148, 163, 184, 0.14);
-    background:
-        radial-gradient(circle at top right, rgba(56, 189, 248, 0.14), transparent 14rem),
-        linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.94));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    gap: 18px;
+    padding: 22px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    background: #f8fafc;
+    box-shadow: none;
 }
 
 #tab-dashboard .dashboard-prize-insight-head {
@@ -29661,17 +29621,17 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 }
 
 #tab-dashboard .dashboard-prize-insight-kicker {
-    color: rgba(191, 219, 254, 0.84);
-    font-size: 11px;
+    color: #64748b;
+    font-size: 12px;
     font-weight: 800;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.1em;
 }
 
 #tab-dashboard .dashboard-prize-insight-title {
-    color: #f8fafc;
-    font-size: clamp(20px, 3vw, 24px);
+    color: #0f172a;
+    font-size: clamp(24px, 3.3vw, 28px);
     font-weight: 800;
-    line-height: 1.14;
+    line-height: 1.2;
     letter-spacing: -0.04em;
 }
 
@@ -29689,21 +29649,22 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     justify-content: center;
     min-height: 42px;
     padding: 0 12px;
-    border-radius: 18px;
-    font-size: 11px;
+    border-radius: 12px;
+    font-size: 12px;
     font-weight: 800;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.02em;
 }
 
 #tab-dashboard .dashboard-prize-share--first {
-    background: linear-gradient(90deg, rgba(59, 130, 246, 0.9), rgba(56, 189, 248, 0.84));
-    color: #eff6ff;
+    background: #e2e8f0;
+    color: #1e293b;
 }
 
 #tab-dashboard .dashboard-prize-share--second,
 #tab-dashboard .dashboard-prize-share--third {
-    background: rgba(255, 255, 255, 0.1);
-    color: #dbeafe;
+    background: #ffffff;
+    color: #475569;
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18);
 }
 
 #tab-dashboard .dashboard-prize-averages {
@@ -29711,29 +29672,29 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     z-index: 1;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
+    gap: 12px;
 }
 
 #tab-dashboard .dashboard-prize-average {
     display: grid;
-    gap: 6px;
-    padding: 14px 12px;
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(148, 163, 184, 0.14);
+    gap: 8px;
+    padding: 15px 14px;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid rgba(148, 163, 184, 0.16);
 }
 
 #tab-dashboard .dashboard-prize-average strong {
-    color: #f8fafc;
-    font-size: clamp(20px, 3vw, 24px);
-    font-weight: 900;
+    color: #0f172a;
+    font-size: clamp(24px, 3.4vw, 30px);
+    font-weight: 800;
     line-height: 1;
     letter-spacing: -0.05em;
 }
 
 #tab-dashboard .dashboard-prize-average span {
-    color: rgba(191, 219, 254, 0.8);
-    font-size: 11px;
+    color: #64748b;
+    font-size: 13px;
     font-weight: 700;
     line-height: 1.4;
 }
@@ -29747,26 +29708,26 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 
 #tab-dashboard .dashboard-prize-fixed-item {
     align-content: start;
-    padding: 16px 18px;
-    background: linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(241, 245, 249, 0.92));
+    padding: 20px;
+    background: #ffffff;
 }
 
 #tab-dashboard .dashboard-prize-footnote {
     margin: 0;
     color: #64748b;
-    font-size: 12px;
-    line-height: 1.65;
+    font-size: 14px;
+    line-height: 1.7;
 }
 
 #tab-dashboard .dashboard-card--next .dashboard-card-actions {
-    margin-top: 2px;
+    margin-top: 4px;
     padding: 0 2px 2px;
 }
 
 #tab-dashboard .dashboard-card--next .dashboard-primary-btn {
     min-height: 56px;
-    border-radius: 22px;
-    box-shadow: 0 16px 32px rgba(37, 99, 235, 0.16);
+    border-radius: 16px;
+    box-shadow: none;
 }
 
 @media (max-width: 980px) {
@@ -29787,76 +29748,85 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 @media (max-width: 760px) {
     #tab-dashboard .dashboard-next-hero,
     #tab-dashboard .dashboard-prize-board {
-        padding: 20px !important;
-        border-radius: 28px !important;
+        padding: 22px !important;
+        border-radius: 22px !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-card-head {
-        min-height: 42px;
-        align-items: center !important;
-        justify-content: center !important;
+        min-height: 0;
+        align-items: flex-start !important;
+        justify-content: space-between !important;
+        text-align: left;
+    }
+
+    #tab-dashboard .dashboard-next-hero .dashboard-card-head-copy {
+        justify-items: start;
+        text-align: left;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-card-kicker {
-        font-size: clamp(22px, 5.8vw, 28px) !important;
+        font-size: 12px !important;
+        min-height: 30px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-card-meta {
-        top: 14px;
-        left: -48px;
-        width: 176px;
-        min-height: 38px;
-        font-size: 9px !important;
-        letter-spacing: 0.2em !important;
+        width: auto;
+        min-height: 32px;
+        padding: 0 12px;
+        font-size: 11px !important;
+        letter-spacing: 0.04em !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-round-row--next {
         grid-template-columns: 1fr;
-        justify-items: center;
-        text-align: center;
-        gap: 12px;
+        justify-items: start;
+        text-align: left;
+        gap: 14px;
+        padding: 22px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown-board {
-        gap: 8px;
-        padding: 0 !important;
+        gap: 10px;
+        padding: 18px 0 0 !important;
+        border-left: 0 !important;
+        border-top: 1px solid rgba(226, 232, 240, 1) !important;
         overflow: visible;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown-board-copy {
-        font-size: clamp(14px, 4.1vw, 17px) !important;
+        font-size: clamp(18px, 4.4vw, 22px) !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-round-copy {
-        justify-items: center;
-        text-align: center;
+        justify-items: start;
+        text-align: left;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-round-copy strong,
     #tab-dashboard .dashboard-next-hero .dashboard-round-copy p {
-        text-align: center;
+        text-align: left;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown {
-        gap: 3px !important;
-        padding: 0 !important;
+        gap: 10px !important;
+        padding: 14px 0 0 !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle {
-        gap: 5px;
+        gap: 6px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle:not(:last-child)::after {
-        margin-left: 0;
-        font-size: 14px;
+        height: 28px;
+        margin-left: 6px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-num {
-        font-size: clamp(22px, 6vw, 32px) !important;
+        font-size: clamp(26px, 6.2vw, 36px) !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt {
-        font-size: clamp(10px, 2vw, 12px) !important;
+        font-size: clamp(13px, 2.6vw, 15px) !important;
     }
 
     #tab-dashboard .dashboard-prize-hero-stats,
@@ -29869,50 +29839,48 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
 @media (max-width: 430px) {
     #tab-dashboard .dashboard-next-hero,
     #tab-dashboard .dashboard-prize-board {
-        gap: 16px;
+        gap: 14px;
         padding: 16px !important;
-        border-radius: 24px !important;
+        border-radius: 18px !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-card-title,
     #tab-dashboard .dashboard-prize-board-title {
-        font-size: clamp(24px, 8vw, 28px) !important;
+        font-size: clamp(24px, 7.4vw, 30px) !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-card-meta {
-        top: 12px;
-        left: -45px;
-        width: 162px;
-        min-height: 34px;
-        padding: 0 16px;
-        font-size: 8px !important;
-        letter-spacing: 0.18em !important;
+        width: auto;
+        min-height: 30px;
+        padding: 0 10px;
+        font-size: 10px !important;
+        letter-spacing: 0.04em !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-round-row--next,
     #tab-dashboard .dashboard-prize-card,
     #tab-dashboard .dashboard-prize-fixed-item,
     #tab-dashboard .dashboard-prize-insight {
-        padding: 14px;
-        border-radius: 20px;
+        padding: 16px;
+        border-radius: 16px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown-board {
-        padding: 0 !important;
+        padding: 14px 0 0 !important;
         border-radius: 0 !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-round-badge {
-        font-size: clamp(28px, 8.5vw, 34px) !important;
+        font-size: clamp(30px, 9vw, 36px) !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-round-copy strong {
-        font-size: clamp(20px, 7vw, 24px) !important;
+        font-size: clamp(22px, 7.2vw, 26px) !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown {
-        gap: 2px !important;
-        padding: 0 !important;
+        gap: 6px !important;
+        padding: 12px 0 0 !important;
         border-radius: 0;
     }
 
@@ -29921,12 +29889,12 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle:not(:last-child)::after {
-        margin-left: 0;
-        font-size: 12px;
+        height: 20px;
+        margin-left: 4px;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-num {
-        font-size: clamp(18px, 5.8vw, 24px) !important;
+        font-size: clamp(20px, 6.6vw, 28px) !important;
     }
 
     #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt,
@@ -29935,98 +29903,108 @@ body[data-theme="dark"] #tab-dashboard .dashboard-card--next .dashboard-card-met
     #tab-dashboard .dashboard-prize-board-badge,
     #tab-dashboard .dashboard-prize-share,
     #tab-dashboard .dashboard-prize-average span {
-        font-size: 10px;
+        font-size: 11px;
     }
 
     #tab-dashboard .dashboard-prize-card--hero .dashboard-prize-amount {
-        font-size: clamp(30px, 9vw, 38px) !important;
+        font-size: clamp(32px, 9.4vw, 40px) !important;
     }
 
     #tab-dashboard .dashboard-prize-board .dashboard-prize-amount,
     #tab-dashboard .dashboard-prize-fixed-amount,
     #tab-dashboard .dashboard-prize-average strong {
-        font-size: clamp(20px, 6vw, 24px) !important;
+        font-size: clamp(22px, 6.4vw, 26px) !important;
     }
 
     #tab-dashboard .dashboard-card--next .dashboard-primary-btn {
         min-height: 52px;
-        border-radius: 18px;
+        border-radius: 16px;
     }
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-next-hero {
-    border-color: rgba(96, 165, 250, 0.18);
-    box-shadow: 0 24px 48px rgba(2, 6, 23, 0.32);
+    border-color: rgba(148, 163, 184, 0.14);
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.97)) !important;
+    box-shadow: 0 16px 32px rgba(2, 6, 23, 0.24);
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-card-kicker {
-    background: none;
-    border-color: transparent;
+    background: rgba(148, 163, 184, 0.08);
+    border-color: rgba(148, 163, 184, 0.16);
+    color: #cbd5e1 !important;
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-round-row--next,
 body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-countdown-board {
-    border-color: rgba(148, 163, 184, 0.14) !important;
+    border-color: rgba(148, 163, 184, 0.16) !important;
 }
 
-body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-round-badge {
-    background: none !important;
-    box-shadow: none;
+body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-card-title,
+body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-round-badge,
+body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-round-copy strong,
+body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-countdown-board-copy,
+body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-num {
     color: #f8fafc !important;
 }
 
-body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-card-meta {
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04) 24%, rgba(255, 255, 255, 0) 54%) top/100% 58% no-repeat,
-        linear-gradient(90deg, rgba(255, 255, 255, 0.06), transparent 18%, rgba(127, 29, 29, 0.1) 84%, rgba(2, 6, 23, 0.22)),
-        linear-gradient(135deg, rgba(251, 113, 133, 0.96), rgba(225, 29, 72, 0.95) 42%, rgba(136, 19, 55, 0.98) 100%) !important;
-    color: #fff1f2 !important;
-    border-top-color: rgba(255, 255, 255, 0.18) !important;
-    border-bottom-color: rgba(76, 5, 25, 0.5) !important;
-    box-shadow:
-        0 12px 20px rgba(69, 10, 10, 0.24),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        inset 0 -2px 0 rgba(76, 5, 25, 0.44);
+body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-round-row--next {
+    background: rgba(15, 23, 42, 0.44) !important;
 }
 
-body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-card-meta::before,
+body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-round-copy p,
+body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-countdown-head,
+body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt {
+    color: #94a3b8 !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-card-meta {
+    background: rgba(30, 41, 59, 0.78) !important;
+    color: #e2e8f0 !important;
+    border-color: rgba(148, 163, 184, 0.2) !important;
+    box-shadow: none;
+}
+
+body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-card-meta::before {
+    background: #38bdf8;
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1);
+}
+
 body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-card-meta::after {
-    background: linear-gradient(180deg, rgba(136, 19, 55, 0.98), rgba(88, 28, 41, 0.98));
+    content: none;
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-countdown {
     background: none !important;
     border: 0 !important;
+    border-top: 1px solid rgba(148, 163, 184, 0.16) !important;
     box-shadow: none !important;
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-circle:not(:last-child)::after {
-    color: rgba(125, 211, 252, 0.52);
-}
-
-body[data-theme="dark"] #tab-dashboard .dashboard-next-hero .dashboard-countdown .time-txt {
-    color: rgba(226, 232, 240, 0.72) !important;
+    background: linear-gradient(180deg, transparent, rgba(148, 163, 184, 0.42), transparent);
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-board {
-    border-color: rgba(96, 165, 250, 0.16) !important;
-    background:
-        radial-gradient(circle at top right, rgba(56, 189, 248, 0.14), transparent 16rem),
-        linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(17, 28, 45, 0.95)) !important;
-    box-shadow: none !important;
+    border-color: rgba(148, 163, 184, 0.14) !important;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.97)) !important;
+    box-shadow: 0 16px 32px rgba(2, 6, 23, 0.24) !important;
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-board-title,
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-board .dashboard-prize-amount,
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-fixed-amount,
-body[data-theme="dark"] #tab-dashboard .dashboard-prize-mini-stat strong {
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-mini-stat strong,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-average strong,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-insight-title {
     color: #f8fafc !important;
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-board-kicker,
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-card-note,
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-footnote,
-body[data-theme="dark"] #tab-dashboard .dashboard-prize-mini-label {
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-mini-label,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-average span,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-insight-kicker {
     color: #94a3b8 !important;
 }
 
@@ -30036,45 +30014,42 @@ body[data-theme="dark"] #tab-dashboard .dashboard-prize-share-tag,
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-card,
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-fixed-item,
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-board .dashboard-prize-rank,
-body[data-theme="dark"] #tab-dashboard .dashboard-prize-mini-stat {
-    background: rgba(15, 23, 42, 0.72) !important;
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-mini-stat,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-average {
+    background: rgba(15, 23, 42, 0.58) !important;
     border-color: rgba(148, 163, 184, 0.16) !important;
     color: #cbd5e1 !important;
     box-shadow: none;
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-card--hero {
-    background:
-        radial-gradient(circle at top right, rgba(56, 189, 248, 0.2), transparent 16rem),
-        linear-gradient(180deg, rgba(29, 78, 216, 0.24), rgba(30, 64, 175, 0.18)) !important;
-    border-color: rgba(96, 165, 250, 0.24) !important;
+    background: rgba(15, 23, 42, 0.66) !important;
+    border-color: rgba(148, 163, 184, 0.18) !important;
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-card--second {
-    background: linear-gradient(180deg, rgba(6, 78, 59, 0.6), rgba(15, 23, 42, 0.76)) !important;
+    background: rgba(15, 23, 42, 0.58) !important;
+    box-shadow: inset 3px 0 0 rgba(125, 211, 252, 0.14);
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-card--third {
-    background: linear-gradient(180deg, rgba(120, 53, 15, 0.52), rgba(30, 41, 59, 0.76)) !important;
+    background: rgba(15, 23, 42, 0.58) !important;
+    box-shadow: inset 3px 0 0 rgba(148, 163, 184, 0.18);
 }
 
 body[data-theme="dark"] #tab-dashboard .dashboard-prize-insight {
-    border-color: rgba(96, 165, 250, 0.18);
+    background: rgba(15, 23, 42, 0.48) !important;
+    border-color: rgba(148, 163, 184, 0.16);
 }
 
-body[data-theme="dark"] #tab-dashboard .dashboard-prize-share--second,
-body[data-theme="dark"] #tab-dashboard .dashboard-prize-share--third,
-body[data-theme="dark"] #tab-dashboard .dashboard-prize-average {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border-color: rgba(148, 163, 184, 0.12) !important;
-}
-
-body[data-theme="dark"] #tab-dashboard .dashboard-prize-average strong,
-body[data-theme="dark"] #tab-dashboard .dashboard-prize-insight-title {
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-share--first {
+    background: rgba(148, 163, 184, 0.18);
     color: #f8fafc;
 }
 
-body[data-theme="dark"] #tab-dashboard .dashboard-prize-average span,
-body[data-theme="dark"] #tab-dashboard .dashboard-prize-insight-kicker {
-    color: rgba(191, 219, 254, 0.76);
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-share--second,
+body[data-theme="dark"] #tab-dashboard .dashboard-prize-share--third {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #cbd5e1;
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.14);
 }
