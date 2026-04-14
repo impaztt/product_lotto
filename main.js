@@ -5850,6 +5850,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return JSON.parse(text);
     }
 
+    function resolveCurrentUserEmail() {
+        if (!currentUser) {
+            return null;
+        }
+        const candidates = [currentUser.email];
+        if (currentUserProfile && currentUserProfile.email) {
+            candidates.push(currentUserProfile.email);
+        }
+        if (Array.isArray(currentUser.providerData)) {
+            currentUser.providerData.forEach(provider => {
+                if (provider && provider.email) {
+                    candidates.push(provider.email);
+                }
+            });
+        }
+        for (const value of candidates) {
+            const normalized = String(value || '').trim().toLowerCase();
+            if (normalized) {
+                return normalized;
+            }
+        }
+        return null;
+    }
+
     function buildRemoteDrawEntryRecords(draws, options = {}) {
         const targetRound = Number(getTargetRoundForEntries() || 0);
         const userType = isMember() ? 'member' : 'guest';
@@ -5879,7 +5903,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     userType,
                     membershipTier,
                     uid: currentUser ? currentUser.uid : null,
-                    userEmail: currentUser && currentUser.email ? String(currentUser.email).trim().toLowerCase() : null,
+                    userEmail: resolveCurrentUserEmail(),
                     guestTrackingId: userType === 'guest' ? guestTrackingId : null,
                     generationId,
                     ruleIds,
