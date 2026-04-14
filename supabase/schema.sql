@@ -13,6 +13,7 @@ create table if not exists public.draw_entries (
     user_type text not null check (user_type in ('guest', 'member')),
     membership_tier text not null check (char_length(membership_tier) between 1 and 40),
     uid text,
+    user_email text,
     guest_tracking_id text,
     generation_id text not null check (char_length(generation_id) between 10 and 64),
     rule_ids text[] not null default '{}',
@@ -43,6 +44,7 @@ create table if not exists public.draw_entries (
 create index if not exists draw_entries_created_at_idx on public.draw_entries (created_at desc);
 create index if not exists draw_entries_round_idx on public.draw_entries (round);
 create index if not exists draw_entries_uid_idx on public.draw_entries (uid);
+create index if not exists draw_entries_user_email_idx on public.draw_entries (user_email);
 create index if not exists draw_entries_guest_tracking_id_idx on public.draw_entries (guest_tracking_id);
 create index if not exists draw_entries_generation_id_idx on public.draw_entries (generation_id);
 
