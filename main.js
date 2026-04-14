@@ -366,6 +366,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let dashExpectedRankEls = [];
     let dashExpectedRankMetaEls = [];
     let dashExpectedAmountEl = null;
+    let dash2MeWeekEl = null;
+    let dash2MeSavedEl = null;
+    let dash2MeRemainingEl = null;
+    let dash2MePlanEl = null;
     let dashBuyBtn = null;
     let recentRoundsEl = null;
     let roundSearchInput = null;
@@ -729,6 +733,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.requestAnimationFrame(() => {
                     window.requestAnimationFrame(scrollDashboardViewportToTop);
                 });
+                renderDash2MeStats();
             }
             if (tabId === 'dashboard' && currentWeeklyData) {
                 loadLastWeekWinDashboard(currentWeeklyData);
@@ -911,6 +916,10 @@ document.addEventListener('DOMContentLoaded', () => {
             root.getElementById('dash-rnk5ExpcMeta')
         ];
         dashExpectedAmountEl = dashExpectedRankEls[0] || null;
+        dash2MeWeekEl = root.getElementById('dash2-me-week');
+        dash2MeSavedEl = root.getElementById('dash2-me-saved');
+        dash2MeRemainingEl = root.getElementById('dash2-me-remaining');
+        dash2MePlanEl = root.getElementById('dash2-me-plan');
         dashBuyBtn = root.getElementById('dash-btnBuyLt645');
         const dashWnStrcBtn = root.getElementById('dash-btnWnStrc');
         const dashPrchsBtn = root.getElementById('dash-btnPrchsMthd');
@@ -5992,6 +6001,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         persistGeneratedHistorySession(draws, options);
         updateLockerTabUi();
+        renderDash2MeStats();
         if (!hasSupabaseDrawStorage()) {
             console.warn('draw_entries: Supabase 설정이 없어 원격 저장을 건너뜁니다.');
             return;
@@ -6005,6 +6015,50 @@ document.addEventListener('DOMContentLoaded', () => {
             loadMypageDrawHistory(true);
         } catch (error) {
             console.error('번호 저장 실패(draw_entries)', error);
+        }
+    }
+
+    function renderDash2MeStats() {
+        if (!dash2MeWeekEl && !dash2MeSavedEl && !dash2MeRemainingEl && !dash2MePlanEl) {
+            return;
+        }
+        const sessions = getGeneratedHistoryForCurrentOwner();
+        const mondayStart = getLockerMondayStart(getKstNow()).getTime();
+        let weekSetCount = 0;
+        let savedSetCount = 0;
+        sessions.forEach(session => {
+            const entries = Array.isArray(session && session.entries) ? session.entries : [];
+            savedSetCount += entries.length;
+            const createdMs = getTimestampMillis(session && session.createdAt);
+            if (createdMs >= mondayStart) {
+                weekSetCount += entries.length;
+            }
+        });
+        if (dash2MeWeekEl) {
+            dash2MeWeekEl.textContent = formatNumber(weekSetCount);
+        }
+        if (dash2MeSavedEl) {
+            dash2MeSavedEl.textContent = formatNumber(savedSetCount);
+        }
+        if (dash2MeRemainingEl) {
+            const limit = getMembershipDailyGenerationLimit();
+            if (!Number.isFinite(limit)) {
+                dash2MeRemainingEl.textContent = '무제한';
+            } else {
+                const used = getDailyGenerationUsageCount();
+                const remaining = Math.max(0, limit - used);
+                dash2MeRemainingEl.textContent = `${formatNumber(remaining)} / ${formatNumber(limit)}`;
+            }
+        }
+        if (dash2MePlanEl) {
+            if (isAuthStatePending()) {
+                dash2MePlanEl.textContent = '확인 중';
+            } else if (isMember()) {
+                const plan = getMembershipPlanMeta();
+                dash2MePlanEl.textContent = plan && plan.label ? `${plan.label} 플랜` : '로그인 회원';
+            } else {
+                dash2MePlanEl.textContent = '비회원';
+            }
         }
     }
 
@@ -7124,6 +7178,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         updateAuthUi();
+        renderDash2MeStats();
         if (wasMember && !currentUser) {
             resetDrawWizardSessionState({
                 clearDraft: true,

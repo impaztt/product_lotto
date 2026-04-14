@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/common.css?v=20260213">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/layout.css?v=20260212">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/main-layout.css?v=20260212">
-    <link rel="stylesheet" href="style.css?v=20260312_2">
+    <link rel="stylesheet" href="style.css?v=20260414_1">
 
 </head>
 <body data-theme="light">
@@ -1451,225 +1451,130 @@
 
         <section id="tab-dashboard" class="tab-panel app-shell app-shell--dashboard is-active" role="tabpanel" aria-labelledby="tab-dashboard-btn" tabindex="0">
             <div class="container-box">
-                <div class="dashboard-shell">
-                    <section class="dashboard-countdown-ribbon" aria-label="이번 회차 추첨까지 남은 시간 배너">
-                        <div class="dashboard-countdown-ribbon-track">
-                            <div class="dashboard-countdown-ribbon-copy">
-                                <span class="dashboard-countdown-ribbon-kicker">추첨 카운트</span>
-                                <strong class="dashboard-countdown-ribbon-title"><span class="dashboard-countdown-ribbon-round" id="dash-ribbon-round">이번 회차</span> 추첨까지 남은 시간</strong>
+                <div class="dash2">
+
+                    <section class="dash2-hero" aria-label="이번 회차 추첨 카운트다운">
+                        <div class="dash2-hero-top">
+                            <span class="dash2-hero-round" id="dash-ribbon-round">이번 회차</span>
+                            <span class="dash2-hero-date" id="dash-thsLtRflYmd">-</span>
+                        </div>
+                        <p class="dash2-hero-lead">추첨까지 남은 시간</p>
+                        <div class="dash2-hero-timer" role="timer" aria-live="polite" aria-atomic="true">
+                            <div class="dash2-time">
+                                <span class="dash2-time-num" id="dash-ribbon-DD">-</span>
+                                <span class="dash2-time-unit">일</span>
                             </div>
-                            <div class="dashboard-countdown-ribbon-timer">
-                                <div class="dashboard-countdown-ribbon-unit">
-                                    <span class="dashboard-countdown-ribbon-num" id="dash-ribbon-DD"></span>
-                                    <span class="dashboard-countdown-ribbon-txt">일</span>
-                                </div>
-                                <div class="dashboard-countdown-ribbon-unit">
-                                    <span class="dashboard-countdown-ribbon-num" id="dash-ribbon-HH"></span>
-                                    <span class="dashboard-countdown-ribbon-txt">시간</span>
-                                </div>
-                                <div class="dashboard-countdown-ribbon-unit">
-                                    <span class="dashboard-countdown-ribbon-num" id="dash-ribbon-MM"></span>
-                                    <span class="dashboard-countdown-ribbon-txt">분</span>
-                                </div>
-                                <div class="dashboard-countdown-ribbon-unit">
-                                    <span class="dashboard-countdown-ribbon-num" id="dash-ribbon-SS"></span>
-                                    <span class="dashboard-countdown-ribbon-txt">초</span>
-                                </div>
+                            <div class="dash2-time">
+                                <span class="dash2-time-num" id="dash-ribbon-HH">-</span>
+                                <span class="dash2-time-unit">시간</span>
+                            </div>
+                            <div class="dash2-time">
+                                <span class="dash2-time-num" id="dash-ribbon-MM">-</span>
+                                <span class="dash2-time-unit">분</span>
+                            </div>
+                            <div class="dash2-time">
+                                <span class="dash2-time-num" id="dash-ribbon-SS">-</span>
+                                <span class="dash2-time-unit">초</span>
                             </div>
                         </div>
+                        <button class="dash2-cta" type="button" id="dash-btnBuyLt645">
+                            <span>번호 만들러 가기</span>
+                            <svg class="dash2-cta-arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                        </button>
+                        <span class="dash2-sr-only" id="dash-thsLtEpsd" aria-hidden="true"></span>
                     </section>
-                    <section class="dashboard-spotlight-grid" aria-label="핵심 회차 카드">
-                        <article class="dashboard-card dashboard-card--result dash-ops-card dash-ops-card--result">
-                            <div class="dashboard-card-head">
-                                <div class="dashboard-card-head-copy">
-                                    <span class="dashboard-card-kicker">직전 회차</span>
-                                    <strong class="dashboard-card-title">당첨 결과</strong>
-                                </div>
-                                <span class="dashboard-card-meta">공식</span>
-                            </div>
-                            <div class="dashboard-round-row">
-                                <div class="result-round dashboard-round-badge" id="dash-pstLtEpsd"></div>
-                                <div class="dashboard-round-copy">
-                                    <strong id="dash-pstLtRflYmd"></strong>
-                                    <p>공식 추첨일</p>
-                                </div>
-                            </div>
-                            <div class="result-ballWrapper dashboard-result-balls">
-                                <div class="dashboard-result-headline">
-                                    <span class="dashboard-result-label">당첨번호</span>
-                                    <span class="dashboard-result-caption">보너스 포함 공식 결과</span>
-                                </div>
-                                <div class="dashboard-result-layout" aria-label="직전 회차 당첨번호와 보너스번호">
-                                    <div class="result-ballBox dashboard-result-main-balls">
-                                        <div class="result-ball" id="dash-tm1WnNo"></div>
-                                        <div class="result-ball" id="dash-tm2WnNo"></div>
-                                        <div class="result-ball" id="dash-tm3WnNo"></div>
-                                        <div class="result-ball" id="dash-tm4WnNo"></div>
-                                        <div class="result-ball" id="dash-tm5WnNo"></div>
-                                        <div class="result-ball" id="dash-tm6WnNo"></div>
-                                    </div>
-                                    <div class="dashboard-result-bonus-inline" aria-label="직전 회차 보너스번호">
-                                        <span class="dashboard-result-bonus-plus" aria-hidden="true">+</span>
-                                        <div class="result-ball dashboard-result-bonus-chip" id="dash-bnsWnNo"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="dashboard-result-prize">
-                                <span class="result-winnings-txt">1등 총 당첨금</span>
-                                <div class="result-winnings-num">
-                                    <span class="fs-g7" id="dash-pstRnk1SumWnAmt"></span>
-                                </div>
-                                <div class="result-detail">
-                                    (<span id="dash-pstRnk1WnAmt"></span>억 원 × <span id="dash-pstRnk1WnNope"></span>명)
-                                </div>
-                            </div>
-                        </article>
 
-                        <article class="dashboard-card dashboard-card--next dash-ops-card dash-ops-card--next">
-                            <section class="dashboard-next-hero" aria-label="이번 회차 핵심 정보">
-                                <div class="dashboard-card-head">
-                                    <div class="dashboard-card-head-copy">
-                                        <span class="dashboard-card-kicker">이번 회차</span>
-                                        <strong class="dashboard-card-title">이번 회차 핵심 리포트</strong>
-                                    </div>
-                                    <span class="dashboard-card-meta">실시간</span>
+                    <section class="dash2-card" aria-label="직전 회차 결과">
+                        <header class="dash2-card-head">
+                            <strong class="dash2-card-title">직전 회차 결과</strong>
+                            <span class="dash2-card-sub">
+                                <span id="dash-pstLtEpsd">-</span>
+                                <span class="dash2-sep" aria-hidden="true">·</span>
+                                <span id="dash-pstLtRflYmd">-</span>
+                            </span>
+                        </header>
+                        <div class="dash2-balls" aria-label="당첨번호">
+                            <div class="result-ball dash2-ball" id="dash-tm1WnNo"></div>
+                            <div class="result-ball dash2-ball" id="dash-tm2WnNo"></div>
+                            <div class="result-ball dash2-ball" id="dash-tm3WnNo"></div>
+                            <div class="result-ball dash2-ball" id="dash-tm4WnNo"></div>
+                            <div class="result-ball dash2-ball" id="dash-tm5WnNo"></div>
+                            <div class="result-ball dash2-ball" id="dash-tm6WnNo"></div>
+                            <span class="dash2-ball-plus" aria-hidden="true">+</span>
+                            <div class="result-ball dash2-ball" id="dash-bnsWnNo"></div>
+                        </div>
+                        <div class="dash2-prize">
+                            <span class="dash2-prize-label">1등 당첨금</span>
+                            <strong class="dash2-prize-amount" id="dash-pstRnk1SumWnAmt">-</strong>
+                            <p class="dash2-prize-sub">
+                                당첨자 <span id="dash-pstRnk1WnNope">-</span>명 · 1인당 <span id="dash-pstRnk1WnAmt">-</span>억 원
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="dash2-card" aria-label="이번 회차 예상 당첨금">
+                        <header class="dash2-card-head">
+                            <strong class="dash2-card-title">이번 회차 예상 당첨금</strong>
+                            <span class="dash2-card-sub">공식 예상 기준</span>
+                        </header>
+                        <ul class="dash2-ranks">
+                            <li class="dash2-rank dash2-rank--hero">
+                                <div class="dash2-rank-label">
+                                    <span class="dash2-rank-no">1등</span>
+                                    <span class="dash2-rank-meta" id="dash-rnk1ExpcMeta">평균 11명 기준 공식 예상 1인당 금액</span>
                                 </div>
-                                <div class="dashboard-next-hero-main">
-                                    <div class="dashboard-round-row dashboard-round-row--next">
-                                        <div class="result-round dashboard-round-badge" id="dash-thsLtEpsd"></div>
-                                        <div class="dashboard-round-copy">
-                                            <strong><span id="dash-thsLtRflYmd"></span> 추첨 예정</strong>
-                                            <p>공식 예상치와 평균 당첨자 수를 기준으로 핵심 수치를 정리했습니다.</p>
-                                        </div>
-                                    </div>
-                                    <section class="dashboard-countdown-board" aria-label="이번 회차 남은 시간">
-                                        <div class="dashboard-countdown-board-head">
-                                            <span class="dashboard-countdown-head">추첨까지</span>
-                                            <strong class="dashboard-countdown-board-copy">추첨까지 남은 시간</strong>
-                                        </div>
-                                        <div class="timer-box dashboard-countdown" role="timer" aria-live="polite" aria-atomic="true">
-                                            <div class="time-circle">
-                                                <div class="time-num" id="dash-DD"></div>
-                                                <div class="time-txt">일</div>
-                                            </div>
-                                            <div class="time-circle">
-                                                <div class="time-num" id="dash-HH"></div>
-                                                <div class="time-txt">시간</div>
-                                            </div>
-                                            <div class="time-circle">
-                                                <div class="time-num" id="dash-MM"></div>
-                                                <div class="time-txt">분</div>
-                                            </div>
-                                            <div class="time-circle">
-                                                <div class="time-num" id="dash-SS"></div>
-                                                <div class="time-txt">초</div>
-                                            </div>
-                                        </div>
-                                    </section>
+                                <strong class="dash2-rank-amt" id="dash-rnk1ExpcAmt">-</strong>
+                            </li>
+                            <li class="dash2-rank">
+                                <div class="dash2-rank-label">
+                                    <span class="dash2-rank-no">2등</span>
+                                    <span class="dash2-rank-meta" id="dash-rnk2ExpcMeta">평균 85명 기준 추산</span>
                                 </div>
-                            </section>
-                            <section class="dashboard-prize-board" aria-label="이번 회차 예상 지급 요약">
-                                <div class="dashboard-prize-board-head">
-                                    <div class="dashboard-prize-board-copy">
-                                        <span class="dashboard-prize-board-kicker">예상 지급액</span>
-                                        <strong class="dashboard-prize-board-title">1위부터 5위까지 예상 지급 요약</strong>
-                                    </div>
-                                    <span class="dashboard-prize-board-badge">공식 예상 기준</span>
+                                <strong class="dash2-rank-amt" id="dash-rnk2ExpcAmt">-</strong>
+                            </li>
+                            <li class="dash2-rank">
+                                <div class="dash2-rank-label">
+                                    <span class="dash2-rank-no">3등</span>
+                                    <span class="dash2-rank-meta" id="dash-rnk3ExpcMeta">평균 3,355명 기준 추산</span>
                                 </div>
-                                <div class="dashboard-prize-storyboard">
-                                    <article class="dashboard-prize-card dashboard-prize-card--hero">
-                                        <div class="dashboard-prize-card-headline">
-                                            <div class="dashboard-prize-rank-group">
-                                                <span class="dashboard-prize-rank">1위</span>
-                                                <span class="dashboard-prize-chip">평균 11명</span>
-                                            </div>
-                                            <span class="dashboard-prize-share-tag">총 배분의 75%</span>
-                                        </div>
-                                        <strong class="dashboard-prize-amount" id="dash-rnk1ExpcAmt">-</strong>
-                                        <p class="dashboard-prize-card-note" id="dash-rnk1ExpcMeta">공식 예상 1인당 금액</p>
-                                        <div class="dashboard-prize-hero-stats" aria-hidden="true">
-                                            <div class="dashboard-prize-mini-stat">
-                                                <span class="dashboard-prize-mini-label">산정 기준</span>
-                                                <strong>공식 1등 예상금</strong>
-                                            </div>
-                                            <div class="dashboard-prize-mini-stat">
-                                                <span class="dashboard-prize-mini-label">의미</span>
-                                                <strong>총 당첨금 풀의 핵심 기준값</strong>
-                                            </div>
-                                        </div>
-                                    </article>
-                                    <div class="dashboard-prize-ladder">
-                                        <article class="dashboard-prize-card dashboard-prize-card--second">
-                                            <div class="dashboard-prize-card-headline">
-                                                <div class="dashboard-prize-rank-group">
-                                                    <span class="dashboard-prize-rank">2위</span>
-                                                    <span class="dashboard-prize-chip">평균 85명</span>
-                                                </div>
-                                                <span class="dashboard-prize-share-tag">12.5%</span>
-                                            </div>
-                                            <strong class="dashboard-prize-amount" id="dash-rnk2ExpcAmt">-</strong>
-                                            <p class="dashboard-prize-card-note" id="dash-rnk2ExpcMeta">평균 당첨자 수 기준 추산</p>
-                                        </article>
-                                        <article class="dashboard-prize-card dashboard-prize-card--third">
-                                            <div class="dashboard-prize-card-headline">
-                                                <div class="dashboard-prize-rank-group">
-                                                    <span class="dashboard-prize-rank">3위</span>
-                                                    <span class="dashboard-prize-chip">평균 3,355명</span>
-                                                </div>
-                                                <span class="dashboard-prize-share-tag">12.5%</span>
-                                            </div>
-                                            <strong class="dashboard-prize-amount" id="dash-rnk3ExpcAmt">-</strong>
-                                            <p class="dashboard-prize-card-note" id="dash-rnk3ExpcMeta">평균 당첨자 수 기준 추산</p>
-                                        </article>
-                                    </div>
-                                    <aside class="dashboard-prize-insight" aria-label="예상 당첨금 배분 구조">
-                                        <div class="dashboard-prize-insight-head">
-                                            <span class="dashboard-prize-insight-kicker">분배 구조</span>
-                                            <strong class="dashboard-prize-insight-title">평균 당첨자 수 기반 추산</strong>
-                                        </div>
-                                        <div class="dashboard-prize-sharebar" aria-hidden="true">
-                                            <span class="dashboard-prize-share dashboard-prize-share--first">1위 75%</span>
-                                            <span class="dashboard-prize-share dashboard-prize-share--second">2위 12.5%</span>
-                                            <span class="dashboard-prize-share dashboard-prize-share--third">3위 12.5%</span>
-                                        </div>
-                                        <div class="dashboard-prize-averages" aria-hidden="true">
-                                            <article class="dashboard-prize-average">
-                                                <strong>11명</strong>
-                                                <span>평균 1위</span>
-                                            </article>
-                                            <article class="dashboard-prize-average">
-                                                <strong>85명</strong>
-                                                <span>평균 2위</span>
-                                            </article>
-                                            <article class="dashboard-prize-average">
-                                                <strong>3,355명</strong>
-                                                <span>평균 3위</span>
-                                            </article>
-                                        </div>
-                                    </aside>
-                                    <div class="dashboard-prize-fixed">
-                                        <article class="dashboard-prize-fixed-item">
-                                            <div class="dashboard-prize-fixed-top">
-                                                <span class="dashboard-prize-rank">4위</span>
-                                                <strong class="dashboard-prize-fixed-amount" id="dash-rnk4ExpcAmt">-</strong>
-                                            </div>
-                                            <p class="dashboard-prize-card-note" id="dash-rnk4ExpcMeta">4개 번호 일치 · 고정 지급</p>
-                                        </article>
-                                        <article class="dashboard-prize-fixed-item">
-                                            <div class="dashboard-prize-fixed-top">
-                                                <span class="dashboard-prize-rank">5위</span>
-                                                <strong class="dashboard-prize-fixed-amount" id="dash-rnk5ExpcAmt">-</strong>
-                                            </div>
-                                            <p class="dashboard-prize-card-note" id="dash-rnk5ExpcMeta">3개 번호 일치 · 고정 지급</p>
-                                        </article>
-                                    </div>
+                                <strong class="dash2-rank-amt" id="dash-rnk3ExpcAmt">-</strong>
+                            </li>
+                            <li class="dash2-rank">
+                                <div class="dash2-rank-label">
+                                    <span class="dash2-rank-no">4등</span>
+                                    <span class="dash2-rank-meta" id="dash-rnk4ExpcMeta">4개 번호 일치 · 고정 지급</span>
                                 </div>
-                                <p class="dashboard-prize-footnote">공식 예상 1인당 금액과 평균 당첨자 수를 기준으로 1위부터 5위까지 예상 지급액을 계산합니다.</p>
-                            </section>
-                            <div class="dashboard-card-actions">
-                                <button class="btn-butNow dashboard-primary-btn" type="button" id="dash-btnBuyLt645">추첨 탭 열기</button>
-                            </div>
-                        </article>
+                                <strong class="dash2-rank-amt" id="dash-rnk4ExpcAmt">-</strong>
+                            </li>
+                            <li class="dash2-rank">
+                                <div class="dash2-rank-label">
+                                    <span class="dash2-rank-no">5등</span>
+                                    <span class="dash2-rank-meta" id="dash-rnk5ExpcMeta">3개 번호 일치 · 고정 지급</span>
+                                </div>
+                                <strong class="dash2-rank-amt" id="dash-rnk5ExpcAmt">-</strong>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="dash2-card" aria-label="나의 현황">
+                        <header class="dash2-card-head">
+                            <strong class="dash2-card-title">나의 현황</strong>
+                            <span class="dash2-card-sub" id="dash2-me-plan">-</span>
+                        </header>
+                        <ul class="dash2-me">
+                            <li class="dash2-me-row">
+                                <span class="dash2-me-label">이번 주 만든 번호</span>
+                                <strong class="dash2-me-value"><span id="dash2-me-week">0</span><em>세트</em></strong>
+                            </li>
+                            <li class="dash2-me-row">
+                                <span class="dash2-me-label">저장한 번호</span>
+                                <strong class="dash2-me-value"><span id="dash2-me-saved">0</span><em>세트</em></strong>
+                            </li>
+                            <li class="dash2-me-row">
+                                <span class="dash2-me-label">오늘 남은 생성 한도</span>
+                                <strong class="dash2-me-value"><span id="dash2-me-remaining">-</span><em>회</em></strong>
+                            </li>
+                        </ul>
                     </section>
 
                 </div>
@@ -3210,6 +3115,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
     <script src="scripts/lotto-tabs.js?v=20260307_1"></script>
     <script src="scripts/lotto-rules.js?v=20260307_1"></script>
-    <script src="main.js?v=20260312_3"></script>
+    <script src="main.js?v=20260414_1"></script>
 </body>
 </html>

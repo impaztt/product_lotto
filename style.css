@@ -30313,3 +30313,539 @@ body[data-theme="dark"] #tab-dashboard .dashboard-countdown-ribbon-unit:not(:las
 body[data-theme="dark"] #tab-dashboard .dashboard-countdown-ribbon-txt {
     color: #94a3b8;
 }
+
+/* ==========================================================================
+   Dashboard v2 — Toss / KakaoBank style redesign (2026-04-14)
+   Simple, legible, high-contrast. Vertical single-column card stack.
+   ========================================================================== */
+
+body #tab-dashboard.app-shell--dashboard,
+body #tab-dashboard {
+    background: #f5f7fb !important;
+}
+
+body #tab-dashboard .container-box {
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+#tab-dashboard .dash2 {
+    --dash2-ink: #0f172a;
+    --dash2-ink-soft: #1f2937;
+    --dash2-muted: #64748b;
+    --dash2-subtle: #94a3b8;
+    --dash2-divider: rgba(15, 23, 42, 0.06);
+    --dash2-border: rgba(15, 23, 42, 0.07);
+    --dash2-card: #ffffff;
+    --dash2-accent: #1e6bff;
+    --dash2-accent-dark: #0f5bd8;
+    --dash2-accent-soft: rgba(30, 107, 255, 0.10);
+    --dash2-radius-card: 22px;
+    --dash2-radius-btn: 16px;
+    --dash2-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.05);
+
+    box-sizing: border-box;
+    max-width: 640px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 20px 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--dash2-ink);
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    letter-spacing: -0.01em;
+    font-feature-settings: 'tnum';
+}
+
+#tab-dashboard .dash2 *,
+#tab-dashboard .dash2 *::before,
+#tab-dashboard .dash2 *::after {
+    box-sizing: border-box;
+}
+
+#tab-dashboard .dash2-sr-only {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ---------- Hero ---------- */
+#tab-dashboard .dash2-hero {
+    position: relative;
+    background: var(--dash2-card);
+    border: 1px solid var(--dash2-border);
+    border-radius: var(--dash2-radius-card);
+    padding: 26px 24px 22px;
+    box-shadow: var(--dash2-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow: hidden;
+}
+
+#tab-dashboard .dash2-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(110% 90% at 100% 0%, rgba(30, 107, 255, 0.10) 0%, transparent 58%);
+    pointer-events: none;
+}
+
+#tab-dashboard .dash2-hero > * {
+    position: relative;
+}
+
+#tab-dashboard .dash2-hero-top {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#tab-dashboard .dash2-hero-round {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: var(--dash2-accent-soft);
+    color: var(--dash2-accent);
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 999px;
+    letter-spacing: -0.01em;
+    line-height: 1;
+}
+
+#tab-dashboard .dash2-hero-date {
+    font-size: 14px;
+    color: var(--dash2-muted);
+    font-weight: 600;
+}
+
+#tab-dashboard .dash2-hero-lead {
+    margin: 2px 0 0;
+    font-size: 15px;
+    color: var(--dash2-muted);
+    font-weight: 500;
+}
+
+#tab-dashboard .dash2-hero-timer {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding-top: 2px;
+}
+
+#tab-dashboard .dash2-time {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    min-width: 0;
+}
+
+#tab-dashboard .dash2-time-num {
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--dash2-ink);
+    letter-spacing: -0.05em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    min-width: 1.2ch;
+    text-align: left;
+}
+
+#tab-dashboard .dash2-time-unit {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dash2-muted);
+    letter-spacing: -0.01em;
+}
+
+#tab-dashboard .dash2-cta {
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 56px;
+    padding: 0 20px;
+    border: none;
+    border-radius: var(--dash2-radius-btn);
+    background: var(--dash2-accent) !important;
+    color: #ffffff !important;
+    font-size: 17px;
+    font-weight: 700;
+    font-family: inherit;
+    letter-spacing: -0.02em;
+    cursor: pointer;
+    transition: background-color 140ms ease, transform 120ms ease, box-shadow 140ms ease;
+    box-shadow: 0 6px 18px rgba(30, 107, 255, 0.25);
+}
+
+#tab-dashboard .dash2-cta:hover {
+    background: var(--dash2-accent-dark) !important;
+}
+
+#tab-dashboard .dash2-cta:active {
+    transform: scale(0.985);
+    box-shadow: 0 3px 10px rgba(30, 107, 255, 0.22);
+}
+
+#tab-dashboard .dash2-cta-arrow {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* ---------- Card (shared) ---------- */
+#tab-dashboard .dash2-card {
+    background: var(--dash2-card);
+    border: 1px solid var(--dash2-border);
+    border-radius: var(--dash2-radius-card);
+    padding: 22px 24px 24px;
+    box-shadow: var(--dash2-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+#tab-dashboard .dash2-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+#tab-dashboard .dash2-card-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--dash2-ink);
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+}
+
+#tab-dashboard .dash2-card-sub {
+    font-size: 13px;
+    color: var(--dash2-muted);
+    font-weight: 500;
+    text-align: right;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 55%;
+}
+
+#tab-dashboard .dash2-card-sub span {
+    color: inherit;
+}
+
+#tab-dashboard .dash2-sep {
+    color: var(--dash2-subtle);
+    margin: 0 5px;
+}
+
+/* ---------- Balls (past round) ---------- */
+#tab-dashboard .dash2-balls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 4px 0;
+}
+
+#tab-dashboard .dash2-ball.result-ball {
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    padding: 0;
+    margin: 0;
+    border-radius: 50%;
+    font-size: 17px;
+    font-weight: 700;
+    text-align: center;
+    color: #ffffff;
+    font-variant-numeric: tabular-nums;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.14);
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#tab-dashboard .dash2-ball-plus {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--dash2-subtle);
+    padding: 0 2px;
+}
+
+/* ---------- Prize summary (past round) ---------- */
+#tab-dashboard .dash2-prize {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding-top: 18px;
+    border-top: 1px solid var(--dash2-divider);
+    text-align: center;
+}
+
+#tab-dashboard .dash2-prize-label {
+    font-size: 13px;
+    color: var(--dash2-muted);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+#tab-dashboard .dash2-prize-amount {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--dash2-ink);
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+    margin: 2px 0;
+}
+
+#tab-dashboard .dash2-prize-sub {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: var(--dash2-muted);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+#tab-dashboard .dash2-prize-sub span {
+    color: var(--dash2-ink-soft);
+    font-weight: 700;
+}
+
+/* ---------- Rank list (next round expected) ---------- */
+#tab-dashboard .dash2-ranks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#tab-dashboard .dash2-rank {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--dash2-divider);
+}
+
+#tab-dashboard .dash2-rank:first-child {
+    padding-top: 2px;
+}
+
+#tab-dashboard .dash2-rank:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+#tab-dashboard .dash2-rank-label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+#tab-dashboard .dash2-rank-no {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dash2-ink);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+#tab-dashboard .dash2-rank-meta {
+    font-size: 12px;
+    color: var(--dash2-muted);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+#tab-dashboard .dash2-rank-amt {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--dash2-ink);
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    flex-shrink: 0;
+    text-align: right;
+}
+
+#tab-dashboard .dash2-rank--hero .dash2-rank-no {
+    font-size: 16px;
+}
+
+#tab-dashboard .dash2-rank--hero .dash2-rank-amt {
+    font-size: 24px;
+    color: var(--dash2-accent);
+}
+
+/* ---------- 나의 현황 ---------- */
+#tab-dashboard .dash2-me {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#tab-dashboard .dash2-me-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--dash2-divider);
+}
+
+#tab-dashboard .dash2-me-row:first-child {
+    padding-top: 2px;
+}
+
+#tab-dashboard .dash2-me-row:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+#tab-dashboard .dash2-me-label {
+    font-size: 14px;
+    color: var(--dash2-muted);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+#tab-dashboard .dash2-me-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--dash2-ink);
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+}
+
+#tab-dashboard .dash2-me-value em {
+    font-size: 13px;
+    font-weight: 600;
+    font-style: normal;
+    color: var(--dash2-muted);
+    margin-left: 4px;
+    letter-spacing: -0.01em;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 520px) {
+    #tab-dashboard .dash2 {
+        padding: 16px 14px 64px;
+        gap: 14px;
+    }
+    #tab-dashboard .dash2-hero {
+        padding: 22px 20px 20px;
+    }
+    #tab-dashboard .dash2-card {
+        padding: 20px 20px 22px;
+    }
+    #tab-dashboard .dash2-time-num {
+        font-size: 34px;
+    }
+    #tab-dashboard .dash2-time {
+        gap: 3px;
+    }
+    #tab-dashboard .dash2-hero-timer {
+        gap: 12px;
+    }
+    #tab-dashboard .dash2-ball.result-ball {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 16px;
+    }
+    #tab-dashboard .dash2-prize-amount {
+        font-size: 26px;
+    }
+    #tab-dashboard .dash2-rank-amt {
+        font-size: 18px;
+    }
+    #tab-dashboard .dash2-rank--hero .dash2-rank-amt {
+        font-size: 22px;
+    }
+    #tab-dashboard .dash2-me-value {
+        font-size: 20px;
+    }
+    #tab-dashboard .dash2-card-title {
+        font-size: 16px;
+    }
+    #tab-dashboard .dash2-card-sub {
+        font-size: 12px;
+    }
+    #tab-dashboard .dash2-cta {
+        height: 52px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 360px) {
+    #tab-dashboard .dash2-time-num {
+        font-size: 28px;
+    }
+    #tab-dashboard .dash2-hero-timer {
+        gap: 10px;
+    }
+    #tab-dashboard .dash2-ball.result-ball {
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        font-size: 14px;
+    }
+}
+
+/* Dark theme support */
+body[data-theme="dark"] #tab-dashboard.app-shell--dashboard,
+body[data-theme="dark"] #tab-dashboard {
+    background: #0b1220 !important;
+}
+
+body[data-theme="dark"] #tab-dashboard .dash2 {
+    --dash2-ink: #f8fafc;
+    --dash2-ink-soft: #e2e8f0;
+    --dash2-muted: #94a3b8;
+    --dash2-subtle: #64748b;
+    --dash2-divider: rgba(255, 255, 255, 0.08);
+    --dash2-border: rgba(255, 255, 255, 0.08);
+    --dash2-card: #131a26;
+    --dash2-accent-soft: rgba(96, 165, 250, 0.14);
+    --dash2-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 12px 28px rgba(0, 0, 0, 0.3);
+}
