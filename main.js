@@ -5770,37 +5770,107 @@ document.addEventListener('DOMContentLoaded', () => {
         saveGeneratedHistorySessions(current.slice(0, 24));
     }
 
-    async function persistGeneratedEntries(draws, options = {}) {
-        if (!Array.isArray(draws) || !draws.length) {
-            return;
+    function getSupabaseConfig() {
+        const raw = window.LOTTO_SUPABASE_CONFIG;
+        if (!raw || typeof raw !== 'object') {
+            return null;
         }
-        persistGeneratedHistorySession(draws, options);
-        updateLockerTabUi();
-        if (!firebaseDb || !window.firebase || !window.firebase.firestore) {
-            return;
+        const url = String(raw.url || '').trim().replace(/\/+$/, '');
+        const anonKey = String(raw.anonKey || '').trim();
+        const schema = String(raw.schema || 'public').trim() || 'public';
+        if (!url || !anonKey) {
+            return null;
         }
-        try {
-            const targetRound = getTargetRoundForEntries();
-            const userType = isMember() ? 'member' : 'guest';
-            const membershipTier = isMember() ? getMembershipTier() : 'guest';
-            const generationId = `gen_${Date.now()}_${createClientNonce(10)}`;
-            const sourceMode = options.sourceMode === 'premium' ? 'premium' : 'self';
-            const ruleIds = Array.isArray(options.ruleIds)
-                ? Array.from(new Set(options.ruleIds.map(value => String(value || '').trim()).filter(Boolean)))
-                : [];
-            const serverNow = window.firebase.firestore.FieldValue.serverTimestamp();
-            const batch = firebaseDb.batch();
-            let writeCount = 0;
+        return { url, anonKey, schema };
+    }
 
-            draws.forEach((draw, index) => {
+    function hasSupabaseDrawStorage() {
+        return Boolean(getSupabaseConfig());
+    }
+
+    function hasRemoteDrawStorage() {
+        return hasSupabaseDrawStorage();
+    }
+
+    function buildSupabaseRestUrl(path, query = {}) {
+        const config = getSupabaseConfig();
+        if (!config) {
+            throw new Error('supabase_not_configured');
+        }
+        const url = new URL(`${config.url}/rest/v1/${String(path || '').replace(/^\/+/, '')}`);
+        Object.entries(query).forEach(([key, value]) => {
+            if (value == null || value === '') {
+                return;
+            }
+            url.searchParams.set(key, String(value));
+        });
+        return url.toString();
+    }
+
+    function buildSupabaseRestHeaders(options = {}) {
+        const config = getSupabaseConfig();
+        if (!config) {
+            throw new Error('supabase_not_configured');
+        }
+        const headers = {
+            apikey: config.anonKey,
+            Authorization: `Bearer ${config.anonKey}`,
+            Accept: 'application/json',
+            'Accept-Profile': config.schema
+        };
+        if (options.write) {
+            headers['Content-Type'] = 'application/json';
+            headers['Content-Profile'] = config.schema;
+        }
+        if (options.prefer) {
+            headers.Prefer = options.prefer;
+        }
+        return headers;
+    }
+
+    async function requestSupabase(path, options = {}) {
+        const method = String(options.method || 'GET').toUpperCase();
+        const response = await fetch(buildSupabaseRestUrl(path, options.query), {
+            method,
+            headers: buildSupabaseRestHeaders({
+                write: method !== 'GET',
+                prefer: options.prefer || ''
+            }),
+            body: options.body == null ? undefined : JSON.stringify(options.body),
+            cache: 'no-store'
+        });
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text || `supabase_${method.toLowerCase()}_${response.status}`);
+        }
+        const text = await response.text();
+        if (!text) {
+            return null;
+        }
+        return JSON.parse(text);
+    }
+
+    function buildRemoteDrawEntryRecords(draws, options = {}) {
+        const targetRound = Number(getTargetRoundForEntries() || 0);
+        const userType = isMember() ? 'member' : 'guest';
+        const membershipTier = isMember() ? getMembershipTier() : 'guest';
+        const generationId = `gen_${Date.now()}_${createClientNonce(10)}`;
+        const sourceMode = options.sourceMode === 'premium' ? 'premium' : 'self';
+        const ruleIds = Array.isArray(options.ruleIds)
+            ? Array.from(new Set(options.ruleIds.map(value => String(value || '').trim()).filter(Boolean)))
+            : [];
+        if (userType === 'guest' && !guestTrackingId) {
+            guestTrackingId = getOrCreateGuestTrackingId();
+        }
+        return draws
+            .map((draw, index) => {
                 const normalizedNumbers = normalizeEntryNumbers(draw && draw.numbers);
                 if (!normalizedNumbers.length) {
-                    return;
+                    return null;
                 }
-                const ref = firebaseDb.collection('draw_entries').doc();
                 const strategy = draw && draw.strategy ? String(draw.strategy).trim() : '';
-                batch.set(ref, {
-                    round: Number(targetRound),
+                return {
+                    round: targetRound,
                     numbers: normalizedNumbers,
                     numbersKey: normalizedNumbers.join('-'),
                     setNo: Number(draw && draw.setNo ? draw.setNo : index + 1),
@@ -5812,19 +5882,103 @@ document.addEventListener('DOMContentLoaded', () => {
                     guestTrackingId: userType === 'guest' ? guestTrackingId : null,
                     generationId,
                     ruleIds,
-                    ruleCount: ruleIds.length,
-                    createdAt: serverNow
-                });
-                writeCount += 1;
-            });
+                    ruleCount: ruleIds.length
+                };
+            })
+            .filter(Boolean);
+    }
 
-            if (!writeCount) {
+    function buildSupabaseDrawEntryRow(record) {
+        return {
+            round: record.round,
+            numbers: record.numbers,
+            numbers_key: record.numbersKey,
+            set_no: record.setNo,
+            source_mode: record.sourceMode,
+            strategy: record.strategy,
+            user_type: record.userType,
+            membership_tier: record.membershipTier,
+            uid: record.uid,
+            guest_tracking_id: record.guestTrackingId,
+            generation_id: record.generationId,
+            rule_ids: record.ruleIds,
+            rule_count: record.ruleCount
+        };
+    }
+
+    async function persistDrawEntriesToSupabase(records) {
+        if (!records.length) {
+            return;
+        }
+        await requestSupabase('draw_entries', {
+            method: 'POST',
+            body: records.map(buildSupabaseDrawEntryRow),
+            prefer: 'return=minimal'
+        });
+    }
+
+    async function fetchRemoteDrawHistoryEntries() {
+        if (!hasSupabaseDrawStorage()) {
+            return [];
+        }
+        const query = {
+            select: 'generation_id,created_at,source_mode,round',
+            order: 'created_at.desc',
+            limit: 400
+        };
+        if (isMember() && currentUser && currentUser.uid) {
+            query.uid = `eq.${currentUser.uid}`;
+        } else {
+            if (!guestTrackingId) {
+                guestTrackingId = getOrCreateGuestTrackingId();
+            }
+            query.guest_tracking_id = `eq.${guestTrackingId}`;
+        }
+        const rows = await requestSupabase('draw_entries', { query });
+        return Array.isArray(rows)
+            ? rows.map(row => ({
+                generationId: String(row.generation_id || ''),
+                createdAt: row.created_at || null,
+                sourceMode: row.source_mode || 'self',
+                round: Number(row.round || 0)
+            }))
+            : [];
+    }
+
+    async function fetchRemoteDrawEntriesByRound(roundNo) {
+        if (!hasSupabaseDrawStorage()) {
+            return [];
+        }
+        const rows = await requestSupabase('draw_entries', {
+            query: {
+                select: 'numbers',
+                round: `eq.${Number(roundNo)}`
+            }
+        });
+        return Array.isArray(rows)
+            ? rows.map(row => ({ numbers: row.numbers }))
+            : [];
+    }
+
+    async function persistGeneratedEntries(draws, options = {}) {
+        if (!Array.isArray(draws) || !draws.length) {
+            return;
+        }
+        persistGeneratedHistorySession(draws, options);
+        updateLockerTabUi();
+        if (!hasSupabaseDrawStorage()) {
+            console.warn('draw_entries: Supabase 설정이 없어 원격 저장을 건너뜁니다.');
+            return;
+        }
+        try {
+            const records = buildRemoteDrawEntryRecords(draws, options);
+            if (!records.length) {
                 return;
             }
-            await batch.commit();
+            await persistDrawEntriesToSupabase(records);
             loadMypageDrawHistory(true);
         } catch (error) {
-            console.warn('번호 저장 실패(draw_entries)', error);
+            console.error('번호 저장 실패(draw_entries)', error);
         }
     }
 
@@ -6250,10 +6404,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!mypageHistoryListEl) {
             return;
         }
-        if (!firebaseDb) {
+        if (!hasRemoteDrawStorage()) {
             mypageHistoryListEl.innerHTML = `
                 <li>
-                    <span class="info-label">Firebase 연결 후 이력을 확인할 수 있습니다.</span>
+                    <span class="info-label">원격 저장소 연결 후 이력을 확인할 수 있습니다.</span>
                     <strong>-</strong>
                 </li>
             `;
@@ -6272,34 +6426,24 @@ document.addEventListener('DOMContentLoaded', () => {
             </li>
         `;
         try {
-            let query = null;
-            if (isMember() && currentUser && currentUser.uid) {
-                query = firebaseDb.collection('draw_entries').where('uid', '==', currentUser.uid);
-            } else {
-                if (!guestTrackingId) {
-                    guestTrackingId = getOrCreateGuestTrackingId();
-                }
-                query = firebaseDb.collection('draw_entries').where('guestTrackingId', '==', guestTrackingId);
-            }
-            const snapshot = await query.get();
             const groupedMap = new Map();
-            snapshot.docs.forEach(doc => {
-                const data = doc.data() || {};
-                const key = String(data.generationId || doc.id);
+            const entries = await fetchRemoteDrawHistoryEntries();
+            entries.forEach(entry => {
+                const key = String(entry.generationId || '');
                 const existing = groupedMap.get(key);
                 if (!existing) {
                     groupedMap.set(key, {
                         generationId: key,
-                        createdAt: data.createdAt || null,
-                        sourceMode: data.sourceMode || 'self',
-                        round: Number(data.round || 0),
+                        createdAt: entry.createdAt || null,
+                        sourceMode: entry.sourceMode || 'self',
+                        round: Number(entry.round || 0),
                         setCount: 1
                     });
                     return;
                 }
                 existing.setCount += 1;
-                if (getTimestampMillis(data.createdAt) > getTimestampMillis(existing.createdAt)) {
-                    existing.createdAt = data.createdAt || existing.createdAt;
+                if (getTimestampMillis(entry.createdAt) > getTimestampMillis(existing.createdAt)) {
+                    existing.createdAt = entry.createdAt || existing.createdAt;
                 }
             });
             const rows = Array.from(groupedMap.values())
@@ -6392,7 +6536,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!dashWinStatusEl || !dashWinRoundLabelEl) {
             return;
         }
-        if (!firebaseDb) {
+        if (!hasRemoteDrawStorage()) {
             setLastWeekDashboardFallback('생성 기록 연결 중');
             return;
         }
@@ -6408,7 +6552,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dashWinRoundLabelEl.textContent = `직전 ${roundNo}회`;
         dashWinStatusEl.textContent = `${roundNo}회 생성 결과 집계 중`;
         try {
-            const snapshot = await firebaseDb.collection('draw_entries').where('round', '==', roundNo).get();
+            const entries = await fetchRemoteDrawEntriesByRound(roundNo);
             const winningNumbers = [
                 Number(roundData.drwtNo1),
                 Number(roundData.drwtNo2),
@@ -6425,9 +6569,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const rankCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
             let totalGenerated = 0;
             let totalWinners = 0;
-            snapshot.forEach(doc => {
-                const data = doc.data() || {};
-                const numbers = normalizeEntryNumbers(data.numbers);
+            entries.forEach(entry => {
+                const numbers = normalizeEntryNumbers(entry && entry.numbers);
                 if (numbers.length !== 6) {
                     return;
                 }
