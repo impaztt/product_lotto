@@ -1696,10 +1696,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 return;
             }
-            updateRulesStatus('현재 연결된 로그인 수단은 구글입니다.');
-            if (firebaseAuthStatusEl) {
-                firebaseAuthStatusEl.textContent = '현재는 구글 로그인만 연결되어 있습니다.';
+            if (provider === 'kakao') {
+                const ok = await signInWithKakao();
+                if (ok) {
+                    closeAuthModal();
+                }
+                return;
             }
+            updateRulesStatus('지원하지 않는 로그인 수단입니다.');
         });
     });
 
@@ -7261,7 +7265,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             void handleGoogleRedirectResult();
-            
+            initKakaoSdk();
+
             if (firebaseAuthStatusEl) {
                 firebaseAuthStatusEl.textContent = hasGoogleRedirectPending()
                     ? '구글 로그인 결과를 확인하는 중입니다...'
@@ -7619,6 +7624,110 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    const KAKAO_JS_KEY = 'f4b5463bb98ef8f9c92e202558762423';
+    let kakaoSdkReady = false;
+
+    function initKakaoSdk() {
+        try {
+            if (typeof window.Kakao === 'undefined') {
+                console.warn('[Auth] Kakao SDK not loaded yet');
+                return;
+            }
+            if (!window.Kakao.isInitialized()) {
+                window.Kakao.init(KAKAO_JS_KEY);
+            }
+            kakaoSdkReady = window.Kakao.isInitialized();
+            console.log('[Auth] Kakao SDK ready:', kakaoSdkReady);
+        } catch (error) {
+            console.error('[Auth] Kakao SDK init failed', error);
+            kakaoSdkReady = false;
+        }
+    }
+
+    function kakaoLoginPromise() {
+        return new Promise((resolve, reject) => {
+            if (!window.Kakao || !window.Kakao.Auth) {
+                reject(new Error('Kakao SDK not available'));
+                return;
+            }
+            window.Kakao.Auth.login({
+                scope: 'account_email profile_nickname profile_image',
+                success: (authObj) => resolve(authObj),
+                fail: (err) => reject(err)
+            });
+        });
+    }
+
+    async function signInWithKakao() {
+        console.log('[Auth] Kakao sign-in requested');
+        if (!firebaseReady || !firebaseAuth) {
+            updateRulesStatus('Firebase 설정이 필요합니다.');
+            setFirebaseAuthStatus('Firebase 설정 미완료');
+            return false;
+        }
+        if (!kakaoSdkReady) {
+            initKakaoSdk();
+        }
+        if (!kakaoSdkReady) {
+            setFirebaseAuthStatus('카카오 SDK를 불러오지 못했습니다. 네트워크를 확인해 주세요.');
+            return false;
+        }
+        if (authActionInFlight) {
+            setFirebaseAuthStatus('로그인 요청을 처리 중입니다. 잠시만 기다려 주세요.');
+            return false;
+        }
+        setAuthButtonsBusy(true);
+        try {
+            await authPersistenceReady;
+            setFirebaseAuthStatus('카카오 로그인 창을 여는 중입니다...');
+            const authObj = await kakaoLoginPromise();
+            const accessToken = authObj && authObj.access_token;
+            if (!accessToken) {
+                throw new Error('카카오 access_token 없음');
+            }
+            setFirebaseAuthStatus('카카오 계정을 확인하는 중입니다...');
+            const res = await fetch('/auth/kakao', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ accessToken })
+            });
+            if (!res.ok) {
+                const errText = await res.text().catch(() => '');
+                throw new Error(`서버 검증 실패 (${res.status}) ${errText}`);
+            }
+            const data = await res.json();
+            if (!data || !data.customToken) {
+                throw new Error('custom token 응답 없음');
+            }
+            setFirebaseAuthStatus('Firebase 로그인 처리 중...');
+            const result = await firebaseAuth.signInWithCustomToken(data.customToken);
+            if (result && result.user) {
+                try {
+                    if (data.displayName && !result.user.displayName) {
+                        await result.user.updateProfile({
+                            displayName: data.displayName,
+                            photoURL: data.photoURL || null
+                        });
+                    }
+                } catch (profileError) {
+                    console.warn('[Auth] Kakao profile update skipped', profileError);
+                }
+                await syncAuthState(result.user);
+            }
+            updateRulesStatus('카카오 가입/로그인 성공');
+            setFirebaseAuthStatus('카카오 로그인 완료. 계정 정보를 불러오는 중입니다.');
+            return true;
+        } catch (error) {
+            console.error('[Auth] Kakao sign-in error', error);
+            const message = (error && error.message) || '카카오 로그인에 실패했습니다.';
+            updateRulesStatus(`카카오 로그인 실패: ${message}`);
+            setFirebaseAuthStatus(message);
+            return false;
+        } finally {
+            setAuthButtonsBusy(false);
+        }
+    }
+
     async function signInWithGoogle() {
         console.log('[Auth] Google sign-in requested');
         if (!firebaseReady || !firebaseAuth) {
@@ -7702,6 +7811,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         try {
             await firebaseAuth.signOut();
+            try {
+                if (window.Kakao && window.Kakao.Auth && typeof window.Kakao.Auth.getAccessToken === 'function' && window.Kakao.Auth.getAccessToken()) {
+                    window.Kakao.Auth.logout(() => {});
+                }
+            } catch (kakaoLogoutError) {
+                console.warn('[Auth] Kakao logout skipped', kakaoLogoutError);
+            }
             setGoogleRedirectPendingState(false);
             currentUserProfile = null;
             welcomeModalDismissedInSession = false;

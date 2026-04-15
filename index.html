@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/common.css?v=20260213">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/layout.css?v=20260212">
     <link rel="stylesheet" href="https://www.dhlottery.co.kr/resources/css/main-layout.css?v=20260212">
-    <link rel="stylesheet" href="style.css?v=20260415_3">
+    <link rel="stylesheet" href="style.css?v=20260415_4">
 
 </head>
 <body data-theme="light">
@@ -3018,12 +3018,16 @@
                 <h3 id="auth-title">간편 로그인</h3>
                 <button class="modal-close" type="button" aria-label="닫기">닫기</button>
             </div>
-            <p class="modal-text">현재는 구글 로그인으로 저장 기준과 추천 기록을 이어서 사용할 수 있습니다.</p>
+            <p class="modal-text">구글 또는 카카오 계정으로 간편하게 로그인하세요. 저장 기준과 추천 기록이 이어집니다.</p>
             <div id="firebase-auth-status" class="auth-status-message" style="font-size: 11px; color: #64748b; margin-bottom: 12px; text-align: center;">로그인 준비 중...</div>
             <div class="auth-buttons">
                 <button class="auth-btn google" data-auth="google">
                     <span class="auth-icon google" aria-hidden="true"></span>
                     구글로 시작
+                </button>
+                <button class="auth-btn kakao" data-auth="kakao">
+                    <span class="auth-icon kakao" aria-hidden="true"></span>
+                    카카오로 시작
                 </button>
             </div>
         </div>
@@ -3113,8 +3117,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
     <script src="scripts/lotto-tabs.js?v=20260307_1"></script>
     <script src="scripts/lotto-rules.js?v=20260307_1"></script>
-    <script src="main.js?v=20260415_3"></script>
+    <script src="main.js?v=20260415_4"></script>
 </body>
 </html>
