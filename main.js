@@ -708,6 +708,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let drawWizardResumeState = null;
     let drawWizardLastViewKey = '';
     let drawWizardTransitionDirection = 'forward';
+    let remoteDrawHistorySessions = [];
+    let remoteDrawHistoryOwnerKey = '';
+    let remoteDrawHistoryPending = false;
 
     const tabController = createTabController({
         tabButtons,
@@ -5983,10 +5986,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }))
             : [];
     }
-
-    let remoteDrawHistorySessions = [];
-    let remoteDrawHistoryOwnerKey = '';
-    let remoteDrawHistoryPending = false;
 
     async function fetchRemoteDrawHistorySessions() {
         if (!hasSupabaseDrawStorage()) {
