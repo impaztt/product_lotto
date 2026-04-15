@@ -30562,40 +30562,43 @@ body #tab-dashboard .container-box {
 #tab-dashboard .dash2-balls {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 6px;
     padding: 4px 0;
+    width: 100%;
 }
 
 #tab-dashboard .dash2-ball.result-ball {
-    width: 44px;
-    height: 44px;
-    line-height: 44px;
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    line-height: 42px;
     padding: 0;
     margin: 0;
     border-radius: 50%;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 700;
     text-align: center;
     color: #ffffff;
     font-variant-numeric: tabular-nums;
     box-shadow: 0 2px 6px rgba(15, 23, 42, 0.14);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
     display: inline-flex;
     align-items: center;
     justify-content: center;
 }
 
 #tab-dashboard .dash2-ball-plus {
+    flex: 0 0 auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 16px;
-    font-size: 18px;
+    width: 12px;
+    font-size: 16px;
     font-weight: 500;
     color: var(--dash2-subtle);
-    padding: 0 2px;
+    padding: 0;
 }
 
 /* ---------- Prize summary (past round) ---------- */
@@ -30787,11 +30790,21 @@ body #tab-dashboard .container-box {
     #tab-dashboard .dash2-hero-timer {
         gap: 12px;
     }
+    #tab-dashboard .dash2-balls {
+        gap: 5px;
+    }
     #tab-dashboard .dash2-ball.result-ball {
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        font-size: 16px;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        font-size: 14px;
+    }
+    #tab-dashboard .dash2-ball-plus {
+        width: 10px;
+        font-size: 14px;
+    }
+    #tab-dashboard .dash2-card {
+        padding: 20px 18px 22px;
     }
     #tab-dashboard .dash2-prize-amount {
         font-size: 26px;
@@ -30824,11 +30837,21 @@ body #tab-dashboard .container-box {
     #tab-dashboard .dash2-hero-timer {
         gap: 10px;
     }
+    #tab-dashboard .dash2-balls {
+        gap: 4px;
+    }
     #tab-dashboard .dash2-ball.result-ball {
-        width: 36px;
-        height: 36px;
-        line-height: 36px;
-        font-size: 14px;
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        font-size: 13px;
+    }
+    #tab-dashboard .dash2-ball-plus {
+        width: 8px;
+        font-size: 13px;
+    }
+    #tab-dashboard .dash2-card {
+        padding: 18px 14px 20px;
     }
 }
 
@@ -30876,12 +30899,12 @@ body #tab-dashboard .container-box {
 }
 
 #tab-dashboard .dash2 {
-    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px) + 68px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 64px) !important;
 }
 
 @media (max-width: 640px) {
     #tab-dashboard .dash2 {
-        padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px) + 64px);
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 60px) !important;
     }
 }
 
