@@ -741,6 +741,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (tabId === 'draw') {
                 scheduleDrawHorizontalWidthSync();
             }
+            if (tabId === 'store') {
+                refreshRemoteDrawHistory({ force: true });
+            }
             if (tabId === 'qr') {
                 updateAnalysisSummaryUi();
                 if (latestAvailableRound && analysisRecentRoundsEl && !analysisRecentRoundsEl.children.length) {
@@ -2315,6 +2318,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateDashboardSummaryUi();
             updateMypageSummaryUi();
             updateAnalysisSummaryUi();
+            refreshRemoteDrawHistory({ force: true });
         } catch (error) {
             console.error('초기화 오류', error);
         }
@@ -5980,6 +5984,125 @@ document.addEventListener('DOMContentLoaded', () => {
             : [];
     }
 
+    let remoteDrawHistorySessions = [];
+    let remoteDrawHistoryOwnerKey = '';
+    let remoteDrawHistoryPending = false;
+
+    async function fetchRemoteDrawHistorySessions() {
+        if (!hasSupabaseDrawStorage()) {
+            return [];
+        }
+        const query = {
+            select: 'generation_id,created_at,source_mode,round,numbers,set_no,strategy,rule_count,rule_ids',
+            order: 'created_at.desc',
+            limit: 600
+        };
+        if (isMember() && currentUser && currentUser.uid) {
+            query.uid = `eq.${currentUser.uid}`;
+        } else {
+            if (!guestTrackingId) {
+                guestTrackingId = getOrCreateGuestTrackingId();
+            }
+            query.guest_tracking_id = `eq.${guestTrackingId}`;
+        }
+        const rows = await requestSupabase('draw_entries', { query });
+        if (!Array.isArray(rows)) {
+            return [];
+        }
+        const sessionMap = new Map();
+        rows.forEach(row => {
+            const generationId = String(row.generation_id || '').trim();
+            if (!generationId) {
+                return;
+            }
+            let session = sessionMap.get(generationId);
+            if (!session) {
+                session = {
+                    ownerKey: 'remote',
+                    generationId,
+                    createdAt: row.created_at || null,
+                    round: Number(row.round || 0),
+                    sourceMode: row.source_mode === 'premium' ? 'premium' : 'self',
+                    ruleCount: Number(row.rule_count || 0),
+                    ruleIds: Array.isArray(row.rule_ids) ? row.rule_ids.slice() : [],
+                    setCount: 0,
+                    entries: []
+                };
+                sessionMap.set(generationId, session);
+            }
+            const numbers = Array.isArray(row.numbers)
+                ? row.numbers.map(value => Number(value)).filter(value => Number.isFinite(value))
+                : [];
+            if (!numbers.length) {
+                return;
+            }
+            session.entries.push({
+                setNo: Number(row.set_no || session.entries.length + 1),
+                numbers,
+                strategy: row.strategy ? String(row.strategy).trim() : ''
+            });
+        });
+        return Array.from(sessionMap.values())
+            .map(session => {
+                session.entries.sort((a, b) => (a.setNo || 0) - (b.setNo || 0));
+                session.setCount = session.entries.length;
+                return session;
+            })
+            .filter(session => session.entries.length > 0)
+            .sort((a, b) => getTimestampMillis(b.createdAt) - getTimestampMillis(a.createdAt));
+    }
+
+    async function refreshRemoteDrawHistory({ force = false } = {}) {
+        if (!hasSupabaseDrawStorage()) {
+            return;
+        }
+        if (remoteDrawHistoryPending) {
+            return;
+        }
+        const ownerKey = getHistoryOwnerKey();
+        if (!force && remoteDrawHistoryOwnerKey === ownerKey && remoteDrawHistorySessions.length) {
+            return;
+        }
+        remoteDrawHistoryPending = true;
+        try {
+            const sessions = await fetchRemoteDrawHistorySessions();
+            remoteDrawHistorySessions = sessions;
+            remoteDrawHistoryOwnerKey = ownerKey;
+            renderLockerHistoryUi();
+            renderDash2MeStats();
+        } catch (error) {
+            console.error('draw_entries 이력 로드 실패', error);
+        } finally {
+            remoteDrawHistoryPending = false;
+        }
+    }
+
+    function getRemoteDrawHistorySessionsForCurrentOwner() {
+        const ownerKey = getHistoryOwnerKey();
+        if (remoteDrawHistoryOwnerKey !== ownerKey) {
+            return [];
+        }
+        return remoteDrawHistorySessions;
+    }
+
+    function getLockerHistorySessionsForDisplay() {
+        const remote = getRemoteDrawHistorySessionsForCurrentOwner();
+        const local = getGeneratedHistoryForCurrentOwner();
+        const merged = new Map();
+        remote.forEach(session => {
+            if (session && session.generationId) {
+                merged.set(session.generationId, session);
+            }
+        });
+        local.forEach(session => {
+            if (session && session.generationId && !merged.has(session.generationId)) {
+                merged.set(session.generationId, session);
+            }
+        });
+        return Array.from(merged.values())
+            .sort((a, b) => getTimestampMillis(b.createdAt) - getTimestampMillis(a.createdAt));
+    }
+
     async function fetchRemoteDrawEntriesByRound(roundNo) {
         if (!hasSupabaseDrawStorage()) {
             return [];
@@ -6012,6 +6135,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             await persistDrawEntriesToSupabase(records);
+            refreshRemoteDrawHistory({ force: true });
             loadMypageDrawHistory(true);
         } catch (error) {
             console.error('번호 저장 실패(draw_entries)', error);
@@ -6022,7 +6146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!dash2MeWeekEl && !dash2MeSavedEl && !dash2MeRemainingEl && !dash2MePlanEl) {
             return;
         }
-        const sessions = getGeneratedHistoryForCurrentOwner();
+        const sessions = getLockerHistorySessionsForDisplay();
         const mondayStart = getLockerMondayStart(getKstNow()).getTime();
         let weekSetCount = 0;
         let savedSetCount = 0;
@@ -6352,7 +6476,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function copyLockerSession(sessionId) {
-        const target = getGeneratedHistoryForCurrentOwner().find(item => item.generationId === sessionId)
+        const target = getLockerHistorySessionsForDisplay().find(item => item.generationId === sessionId)
             || getLockerPlanSessionsForCurrentOwner().find(item => item.generationId === sessionId);
         if (!target) {
             showActionPopup('복사할 번호를 찾지 못했습니다.');
@@ -6377,15 +6501,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!lockerHistoryListEl) {
             return;
         }
-        const sessions = getGeneratedHistoryForCurrentOwner();
+        const sessions = getLockerHistorySessionsForDisplay();
         if (lockerHistoryChipEl) {
             lockerHistoryChipEl.textContent = sessions.length ? `최근 ${formatNumber(sessions.length)}건` : '0건';
         }
         if (!sessions.length) {
+            const emptyBody = remoteDrawHistoryPending
+                ? '<strong>번호 이력을 불러오는 중입니다.</strong><p>잠시만 기다려 주세요.</p>'
+                : '<strong>직접 추첨한 번호가 아직 없습니다.</strong><p>추첨 후 Supabase에 자동 저장되며, 다시 열어 복사할 수 있습니다.</p>';
             lockerHistoryListEl.innerHTML = `
                 <article class="locker-history-empty">
-                    <strong>직접 추첨한 번호가 아직 없습니다.</strong>
-                    <p>추첨 후 자동 저장되며, 나중에 다시 열어 복사할 수 있습니다.</p>
+                    ${emptyBody}
                 </article>
             `;
             return;
@@ -7187,6 +7313,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         syncDrawWizardResumeStateFromAuth();
         refreshGuestLimitMessage();
+        remoteDrawHistorySessions = [];
+        remoteDrawHistoryOwnerKey = '';
+        refreshRemoteDrawHistory({ force: true });
         loadMypageDrawHistory(true);
         if (currentWeeklyData) {
             loadLastWeekWinDashboard(currentWeeklyData, { force: true });
