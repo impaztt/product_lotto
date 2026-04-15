@@ -14193,14 +14193,13 @@ body[data-theme="dark"] #tab-draw {
 }
 
 #tab-mypage .mypage-account-actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: stretch;
-    gap: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
 }
 
-#tab-mypage .mypage-account-actions .cta,
-#tab-mypage .mypage-account-actions .ghost,
 #tab-mypage .mypage-slot-actions .ghost,
 #tab-mypage .mypage-inline-actions--plan .ghost {
     min-height: 44px;
@@ -14210,7 +14209,14 @@ body[data-theme="dark"] #tab-draw {
 
 #tab-mypage .mypage-account-actions .cta,
 #tab-mypage .mypage-account-actions .ghost {
-    width: 100%;
+    min-height: 34px;
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    width: auto;
+    flex: 0 0 auto;
 }
 
 #tab-mypage .mypage-account-top .badge {
@@ -31666,6 +31672,22 @@ body #tab-mypage .mypage-inline-actions .cta:hover,
 body #tab-mypage .mypage-plan-actions .cta:hover {
     background: var(--mp2-accent-dark) !important;
     transform: translateY(-1px);
+}
+
+body #tab-mypage .mypage-account-actions {
+    justify-content: flex-end !important;
+}
+
+body #tab-mypage .mypage-account-actions .cta {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-height: 34px !important;
+    height: 34px !important;
+    padding: 0 16px !important;
+    border-radius: 999px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 10px rgba(30, 107, 255, 0.18) !important;
 }
 
 body #tab-mypage .mypage-inline-actions .ghost,
