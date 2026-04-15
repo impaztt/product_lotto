@@ -5646,7 +5646,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (analysisExpectedAmountEl) {
             if (weeklyExpectedOverride != null) {
-                analysisExpectedAmountEl.textContent = formatCurrency(weeklyExpectedOverride);
+                const perWinner = computePerWinnerFromPool(weeklyExpectedOverride);
+                analysisExpectedAmountEl.textContent = perWinner == null ? '-' : formatCurrency(perWinner);
             } else if (dashExpectedAmountEl && String(dashExpectedAmountEl.textContent || '').trim()) {
                 analysisExpectedAmountEl.textContent = String(dashExpectedAmountEl.textContent || '').trim();
             } else {
@@ -6212,8 +6213,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!millis) {
             return '-';
         }
-        const date = new Date(millis);
-        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+        return formatKstDateTime(new Date(millis));
     }
 
 
@@ -6224,28 +6224,24 @@ document.addEventListener('DOMContentLoaded', () => {
             .sort((a, b) => getTimestampMillis(b.createdAt) - getTimestampMillis(a.createdAt));
     }
 
-    function getLockerMondayStart(date = getKstNow()) {
-        const monday = new Date(date);
-        monday.setHours(0, 0, 0, 0);
-        const day = monday.getDay();
-        const offset = day === 0 ? 6 : day - 1;
-        monday.setDate(monday.getDate() - offset);
-        return monday;
+    function getLockerMondayStart(date = new Date()) {
+        const k = getKstParts(date);
+        const offset = k.weekday === 0 ? 6 : k.weekday - 1;
+        return new Date(Date.UTC(k.year, k.month - 1, k.day - offset, -9, 0, 0));
     }
 
     function getLockerWeeklyDrawDate(mondayDate) {
-        const drawDate = new Date(mondayDate);
-        drawDate.setDate(drawDate.getDate() + 5);
-        drawDate.setHours(20, 35, 0, 0);
-        return drawDate;
+        const mondayKst = getKstParts(mondayDate);
+        return kstSaturdayDrawTime(mondayKst.year, mondayKst.month, mondayKst.day + 5);
     }
 
     function getEstimatedRoundFromDrawDate(drawDate) {
         if (!(drawDate instanceof Date) || Number.isNaN(drawDate.getTime())) {
             return 0;
         }
+        const k = getKstParts(drawDate);
         const firstDrawUtcMs = Date.UTC(2002, 11, 7);
-        const targetUtcMs = Date.UTC(drawDate.getFullYear(), drawDate.getMonth(), drawDate.getDate());
+        const targetUtcMs = Date.UTC(k.year, k.month - 1, k.day);
         const diffWeeks = Math.round((targetUtcMs - firstDrawUtcMs) / (7 * 24 * 60 * 60 * 1000));
         return diffWeeks + 1;
     }
@@ -6256,8 +6252,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!ownerKey || plan.id === 'free' || !setCount || !(mondayDate instanceof Date) || Number.isNaN(mondayDate.getTime())) {
             return null;
         }
-        const releaseAt = new Date(mondayDate);
-        releaseAt.setHours(9, 0, 0, 0);
+        const mondayKst = getKstParts(mondayDate);
+        const releaseAt = new Date(Date.UTC(mondayKst.year, mondayKst.month - 1, mondayKst.day, 0, 0, 0));
         const drawDate = getLockerWeeklyDrawDate(mondayDate);
         const round = getEstimatedRoundFromDrawDate(drawDate);
         const releaseDateLabel = formatShortDate(releaseAt);
@@ -8598,9 +8594,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getMonthKey(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        return `${year}-${month}`;
+        const k = getKstParts(date instanceof Date ? date : new Date());
+        return `${k.year}-${String(k.month).padStart(2, '0')}`;
     }
 
     function getNicknameRemainingChanges() {
@@ -9265,26 +9260,49 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getKstNow() {
-        const now = new Date();
-        const utc = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
-        return new Date(utc + 9 * 60 * 60 * 1000);
+        return new Date();
     }
 
-    function getLatestSaturdayDrawTime(kstNow) {
-        const day = kstNow.getDay();
-        const saturdayOffset = (day >= 6 ? day - 6 : day + 1);
-        const saturday = new Date(kstNow);
-        saturday.setDate(kstNow.getDate() - saturdayOffset);
-        saturday.setHours(20, 35, 0, 0);
-        return saturday;
-    }
-
-    function getNextSaturdayDrawTime(kstNow) {
-        const latestSaturday = getLatestSaturdayDrawTime(kstNow);
-        if (kstNow >= latestSaturday) {
-            latestSaturday.setDate(latestSaturday.getDate() + 7);
+    function getKstParts(date = new Date()) {
+        const fmt = new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Asia/Seoul',
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', second: '2-digit',
+            weekday: 'short', hour12: false
+        });
+        const parts = {};
+        for (const p of fmt.formatToParts(date)) {
+            if (p.type !== 'literal') parts[p.type] = p.value;
         }
-        return latestSaturday;
+        const weekdayMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+        return {
+            year: Number(parts.year),
+            month: Number(parts.month),
+            day: Number(parts.day),
+            hour: Number(parts.hour) === 24 ? 0 : Number(parts.hour),
+            minute: Number(parts.minute),
+            second: Number(parts.second),
+            weekday: weekdayMap[parts.weekday] ?? 0
+        };
+    }
+
+    function kstSaturdayDrawTime(year, month1, day) {
+        return new Date(Date.UTC(year, month1 - 1, day, 11, 35, 0));
+    }
+
+    function getLatestSaturdayDrawTime(now = new Date()) {
+        const kst = getKstParts(now);
+        const daysSinceSaturday = (kst.weekday - 6 + 7) % 7;
+        let candidate = kstSaturdayDrawTime(kst.year, kst.month, kst.day - daysSinceSaturday);
+        if (candidate.getTime() > now.getTime()) {
+            candidate = new Date(candidate.getTime() - 7 * 24 * 60 * 60 * 1000);
+        }
+        return candidate;
+    }
+
+    function getNextSaturdayDrawTime(now = new Date()) {
+        const latest = getLatestSaturdayDrawTime(now);
+        return new Date(latest.getTime() + 7 * 24 * 60 * 60 * 1000);
     }
 
     function updateWeeklyCountdownDisplay() {
@@ -9367,13 +9385,22 @@ document.addEventListener('DOMContentLoaded', () => {
         weeklyNextDrawEl.textContent = `${days}일 ${hours}시간 ${minutes}분`;
     }
 
+    function computePerWinnerFromPool(poolAmount) {
+        const pool = normalizeAmount(poolAmount);
+        if (pool == null) {
+            return null;
+        }
+        return Math.round(pool / 11);
+    }
+
     function applyWeeklyExpectedAmount(value, note) {
         if (!weeklyExpectedAmountEl) {
             return;
         }
-        weeklyExpectedAmountEl.textContent = value == null ? '-' : formatCurrency(value);
+        const perWinner = computePerWinnerFromPool(value);
+        weeklyExpectedAmountEl.textContent = perWinner == null ? '-' : formatCurrency(perWinner);
         if (weeklyExpectedNoteEl) {
-            weeklyExpectedNoteEl.textContent = note || '공식 예상';
+            weeklyExpectedNoteEl.textContent = note || '공식 예상 · 1인당';
         }
     }
 
@@ -9389,12 +9416,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return Number.isFinite(amount) ? amount : null;
     }
 
-    function buildDashboardExpectedRankData(firstAmount) {
+    function buildDashboardExpectedRankData(firstPoolAmount) {
         const averageFirstWinners = 11;
         const averageSecondWinners = 85;
         const averageThirdWinners = 3355;
-        const normalizedFirstAmount = normalizeAmount(firstAmount);
-        const firstPoolEstimate = normalizedFirstAmount == null ? null : normalizedFirstAmount * averageFirstWinners;
+        const firstPoolEstimate = normalizeAmount(firstPoolAmount);
+        const normalizedFirstAmount = firstPoolEstimate == null ? null : Math.round(firstPoolEstimate / averageFirstWinners);
         const sharedPoolEstimate = firstPoolEstimate == null ? null : firstPoolEstimate / 6;
         const secondAmount = sharedPoolEstimate == null ? null : sharedPoolEstimate / averageSecondWinners;
         const thirdAmount = sharedPoolEstimate == null ? null : sharedPoolEstimate / averageThirdWinners;
@@ -9493,10 +9520,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
             return '';
         }
-        const year = String(value.getFullYear());
-        const month = String(value.getMonth() + 1).padStart(2, '0');
-        const day = String(value.getDate()).padStart(2, '0');
-        return `${year}${month}${day}`;
+        const k = getKstParts(value);
+        return `${k.year}${String(k.month).padStart(2, '0')}${String(k.day).padStart(2, '0')}`;
     }
 
     function buildLocalIntroFallback() {
@@ -9508,14 +9533,15 @@ document.addEventListener('DOMContentLoaded', () => {
             Number(embeddedLatest?.drwNo || 0)
         );
         const nextRound = Math.max(1, baselineRound + 1);
-        const nextDraw = getNextSaturdayDrawTime(getKstNow());
+        const nextDraw = getNextSaturdayDrawTime();
+        const nextKst = getKstParts(nextDraw);
         return {
             expected: null,
             current: {
                 ltEpsd: nextRound,
                 ltRflYmd: formatCompactKstDate(nextDraw),
-                ltRflHh: nextDraw.getHours(),
-                ltRflMm: nextDraw.getMinutes()
+                ltRflHh: nextKst.hour,
+                ltRflMm: nextKst.minute
             }
         };
     }
@@ -9604,16 +9630,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (current?.ltRflYmd && dashThisDateEl) {
             dashThisDateEl.textContent = formatShortDate(current.ltRflYmd);
         }
-        if (current?.ltRflYmd && current?.ltRflHh != null && current?.ltRflMm != null) {
-            const date = new Date(`${String(current.ltRflYmd).slice(0, 4)}-${String(current.ltRflYmd).slice(4, 6)}-${String(current.ltRflYmd).slice(6, 8)}T00:00:00+09:00`);
-            date.setHours(Number(current.ltRflHh));
-            date.setMinutes(Number(current.ltRflMm));
-            date.setSeconds(0);
-            weeklyNextDrawOverride = date;
-            updateWeeklyCountdownDisplay();
-            updateWeeklyNextDrawDisplay();
-            if (weeklyCountdownSubEl && current?.ltEpsd) {
-                weeklyCountdownSubEl.textContent = `제${current.ltEpsd}회 추첨: ${formatKstDateTime(date)} (KST)`;
+        if (current?.ltRflYmd) {
+            const digits = String(current.ltRflYmd).replace(/[^\d]/g, '');
+            if (digits.length === 8) {
+                const year = Number(digits.slice(0, 4));
+                const month = Number(digits.slice(4, 6));
+                const day = Number(digits.slice(6, 8));
+                const date = kstSaturdayDrawTime(year, month, day);
+                weeklyNextDrawOverride = date;
+                updateWeeklyCountdownDisplay();
+                updateWeeklyNextDrawDisplay();
+                if (weeklyCountdownSubEl && current?.ltEpsd) {
+                    weeklyCountdownSubEl.textContent = `제${current.ltEpsd}회 추첨: ${formatKstDateTime(date)} (KST)`;
+                }
             }
         }
         if (current?.ltEpsd) {
@@ -9876,10 +9905,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return '';
         }
         if (value instanceof Date) {
-            const year = value.getFullYear();
-            const month = String(value.getMonth() + 1).padStart(2, '0');
-            const day = String(value.getDate()).padStart(2, '0');
-            return `${year}.${month}.${day}`;
+            const k = getKstParts(value);
+            return `${k.year}.${String(k.month).padStart(2, '0')}.${String(k.day).padStart(2, '0')}`;
         }
         const digits = String(value).replace(/[^\d]/g, '');
         if (digits.length === 8) {
@@ -10954,12 +10981,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function formatKstDateTime(date) {
-        const yyyy = date.getFullYear();
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const dd = String(date.getDate()).padStart(2, '0');
-        const hh = String(date.getHours()).padStart(2, '0');
-        const min = String(date.getMinutes()).padStart(2, '0');
-        return `${yyyy}-${mm}-${dd} ${hh}:${min}`;
+        if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+            return '-';
+        }
+        const k = getKstParts(date);
+        const pad = value => String(value).padStart(2, '0');
+        return `${k.year}-${pad(k.month)}-${pad(k.day)} ${pad(k.hour)}:${pad(k.minute)}`;
     }
 
     function cacheRoundOnly(data) {
