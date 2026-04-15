@@ -32331,3 +32331,50 @@ body[data-theme="dark"] #tab-mypage .mypage-plan-offer-label.is-pro {
     background: #f8fafc !important;
     color: #0b1220 !important;
 }
+
+/* Tab scroll clearance — stop scroll right above the fixed bottom bars
+   so there's no dead whitespace beyond the last content block. */
+:root {
+    --app-bottom-clearance: calc(88px + env(safe-area-inset-bottom));
+    --app-bottom-clearance-draw: calc(168px + env(safe-area-inset-bottom));
+}
+
+body main {
+    padding-bottom: var(--app-bottom-clearance) !important;
+}
+
+body[data-active-tab="draw"] main {
+    padding-bottom: var(--app-bottom-clearance) !important;
+}
+
+body[data-active-tab="draw"]:has(#tab-draw.has-generate-cta-collapsed) main {
+    padding-bottom: calc(140px + env(safe-area-inset-bottom)) !important;
+}
+
+body[data-active-tab="draw"]:has(#tab-draw.has-generate-cta:not(.has-generate-cta-collapsed)) main {
+    padding-bottom: var(--app-bottom-clearance-draw) !important;
+}
+
+body #tab-dashboard .container-box,
+body #tab-mypage .container-box,
+body #tab-qr .container-box,
+body #tab-store .container-box,
+body #tab-draw .container-box {
+    padding-bottom: 0 !important;
+}
+
+body #tab-dashboard.app-shell,
+body #tab-mypage.app-shell,
+body #tab-qr.app-shell,
+body #tab-store.app-shell {
+    padding-bottom: 0 !important;
+}
+
+body #tab-draw.app-shell,
+body #tab-draw.has-generate-cta-collapsed.app-shell {
+    padding-bottom: 0 !important;
+}
+
+html {
+    scroll-padding-bottom: var(--app-bottom-clearance);
+}
