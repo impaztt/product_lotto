@@ -7669,7 +7669,7 @@ document.addEventListener('DOMContentLoaded', () => {
             initKakaoSdk();
         }
         if (!kakaoSdkReady) {
-            setFirebaseAuthStatus('카카오 SDK 로드 실패 — 광고 차단기/네트워크를 확인하고 새로고침해 주세요.');
+            setFirebaseAuthStatus('카카오 SDK를 불러오지 못했습니다. 네트워크를 확인해 주세요.');
             return false;
         }
         if (authActionInFlight) {

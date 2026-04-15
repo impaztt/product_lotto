@@ -32263,9 +32263,6 @@ body #tab-mypage .mypage-shell-logout {
     align-self: stretch;
     margin: 0 !important;
 }
-body #tab-mypage .mypage-shell-logout[hidden] {
-    display: none !important;
-}
 
 /* Responsive */
 @media (max-width: 640px) {
