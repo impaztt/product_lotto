@@ -794,21 +794,33 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         body.dataset.activeTab = String(tabId || 'dashboard');
-        applyDashboardScrollLock(tabId);
+        applyTabScrollLock(tabId);
     }
 
-    function applyDashboardScrollLock(tabId) {
-        const dashPanel = document.getElementById('tab-dashboard');
-        if (!dashPanel) {
-            return;
-        }
-        if (tabId === 'dashboard') {
-            const headerH = siteHeaderEl ? Math.ceil(siteHeaderEl.getBoundingClientRect().height) : 0;
-            dashPanel.style.height = 'calc(100dvh - ' + headerH + 'px)';
+    var TAB_SCROLL_LOCK_IDS = ['tab-dashboard', 'tab-draw', 'tab-mypage'];
+
+    function applyTabScrollLock(tabId) {
+        var headerH = siteHeaderEl ? Math.ceil(siteHeaderEl.getBoundingClientRect().height) : 0;
+        var lockHeight = 'calc(100dvh - ' + headerH + 'px)';
+        var anyLocked = false;
+        TAB_SCROLL_LOCK_IDS.forEach(function (panelId) {
+            var panel = document.getElementById(panelId);
+            if (!panel) {
+                return;
+            }
+            var tid = panelId.replace('tab-', '');
+            if (tid === tabId) {
+                panel.style.height = lockHeight;
+                panel.classList.add('tab-scroll-locked');
+                anyLocked = true;
+            } else {
+                panel.style.height = '';
+                panel.classList.remove('tab-scroll-locked');
+            }
+        });
+        if (anyLocked) {
             body.classList.add('dash-scroll-lock');
-            dashPanel.scrollTop = 0;
         } else {
-            dashPanel.style.height = '';
             body.classList.remove('dash-scroll-lock');
         }
     }
@@ -2000,9 +2012,9 @@ document.addEventListener('DOMContentLoaded', () => {
         window.setTimeout(scheduleDrawHorizontalWidthSync, 120);
     }, { passive: true });
 
-    window.addEventListener('resize', () => applyDashboardScrollLock(getCurrentActiveTabId()), { passive: true });
+    window.addEventListener('resize', () => applyTabScrollLock(getCurrentActiveTabId()), { passive: true });
     window.addEventListener('orientationchange', () => {
-        window.setTimeout(() => applyDashboardScrollLock(getCurrentActiveTabId()), 150);
+        window.setTimeout(() => applyTabScrollLock(getCurrentActiveTabId()), 150);
     }, { passive: true });
 
     if (authClose) {

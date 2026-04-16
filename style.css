@@ -32379,10 +32379,10 @@ html {
     scroll-padding-bottom: var(--app-bottom-clearance);
 }
 
-/* Dashboard tab — JS-driven scroll containment.
-   Body gets overflow:hidden, #tab-dashboard becomes the scroll
-   container via JS-set height. CSS just hides the footer and
-   injects the disclaimer. */
+/* JS-driven scroll containment for dashboard / draw / mypage.
+   Body gets overflow:hidden, the active panel becomes the sole
+   scroll container via JS-set height. Footer hidden; disclaimer
+   injected via ::after on the innermost wrapper. */
 body.dash-scroll-lock {
     overflow: hidden !important;
 }
@@ -32391,13 +32391,18 @@ body.dash-scroll-lock main {
     overflow: hidden !important;
 }
 
-body.dash-scroll-lock #tab-dashboard {
+.tab-scroll-locked {
     overflow-y: auto !important;
     overflow-x: hidden !important;
     overscroll-behavior-y: contain;
     -webkit-overflow-scrolling: touch;
 }
 
+body.dash-scroll-lock .site-footer {
+    display: none !important;
+}
+
+/* Dashboard disclaimer */
 body.dash-scroll-lock #tab-dashboard .dash2 {
     padding-bottom: 0 !important;
 }
@@ -32412,6 +32417,24 @@ body.dash-scroll-lock #tab-dashboard .dash2::after {
     padding: 16px 0 calc(var(--app-bottom-clearance) + 8px);
 }
 
-body.dash-scroll-lock .site-footer {
-    display: none !important;
+/* Draw tab disclaimer */
+body.dash-scroll-lock #tab-draw::after {
+    content: "로또픽스튜디오. 결과를 보장하지 않으며 선택 과정을 돕기 위한 도구입니다.";
+    display: block;
+    text-align: center;
+    color: #8b95a1;
+    font-size: 11px;
+    line-height: 1.4;
+    padding: 16px 0 calc(var(--app-bottom-clearance) + 8px);
+}
+
+/* Mypage disclaimer */
+body.dash-scroll-lock #tab-mypage::after {
+    content: "로또픽스튜디오. 결과를 보장하지 않으며 선택 과정을 돕기 위한 도구입니다.";
+    display: block;
+    text-align: center;
+    color: #8b95a1;
+    font-size: 11px;
+    line-height: 1.4;
+    padding: 16px 0 calc(var(--app-bottom-clearance) + 8px);
 }
