@@ -32379,24 +32379,51 @@ html {
     scroll-padding-bottom: var(--app-bottom-clearance);
 }
 
-/* Dashboard tab — eliminate all trailing scroll below 나의 현황.
-   Zero every ancestor padding, kill body min-height, and let the
-   footer sit flush against the last card with only enough bottom
-   padding to clear the fixed tab bar. */
+/* Dashboard tab — kill ALL trailing scroll.
+   Hide the global footer (it lives outside <main> and creates
+   uncontrollable gap), then inject the disclaimer as ::after
+   inside .dash2 so it sits in normal flow right after 나의 현황.
+   Lock body height to viewport and make the tab the sole scroll
+   container so nothing beyond the content is reachable. */
 body[data-active-tab="dashboard"] {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100dvh;
+    height: 100vh;
+    overflow: hidden !important;
     min-height: 0 !important;
 }
 
 body[data-active-tab="dashboard"] main {
-    padding-bottom: 0 !important;
+    flex: 1 1 0% !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+body[data-active-tab="dashboard"] #tab-dashboard {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    height: 100% !important;
 }
 
 body[data-active-tab="dashboard"] #tab-dashboard .dash2 {
     padding-bottom: 0 !important;
 }
 
-body[data-active-tab="dashboard"] .site-footer {
-    padding: 12px 6vw calc(var(--app-bottom-clearance) + 4px) !important;
+body[data-active-tab="dashboard"] #tab-dashboard .dash2::after {
+    content: "로또픽스튜디오. 결과를 보장하지 않으며 선택 과정을 돕기 위한 도구입니다.";
+    display: block;
+    text-align: center;
+    color: var(--dash2-muted, #8b95a1);
     font-size: 11px;
     line-height: 1.4;
+    padding: 16px 0 calc(var(--app-bottom-clearance) + 8px);
+}
+
+body[data-active-tab="dashboard"] .site-footer {
+    display: none !important;
 }
