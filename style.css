@@ -32378,3 +32378,15 @@ body #tab-draw.has-generate-cta-collapsed.app-shell {
 html {
     scroll-padding-bottom: var(--app-bottom-clearance);
 }
+
+/* Dashboard tab — drop main's bottom clearance and tighten the global
+   footer paddings so "나의 현황" flows straight into the disclaimer
+   line with no dead whitespace before the fixed bottom tab bar. */
+body[data-active-tab="dashboard"] main {
+    padding-bottom: 0 !important;
+}
+
+body[data-active-tab="dashboard"] .site-footer {
+    padding-top: 16px !important;
+    padding-bottom: var(--app-bottom-clearance) !important;
+}
