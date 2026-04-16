@@ -32379,14 +32379,24 @@ html {
     scroll-padding-bottom: var(--app-bottom-clearance);
 }
 
-/* Dashboard tab — drop main's bottom clearance and tighten the global
-   footer paddings so "나의 현황" flows straight into the disclaimer
-   line with no dead whitespace before the fixed bottom tab bar. */
+/* Dashboard tab — eliminate all trailing scroll below 나의 현황.
+   Zero every ancestor padding, kill body min-height, and let the
+   footer sit flush against the last card with only enough bottom
+   padding to clear the fixed tab bar. */
+body[data-active-tab="dashboard"] {
+    min-height: 0 !important;
+}
+
 body[data-active-tab="dashboard"] main {
     padding-bottom: 0 !important;
 }
 
+body[data-active-tab="dashboard"] #tab-dashboard .dash2 {
+    padding-bottom: 0 !important;
+}
+
 body[data-active-tab="dashboard"] .site-footer {
-    padding-top: 16px !important;
-    padding-bottom: var(--app-bottom-clearance) !important;
+    padding: 12px 6vw calc(var(--app-bottom-clearance) + 4px) !important;
+    font-size: 11px;
+    line-height: 1.4;
 }
