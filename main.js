@@ -794,6 +794,23 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         body.dataset.activeTab = String(tabId || 'dashboard');
+        applyDashboardScrollLock(tabId);
+    }
+
+    function applyDashboardScrollLock(tabId) {
+        const dashPanel = document.getElementById('tab-dashboard');
+        if (!dashPanel) {
+            return;
+        }
+        if (tabId === 'dashboard') {
+            const headerH = siteHeaderEl ? Math.ceil(siteHeaderEl.getBoundingClientRect().height) : 0;
+            dashPanel.style.height = 'calc(100dvh - ' + headerH + 'px)';
+            body.classList.add('dash-scroll-lock');
+            dashPanel.scrollTop = 0;
+        } else {
+            dashPanel.style.height = '';
+            body.classList.remove('dash-scroll-lock');
+        }
     }
 
     function scrollDashboardViewportToTop() {
@@ -1981,6 +1998,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', scheduleDrawHorizontalWidthSync, { passive: true });
     window.addEventListener('orientationchange', () => {
         window.setTimeout(scheduleDrawHorizontalWidthSync, 120);
+    }, { passive: true });
+
+    window.addEventListener('resize', () => applyDashboardScrollLock(getCurrentActiveTabId()), { passive: true });
+    window.addEventListener('orientationchange', () => {
+        window.setTimeout(() => applyDashboardScrollLock(getCurrentActiveTabId()), 150);
     }, { passive: true });
 
     if (authClose) {

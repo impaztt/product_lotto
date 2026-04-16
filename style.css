@@ -32379,37 +32379,30 @@ html {
     scroll-padding-bottom: var(--app-bottom-clearance);
 }
 
-/* Dashboard tab — remove trailing dead scroll.
-   Keep the original body/main layout untouched.
-   Hide the global footer and inject disclaimer via ::after.
-   Zero every bottom padding/min-height on ancestors so the document
-   height equals content height exactly. */
-body[data-active-tab="dashboard"] {
-    min-height: 0 !important;
+/* Dashboard tab — JS-driven scroll containment.
+   Body gets overflow:hidden, #tab-dashboard becomes the scroll
+   container via JS-set height. CSS just hides the footer and
+   injects the disclaimer. */
+body.dash-scroll-lock {
+    overflow: hidden !important;
 }
 
-body[data-active-tab="dashboard"] main {
+body.dash-scroll-lock main {
+    overflow: hidden !important;
+}
+
+body.dash-scroll-lock #tab-dashboard {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+body.dash-scroll-lock #tab-dashboard .dash2 {
     padding-bottom: 0 !important;
-    margin-bottom: 0 !important;
-    min-height: 0 !important;
 }
 
-body[data-active-tab="dashboard"] #tab-dashboard {
-    min-height: 0 !important;
-}
-
-body[data-active-tab="dashboard"] #tab-dashboard .container-box {
-    padding-bottom: 0 !important;
-    margin-bottom: 0 !important;
-    min-height: 0 !important;
-}
-
-body[data-active-tab="dashboard"] #tab-dashboard .dash2 {
-    padding-bottom: 0 !important;
-    margin-bottom: 0 !important;
-}
-
-body[data-active-tab="dashboard"] #tab-dashboard .dash2::after {
+body.dash-scroll-lock #tab-dashboard .dash2::after {
     content: "로또픽스튜디오. 결과를 보장하지 않으며 선택 과정을 돕기 위한 도구입니다.";
     display: block;
     text-align: center;
@@ -32419,6 +32412,6 @@ body[data-active-tab="dashboard"] #tab-dashboard .dash2::after {
     padding: 16px 0 calc(var(--app-bottom-clearance) + 8px);
 }
 
-body[data-active-tab="dashboard"] .site-footer {
+body.dash-scroll-lock .site-footer {
     display: none !important;
 }
