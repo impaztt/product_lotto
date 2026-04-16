@@ -32379,39 +32379,34 @@ html {
     scroll-padding-bottom: var(--app-bottom-clearance);
 }
 
-/* Dashboard tab — kill ALL trailing scroll.
-   Hide the global footer (it lives outside <main> and creates
-   uncontrollable gap), then inject the disclaimer as ::after
-   inside .dash2 so it sits in normal flow right after 나의 현황.
-   Lock body height to viewport and make the tab the sole scroll
-   container so nothing beyond the content is reachable. */
+/* Dashboard tab — remove trailing dead scroll.
+   Keep the original body/main layout untouched.
+   Hide the global footer and inject disclaimer via ::after.
+   Zero every bottom padding/min-height on ancestors so the document
+   height equals content height exactly. */
 body[data-active-tab="dashboard"] {
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100dvh;
-    height: 100vh;
-    overflow: hidden !important;
     min-height: 0 !important;
 }
 
 body[data-active-tab="dashboard"] main {
-    flex: 1 1 0% !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
     min-height: 0 !important;
-    overflow: hidden !important;
-    padding: 0 !important;
-    margin: 0 !important;
 }
 
 body[data-active-tab="dashboard"] #tab-dashboard {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
-    height: 100% !important;
+    min-height: 0 !important;
+}
+
+body[data-active-tab="dashboard"] #tab-dashboard .container-box {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+    min-height: 0 !important;
 }
 
 body[data-active-tab="dashboard"] #tab-dashboard .dash2 {
     padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
 }
 
 body[data-active-tab="dashboard"] #tab-dashboard .dash2::after {
