@@ -2399,7 +2399,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.requestAnimationFrame(scrollToGeneratedRow);
     }
 
-    function handleDrawGenerationRequest(source = 'panel') {
+    async function handleDrawGenerationRequest(source = 'panel') {
         const activeRules = getActiveRules();
         if (!activeRules.length) {
             updateRulesStatus('필터를 하나 이상 선택한 뒤 번호를 생성해 주세요.');
@@ -2428,6 +2428,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 return false;
             }
+
+            // Show ad interstitial for free users before generating
+            if (shouldShowAdInterstitial()) {
+                await showAdInterstitial();
+            }
+
             const generatedCount = generateAndDisplayNumbers({
                 source,
                 activeRules
@@ -5269,7 +5275,7 @@ document.addEventListener('DOMContentLoaded', () => {
             commit: false
         });
         syncDrawWizardSelections();
-        const generated = handleDrawGenerationRequest('wizard');
+        const generated = await handleDrawGenerationRequest('wizard');
         if (!generated) {
             renderDrawWizard();
             return false;
@@ -11539,6 +11545,69 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function logProxyError(stage, error, meta = {}) {
         console.warn(`[lotto-proxy] ${stage}`, { error, ...meta });
+    }
+
+    /* ── AdSense Interstitial for Free Users ── */
+    const adInterstitialEl = document.getElementById('ad-interstitial');
+    const adInterstitialCloseBtn = document.getElementById('ad-interstitial-close');
+    const adInterstitialCountdownEl = document.getElementById('ad-interstitial-countdown');
+    let adInterstitialResolve = null;
+
+    function shouldShowAdInterstitial() {
+        return !isPremiumMember();
+    }
+
+    function showAdInterstitial() {
+        return new Promise(resolve => {
+            if (!adInterstitialEl) {
+                resolve();
+                return;
+            }
+            adInterstitialResolve = resolve;
+            adInterstitialEl.hidden = false;
+
+            // Request ad fill
+            try {
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+            } catch (e) {
+                console.warn('[ad] adsbygoogle push failed', e);
+            }
+
+            // Countdown
+            let remaining = 5;
+            adInterstitialCloseBtn.disabled = true;
+            adInterstitialCountdownEl.textContent = remaining;
+            adInterstitialCloseBtn.innerHTML = '<span id="ad-interstitial-countdown">' + remaining + '</span>초 후 닫기';
+
+            const tick = setInterval(() => {
+                remaining -= 1;
+                if (remaining <= 0) {
+                    clearInterval(tick);
+                    adInterstitialCloseBtn.disabled = false;
+                    adInterstitialCloseBtn.textContent = '닫기';
+                } else {
+                    adInterstitialCloseBtn.innerHTML = '<span id="ad-interstitial-countdown">' + remaining + '</span>초 후 닫기';
+                }
+            }, 1000);
+        });
+    }
+
+    function closeAdInterstitial() {
+        if (adInterstitialEl) {
+            adInterstitialEl.hidden = true;
+        }
+        if (adInterstitialResolve) {
+            adInterstitialResolve();
+            adInterstitialResolve = null;
+        }
+    }
+
+    if (adInterstitialCloseBtn) {
+        adInterstitialCloseBtn.addEventListener('click', () => {
+            if (!adInterstitialCloseBtn.disabled) {
+                closeAdInterstitial();
+            }
+        });
     }
 
 });

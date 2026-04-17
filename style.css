@@ -32428,6 +32428,85 @@ body.dash-scroll-lock #tab-draw::after {
     padding: 16px 0 calc(var(--app-bottom-clearance) + 8px);
 }
 
+/* ── Ad Interstitial Overlay ── */
+.ad-interstitial {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ad-interstitial[hidden] { display: none; }
+.ad-interstitial-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.65);
+}
+.ad-interstitial-card {
+    position: relative;
+    width: calc(100% - 32px);
+    max-width: 420px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.25);
+}
+body[data-theme="dark"] .ad-interstitial-card {
+    background: #1e1e1e;
+}
+.ad-interstitial-label {
+    font-size: 13px;
+    color: #8b95a1;
+    margin: 0;
+}
+body[data-theme="dark"] .ad-interstitial-label {
+    color: #9ba3ae;
+}
+.ad-interstitial-slot {
+    width: 100%;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f6f7;
+    border-radius: 8px;
+    overflow: hidden;
+}
+body[data-theme="dark"] .ad-interstitial-slot {
+    background: #2a2a2a;
+}
+.ad-interstitial-close {
+    appearance: none;
+    border: none;
+    background: #f1f3f5;
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity .2s, background .2s;
+}
+.ad-interstitial-close:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+.ad-interstitial-close:not(:disabled):hover {
+    background: #e2e5e9;
+}
+body[data-theme="dark"] .ad-interstitial-close {
+    background: #333;
+    color: #ddd;
+}
+body[data-theme="dark"] .ad-interstitial-close:not(:disabled):hover {
+    background: #444;
+}
+
 /* Mypage disclaimer */
 body.dash-scroll-lock #tab-mypage::after {
     content: "로또픽스튜디오. 결과를 보장하지 않으며 선택 과정을 돕기 위한 도구입니다.";
