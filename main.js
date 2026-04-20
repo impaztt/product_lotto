@@ -11610,4 +11610,61 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // === Sponsor banner config ===
+    // Edit this object to show a banner on top of each tab.
+    // For a paid direct banner:  { image: 'https://...', link: 'https://...', alt: '광고주명', label: 'AD' }
+    // For an AdSense unit:       { adsense: 'YOUR_AD_SLOT_ID' }
+    // To hide a tab's banner:    null
+    const SPONSOR_CONFIG = {
+        dashboard: null,
+        draw: null,
+        store: null,
+    };
+
+    function renderSponsorSlot(slot) {
+        const key = slot.getAttribute('data-sponsor-slot');
+        const cfg = SPONSOR_CONFIG[key];
+        if (!cfg) {
+            slot.hidden = true;
+            slot.innerHTML = '';
+            return;
+        }
+        if (cfg.image && cfg.link) {
+            const link = document.createElement('a');
+            link.className = 'sponsor-link';
+            link.href = cfg.link;
+            link.target = '_blank';
+            link.rel = 'noopener sponsored';
+            const img = document.createElement('img');
+            img.src = cfg.image;
+            img.alt = cfg.alt || '광고';
+            img.loading = 'lazy';
+            link.appendChild(img);
+            const label = document.createElement('span');
+            label.className = 'sponsor-label';
+            label.textContent = cfg.label || 'AD';
+            link.appendChild(label);
+            slot.innerHTML = '';
+            slot.appendChild(link);
+            slot.hidden = false;
+        } else if (cfg.adsense) {
+            const ins = document.createElement('ins');
+            ins.className = 'adsbygoogle';
+            ins.style.display = 'block';
+            ins.setAttribute('data-ad-client', 'ca-pub-7243343622358488');
+            ins.setAttribute('data-ad-slot', cfg.adsense);
+            ins.setAttribute('data-ad-format', 'auto');
+            ins.setAttribute('data-full-width-responsive', 'true');
+            slot.innerHTML = '';
+            slot.appendChild(ins);
+            slot.hidden = false;
+            try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+        } else {
+            slot.hidden = true;
+            slot.innerHTML = '';
+        }
+    }
+
+    document.querySelectorAll('[data-sponsor-slot]').forEach(renderSponsorSlot);
+
 });

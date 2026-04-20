@@ -32517,3 +32517,63 @@ body.dash-scroll-lock #tab-mypage::after {
     line-height: 1.4;
     padding: 16px 0 calc(var(--app-bottom-clearance) + 8px);
 }
+
+/* Sponsor banner slot — top of dashboard, draw, store tabs */
+.sponsor-slot {
+    display: block;
+    width: 100%;
+    margin: 0 0 12px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(17, 23, 31, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.sponsor-slot[hidden] { display: none !important; }
+#tab-store .sponsor-slot,
+#tab-dashboard .sponsor-slot {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.sponsor-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 70px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+}
+.sponsor-link img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 110px;
+    object-fit: cover;
+}
+.sponsor-label {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 10px;
+    color: rgba(15, 23, 42, 0.45);
+    background: rgba(255, 255, 255, 0.85);
+    padding: 2px 6px;
+    border-radius: 6px;
+    letter-spacing: 0.04em;
+    pointer-events: none;
+}
+#tab-draw .sponsor-label {
+    color: rgba(248, 250, 252, 0.6);
+    background: rgba(17, 23, 31, 0.6);
+}
+.sponsor-slot .adsbygoogle {
+    display: block;
+    min-height: 70px;
+}
+@media (min-width: 768px) {
+    .sponsor-link { min-height: 90px; }
+    .sponsor-link img { max-height: 130px; }
+    .sponsor-slot .adsbygoogle { min-height: 90px; }
+}
