@@ -11651,10 +11651,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const ins = document.createElement('ins');
             ins.className = 'adsbygoogle';
             ins.style.display = 'block';
+            ins.style.width = '100%';
+            ins.style.height = '100%';
             ins.setAttribute('data-ad-client', 'ca-pub-7243343622358488');
             ins.setAttribute('data-ad-slot', cfg.adsense);
-            ins.setAttribute('data-ad-format', 'horizontal');
-            ins.setAttribute('data-full-width-responsive', 'true');
             slot.innerHTML = '';
             slot.appendChild(ins);
             slot.hidden = false;
