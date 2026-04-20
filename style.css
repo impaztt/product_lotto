@@ -18294,7 +18294,16 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 }
 
 #tab-draw .draw-wizard-app {
-    min-height: calc(100vh - var(--site-header-height, 0px) - 28px);
+    min-height: calc(100vh - var(--site-header-height, 0px) - 28px - var(--sponsor-banner-reserve, 0px));
+}
+
+#tab-draw:has([data-sponsor-slot="draw"]:not([hidden])) {
+    --sponsor-banner-reserve: calc(clamp(48px, 10vh, 80px) + 10px);
+}
+@media (min-width: 768px) {
+    #tab-draw:has([data-sponsor-slot="draw"]:not([hidden])) {
+        --sponsor-banner-reserve: calc(clamp(56px, 9vh, 90px) + 10px);
+    }
 }
 
 #tab-draw .draw-wizard-frame {
