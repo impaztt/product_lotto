@@ -11616,9 +11616,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // For an AdSense unit:       { adsense: 'YOUR_AD_SLOT_ID' }
     // To hide a tab's banner:    null
     const SPONSOR_CONFIG = {
-        dashboard: null,
-        draw: null,
-        store: null,
+        dashboard: { adsense: '1190439146' },
+        draw: { adsense: '8302642406' },
+        store: { adsense: '9582874991' },
     };
 
     function renderSponsorSlot(slot) {
