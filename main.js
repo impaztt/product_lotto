@@ -11653,7 +11653,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ins.style.display = 'block';
             ins.setAttribute('data-ad-client', 'ca-pub-7243343622358488');
             ins.setAttribute('data-ad-slot', cfg.adsense);
-            ins.setAttribute('data-ad-format', 'auto');
+            ins.setAttribute('data-ad-format', 'horizontal');
             ins.setAttribute('data-full-width-responsive', 'true');
             slot.innerHTML = '';
             slot.appendChild(ins);

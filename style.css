@@ -32570,10 +32570,11 @@ body.dash-scroll-lock #tab-mypage::after {
 }
 .sponsor-slot .adsbygoogle {
     display: block;
-    min-height: 70px;
+    min-height: 60px;
+    max-height: 100px;
 }
 @media (min-width: 768px) {
     .sponsor-link { min-height: 90px; }
     .sponsor-link img { max-height: 130px; }
-    .sponsor-slot .adsbygoogle { min-height: 90px; }
+    .sponsor-slot .adsbygoogle { min-height: 80px; max-height: 120px; }
 }
