@@ -810,7 +810,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             var tid = panelId.replace('tab-', '');
             if (tid === tabId) {
-                panel.style.height = lockHeight;
+                // tab-draw manages its own height in CSS; inline would clobber bottom-bar reservation.
+                if (panelId !== 'tab-draw') {
+                    panel.style.height = lockHeight;
+                }
                 panel.classList.add('tab-scroll-locked');
                 anyLocked = true;
             } else {
@@ -8804,7 +8807,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         drawTabPanel.style.setProperty('--draw-tab-viewport-height', `${viewportHeight}px`);
         drawTabPanel.style.setProperty('--site-header-height', `${headerHeight}px`);
-        drawTabPanel.style.setProperty('--draw-tab-bottom-offset', `${bottomTabHeight}px`);
+        if (bottomTabHeight > 0) {
+            drawTabPanel.style.setProperty('--draw-tab-bottom-offset', `${bottomTabHeight}px`);
+        } else {
+            drawTabPanel.style.removeProperty('--draw-tab-bottom-offset');
+        }
     }
 
     function scheduleDrawHorizontalWidthSync() {
