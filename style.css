@@ -18917,7 +18917,7 @@ body[data-theme="dark"] #tab-draw .draw-generator-card--primary #generate-btn {
 
 #tab-draw.draw-wizard-tab .draw-wizard-app {
     display: grid;
-    height: 100%;
+    height: calc(100% - var(--sponsor-banner-reserve, 0px));
     min-height: 0;
     overflow: hidden;
 }
