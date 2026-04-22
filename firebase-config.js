@@ -12,5 +12,5 @@ window.LOTTO_FIREBASE_CONFIG = {
 // Match this value to the OpenID Connect provider ID generated in Firebase Auth.
 window.LOTTO_KAKAO_AUTH_CONFIG = {
     providerId: "oidc.kakao",
-    scopes: ["profile_nickname"]
+    scopes: []
 };
