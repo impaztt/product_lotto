@@ -3020,12 +3020,16 @@
                 <h3 id="auth-title">간편 로그인</h3>
                 <button class="modal-close" type="button" aria-label="닫기">닫기</button>
             </div>
-            <p class="modal-text">현재는 구글 로그인으로 저장 기준과 추천 기록을 이어서 사용할 수 있습니다.</p>
+            <p class="modal-text">구글 또는 카카오 로그인으로 저장 기준과 추천 기록을 이어서 사용할 수 있습니다.</p>
             <div id="firebase-auth-status" class="auth-status-message" style="font-size: 11px; color: #64748b; margin-bottom: 12px; text-align: center;">로그인 준비 중...</div>
             <div class="auth-buttons">
                 <button class="auth-btn google" data-auth="google">
                     <span class="auth-icon google" aria-hidden="true"></span>
                     구글로 시작
+                </button>
+                <button class="auth-btn kakao" data-auth="kakao">
+                    <span class="auth-icon kakao" aria-hidden="true"></span>
+                    카카오로 로그인
                 </button>
             </div>
         </div>

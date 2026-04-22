@@ -551,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentUser = null;
     let currentUserProfile = null;
     let authActionInFlight = false;
-    let googleRedirectResultChecked = false;
+    let authRedirectResultChecked = false;
     let nicknameSaveInFlight = false;
     let mypageSupportSubmitInFlight = false;
     let mypageSupportStatusTone = 'default';
@@ -590,8 +590,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const HELP_CHAT_POSITION_KEY = 'lotto_help_chat_position_v1';
     const ONBOARDING_SKIP_TODAY_KEY = 'lotto_onboarding_skip_today';
     const GOOGLE_REDIRECT_STATE_KEY = 'lotto_google_redirect_state';
+    const KAKAO_REDIRECT_STATE_KEY = 'lotto_kakao_redirect_state';
     const GOOGLE_REDIRECT_PENDING_TTL_MS = 10 * 60 * 1000;
     const KAKAO_INAPP_NOTICE_DISMISSED_KEY = 'lotto_kakao_inapp_notice_dismissed';
+    const DEFAULT_KAKAO_OIDC_PROVIDER_ID = 'oidc.kakao';
+    const DEFAULT_KAKAO_AUTH_SCOPES = ['profile_nickname'];
     const MEMBERSHIP_STATE_LOCAL_KEY = 'lotto_membership_state_v1';
     const PLAN_DAILY_USAGE_KEY = 'lotto_plan_daily_usage_v1';
     const HELP_CHAT_PROMPTS = {
@@ -604,6 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
         locker: '보관함은 뭐야?'
     };
     let googleRedirectFlowPending = readGoogleRedirectPendingState();
+    let kakaoRedirectFlowPending = readKakaoRedirectPendingState();
     let drawWizardScrollHintSeen = readDrawWizardScrollHintSeen();
     const DRAW_WIZARD_RULE_GROUP_INFO = {
         '홀짝 비율': {
@@ -1731,9 +1735,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 return;
             }
-            updateRulesStatus('현재 연결된 로그인 수단은 구글입니다.');
+            if (provider === 'kakao') {
+                const ok = await signInWithKakao();
+                if (ok) {
+                    closeAuthModal();
+                }
+                return;
+            }
+            updateRulesStatus('지원하지 않는 로그인 수단입니다.');
             if (firebaseAuthStatusEl) {
-                firebaseAuthStatusEl.textContent = '현재는 구글 로그인만 연결되어 있습니다.';
+                firebaseAuthStatusEl.textContent = '지원하지 않는 로그인 수단입니다.';
             }
         });
     });
@@ -2328,7 +2339,6 @@ document.addEventListener('DOMContentLoaded', () => {
         refreshRevealMotion(document.getElementById(`tab-${getCurrentActiveTabId()}`));
         setOnboardingSlide(0);
         scheduleWelcomeModal();
-        scheduleInAppBrowserPrompt();
         initializeHelpChat();
         window.addEventListener('message', event => {
             if (!event || !event.data || event.data.type !== 'switch-tab') {
@@ -3123,48 +3133,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function scheduleInAppBrowserPrompt() {
-        if (!shouldUseExternalBrowserPrompt() || readKakaoInAppNoticeDismissed()) {
-            return;
-        }
-        window.setTimeout(() => {
-            openInAppBrowserModal();
-        }, 420);
-    }
-
-    function readGoogleRedirectPendingState() {
+    function readAuthRedirectPendingState(storageKey, providerLabel) {
         try {
-            const raw = localStorage.getItem(GOOGLE_REDIRECT_STATE_KEY);
+            const raw = localStorage.getItem(storageKey);
             if (!raw) {
                 return false;
             }
             const startedAt = Number(raw);
             if (!Number.isFinite(startedAt) || startedAt <= 0) {
-                localStorage.removeItem(GOOGLE_REDIRECT_STATE_KEY);
+                localStorage.removeItem(storageKey);
                 return false;
             }
             if (Date.now() - startedAt > GOOGLE_REDIRECT_PENDING_TTL_MS) {
-                localStorage.removeItem(GOOGLE_REDIRECT_STATE_KEY);
+                localStorage.removeItem(storageKey);
                 return false;
             }
             return true;
         } catch (error) {
-            console.warn('구글 리디렉션 상태 확인 실패', error);
+            console.warn(`${providerLabel} 리디렉션 상태 확인 실패`, error);
             return false;
         }
     }
 
-    function setGoogleRedirectPendingState(nextPending) {
-        googleRedirectFlowPending = Boolean(nextPending);
+    function writeAuthRedirectPendingState(storageKey, nextPending, providerLabel) {
         try {
-            if (googleRedirectFlowPending) {
-                localStorage.setItem(GOOGLE_REDIRECT_STATE_KEY, String(Date.now()));
+            if (nextPending) {
+                localStorage.setItem(storageKey, String(Date.now()));
             } else {
-                localStorage.removeItem(GOOGLE_REDIRECT_STATE_KEY);
+                localStorage.removeItem(storageKey);
             }
         } catch (error) {
-            console.warn('구글 리디렉션 상태 저장 실패', error);
+            console.warn(`${providerLabel} 리디렉션 상태 저장 실패`, error);
         }
+    }
+
+    function readGoogleRedirectPendingState() {
+        return readAuthRedirectPendingState(GOOGLE_REDIRECT_STATE_KEY, '구글');
+    }
+
+    function setGoogleRedirectPendingState(nextPending) {
+        googleRedirectFlowPending = Boolean(nextPending);
+        writeAuthRedirectPendingState(GOOGLE_REDIRECT_STATE_KEY, googleRedirectFlowPending, '구글');
     }
 
     function hasGoogleRedirectPending() {
@@ -3175,14 +3184,51 @@ document.addEventListener('DOMContentLoaded', () => {
         return googleRedirectFlowPending;
     }
 
+    function readKakaoRedirectPendingState() {
+        return readAuthRedirectPendingState(KAKAO_REDIRECT_STATE_KEY, '카카오');
+    }
+
+    function setKakaoRedirectPendingState(nextPending) {
+        kakaoRedirectFlowPending = Boolean(nextPending);
+        writeAuthRedirectPendingState(KAKAO_REDIRECT_STATE_KEY, kakaoRedirectFlowPending, '카카오');
+    }
+
+    function hasKakaoRedirectPending() {
+        if (!kakaoRedirectFlowPending) {
+            return false;
+        }
+        kakaoRedirectFlowPending = readKakaoRedirectPendingState();
+        return kakaoRedirectFlowPending;
+    }
+
+    function clearAuthRedirectPendingStates() {
+        setGoogleRedirectPendingState(false);
+        setKakaoRedirectPendingState(false);
+    }
+
+    function getPendingRedirectProvider() {
+        if (hasKakaoRedirectPending()) {
+            return 'kakao';
+        }
+        if (hasGoogleRedirectPending()) {
+            return 'google';
+        }
+        return '';
+    }
+
+    function getAuthProviderLabel(providerKey) {
+        return providerKey === 'kakao' ? '카카오' : '구글';
+    }
+
     function getAuthPendingStatusMessage() {
-        return hasGoogleRedirectPending()
-            ? '구글 로그인 결과를 확인하는 중입니다.'
+        const pendingProvider = getPendingRedirectProvider();
+        return pendingProvider
+            ? `${getAuthProviderLabel(pendingProvider)} 로그인 결과를 확인하는 중입니다.`
             : '저장된 로그인 상태를 확인하는 중입니다.';
     }
 
     function isAuthStatePending() {
-        return Boolean((firebaseReady && !authStateResolved) || hasGoogleRedirectPending());
+        return Boolean((firebaseReady && !authStateResolved) || getPendingRedirectProvider());
     }
 
 
@@ -7278,6 +7324,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('[Auth] Auth & Firestore ready');
 
             googleRedirectFlowPending = readGoogleRedirectPendingState();
+            kakaoRedirectFlowPending = readKakaoRedirectPendingState();
             
             if (window.firebase.auth.Auth && window.firebase.auth.Auth.Persistence) {
                 const { Persistence } = window.firebase.auth.Auth;
@@ -7298,11 +7345,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 await syncAuthState(user);
             });
 
-            void handleGoogleRedirectResult();
+            void handleAuthRedirectResult();
             
             if (firebaseAuthStatusEl) {
-                firebaseAuthStatusEl.textContent = hasGoogleRedirectPending()
-                    ? '구글 로그인 결과를 확인하는 중입니다...'
+                const pendingProvider = getPendingRedirectProvider();
+                firebaseAuthStatusEl.textContent = pendingProvider
+                    ? `${getAuthProviderLabel(pendingProvider)} 로그인 결과를 확인하는 중입니다...`
                     : '로그인할 준비가 되었습니다.';
                 firebaseAuthStatusEl.style.color = '#64748b';
             }
@@ -7327,7 +7375,7 @@ document.addEventListener('DOMContentLoaded', () => {
         authStateResolved = true;
         currentUser = user || null;
         if (currentUser) {
-            setGoogleRedirectPendingState(false);
+            clearAuthRedirectPendingStates();
         }
         try {
             if (currentUser) {
@@ -7591,15 +7639,51 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function shouldPreferGoogleRedirect() {
+    function shouldPreferAuthRedirect() {
         const ua = navigator.userAgent || '';
         const isInAppBrowser = /; wv\)|KAKAOTALK|NAVER|Instagram|FBAN|FBAV|Line\//i.test(ua);
         return isInAppBrowser;
     }
 
-    function shouldFallbackGoogleRedirect(error) {
+    function shouldFallbackAuthRedirect(error) {
         const code = error && error.code ? error.code : '';
         return code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment';
+    }
+
+    function getKakaoAuthConfig() {
+        const config = window.LOTTO_KAKAO_AUTH_CONFIG;
+        return config && typeof config === 'object' ? config : {};
+    }
+
+    function getKakaoOidcProviderId() {
+        const providerId = String(getKakaoAuthConfig().providerId || '').trim();
+        return providerId || DEFAULT_KAKAO_OIDC_PROVIDER_ID;
+    }
+
+    function getKakaoAuthScopes() {
+        const scopes = getKakaoAuthConfig().scopes;
+        if (Array.isArray(scopes)) {
+            return scopes.map(scope => String(scope || '').trim()).filter(Boolean);
+        }
+        if (typeof scopes === 'string') {
+            return scopes.split(/[,\s]+/).map(scope => scope.trim()).filter(Boolean);
+        }
+        return DEFAULT_KAKAO_AUTH_SCOPES;
+    }
+
+    function createKakaoAuthProvider() {
+        const providerId = getKakaoOidcProviderId();
+        if (!providerId) {
+            throw new Error('missing_kakao_provider_id');
+        }
+        if (!window.firebase.auth.OAuthProvider) {
+            throw new Error('missing_oauth_provider');
+        }
+        const provider = new window.firebase.auth.OAuthProvider(providerId);
+        getKakaoAuthScopes().forEach(scope => {
+            provider.addScope(scope);
+        });
+        return provider;
     }
 
     function getGoogleAuthErrorMessage(error) {
@@ -7626,32 +7710,71 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function handleGoogleRedirectResult() {
-        if (!firebaseReady || !firebaseAuth || googleRedirectResultChecked) {
+    function getKakaoAuthErrorMessage(error) {
+        const code = error && error.code ? error.code : '';
+        const message = error && error.message ? String(error.message) : '';
+        switch (code || message) {
+            case 'missing_kakao_provider_id':
+                return '카카오 OIDC provider ID가 설정되지 않았습니다.';
+            case 'missing_oauth_provider':
+                return 'Firebase OAuthProvider 모듈을 사용할 수 없습니다.';
+            case 'auth/unauthorized-domain':
+                return '현재 접속 주소가 Firebase Authorized domains에 등록되지 않았습니다.';
+            case 'auth/operation-not-allowed':
+                return 'Firebase Authentication에서 카카오 OIDC provider가 비활성화되어 있습니다.';
+            case 'auth/invalid-oauth-provider':
+                return 'Firebase 카카오 OIDC provider ID를 확인해 주세요.';
+            case 'auth/popup-blocked':
+                return '브라우저가 카카오 로그인 팝업을 차단했습니다.';
+            case 'auth/popup-closed-by-user':
+                return '카카오 로그인 창이 닫혀서 진행이 멈췄습니다.';
+            case 'auth/operation-not-supported-in-this-environment':
+                return '현재 브라우저에서는 팝업 로그인을 지원하지 않습니다.';
+            case 'auth/network-request-failed':
+                return '네트워크 연결이 불안정해 로그인에 실패했습니다.';
+            case 'auth/web-storage-unsupported':
+                return '브라우저 저장소를 사용할 수 없어 로그인에 실패했습니다.';
+            case 'auth/cancelled-popup-request':
+                return '로그인 요청이 겹쳐 취소되었습니다.';
+            default:
+                return '카카오 로그인에 실패했습니다. Firebase와 Kakao OIDC 설정을 확인해 주세요.';
+        }
+    }
+
+    function getAuthErrorMessage(error, providerKey = 'google') {
+        return providerKey === 'kakao'
+            ? getKakaoAuthErrorMessage(error)
+            : getGoogleAuthErrorMessage(error);
+    }
+
+    async function handleAuthRedirectResult() {
+        if (!firebaseReady || !firebaseAuth || authRedirectResultChecked) {
             return;
         }
-        googleRedirectResultChecked = true;
-        const hadPendingRedirect = hasGoogleRedirectPending();
+        authRedirectResultChecked = true;
+        const pendingProvider = getPendingRedirectProvider();
+        const hadPendingRedirect = Boolean(pendingProvider);
+        const providerLabel = getAuthProviderLabel(pendingProvider);
         try {
             const result = await firebaseAuth.getRedirectResult();
             const redirectUser = (result && result.user) || firebaseAuth.currentUser || null;
             if (!redirectUser) {
                 if (hadPendingRedirect) {
-                    setGoogleRedirectPendingState(false);
+                    clearAuthRedirectPendingStates();
                     updateAuthUi();
-                    setFirebaseAuthStatus('구글 로그인 연결을 확인하지 못했습니다. 다시 시도해 주세요.');
+                    setFirebaseAuthStatus(`${providerLabel} 로그인 연결을 확인하지 못했습니다. 다시 시도해 주세요.`);
                 }
                 return;
             }
-            setGoogleRedirectPendingState(false);
+            clearAuthRedirectPendingStates();
             await syncAuthState(redirectUser);
-            updateRulesStatus('구글 가입/로그인 성공');
-            setFirebaseAuthStatus('구글 로그인 완료. 계정 정보를 불러오는 중입니다.');
+            updateRulesStatus(`${providerLabel} 가입/로그인 성공`);
+            setFirebaseAuthStatus(`${providerLabel} 로그인 완료. 계정 정보를 불러오는 중입니다.`);
         } catch (error) {
-            setGoogleRedirectPendingState(false);
-            console.error('구글 리디렉션 로그인 실패', error);
-            const message = getGoogleAuthErrorMessage(error);
-            updateRulesStatus(`구글 로그인 실패: ${message}`);
+            clearAuthRedirectPendingStates();
+            console.error(`${providerLabel} 리디렉션 로그인 실패`, error);
+            const message = getAuthErrorMessage(error, pendingProvider || 'google');
+            updateRulesStatus(`${providerLabel} 로그인 실패: ${message}`);
             setFirebaseAuthStatus(`${message}${error && error.code ? ` [${error.code}]` : ''}`);
             updateAuthUi();
         }
@@ -7686,7 +7809,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             console.log('[Auth] Waiting for persistence...');
             await authPersistenceReady;
-            if (shouldPreferGoogleRedirect()) {
+            if (shouldPreferAuthRedirect()) {
                 console.log('[Auth] Preferring redirect flow');
                 updateRulesStatus('구글 로그인 화면으로 이동합니다.');
                 setFirebaseAuthStatus('브라우저 환경에 맞춰 구글 로그인 화면으로 이동합니다.');
@@ -7706,7 +7829,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return true;
         } catch (error) {
             console.error('[Auth] Google sign-in error', error);
-            if (!startedRedirect && shouldFallbackGoogleRedirect(error)) {
+            if (!startedRedirect && shouldFallbackAuthRedirect(error)) {
                 try {
                     console.log('[Auth] Falling back to redirect flow due to popup block');
                     updateRulesStatus('팝업 대신 구글 로그인 화면으로 이동합니다.');
@@ -7723,8 +7846,86 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             setGoogleRedirectPendingState(false);
-            const message = getGoogleAuthErrorMessage(error);
+            const message = getAuthErrorMessage(error, 'google');
             updateRulesStatus(`구글 로그인 실패: ${message}`);
+            setFirebaseAuthStatus(`${message}${error && error.code ? ` [${error.code}]` : ''}`);
+            return false;
+        } finally {
+            if (!startedRedirect) {
+                setAuthButtonsBusy(false);
+            }
+        }
+    }
+
+    async function signInWithKakao() {
+        console.log('[Auth] Kakao sign-in requested');
+        if (!firebaseReady || !firebaseAuth) {
+            console.error('[Auth] Firebase not ready', { firebaseReady, hasAuth: !!firebaseAuth });
+            updateRulesStatus('Firebase 설정이 필요합니다. firebase-config.js 값을 먼저 입력하세요.');
+            setFirebaseAuthStatus('Firebase 설정 미완료');
+            return false;
+        }
+        if (authActionInFlight) {
+            console.warn('[Auth] Auth action already in flight');
+            setFirebaseAuthStatus('로그인 요청을 처리 중입니다. 잠시만 기다려 주세요.');
+            return false;
+        }
+
+        let provider;
+        try {
+            provider = createKakaoAuthProvider();
+        } catch (error) {
+            console.error('[Auth] Kakao provider setup error', error);
+            const message = getAuthErrorMessage(error, 'kakao');
+            updateRulesStatus(`카카오 로그인 실패: ${message}`);
+            setFirebaseAuthStatus(message);
+            return false;
+        }
+
+        let startedRedirect = false;
+        setAuthButtonsBusy(true);
+        try {
+            console.log('[Auth] Waiting for persistence...');
+            await authPersistenceReady;
+            if (shouldPreferAuthRedirect()) {
+                console.log('[Auth] Preferring Kakao redirect flow');
+                updateRulesStatus('카카오 로그인 화면으로 이동합니다.');
+                setFirebaseAuthStatus('브라우저 환경에 맞춰 카카오 로그인 화면으로 이동합니다.');
+                setKakaoRedirectPendingState(true);
+                await firebaseAuth.signInWithRedirect(provider);
+                startedRedirect = true;
+                return false;
+            }
+            console.log('[Auth] Launching Kakao popup...');
+            const result = await firebaseAuth.signInWithPopup(provider);
+            console.log('[Auth] Kakao popup result received', result?.user?.uid);
+            if (result && result.user) {
+                await syncAuthState(result.user);
+            }
+            updateRulesStatus('카카오 가입/로그인 성공');
+            setFirebaseAuthStatus('카카오 로그인 완료. 계정 정보를 불러오는 중입니다.');
+            return true;
+        } catch (error) {
+            console.error('[Auth] Kakao sign-in error', error);
+            if (!startedRedirect && shouldFallbackAuthRedirect(error)) {
+                try {
+                    console.log('[Auth] Falling back to Kakao redirect flow due to popup block');
+                    updateRulesStatus('팝업 대신 카카오 로그인 화면으로 이동합니다.');
+                    setFirebaseAuthStatus('팝업이 어려워 전체 페이지 로그인으로 전환합니다.');
+                    setKakaoRedirectPendingState(true);
+                    await firebaseAuth.signInWithRedirect(provider);
+                    startedRedirect = true;
+                    return false;
+                } catch (redirectError) {
+                    console.error('[Auth] Kakao fallback redirect error', redirectError);
+                    setKakaoRedirectPendingState(false);
+                    console.error('카카오 리디렉션 로그인 전환 실패', redirectError);
+                    error = redirectError;
+                }
+            }
+            setKakaoRedirectPendingState(false);
+            const message = getAuthErrorMessage(error, 'kakao');
+            updateRulesStatus(`카카오 로그인 실패: ${message}`);
             setFirebaseAuthStatus(`${message}${error && error.code ? ` [${error.code}]` : ''}`);
             return false;
         } finally {
@@ -7740,7 +7941,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         try {
             await firebaseAuth.signOut();
-            setGoogleRedirectPendingState(false);
+            clearAuthRedirectPendingStates();
             currentUserProfile = null;
             welcomeModalDismissedInSession = false;
             scheduleWelcomeModal();
@@ -8733,10 +8934,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (isAuthStatePending()) {
             setFirebaseAuthStatus(getAuthPendingStatusMessage());
-            return;
-        }
-        if (shouldUseExternalBrowserPrompt()) {
-            openInAppBrowserModal({ force: true });
             return;
         }
         closeWelcomeModal();

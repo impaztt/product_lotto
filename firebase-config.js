@@ -8,3 +8,9 @@ window.LOTTO_FIREBASE_CONFIG = {
     messagingSenderId: "961004650156",
     appId: "1:961004650156:web:887ce54e634699c5892909"
 };
+
+// Match this value to the OpenID Connect provider ID generated in Firebase Auth.
+window.LOTTO_KAKAO_AUTH_CONFIG = {
+    providerId: "oidc.kakao",
+    scopes: ["profile_nickname"]
+};
