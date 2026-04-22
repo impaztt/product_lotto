@@ -2339,6 +2339,7 @@ document.addEventListener('DOMContentLoaded', () => {
         refreshRevealMotion(document.getElementById(`tab-${getCurrentActiveTabId()}`));
         setOnboardingSlide(0);
         scheduleWelcomeModal();
+        scheduleInAppBrowserPrompt();
         initializeHelpChat();
         window.addEventListener('message', event => {
             if (!event || !event.data || event.data.type !== 'switch-tab') {
@@ -2993,8 +2994,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const android = isAndroidDevice();
         if (inAppBrowserDescEl) {
             inAppBrowserDescEl.textContent = ios
-                ? '카카오톡 인앱브라우저에서는 Google 로그인 정책 때문에 로그인이 차단될 수 있습니다. Safari나 Chrome으로 다시 열면 정상 로그인됩니다.'
-                : '카카오톡 인앱브라우저에서는 Google 로그인 정책 때문에 로그인이 차단될 수 있습니다. 기본 브라우저나 Chrome으로 다시 열면 정상 로그인됩니다.';
+                ? '카카오톡 인앱브라우저에서는 일부 로그인 흐름이 제한될 수 있습니다. Safari나 Chrome으로 다시 열면 정상 로그인됩니다.'
+                : '카카오톡 인앱브라우저에서는 일부 로그인 흐름이 제한될 수 있습니다. 기본 브라우저나 Chrome으로 다시 열면 정상 로그인됩니다.';
         }
         if (inAppBrowserHintEl) {
             inAppBrowserHintEl.textContent = ios
@@ -3131,6 +3132,15 @@ document.addEventListener('DOMContentLoaded', () => {
             console.warn('현재 페이지 링크 복사 실패', error);
             setInAppBrowserStatus('링크 복사에 실패했습니다. 카카오톡 메뉴의 브라우저로 열기를 사용해 주세요.', true);
         }
+    }
+
+    function scheduleInAppBrowserPrompt() {
+        if (!shouldUseExternalBrowserPrompt() || readKakaoInAppNoticeDismissed()) {
+            return;
+        }
+        window.setTimeout(() => {
+            openInAppBrowserModal();
+        }, 420);
     }
 
     function readAuthRedirectPendingState(storageKey, providerLabel) {
@@ -7721,7 +7731,7 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'auth/unauthorized-domain':
                 return '현재 접속 주소가 Firebase Authorized domains에 등록되지 않았습니다.';
             case 'auth/operation-not-allowed':
-                return 'Firebase Authentication에서 카카오 OIDC provider가 비활성화되어 있습니다.';
+                return 'Firebase Authentication에서 카카오 OIDC provider가 비활성화되어 있거나 provider ID가 일치하지 않습니다.';
             case 'auth/invalid-oauth-provider':
                 return 'Firebase 카카오 OIDC provider ID를 확인해 주세요.';
             case 'auth/popup-blocked':
@@ -8934,6 +8944,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (isAuthStatePending()) {
             setFirebaseAuthStatus(getAuthPendingStatusMessage());
+            return;
+        }
+        if (shouldUseExternalBrowserPrompt()) {
+            openInAppBrowserModal({ force: true });
             return;
         }
         closeWelcomeModal();
