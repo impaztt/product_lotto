@@ -12050,6 +12050,7 @@ document.addEventListener('DOMContentLoaded', () => {
         draw: { adsense: '8302642406' },
         store: { adsense: '9582874991' },
     };
+    const SPONSOR_AD_LOAD_TIMEOUT_MS = 1800;
     const SPONSOR_SLOT_MOBILE_HEIGHT = 'clamp(48px, 10vh, 80px)';
     const SPONSOR_SLOT_DESKTOP_HEIGHT = 'clamp(56px, 9vh, 90px)';
     const sponsorSlotLocks = new WeakMap();
@@ -12178,7 +12179,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 (window.adsbygoogle = window.adsbygoogle || []).push({});
                 status = await waitForAdSenseFill(ins, {
-                    timeoutMs: AD_INTERSTITIAL_LOAD_TIMEOUT_MS,
+                    timeoutMs: SPONSOR_AD_LOAD_TIMEOUT_MS,
                     requireExplicitFilledStatus: true
                 });
             } catch (error) {
