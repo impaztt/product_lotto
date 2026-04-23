@@ -11769,10 +11769,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const ADSENSE_CLIENT_ID = 'ca-pub-7243343622358488';
     const AD_INTERSTITIAL_SLOT_ID = '3814940353';
     const AD_INTERSTITIAL_DEFAULT_SECONDS = 5;
-    const AD_INTERSTITIAL_FAILSAFE_SECONDS = 1;
-    const AD_INTERSTITIAL_LOAD_TIMEOUT_MS = 3200;
+    const AD_INTERSTITIAL_FAILSAFE_SECONDS = 3;
+    const AD_INTERSTITIAL_LOAD_TIMEOUT_MS = 8000;
     const AD_INTERSTITIAL_LABEL_DEFAULT = '광고 후 번호가 생성됩니다';
-    const AD_INTERSTITIAL_LABEL_FALLBACK = '광고를 불러오지 못해 바로 진행합니다';
     const adInterstitialEl = document.getElementById('ad-interstitial');
     const adInterstitialCloseBtn = document.getElementById('ad-interstitial-close');
     const adInterstitialLabelEl = adInterstitialEl ? adInterstitialEl.querySelector('.ad-interstitial-label') : null;
@@ -11924,10 +11923,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (status === 'filled') {
                         return;
                     }
-                    console.warn('[ad] interstitial not filled', { status });
-                    if (adInterstitialLabelEl) {
-                        adInterstitialLabelEl.textContent = AD_INTERSTITIAL_LABEL_FALLBACK;
+                    // Timeout은 광고 응답 지연일 수 있으므로 기본 카운트다운을 유지한다.
+                    if (status === 'timeout') {
+                        console.info('[ad] interstitial load timeout, keeping default countdown');
+                        return;
                     }
+                    console.warn('[ad] interstitial not filled', { status });
                     startAdInterstitialCountdown(AD_INTERSTITIAL_FAILSAFE_SECONDS);
                 })
                 .catch(error => {
@@ -11935,9 +11936,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         return;
                     }
                     console.warn('[ad] interstitial load failed', error);
-                    if (adInterstitialLabelEl) {
-                        adInterstitialLabelEl.textContent = AD_INTERSTITIAL_LABEL_FALLBACK;
-                    }
                     startAdInterstitialCountdown(AD_INTERSTITIAL_FAILSAFE_SECONDS);
                 });
         });
