@@ -7307,7 +7307,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const config = window.LOTTO_FIREBASE_CONFIG || {};
+        const rawConfig = window.LOTTO_FIREBASE_CONFIG || {};
+        const config = {
+            ...rawConfig,
+            authDomain: getNormalizedFirebaseAuthDomain(rawConfig)
+        };
         if (!config.apiKey || !config.authDomain || !config.projectId || !config.appId) {
             authStateResolved = true;
             console.error('[Auth] Firebase config missing required fields', config);
@@ -7316,6 +7320,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 firebaseAuthStatusEl.style.color = '#ef4444';
             }
             return;
+        }
+        if (rawConfig.authDomain && config.authDomain !== String(rawConfig.authDomain).trim()) {
+            console.log('[Auth] authDomain normalized for current host', {
+                configured: rawConfig.authDomain,
+                resolved: config.authDomain
+            });
         }
 
         try {
@@ -7660,6 +7670,49 @@ document.addEventListener('DOMContentLoaded', () => {
         return code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment';
     }
 
+    function getNormalizedFirebaseAuthDomain(config) {
+        const projectId = String(config && config.projectId ? config.projectId : '').trim();
+        const fallbackAuthDomain = String(config && config.authDomain ? config.authDomain : '').trim();
+        const host = String(window.location && window.location.hostname ? window.location.hostname : '').trim().toLowerCase();
+        if (!projectId) {
+            return fallbackAuthDomain;
+        }
+        if (host.endsWith('.web.app')) {
+            return `${projectId}.web.app`;
+        }
+        if (host.endsWith('.firebaseapp.com')) {
+            return `${projectId}.firebaseapp.com`;
+        }
+        return fallbackAuthDomain;
+    }
+
+    function getActiveFirebaseAuthDomain() {
+        const authDomain = firebaseAuth
+            && firebaseAuth.app
+            && firebaseAuth.app.options
+            && firebaseAuth.app.options.authDomain;
+        if (authDomain) {
+            return String(authDomain).trim();
+        }
+        const config = window.LOTTO_FIREBASE_CONFIG || {};
+        return String(config.authDomain || '').trim();
+    }
+
+    function getKakaoRedirectUriHints() {
+        const hints = [];
+        const config = window.LOTTO_FIREBASE_CONFIG || {};
+        const projectId = String(config.projectId || '').trim();
+        const activeAuthDomain = getActiveFirebaseAuthDomain();
+        if (activeAuthDomain) {
+            hints.push(`https://${activeAuthDomain}/__/auth/handler`);
+        }
+        if (projectId) {
+            hints.push(`https://${projectId}.web.app/__/auth/handler`);
+            hints.push(`https://${projectId}.firebaseapp.com/__/auth/handler`);
+        }
+        return hints.filter((uri, index, list) => Boolean(uri) && list.indexOf(uri) === index);
+    }
+
     function getKakaoAuthConfig() {
         const config = window.LOTTO_KAKAO_AUTH_CONFIG;
         return config && typeof config === 'object' ? config : {};
@@ -7723,6 +7776,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function getKakaoAuthErrorMessage(error) {
         const code = error && error.code ? error.code : '';
         const message = error && error.message ? String(error.message) : '';
+        if (/KOE006/i.test(message)) {
+            const hints = getKakaoRedirectUriHints();
+            const target = hints[0] || 'https://<project-id>.web.app/__/auth/handler';
+            return `카카오 Redirect URI 불일치(KOE006)입니다. 카카오 개발자 콘솔 > 카카오 로그인 > Redirect URI에 ${target} 를 등록해 주세요.`;
+        }
         switch (code || message) {
             case 'missing_kakao_provider_id':
                 return '카카오 OIDC provider ID가 설정되지 않았습니다.';
