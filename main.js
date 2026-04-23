@@ -11803,7 +11803,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return ins;
     }
 
-    function waitForAdSenseFill(ins, timeoutMs = AD_INTERSTITIAL_LOAD_TIMEOUT_MS) {
+    function waitForAdSenseFill(ins, options = {}) {
+        const normalizedOptions = (typeof options === 'number')
+            ? { timeoutMs: options }
+            : (options || {});
+        const timeoutMs = Number(normalizedOptions.timeoutMs) > 0
+            ? Number(normalizedOptions.timeoutMs)
+            : AD_INTERSTITIAL_LOAD_TIMEOUT_MS;
+        const requireExplicitFilledStatus = normalizedOptions.requireExplicitFilledStatus === true;
         return new Promise(resolve => {
             if (!(ins instanceof Element)) {
                 resolve('missing');
@@ -11834,7 +11841,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     settle(status);
                     return;
                 }
-                if (ins.querySelector('iframe')) {
+                if (!requireExplicitFilledStatus && ins.querySelector('iframe')) {
                     settle('filled');
                 }
             };
@@ -12112,7 +12119,10 @@ document.addEventListener('DOMContentLoaded', () => {
             let status = 'missing';
             try {
                 (window.adsbygoogle = window.adsbygoogle || []).push({});
-                status = await waitForAdSenseFill(ins);
+                status = await waitForAdSenseFill(ins, {
+                    timeoutMs: AD_INTERSTITIAL_LOAD_TIMEOUT_MS,
+                    requireExplicitFilledStatus: true
+                });
             } catch (error) {
                 console.warn('[ad] sponsor adsbygoogle push failed', error);
                 status = 'push-failed';
