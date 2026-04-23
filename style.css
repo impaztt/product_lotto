@@ -31709,6 +31709,12 @@ body #tab-mypage .mypage-account-actions .cta {
     box-shadow: 0 4px 10px rgba(30, 107, 255, 0.18) !important;
 }
 
+body #tab-mypage .mypage-inline-actions > [hidden],
+body #tab-mypage .mypage-account-actions > [hidden],
+body #tab-mypage .mypage-plan-actions > [hidden] {
+    display: none !important;
+}
+
 body #tab-mypage .mypage-inline-actions .ghost,
 body #tab-mypage .mypage-plan-actions .ghost {
     flex: 1 1 160px;
