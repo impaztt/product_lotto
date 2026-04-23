@@ -11766,13 +11766,139 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ── AdSense Interstitial for Free Users ── */
+    const ADSENSE_CLIENT_ID = 'ca-pub-7243343622358488';
+    const AD_INTERSTITIAL_SLOT_ID = '3814940353';
+    const AD_INTERSTITIAL_DEFAULT_SECONDS = 5;
+    const AD_INTERSTITIAL_FAILSAFE_SECONDS = 1;
+    const AD_INTERSTITIAL_LOAD_TIMEOUT_MS = 3200;
+    const AD_INTERSTITIAL_LABEL_DEFAULT = '광고 후 번호가 생성됩니다';
+    const AD_INTERSTITIAL_LABEL_FALLBACK = '광고를 불러오지 못해 바로 진행합니다';
     const adInterstitialEl = document.getElementById('ad-interstitial');
     const adInterstitialCloseBtn = document.getElementById('ad-interstitial-close');
-    const adInterstitialCountdownEl = document.getElementById('ad-interstitial-countdown');
+    const adInterstitialLabelEl = adInterstitialEl ? adInterstitialEl.querySelector('.ad-interstitial-label') : null;
+    const adInterstitialSlotEl = adInterstitialEl ? adInterstitialEl.querySelector('.ad-interstitial-slot') : null;
     let adInterstitialResolve = null;
+    let adInterstitialCountdownTimer = null;
+    let adInterstitialSessionToken = 0;
 
     function shouldShowAdInterstitial() {
         return !isPremiumMember();
+    }
+
+    function createAdSenseUnit(slotId) {
+        const ins = document.createElement('ins');
+        ins.className = 'adsbygoogle';
+        ins.style.display = 'block';
+        ins.setAttribute('data-ad-client', ADSENSE_CLIENT_ID);
+        ins.setAttribute('data-ad-slot', slotId);
+        ins.setAttribute('data-ad-format', 'auto');
+        ins.setAttribute('data-full-width-responsive', 'true');
+        return ins;
+    }
+
+    function waitForAdSenseFill(ins, timeoutMs = AD_INTERSTITIAL_LOAD_TIMEOUT_MS) {
+        return new Promise(resolve => {
+            if (!(ins instanceof Element)) {
+                resolve('missing');
+                return;
+            }
+
+            let settled = false;
+            let timeoutId = null;
+            const observer = new MutationObserver(() => {
+                checkStatus();
+            });
+
+            const settle = status => {
+                if (settled) {
+                    return;
+                }
+                settled = true;
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                }
+                observer.disconnect();
+                resolve(status);
+            };
+
+            const checkStatus = () => {
+                const status = String(ins.getAttribute('data-ad-status') || '').toLowerCase();
+                if (status === 'filled' || status === 'unfilled') {
+                    settle(status);
+                    return;
+                }
+                if (ins.querySelector('iframe')) {
+                    settle('filled');
+                }
+            };
+
+            observer.observe(ins, {
+                attributes: true,
+                attributeFilter: ['data-ad-status'],
+                childList: true,
+                subtree: true
+            });
+
+            timeoutId = setTimeout(() => {
+                settle('timeout');
+            }, timeoutMs);
+
+            checkStatus();
+        });
+    }
+
+    function setAdInterstitialCloseButton(secondsRemaining = 0) {
+        if (!adInterstitialCloseBtn) {
+            return;
+        }
+        if (secondsRemaining > 0) {
+            adInterstitialCloseBtn.disabled = true;
+            adInterstitialCloseBtn.textContent = `${secondsRemaining}초 후 닫기`;
+            return;
+        }
+        adInterstitialCloseBtn.disabled = false;
+        adInterstitialCloseBtn.textContent = '닫기';
+    }
+
+    function stopAdInterstitialCountdown() {
+        if (adInterstitialCountdownTimer) {
+            clearInterval(adInterstitialCountdownTimer);
+            adInterstitialCountdownTimer = null;
+        }
+    }
+
+    function startAdInterstitialCountdown(seconds = AD_INTERSTITIAL_DEFAULT_SECONDS) {
+        stopAdInterstitialCountdown();
+        let remaining = Math.max(0, Number(seconds) || 0);
+        setAdInterstitialCloseButton(remaining);
+        if (!remaining) {
+            return;
+        }
+        adInterstitialCountdownTimer = setInterval(() => {
+            remaining -= 1;
+            if (remaining <= 0) {
+                stopAdInterstitialCountdown();
+                setAdInterstitialCloseButton(0);
+                return;
+            }
+            setAdInterstitialCloseButton(remaining);
+        }, 1000);
+    }
+
+    async function requestAdInterstitialFill() {
+        if (!adInterstitialSlotEl) {
+            return 'missing-slot';
+        }
+        adInterstitialSlotEl.innerHTML = '';
+        const ins = createAdSenseUnit(AD_INTERSTITIAL_SLOT_ID);
+        adInterstitialSlotEl.appendChild(ins);
+        try {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (error) {
+            console.warn('[ad] adsbygoogle push failed', error);
+            return 'push-failed';
+        }
+        return waitForAdSenseFill(ins);
     }
 
     function showAdInterstitial() {
@@ -11782,37 +11908,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             adInterstitialResolve = resolve;
+            adInterstitialSessionToken += 1;
+            const token = adInterstitialSessionToken;
             adInterstitialEl.hidden = false;
-
-            // Request ad fill
-            try {
-                (window.adsbygoogle = window.adsbygoogle || []).push({});
-            } catch (e) {
-                console.warn('[ad] adsbygoogle push failed', e);
+            if (adInterstitialLabelEl) {
+                adInterstitialLabelEl.textContent = AD_INTERSTITIAL_LABEL_DEFAULT;
             }
+            startAdInterstitialCountdown(AD_INTERSTITIAL_DEFAULT_SECONDS);
 
-            // Countdown
-            let remaining = 5;
-            adInterstitialCloseBtn.disabled = true;
-            adInterstitialCountdownEl.textContent = remaining;
-            adInterstitialCloseBtn.innerHTML = '<span id="ad-interstitial-countdown">' + remaining + '</span>초 후 닫기';
-
-            const tick = setInterval(() => {
-                remaining -= 1;
-                if (remaining <= 0) {
-                    clearInterval(tick);
-                    adInterstitialCloseBtn.disabled = false;
-                    adInterstitialCloseBtn.textContent = '닫기';
-                } else {
-                    adInterstitialCloseBtn.innerHTML = '<span id="ad-interstitial-countdown">' + remaining + '</span>초 후 닫기';
-                }
-            }, 1000);
+            void requestAdInterstitialFill()
+                .then(status => {
+                    if (token !== adInterstitialSessionToken || adInterstitialEl.hidden) {
+                        return;
+                    }
+                    if (status === 'filled') {
+                        return;
+                    }
+                    console.warn('[ad] interstitial not filled', { status });
+                    if (adInterstitialLabelEl) {
+                        adInterstitialLabelEl.textContent = AD_INTERSTITIAL_LABEL_FALLBACK;
+                    }
+                    startAdInterstitialCountdown(AD_INTERSTITIAL_FAILSAFE_SECONDS);
+                })
+                .catch(error => {
+                    if (token !== adInterstitialSessionToken || adInterstitialEl.hidden) {
+                        return;
+                    }
+                    console.warn('[ad] interstitial load failed', error);
+                    if (adInterstitialLabelEl) {
+                        adInterstitialLabelEl.textContent = AD_INTERSTITIAL_LABEL_FALLBACK;
+                    }
+                    startAdInterstitialCountdown(AD_INTERSTITIAL_FAILSAFE_SECONDS);
+                });
         });
     }
 
     function closeAdInterstitial() {
+        adInterstitialSessionToken += 1;
+        stopAdInterstitialCountdown();
         if (adInterstitialEl) {
             adInterstitialEl.hidden = true;
+        }
+        if (adInterstitialSlotEl) {
+            adInterstitialSlotEl.innerHTML = '';
+        }
+        if (adInterstitialLabelEl) {
+            adInterstitialLabelEl.textContent = AD_INTERSTITIAL_LABEL_DEFAULT;
         }
         if (adInterstitialResolve) {
             adInterstitialResolve();
@@ -11866,17 +12007,18 @@ document.addEventListener('DOMContentLoaded', () => {
             slot.appendChild(link);
             slot.hidden = false;
         } else if (cfg.adsense) {
-            const ins = document.createElement('ins');
-            ins.className = 'adsbygoogle';
+            const ins = createAdSenseUnit(cfg.adsense);
             ins.style.display = 'block';
             ins.style.width = '100%';
             ins.style.height = '100%';
-            ins.setAttribute('data-ad-client', 'ca-pub-7243343622358488');
-            ins.setAttribute('data-ad-slot', cfg.adsense);
             slot.innerHTML = '';
             slot.appendChild(ins);
             slot.hidden = false;
-            try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+            try {
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+            } catch (error) {
+                console.warn('[ad] sponsor adsbygoogle push failed', error);
+            }
         } else {
             slot.hidden = true;
             slot.innerHTML = '';
