@@ -32600,6 +32600,13 @@ body.dash-scroll-lock #tab-mypage::after {
     width: 100%;
     height: 100%;
 }
+.sponsor-slot .adsbygoogle,
+.sponsor-slot [id^="aswift_"],
+.sponsor-slot iframe {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+}
 @media (min-width: 768px) {
     .sponsor-slot { height: clamp(56px, 9vh, 90px); }
     #tab-dashboard .sponsor-slot {
