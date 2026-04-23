@@ -11988,6 +11988,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const SPONSOR_SLOT_MOBILE_HEIGHT = 'clamp(48px, 10vh, 80px)';
     const SPONSOR_SLOT_DESKTOP_HEIGHT = 'clamp(56px, 9vh, 90px)';
     const sponsorSlotLocks = new WeakMap();
+    const sponsorRenderTokens = new WeakMap();
 
     function getSponsorSlotHeightValue() {
         return window.matchMedia('(min-width: 768px)').matches
@@ -12065,7 +12066,12 @@ document.addEventListener('DOMContentLoaded', () => {
         slot.removeAttribute('style');
     }
 
-    function renderSponsorSlot(slot) {
+    async function renderSponsorSlot(slot) {
+        if (!(slot instanceof HTMLElement)) {
+            return;
+        }
+        const renderToken = (sponsorRenderTokens.get(slot) || 0) + 1;
+        sponsorRenderTokens.set(slot, renderToken);
         const key = slot.getAttribute('data-sponsor-slot');
         const cfg = SPONSOR_CONFIG[key];
         if (!cfg) {
@@ -12103,16 +12109,28 @@ document.addEventListener('DOMContentLoaded', () => {
             slot.appendChild(ins);
             slot.hidden = false;
             lockSponsorSlotSize(slot);
+            let status = 'missing';
             try {
                 (window.adsbygoogle = window.adsbygoogle || []).push({});
+                status = await waitForAdSenseFill(ins);
             } catch (error) {
                 console.warn('[ad] sponsor adsbygoogle push failed', error);
+                status = 'push-failed';
+            }
+            if (sponsorRenderTokens.get(slot) !== renderToken) {
+                return;
+            }
+            if (status !== 'filled') {
+                console.info('[ad] sponsor slot hidden due to unfilled status', { slot: key, status });
+                resetSponsorSlot(slot);
             }
         } else {
             resetSponsorSlot(slot);
         }
     }
 
-    document.querySelectorAll('[data-sponsor-slot]').forEach(renderSponsorSlot);
+    document.querySelectorAll('[data-sponsor-slot]').forEach(slot => {
+        void renderSponsorSlot(slot);
+    });
 
 });
