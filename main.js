@@ -877,45 +877,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function bindWeeklyElements(root) {
-        weeklyStatusEl = root.getElementById('weekly-status');
-        weeklyThisRoundEl = root.getElementById('thsLtEpsd');
-        weeklyThisDateEl = root.getElementById('thsLtRflYmd');
-        weeklyLatestRoundEl = root.getElementById('pstLtEpsd');
-        weeklyLatestDateEl = root.getElementById('pstLtRflYmd');
-        weeklyLatestNumbers = [
-            root.getElementById('tm1WnNo'),
-            root.getElementById('tm2WnNo'),
-            root.getElementById('tm3WnNo'),
-            root.getElementById('tm4WnNo'),
-            root.getElementById('tm5WnNo'),
-            root.getElementById('tm6WnNo')
-        ];
-        weeklyLatestBonusEl = root.getElementById('bnsWnNo');
-        weeklyLatestFirstTotalEl = root.getElementById('pstRnk1SumWnAmt');
-        weeklyLatestFirstEachEl = root.getElementById('pstRnk1WnAmt');
-        weeklyLatestFirstWinnersEl = root.getElementById('pstRnk1WnNope');
-        weeklyRoundSelect = root.getElementById('weekly-round-select');
-        weeklyRoundHint = root.getElementById('weekly-round-hint');
-        weeklyNextDrawEl = root.getElementById('weekly-next-draw');
-        weeklyCountdownEl = root.getElementById('weekly-countdown');
-        weeklyCountdownSubEl = root.getElementById('weekly-countdown-sub');
-        weeklyCountdownDaysEl = root.getElementById('DD');
-        weeklyCountdownHoursEl = root.getElementById('HH');
-        weeklyCountdownMinutesEl = root.getElementById('MM');
-        weeklyCountdownSecondsEl = root.getElementById('SS');
-        weeklyExpectedAmountEl = root.getElementById('rnk1ExpcAmt');
-        weeklyExpectedNoteEl = root.getElementById('weekly-expected-note');
-        recentRoundsEl = root.getElementById('recent-rounds');
-        roundSearchInput = root.getElementById('round-search-input');
-        roundSearchBtn = root.getElementById('round-search-btn');
-        compareInput = root.getElementById('compare-input');
-        compareBonusInput = root.getElementById('compare-bonus');
-        compareBtn = root.getElementById('compare-btn');
-        compareResult = root.getElementById('compare-result');
-        recentCountSelect = root.getElementById('recent-count');
-        trendChart = root.getElementById('trend-chart');
-    }
 
     function bindDashboardElements(root) {
         dashThisRoundEl = root.getElementById('dash-thsLtEpsd');
@@ -1048,101 +1009,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function normalizeWeeklyLinks() {
-        normalizeRelativeResourceUrls('tab-weekly');
-    }
-
     function normalizeDashboardLinks() {
         normalizeRelativeResourceUrls('tab-dashboard', { rewriteSrcset: true });
     }
 
-    function initWeeklyIntroUi() {
-        const root = document.getElementById('tab-weekly');
-        if (!root) {
-            return;
-        }
-        root.querySelectorAll('.draw-tab-container').forEach(container => {
-            const tabs = Array.from(container.querySelectorAll('.draw-tab-li'));
-            const panels = Array.from(container.querySelectorAll('.draw-tab-box'));
-            const setTab = tabId => {
-                tabs.forEach(tab => {
-                    const isActive = tab.id === tabId;
-                    tab.classList.toggle('tagTab', isActive);
-                    tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
-                });
-                panels.forEach(panel => {
-                    const isActive = panel.getAttribute('aria-labelledby') === tabId;
-                    panel.classList.toggle('tagTab', isActive);
-                    panel.setAttribute('aria-expanded', isActive ? 'true' : 'false');
-                });
-            };
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => setTab(tab.id));
-                const btn = tab.querySelector('button');
-                if (btn) {
-                    btn.addEventListener('click', () => setTab(tab.id));
-                }
-            });
-        });
-
-        const popupBtn = root.querySelector('.btn-popup');
-        const popupWrap = root.querySelector('.popup-wrap');
-        const popupBg = popupWrap ? popupWrap.querySelector('.popup-bg') : null;
-        const popupClose = popupWrap ? popupWrap.querySelector('.btn-pop-close') : null;
-        const openPopup = () => {
-            if (!popupWrap) {
-                return;
-            }
-            popupWrap.style.display = 'block';
-        };
-        const closePopup = () => {
-            if (!popupWrap) {
-                return;
-            }
-            popupWrap.style.display = 'none';
-        };
-        if (popupBtn) {
-            popupBtn.addEventListener('click', openPopup);
-        }
-        if (popupBg) {
-            popupBg.addEventListener('click', closePopup);
-        }
-        if (popupClose) {
-            popupClose.addEventListener('click', closePopup);
-        }
-
-        const toggleBtn = root.querySelector('.btn-toggle');
-        const toggleContent = root.querySelector('.toggle-content');
-        if (toggleBtn && toggleContent) {
-            toggleBtn.addEventListener('click', () => {
-                const isOpen = toggleContent.style.display === 'block';
-                toggleContent.style.display = isOpen ? 'none' : 'block';
-            });
-        }
-
-        const jumpMap = {
-            btnWnStrc: 'wnStrcDiv',
-            btnPrchsMthd: 'prchsMthdDiv'
-        };
-        Object.keys(jumpMap).forEach(btnId => {
-            const btn = root.querySelector(`#${btnId}`);
-            const targetId = jumpMap[btnId];
-            if (!btn || !targetId) {
-                return;
-            }
-            btn.addEventListener('click', () => {
-                const target = root.querySelector(`#${targetId}`) || document.getElementById(targetId);
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-    }
-
-    bindWeeklyElements(document);
     bindDashboardElements(document);
-    normalizeWeeklyLinks();
-    initWeeklyIntroUi();
     normalizeDashboardLinks();
 
     // 네트워크/초기화 오류와 무관하게 회차 리스트는 먼저 표시한다.
