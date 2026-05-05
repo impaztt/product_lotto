@@ -14,17 +14,32 @@
     --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
 }
 
-/* Make web app feel like a native app by disabling text selection and callouts */
+/* Native-feel chrome: disable callouts/highlight on body, keep content selectable */
 html, body {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Allow selection in input-related elements */
+/* Block text selection only on app chrome (nav, tabs, FAB, modal close).
+   Result balls and copy targets in the body remain selectable so users
+   can drag-copy generated lottery numbers. */
+.site-header,
+.bottom-tab-bar,
+.mobile-menu,
+.menu-toggle,
+.tab-btn,
+.draw-funnel-nav,
+.draw-funnel-header,
+.modal-close,
+.help-chat-fab,
+.site-footer {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Allow selection in input-related elements (kept for safety) */
 input, textarea, [contenteditable="true"] {
     -webkit-user-select: text;
     -moz-user-select: text;
@@ -8336,9 +8351,105 @@ body[data-theme="dark"] #tab-draw .draw-selection-dock-chip {
 }
 
 .site-footer {
-    padding: 30px 6vw 60px;
+    padding: 24px 6vw calc(96px + env(safe-area-inset-bottom));
     text-align: center;
-    color: var(--text-muted);
+    color: #6b7280;
+    font-size: 12px;
+    line-height: 1.65;
+    background: transparent;
+    border-top: 1px solid rgba(15, 23, 42, 0.06);
+    margin-top: 32px;
+}
+
+.site-footer p {
+    margin: 0 0 6px;
+}
+
+.site-footer-disclaimer strong {
+    color: #111827;
+    font-weight: 700;
+}
+
+.site-footer-meta {
+    color: #9ca3af;
+}
+
+body[data-theme="dark"] .site-footer {
+    color: rgba(248, 250, 252, 0.6);
+    border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+body[data-theme="dark"] .site-footer-disclaimer strong {
+    color: #f8fafc;
+}
+
+.mypage-plan-policy {
+    margin-top: 16px;
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: #f7f9fc;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    color: #4b5563;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.mypage-plan-policy h4 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: -0.01em;
+}
+
+.mypage-plan-policy ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+}
+
+.mypage-plan-policy li {
+    position: relative;
+    padding-left: 12px;
+}
+
+.mypage-plan-policy li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #94a3b8;
+}
+
+.mypage-plan-policy li strong {
+    color: #111827;
+    font-weight: 700;
+}
+
+.mypage-plan-policy li em {
+    font-style: normal;
+    color: #2563eb;
+    font-weight: 600;
+}
+
+body[data-theme="dark"] .mypage-plan-policy {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: rgba(248, 250, 252, 0.75);
+}
+
+body[data-theme="dark"] .mypage-plan-policy h4,
+body[data-theme="dark"] .mypage-plan-policy li strong {
+    color: #f8fafc;
+}
+
+body[data-theme="dark"] .mypage-plan-policy li em {
+    color: #93c5fd;
 }
 
 .sr-only {
