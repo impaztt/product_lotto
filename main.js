@@ -1,3 +1,19 @@
+(function silenceConsoleInProduction() {
+    try {
+        const host = (location.hostname || '').toLowerCase();
+        const isDev = host === 'localhost'
+            || host === '127.0.0.1'
+            || host === '0.0.0.0'
+            || host === '::1'
+            || host.endsWith('.local');
+        if (isDev) return;
+        const noop = () => {};
+        ['log', 'info', 'debug', 'warn'].forEach((method) => {
+            if (typeof console[method] === 'function') console[method] = noop;
+        });
+    } catch (_) { /* leave console untouched */ }
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
     const numbersContainer = document.querySelector('.numbers-container');
     const generateBtn = document.getElementById('generate-btn');
