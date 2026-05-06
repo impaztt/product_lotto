@@ -5853,6 +5853,82 @@ document.addEventListener('DOMContentLoaded', () => {
         return JSON.parse(text);
     }
 
+    const DRAW_ENTRIES_PROXY_PATH = '/api/draw-entries';
+    const PROXY_FALLBACK = Symbol('proxy_fallback');
+
+    async function getFirebaseIdTokenSafe() {
+        if (!currentUser || typeof currentUser.getIdToken !== 'function') {
+            return null;
+        }
+        try {
+            const token = await currentUser.getIdToken();
+            return token ? String(token) : null;
+        } catch (error) {
+            console.warn('Firebase ID 토큰 발급 실패', error);
+            return null;
+        }
+    }
+
+    async function requestDrawEntriesProxy(op, options = {}) {
+        const url = new URL(DRAW_ENTRIES_PROXY_PATH, window.location.origin);
+        url.searchParams.set('op', op);
+        if (options.query) {
+            Object.entries(options.query).forEach(([key, value]) => {
+                if (value == null || value === '') return;
+                url.searchParams.set(key, String(value));
+            });
+        }
+        const headers = { Accept: 'application/json' };
+        const method = String(options.method || 'GET').toUpperCase();
+        if (method !== 'GET') {
+            headers['Content-Type'] = 'application/json';
+        }
+        const member = isMember() && currentUser && currentUser.uid;
+        if (member) {
+            const token = await getFirebaseIdTokenSafe();
+            if (!token) {
+                throw PROXY_FALLBACK;
+            }
+            headers.Authorization = `Bearer ${token}`;
+        } else {
+            if (!guestTrackingId) {
+                guestTrackingId = getOrCreateGuestTrackingId();
+            }
+            if (!guestTrackingId) {
+                throw PROXY_FALLBACK;
+            }
+            headers['X-Guest-Tracking-Id'] = guestTrackingId;
+        }
+        let response;
+        try {
+            response = await fetch(url.toString(), {
+                method,
+                headers,
+                body: options.body == null ? undefined : JSON.stringify(options.body),
+                cache: 'no-store'
+            });
+        } catch (error) {
+            throw PROXY_FALLBACK;
+        }
+        if (response.status === 404 || response.status === 501) {
+            throw PROXY_FALLBACK;
+        }
+        const text = await response.text();
+        let parsed = null;
+        if (text) {
+            try {
+                parsed = JSON.parse(text);
+            } catch {
+                parsed = null;
+            }
+        }
+        if (!response.ok || !parsed || parsed.ok !== true) {
+            const message = parsed && parsed.error ? String(parsed.error) : `proxy_${response.status}`;
+            throw new Error(message);
+        }
+        return parsed;
+    }
+
     function resolveCurrentUserEmail() {
         if (!currentUser) {
             return null;
@@ -5939,9 +6015,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!records.length) {
             return;
         }
+        const rows = records.map(buildSupabaseDrawEntryRow);
+        try {
+            await requestDrawEntriesProxy('insert', {
+                method: 'POST',
+                body: { records: rows }
+            });
+            return;
+        } catch (error) {
+            if (error !== PROXY_FALLBACK) throw error;
+        }
         await requestSupabase('draw_entries', {
             method: 'POST',
-            body: records.map(buildSupabaseDrawEntryRow),
+            body: rows,
             prefer: 'return=minimal'
         });
     }
@@ -5950,20 +6036,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!hasSupabaseDrawStorage()) {
             return [];
         }
-        const query = {
-            select: 'generation_id,created_at,source_mode,round',
-            order: 'created_at.desc',
-            limit: 400
-        };
-        if (isMember() && currentUser && currentUser.uid) {
-            query.uid = `eq.${currentUser.uid}`;
-        } else {
-            if (!guestTrackingId) {
-                guestTrackingId = getOrCreateGuestTrackingId();
+        let rows = null;
+        try {
+            const result = await requestDrawEntriesProxy('history');
+            rows = Array.isArray(result.rows) ? result.rows : [];
+        } catch (error) {
+            if (error !== PROXY_FALLBACK) throw error;
+            const query = {
+                select: 'generation_id,created_at,source_mode,round',
+                order: 'created_at.desc',
+                limit: 400
+            };
+            if (isMember() && currentUser && currentUser.uid) {
+                query.uid = `eq.${currentUser.uid}`;
+            } else {
+                if (!guestTrackingId) {
+                    guestTrackingId = getOrCreateGuestTrackingId();
+                }
+                query.guest_tracking_id = `eq.${guestTrackingId}`;
             }
-            query.guest_tracking_id = `eq.${guestTrackingId}`;
+            rows = await requestSupabase('draw_entries', { query });
         }
-        const rows = await requestSupabase('draw_entries', { query });
         return Array.isArray(rows)
             ? rows.map(row => ({
                 generationId: String(row.generation_id || ''),
@@ -5978,20 +6071,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!hasSupabaseDrawStorage()) {
             return [];
         }
-        const query = {
-            select: 'generation_id,created_at,source_mode,round,numbers,set_no,strategy,rule_count,rule_ids',
-            order: 'created_at.desc',
-            limit: 600
-        };
-        if (isMember() && currentUser && currentUser.uid) {
-            query.uid = `eq.${currentUser.uid}`;
-        } else {
-            if (!guestTrackingId) {
-                guestTrackingId = getOrCreateGuestTrackingId();
+        let rows = null;
+        try {
+            const result = await requestDrawEntriesProxy('sessions');
+            rows = Array.isArray(result.rows) ? result.rows : [];
+        } catch (error) {
+            if (error !== PROXY_FALLBACK) throw error;
+            const query = {
+                select: 'generation_id,created_at,source_mode,round,numbers,set_no,strategy,rule_count,rule_ids',
+                order: 'created_at.desc',
+                limit: 600
+            };
+            if (isMember() && currentUser && currentUser.uid) {
+                query.uid = `eq.${currentUser.uid}`;
+            } else {
+                if (!guestTrackingId) {
+                    guestTrackingId = getOrCreateGuestTrackingId();
+                }
+                query.guest_tracking_id = `eq.${guestTrackingId}`;
             }
-            query.guest_tracking_id = `eq.${guestTrackingId}`;
+            rows = await requestSupabase('draw_entries', { query });
         }
-        const rows = await requestSupabase('draw_entries', { query });
         if (!Array.isArray(rows)) {
             return [];
         }
@@ -6093,12 +6193,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!hasSupabaseDrawStorage()) {
             return [];
         }
-        const rows = await requestSupabase('draw_entries', {
-            query: {
-                select: 'numbers',
-                round: `eq.${Number(roundNo)}`
-            }
-        });
+        let rows = null;
+        try {
+            const result = await requestDrawEntriesProxy('by-round', {
+                query: { round: Number(roundNo) }
+            });
+            rows = Array.isArray(result.rows) ? result.rows : [];
+        } catch (error) {
+            if (error !== PROXY_FALLBACK) throw error;
+            rows = await requestSupabase('draw_entries', {
+                query: {
+                    select: 'numbers',
+                    round: `eq.${Number(roundNo)}`
+                }
+            });
+        }
         return Array.isArray(rows)
             ? rows.map(row => ({ numbers: row.numbers }))
             : [];
