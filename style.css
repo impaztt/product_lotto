@@ -16310,3 +16310,43 @@ body.dash-scroll-lock #tab-mypage::after {
 @media (min-width: 768px) {
     .sponsor-slot { height: clamp(56px, 9vh, 90px); }
 }
+
+/* ========================================================================
+ * Capacitor (native app) adjustments.
+ * Active only when scripts/app-init.js adds .is-app to <html>.
+ * Web users never see any of these rules.
+ * ======================================================================== */
+html.is-app body,
+html.is-app main.tab-layout,
+html.is-app .tab-panel {
+    overscroll-behavior: none;
+}
+
+html.is-app .site-header {
+    padding-top: max(env(safe-area-inset-top, 0px), 12px);
+}
+
+html.is-app .bottom-tab-bar {
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px);
+}
+
+html.is-app .tab-panel,
+html.is-app main.tab-layout {
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* AdSense slots are replaced by native AdMob banners in app; hide here.
+   The next phase wires actual AdMob calls in. */
+html.is-app .sponsor-slot,
+html.is-app #ad-interstitial {
+    display: none !important;
+}
+
+/* iOS quirks */
+html.is-app-ios input,
+html.is-app-ios textarea,
+html.is-app-ios select {
+    /* Prevent iOS auto-zoom on input focus when font-size < 16px */
+    font-size: max(16px, 1rem);
+}

@@ -3,3 +3,25 @@ node_modules/
 firebase-debug.log
 *.log
 .DS_Store
+.idea/
+
+# Capacitor build output (copied from web sources)
+www/
+
+# iOS build artifacts (Xcode project itself is committed)
+ios/App/Pods/
+ios/App/build/
+ios/App/App/public/
+ios/DerivedData/
+ios/.DS_Store
+*.xcuserdata/
+*.xcworkspace/xcuserdata/
+
+# Android build artifacts (Gradle project itself is committed)
+android/.gradle/
+android/build/
+android/app/build/
+android/app/src/main/assets/public/
+android/captures/
+android/local.properties
+*.iml
