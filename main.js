@@ -3366,20 +3366,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return text;
     }
 
-    function readStoredRuleIds(key) {
-        try {
-            const raw = localStorage.getItem(key);
-            if (!raw) {
-                return [];
-            }
-            const parsed = JSON.parse(raw);
-            return Array.isArray(parsed) ? parsed : [];
-        } catch (error) {
-            console.warn('저장된 규칙 로드 실패', error);
-            return [];
-        }
-    }
-
     function persistSelectedRules() {
         const selected = ruleInputs.filter(input => input.checked).map(input => input.value);
         localStorage.setItem('lotto_rules', JSON.stringify(selected));
@@ -4008,10 +3994,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 rules
             } : null;
         }).filter(Boolean);
-    }
-
-    function getDrawWizardTotalSteps() {
-        return getDrawWizardRuleSteps().length + 3;
     }
 
     function normalizeDrawWizardExcludeNumbers(values) {
@@ -4793,10 +4775,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 `
                 : '<div class="draw-funnel-empty-state">없음</div>';
         }
-    }
-
-    function formatDrawWizardOddsLabel(value) {
-        return `1 / ${formatNumber(Math.max(1, Math.round(Number(value) || 1)))}`;
     }
 
     function formatDrawWizardCompactOddsLabel(value) {
@@ -9215,6 +9193,21 @@ document.addEventListener('DOMContentLoaded', () => {
             .replaceAll("'", '&#39;');
     }
 
+    let jsQrLoadPromise = null;
+    function ensureJsQrLoaded() {
+        if (typeof window.jsQR === 'function') return Promise.resolve();
+        if (jsQrLoadPromise) return jsQrLoadPromise;
+        jsQrLoadPromise = new Promise((resolve, reject) => {
+            const s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js';
+            s.async = true;
+            s.onload = () => resolve();
+            s.onerror = () => { jsQrLoadPromise = null; reject(new Error('jsQR load failed')); };
+            document.head.appendChild(s);
+        });
+        return jsQrLoadPromise;
+    }
+
     async function startQrScanner() {
         if (!qrVideoEl || !qrStatusEl) {
             return;
@@ -9226,6 +9219,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (qrStream) {
             qrStatusEl.textContent = 'QR 스캔이 이미 실행 중입니다. 코드를 프레임 안에 맞춰 주세요.';
             return;
+        }
+        if (!('BarcodeDetector' in window)) {
+            ensureJsQrLoaded().catch(() => {});
         }
         try {
             qrStatusEl.textContent = '카메라를 준비하는 중입니다. 권한 요청을 허용해 주세요.';
@@ -11228,17 +11224,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function formatNumber(value) {
         return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
-
-    function formatImproveFactor(ratio) {
-        if (!Number.isFinite(ratio) || ratio <= 0) {
-            return '-';
-        }
-        const factor = 1 / ratio;
-        if (!Number.isFinite(factor)) {
-            return '-';
-        }
-        return `${Number(factor.toFixed(1)).toString()}배`;
     }
 
     function getEstimatedRatioByIds(ids) {
