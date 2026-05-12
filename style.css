@@ -547,7 +547,7 @@ body[data-theme="light"] {
 
 body {
     margin: 0;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
     background: radial-gradient(circle at 10% 20%, rgba(45, 212, 191, 0.15), transparent 50%),
         radial-gradient(circle at 85% 0%, rgba(255, 120, 73, 0.2), transparent 45%),
         var(--bg);
@@ -560,7 +560,7 @@ body {
     padding: 0;
     background: #ffffff;
     margin: -40px -6vw 0;
-    font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
+    font-family: 'Pretendard', 'Gmarket Sans', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', system-ui, sans-serif;
     color: #111111;
     --lt645-blue: #1e6bff;
     --lt645-blue-dark: #0f5bd8;
@@ -657,7 +657,7 @@ body {
     padding: 0;
     margin: 0;
     background: #ffffff;
-    font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
+    font-family: 'Pretendard', 'Gmarket Sans', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', system-ui, sans-serif;
     color: #111111;
     --lt645-blue: #1e6bff;
     --lt645-blue-dark: #0f5bd8;
@@ -711,7 +711,7 @@ body {
     padding: 22px 6vw 90px;
     background: #ffffff;
     color: #191f28;
-    font-family: 'Pretendard Variable', 'Pretendard', 'Noto Sans KR', sans-serif;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
     font-size: 16px;
     line-height: 1.55;
     letter-spacing: -0.014em;
@@ -842,7 +842,7 @@ body {
     padding: 22px 6vw 90px;
     background: #ffffff;
     color: #0f172a;
-    font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
+    font-family: 'Pretendard', 'Gmarket Sans', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', system-ui, sans-serif;
 }
 
 #tab-store.store-webview-tab {
@@ -1207,7 +1207,7 @@ body[data-theme="light"] .site-header {
 }
 
 .logo {
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
     font-weight: 700;
     font-size: 20px;
     letter-spacing: 0.5px;
@@ -2019,7 +2019,7 @@ body[data-theme="light"] .weekly-feature-card.primary {
 }
 
 .hero h1 {
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
     font-weight: 700;
     font-size: 46px;
     margin: 12px 0 16px;
@@ -2169,7 +2169,7 @@ body[data-theme="light"] .weekly-feature-card.primary {
         radial-gradient(circle at top right, rgba(49, 130, 246, 0.15), transparent 34%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(246, 249, 255, 0.99) 100%);
     box-shadow: 0 32px 80px rgba(15, 23, 42, 0.22);
-    font-family: 'Pretendard Variable', 'Pretendard', 'Noto Sans KR', sans-serif;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
     animation: onboardingRise 0.35s ease;
 }
 
@@ -2553,7 +2553,7 @@ body[data-theme="light"] .weekly-feature-card.primary {
 }
 
 .section-title h2 {
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
     font-weight: 700;
     font-size: 30px;
     margin: 0 0 8px;
@@ -2631,7 +2631,7 @@ body[data-theme="light"] .weekly-feature-card.primary {
     background: #ffffff;
     border-radius: 0;
     color: var(--draw-text);
-    font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
+    font-family: 'Pretendard', 'Gmarket Sans', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', system-ui, sans-serif;
     width: 100%;
     max-width: 100%;
     overflow-x: clip;
@@ -5277,7 +5277,7 @@ body[data-theme="light"] {
 }
 
 body {
-    font-family: 'Pretendard Variable', 'Pretendard', 'Noto Sans KR', sans-serif;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
     background: linear-gradient(180deg, #f8fafc 0%, #f2f4f6 100%);
     color: var(--text);
 }
@@ -7197,7 +7197,7 @@ body[data-theme="dark"] #tab-draw {
 }
 
 #welcome-modal .onboarding-visual-svg text {
-    font-family: 'Pretendard Variable', 'Pretendard', 'Noto Sans KR', sans-serif;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
     letter-spacing: -0.02em;
 }
 
@@ -8104,7 +8104,7 @@ body[data-theme="dark"] #tab-mypage .mypage-plan-offer-billing {
     --tab-weight-body: 500;
     --tab-weight-strong: 700;
     --tab-weight-heading: 800;
-    font-family: 'Pretendard', 'Gmarket Sans', sans-serif;
+    font-family: 'Pretendard', 'Gmarket Sans', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', system-ui, sans-serif;
 }
 
 #tab-dashboard button,
@@ -14073,7 +14073,7 @@ body #tab-dashboard .container-box {
     flex-direction: column;
     gap: 16px;
     color: var(--dash2-ink);
-    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
     letter-spacing: -0.01em;
     font-feature-settings: 'tnum';
 }
@@ -16349,4 +16349,31 @@ html.is-app-ios textarea,
 html.is-app-ios select {
     /* Prevent iOS auto-zoom on input focus when font-size < 16px */
     font-size: max(16px, 1rem);
+}
+
+/* Native auth providers (Google/Kakao OAuth) are blocked in WebViews by
+   their issuers. Until a native auth plugin is wired in, the app build
+   hides the social buttons and surfaces a guest-mode notice instead. */
+html.is-app .auth-buttons,
+html.is-app .auth-text-web,
+html.is-app .inapp-browser-actions {
+    display: none !important;
+}
+html.is-app .auth-text-app {
+    display: block !important;
+}
+html.is-app #inapp-browser-modal {
+    /* The Kakao-in-app-browser warning never applies inside our own app shell */
+    display: none !important;
+}
+
+/* AdMob banner reserves vertical space at screen bottom; lift the bottom
+   tab bar above it. .has-app-banner is added by app-init.js after the
+   banner reports loaded successfully. */
+html.has-app-banner {
+    --app-banner-h: 50px;
+}
+html.has-app-banner .bottom-tab-bar {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + var(--app-banner-h, 50px));
+    padding-bottom: 6px;
 }

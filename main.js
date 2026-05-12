@@ -7824,6 +7824,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function signInWithGoogle() {
         console.log('[Auth] Google sign-in requested');
+        if (window.appAds?.isApp) {
+            // OAuth-in-WebView is blocked by Google. v1 app build keeps users in guest mode;
+            // a native sign-in plugin lands in a future release.
+            updateRulesStatus('앱에서는 게스트 모드로 모든 기능을 이용할 수 있습니다.');
+            setFirebaseAuthStatus('앱 버전은 게스트 모드로 사용해 주세요.');
+            showActionPopup('현재 앱 버전에서는 게스트 모드로 모든 기능을 사용할 수 있습니다. 클라우드 동기화는 웹 사이트에서 로그인 후 이용해 주세요.');
+            return false;
+        }
         if (!firebaseReady || !firebaseAuth) {
             console.error('[Auth] Firebase not ready', { firebaseReady, hasAuth: !!firebaseAuth });
             updateRulesStatus('Firebase 설정이 필요합니다. firebase-config.js 값을 먼저 입력하세요.');
@@ -7901,6 +7909,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function signInWithKakao() {
         console.log('[Auth] Kakao sign-in requested');
+        if (window.appAds?.isApp) {
+            updateRulesStatus('앱에서는 게스트 모드로 모든 기능을 이용할 수 있습니다.');
+            setFirebaseAuthStatus('앱 버전은 게스트 모드로 사용해 주세요.');
+            showActionPopup('현재 앱 버전에서는 게스트 모드로 모든 기능을 사용할 수 있습니다. 클라우드 동기화는 웹 사이트에서 로그인 후 이용해 주세요.');
+            return false;
+        }
         if (!firebaseReady || !firebaseAuth) {
             console.error('[Auth] Firebase not ready', { firebaseReady, hasAuth: !!firebaseAuth });
             updateRulesStatus('Firebase 설정이 필요합니다. firebase-config.js 값을 먼저 입력하세요.');
@@ -11955,6 +11969,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showAdInterstitial() {
+        // In the Capacitor app, hand off to native AdMob — the HTML modal is hidden via CSS.
+        if (window.appAds?.isApp && typeof window.appAds.showInterstitial === 'function') {
+            return window.appAds.showInterstitial();
+        }
         return new Promise(resolve => {
             if (!adInterstitialEl) {
                 resolve();
@@ -12115,6 +12133,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function renderSponsorSlot(slot) {
         if (!(slot instanceof HTMLElement)) {
+            return;
+        }
+        // In the Capacitor app, native AdMob banners overlay the WebView;
+        // the HTML sponsor slot is hidden via CSS so we just no-op here.
+        if (window.appAds?.isApp) {
             return;
         }
         const renderToken = (sponsorRenderTokens.get(slot) || 0) + 1;

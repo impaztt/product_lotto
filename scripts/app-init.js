@@ -9,6 +9,8 @@
  *   - Route Android hardware back button to logical navigation.
  *   - Send external http(s) links to the in-app browser instead of
  *     navigating away from the WebView.
+ *   - Initialize AdMob and expose a small `window.appAds` API so main.js
+ *     can route ad calls through native AdMob instead of AdSense.
  */
 (function () {
     if (typeof window === 'undefined') return;
@@ -22,6 +24,20 @@
     if (platform) root.classList.add('is-app-' + platform);
 
     const plugins = Cap.Plugins || {};
+
+    /* ── AdMob test ad unit IDs (Google-published, safe to commit).
+       Replace with real unit IDs before production release. ── */
+    const AD_IDS = {
+        banner: {
+            ios: 'ca-app-pub-3940256099942544/2934735716',
+            android: 'ca-app-pub-3940256099942544/6300978111',
+        },
+        interstitial: {
+            ios: 'ca-app-pub-3940256099942544/4411468910',
+            android: 'ca-app-pub-3940256099942544/1033173712',
+        },
+    };
+    const adId = (type) => AD_IDS[type][platform] || AD_IDS[type].android;
 
     async function setupStatusBar() {
         const sb = plugins.StatusBar;
@@ -90,10 +106,86 @@
         });
     }
 
+    async function setupAdMob() {
+        const admob = plugins.AdMob;
+        if (!admob) return;
+        try {
+            await admob.initialize({
+                requestTrackingAuthorization: true,
+                initializeForTesting: true,
+                testingDevices: [],
+            });
+        } catch (_) { /* offline or first-run hiccup — non-fatal */ }
+    }
+
+    let interstitialReady = false;
+    let bannerVisible = false;
+
+    async function prepareInterstitial() {
+        const admob = plugins.AdMob;
+        if (!admob || interstitialReady) return;
+        try {
+            await admob.prepareInterstitial({ adId: adId('interstitial'), isTesting: true });
+            interstitialReady = true;
+        } catch (_) { interstitialReady = false; }
+    }
+
+    async function showInterstitial() {
+        const admob = plugins.AdMob;
+        if (!admob) return;
+        if (!interstitialReady) {
+            await prepareInterstitial();
+        }
+        if (!interstitialReady) return;  // load failed → skip (user not blocked)
+        try {
+            await admob.showInterstitial();
+        } catch (_) { /* dismissed/closed */ }
+        interstitialReady = false;
+        prepareInterstitial().catch(() => {});  // queue the next one
+    }
+
+    async function showBanner() {
+        const admob = plugins.AdMob;
+        if (!admob || bannerVisible) return;
+        try {
+            await admob.showBanner({
+                adId: adId('banner'),
+                adSize: 'ADAPTIVE_BANNER',
+                position: 'BOTTOM_CENTER',
+                margin: 0,
+                isTesting: true,
+            });
+            bannerVisible = true;
+            root.classList.add('has-app-banner');
+        } catch (_) { bannerVisible = false; }
+    }
+
+    async function hideBanner() {
+        const admob = plugins.AdMob;
+        if (!admob) return;
+        try { await admob.hideBanner(); } catch (_) {}
+        bannerVisible = false;
+        root.classList.remove('has-app-banner');
+    }
+
+    window.appAds = {
+        isApp: true,
+        platform,
+        showBanner,
+        hideBanner,
+        showInterstitial,
+        prepareInterstitial,
+    };
+
     async function boot() {
         await setupStatusBar();
         setupBackButton();
         setupExternalLinks();
+        await setupAdMob();
+        // Pre-load first interstitial early so it's ready when user generates.
+        prepareInterstitial().catch(() => {});
+        // Show banner as soon as the bridge is ready.
+        showBanner().catch(() => {});
         // Give the web app a moment to render its first paint
         await waitFor(() => document.readyState === 'complete' || document.readyState === 'interactive');
         // Small extra delay so the first tab paint completes
