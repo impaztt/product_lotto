@@ -144,9 +144,30 @@
         prepareInterstitial().catch(() => {});  // queue the next one
     }
 
+    function applyBannerHeight(px) {
+        if (typeof px !== 'number' || !Number.isFinite(px) || px <= 0) return;
+        root.style.setProperty('--app-banner-h', px + 'px');
+    }
+
     async function showBanner() {
         const admob = plugins.AdMob;
         if (!admob || bannerVisible) return;
+        // Subscribe once so we can react to size changes / failures.
+        if (!showBanner._bound && typeof admob.addListener === 'function') {
+            showBanner._bound = true;
+            admob.addListener('bannerViewSizeChanged', (info) => {
+                const h = info?.height;
+                applyBannerHeight(typeof h === 'number' ? h : Number(h));
+            });
+            admob.addListener('bannerViewLoaded', () => {
+                bannerVisible = true;
+                root.classList.add('has-app-banner');
+            });
+            admob.addListener('bannerViewFailedToLoad', () => {
+                bannerVisible = false;
+                root.classList.remove('has-app-banner');
+            });
+        }
         try {
             await admob.showBanner({
                 adId: adId('banner'),
@@ -155,6 +176,8 @@
                 margin: 0,
                 isTesting: true,
             });
+            // Optimistic: most builds emit bannerViewLoaded too, but flip the
+            // flag here so subsequent calls are idempotent even if no events fire.
             bannerVisible = true;
             root.classList.add('has-app-banner');
         } catch (_) { bannerVisible = false; }

@@ -16369,11 +16369,18 @@ html.is-app #inapp-browser-modal {
 
 /* AdMob banner reserves vertical space at screen bottom; lift the bottom
    tab bar above it. .has-app-banner is added by app-init.js after the
-   banner reports loaded successfully. */
+   banner reports loaded successfully. The height is set dynamically by
+   app-init.js once the banner reports its actual size; this fallback
+   covers the standard ADAPTIVE_BANNER range (50–100px). */
 html.has-app-banner {
-    --app-banner-h: 50px;
+    --app-banner-h: 60px;
 }
 html.has-app-banner .bottom-tab-bar {
-    bottom: calc(env(safe-area-inset-bottom, 0px) + var(--app-banner-h, 50px));
+    bottom: calc(env(safe-area-inset-bottom, 0px) + var(--app-banner-h, 60px));
     padding-bottom: 6px;
+    z-index: 10000;
+}
+/* Reserve scroll padding so content isn't clipped by the banner */
+html.has-app-banner .tab-panel {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--app-banner-h, 60px) + 80px);
 }

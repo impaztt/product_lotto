@@ -6,7 +6,11 @@
             || host === '0.0.0.0'
             || host === '::1'
             || host.endsWith('.local');
-        if (isDev) return;
+        // Inside the Capacitor app shell (capacitor://) keep console output so
+        // that Safari Web Inspector / adb logcat surfaces real diagnostics.
+        const isApp = !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function'
+            && window.Capacitor.isNativePlatform());
+        if (isDev || isApp) return;
         const noop = () => {};
         ['log', 'info', 'debug', 'warn'].forEach((method) => {
             if (typeof console[method] === 'function') console[method] = noop;
