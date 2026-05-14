@@ -149,6 +149,23 @@
         root.style.setProperty('--app-banner-h', px + 'px');
     }
 
+    function measureHeaderHeight() {
+        const header = document.querySelector('.site-header');
+        if (!header) return 0;
+        const rect = header.getBoundingClientRect();
+        // Header is sticky/top:0 so rect.bottom == header height in CSS pixels.
+        const measured = Math.max(0, Math.round(rect.bottom));
+        // Guard against an unrealistically small measurement (e.g. while a
+        // full-screen splash/onboarding modal is up the header may report
+        // height 0). Most phones land around 100–140 CSS px once the chrome
+        // is settled, so fall back to a safe minimum.
+        return measured >= 64 ? measured : 120;
+    }
+
+    function logAdMob(...args) {
+        try { console.log('[appAds]', ...args); } catch (_) {}
+    }
+
     async function showBanner() {
         const admob = plugins.AdMob;
         if (!admob || bannerVisible) return;
@@ -160,20 +177,30 @@
                 applyBannerHeight(typeof h === 'number' ? h : Number(h));
             });
             admob.addListener('bannerViewLoaded', () => {
+                logAdMob('banner loaded');
                 bannerVisible = true;
                 root.classList.add('has-app-banner');
             });
-            admob.addListener('bannerViewFailedToLoad', () => {
+            admob.addListener('bannerViewFailedToLoad', (info) => {
+                logAdMob('banner FAILED', info);
                 bannerVisible = false;
                 root.classList.remove('has-app-banner');
             });
+            admob.addListener('bannerViewSizeChanged', (info) => {
+                logAdMob('size changed', info);
+            });
         }
         try {
+            // Original web build placed the sponsor banner at the TOP of each tab,
+            // right under the sticky header. Mirror that by anchoring the native
+            // AdMob view to TOP_CENTER and offsetting by the measured header height.
+            const headerHeight = measureHeaderHeight();
+            logAdMob('showBanner', { headerHeight, position: 'TOP_CENTER' });
             await admob.showBanner({
                 adId: adId('banner'),
                 adSize: 'ADAPTIVE_BANNER',
-                position: 'BOTTOM_CENTER',
-                margin: 0,
+                position: 'TOP_CENTER',
+                margin: headerHeight,
                 isTesting: true,
             });
             // Optimistic: most builds emit bannerViewLoaded too, but flip the
@@ -182,6 +209,26 @@
             root.classList.add('has-app-banner');
         } catch (_) { bannerVisible = false; }
     }
+
+    // Re-anchor the banner when the header height changes (orientation /
+    // dynamic header content). Debounced via rAF to avoid thrashing.
+    let resyncRafId = 0;
+    function resyncBannerPosition() {
+        if (!bannerVisible) return;
+        if (resyncRafId) cancelAnimationFrame(resyncRafId);
+        resyncRafId = requestAnimationFrame(async () => {
+            resyncRafId = 0;
+            const admob = plugins.AdMob;
+            if (!admob || !admob.showBanner) return;
+            try {
+                await admob.hideBanner();
+            } catch (_) {}
+            bannerVisible = false;
+            await showBanner();
+        });
+    }
+    window.addEventListener('resize', resyncBannerPosition);
+    window.addEventListener('orientationchange', resyncBannerPosition);
 
     async function hideBanner() {
         const admob = plugins.AdMob;
@@ -207,13 +254,14 @@
         await setupAdMob();
         // Pre-load first interstitial early so it's ready when user generates.
         prepareInterstitial().catch(() => {});
-        // Show banner as soon as the bridge is ready.
-        showBanner().catch(() => {});
         // Give the web app a moment to render its first paint
         await waitFor(() => document.readyState === 'complete' || document.readyState === 'interactive');
         // Small extra delay so the first tab paint completes
         await new Promise((r) => setTimeout(r, 250));
         await hideSplash();
+        // Show banner after first paint so measureHeaderHeight() returns a real
+        // value (the banner is anchored just below the sticky site-header).
+        showBanner().catch(() => {});
     }
 
     if (document.readyState === 'loading') {
