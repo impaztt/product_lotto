@@ -150,6 +150,21 @@
         prepareInterstitial,
     };
 
+    /* When the user switches tabs, lotto-tabs calls panel.scrollIntoView({
+       block: 'start' }), which puts the panel's top edge flush with the
+       viewport top — but the sticky .site-header sits *over* that area,
+       so the first card of each tab gets clipped. Publishing the live
+       header height as --app-header-h lets scroll-padding-top push the
+       scroll target down to clear the header. */
+    function syncHeaderHeightVar() {
+        const header = document.querySelector('.site-header');
+        if (!header) return;
+        const h = Math.ceil(header.getBoundingClientRect().height);
+        if (h > 0) root.style.setProperty('--app-header-h', h + 'px');
+    }
+    window.addEventListener('resize', syncHeaderHeightVar);
+    window.addEventListener('orientationchange', syncHeaderHeightVar);
+
     async function boot() {
         await setupStatusBar();
         setupBackButton();
@@ -162,6 +177,9 @@
         // Small extra delay so the first tab paint completes
         await new Promise((r) => setTimeout(r, 250));
         await hideSplash();
+        // Header is fully laid out by this point — publish its height so
+        // scroll-padding-top can account for the sticky chrome.
+        syncHeaderHeightVar();
     }
 
     if (document.readyState === 'loading') {

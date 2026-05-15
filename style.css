@@ -16370,3 +16370,16 @@ html.is-app #inapp-browser-modal {
 /* AdMob banners are intentionally not used in the app — only interstitial
    ads run on the draw flow. If a banner is ever brought back, scope its
    layout rules under html.has-app-banner. */
+
+/* lotto-tabs calls panel.scrollIntoView({ block: 'start' }) when the user
+   switches tabs, which puts the panel top under the sticky .site-header
+   and clips the first card. Offsetting scroll alignment by the header
+   height fixes the clipping on store / mypage where the first child is a
+   card (dashboard hero already absorbs the sticky header). app-init.js
+   keeps --app-header-h in sync with the actual header size. */
+html.is-app {
+    scroll-padding-top: calc(var(--app-header-h, 100px) + 8px);
+}
+html.is-app .tab-panel {
+    scroll-margin-top: calc(var(--app-header-h, 100px) + 8px);
+}
