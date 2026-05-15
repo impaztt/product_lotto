@@ -149,21 +149,19 @@
         root.style.setProperty('--app-banner-h', px + 'px');
     }
 
-    function measureHeaderHeight() {
-        const header = document.querySelector('.site-header');
-        if (!header) return 0;
-        const rect = header.getBoundingClientRect();
-        // Header is sticky/top:0 so rect.bottom == header height in CSS pixels.
-        const measured = Math.max(0, Math.round(rect.bottom));
-        // Guard against an unrealistically small measurement (e.g. while a
-        // full-screen splash/onboarding modal is up the header may report
-        // height 0). Most phones land around 100–140 CSS px once the chrome
-        // is settled, so fall back to a safe minimum.
-        return measured >= 64 ? measured : 120;
-    }
-
     function logAdMob(...args) {
         try { console.log('[appAds]', ...args); } catch (_) {}
+    }
+
+    function measureSafeAreaTop() {
+        // Read env(safe-area-inset-top) via a hidden probe element so we offset
+        // the native banner below the status bar / Dynamic Island.
+        const probe = document.createElement('div');
+        probe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:env(safe-area-inset-top);visibility:hidden;pointer-events:none;';
+        document.documentElement.appendChild(probe);
+        const h = probe.getBoundingClientRect().height;
+        probe.remove();
+        return Math.max(0, Math.round(h));
     }
 
     async function showBanner() {
@@ -191,16 +189,21 @@
             });
         }
         try {
-            // Original web build placed the sponsor banner at the TOP of each tab,
-            // right under the sticky header. Mirror that by anchoring the native
-            // AdMob view to TOP_CENTER and offsetting by the measured header height.
-            const headerHeight = measureHeaderHeight();
-            logAdMob('showBanner', { headerHeight, position: 'TOP_CENTER' });
+            // Anchor banner at the very top of the screen, just below the iOS
+            // status bar / Dynamic Island. The native AdMob view is drawn above
+            // the WebView; we let the WebView content reflow under it via the
+            // --app-banner-h custom property (plus --app-banner-top for the
+            // safe-area offset). Offsetting by the sticky header instead caused
+            // the banner to land inside the header's backdrop-filter area and
+            // disappear visually.
+            const safeTop = measureSafeAreaTop();
+            root.style.setProperty('--app-banner-top', safeTop + 'px');
+            logAdMob('showBanner', { position: 'TOP_CENTER', margin: safeTop });
             await admob.showBanner({
                 adId: adId('banner'),
                 adSize: 'ADAPTIVE_BANNER',
                 position: 'TOP_CENTER',
-                margin: headerHeight,
+                margin: safeTop,
                 isTesting: true,
             });
             // Optimistic: most builds emit bannerViewLoaded too, but flip the
