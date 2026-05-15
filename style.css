@@ -16383,3 +16383,13 @@ html.is-app {
 html.is-app .tab-panel {
     scroll-margin-top: calc(var(--app-header-h, 100px) + 8px);
 }
+
+/* The draw intro screen vertically centers its hero copy inside a
+   viewport-tall card (align-content: center). On the smaller app
+   viewport that produces a large empty band above the headline.
+   Anchor the content to the top of the card in the app build only —
+   web layout is untouched. */
+html.is-app #tab-draw.draw-wizard-tab .draw-screen-intro-stage {
+    align-content: start;
+    padding-top: clamp(20px, 5vw, 36px);
+}
