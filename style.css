@@ -16367,26 +16367,6 @@ html.is-app #inapp-browser-modal {
     display: none !important;
 }
 
-/* AdMob banner is a native view drawn on top of the WebView, anchored to
-   the very top of the screen. We push our entire page chrome (the sticky
-   site-header) down by the banner's height via a body margin so nothing
-   in the WebView overlaps the banner. The header keeps its safe-area
-   padding so the status bar / Dynamic Island still sit above the banner.
-   The height is updated by app-init.js once the banner reports its
-   actual size; 60px is a safe fallback. */
-html.has-app-banner {
-    --app-banner-h: 60px;
-    --app-banner-top: 0px;
-}
-html.has-app-banner body {
-    /* Push entire page down by status-bar safe area + banner height so the
-       native AdMob view sits in its own band above the site-header. */
-    margin-top: calc(var(--app-banner-top, 0px) + var(--app-banner-h, 60px));
-}
-/* Header already adds its own safe-area-inset-top padding inside .is-app;
-   reset that so the header doesn't double-pad on top of our body margin. */
-html.has-app-banner .site-header {
-    padding-top: 12px;
-}
-/* Bottom tab bar stays exactly where it was — no banner there anymore.
-   The tab-panel keeps its own bottom padding rules unchanged. */
+/* AdMob banners are intentionally not used in the app — only interstitial
+   ads run on the draw flow. If a banner is ever brought back, scope its
+   layout rules under html.has-app-banner. */

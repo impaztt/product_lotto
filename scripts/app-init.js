@@ -119,7 +119,6 @@
     }
 
     let interstitialReady = false;
-    let bannerVisible = false;
 
     async function prepareInterstitial() {
         const admob = plugins.AdMob;
@@ -144,108 +143,9 @@
         prepareInterstitial().catch(() => {});  // queue the next one
     }
 
-    function applyBannerHeight(px) {
-        if (typeof px !== 'number' || !Number.isFinite(px) || px <= 0) return;
-        root.style.setProperty('--app-banner-h', px + 'px');
-    }
-
-    function logAdMob(...args) {
-        try { console.log('[appAds]', ...args); } catch (_) {}
-    }
-
-    function measureSafeAreaTop() {
-        // Read env(safe-area-inset-top) via a hidden probe element so we offset
-        // the native banner below the status bar / Dynamic Island.
-        const probe = document.createElement('div');
-        probe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:env(safe-area-inset-top);visibility:hidden;pointer-events:none;';
-        document.documentElement.appendChild(probe);
-        const h = probe.getBoundingClientRect().height;
-        probe.remove();
-        return Math.max(0, Math.round(h));
-    }
-
-    async function showBanner() {
-        const admob = plugins.AdMob;
-        if (!admob || bannerVisible) return;
-        // Subscribe once so we can react to size changes / failures.
-        if (!showBanner._bound && typeof admob.addListener === 'function') {
-            showBanner._bound = true;
-            admob.addListener('bannerViewSizeChanged', (info) => {
-                const h = info?.height;
-                applyBannerHeight(typeof h === 'number' ? h : Number(h));
-            });
-            admob.addListener('bannerViewLoaded', () => {
-                logAdMob('banner loaded');
-                bannerVisible = true;
-                root.classList.add('has-app-banner');
-            });
-            admob.addListener('bannerViewFailedToLoad', (info) => {
-                logAdMob('banner FAILED', info);
-                bannerVisible = false;
-                root.classList.remove('has-app-banner');
-            });
-            admob.addListener('bannerViewSizeChanged', (info) => {
-                logAdMob('size changed', info);
-            });
-        }
-        try {
-            // Anchor banner at the very top of the screen, just below the iOS
-            // status bar / Dynamic Island. The native AdMob view is drawn above
-            // the WebView; we let the WebView content reflow under it via the
-            // --app-banner-h custom property (plus --app-banner-top for the
-            // safe-area offset). Offsetting by the sticky header instead caused
-            // the banner to land inside the header's backdrop-filter area and
-            // disappear visually.
-            const safeTop = measureSafeAreaTop();
-            root.style.setProperty('--app-banner-top', safeTop + 'px');
-            logAdMob('showBanner', { position: 'TOP_CENTER', margin: safeTop });
-            await admob.showBanner({
-                adId: adId('banner'),
-                adSize: 'ADAPTIVE_BANNER',
-                position: 'TOP_CENTER',
-                margin: safeTop,
-                isTesting: true,
-            });
-            // Optimistic: most builds emit bannerViewLoaded too, but flip the
-            // flag here so subsequent calls are idempotent even if no events fire.
-            bannerVisible = true;
-            root.classList.add('has-app-banner');
-        } catch (_) { bannerVisible = false; }
-    }
-
-    // Re-anchor the banner when the header height changes (orientation /
-    // dynamic header content). Debounced via rAF to avoid thrashing.
-    let resyncRafId = 0;
-    function resyncBannerPosition() {
-        if (!bannerVisible) return;
-        if (resyncRafId) cancelAnimationFrame(resyncRafId);
-        resyncRafId = requestAnimationFrame(async () => {
-            resyncRafId = 0;
-            const admob = plugins.AdMob;
-            if (!admob || !admob.showBanner) return;
-            try {
-                await admob.hideBanner();
-            } catch (_) {}
-            bannerVisible = false;
-            await showBanner();
-        });
-    }
-    window.addEventListener('resize', resyncBannerPosition);
-    window.addEventListener('orientationchange', resyncBannerPosition);
-
-    async function hideBanner() {
-        const admob = plugins.AdMob;
-        if (!admob) return;
-        try { await admob.hideBanner(); } catch (_) {}
-        bannerVisible = false;
-        root.classList.remove('has-app-banner');
-    }
-
     window.appAds = {
         isApp: true,
         platform,
-        showBanner,
-        hideBanner,
         showInterstitial,
         prepareInterstitial,
     };
@@ -262,9 +162,6 @@
         // Small extra delay so the first tab paint completes
         await new Promise((r) => setTimeout(r, 250));
         await hideSplash();
-        // Show banner after first paint so measureHeaderHeight() returns a real
-        // value (the banner is anchored just below the sticky site-header).
-        showBanner().catch(() => {});
     }
 
     if (document.readyState === 'loading') {
