@@ -128,13 +128,145 @@ keytool -genkey -v -keystore ~/lottopick-release.keystore \
   + GoogleService-Info.plist / google-services.json
 - Kakao 네이티브 SDK 통합
 - 푸시 알림 (FCM): 추첨일 D-1 리마인더 등
-- 앱 내 결제(IAP): 현재 프리미엄 결제는 웹에서만. iOS는 외부 결제 금지 →
-  StoreKit / Play Billing 도입 필요. 웹 결제와 사용자 동기화 전략 필요.
+- **인앱 결제(IAP)** — 아래 5절 참고
 - Live Updates (Capgo / Ionic Live Update): 심사 없이 웹 자산만 OTA 업데이트
 
 ---
 
-## 5. 빠른 빌드 검증 명령
+## 5. 인앱 결제(IAP) 기획안
+
+현재 코드의 결제 상태: **UI는 갖춰져 있으나 실제 과금 없음**.
+`setMembershipTier()` (main.js:7083)가 localStorage + Firestore에만 멤버십
+정보를 기록한다. 외부 결제 게이트웨이 호출 0건. 앱 출시하려면 양 스토어
+정책상 반드시 IAP를 채워야 한다.
+
+### 5.1 정책 제약
+
+| 스토어 | 디지털 구독 결제 | 수수료 |
+| --- | --- | --- |
+| Apple App Store | StoreKit 의무 (외부 결제 금지) | 30% / 13개월차 이상 자동갱신 구독자는 15% |
+| Google Play | Play Billing 의무 | 15% (구독 기본), 매출 100만$ 이상 30% |
+
+외부 결제로 우회 시도 → 거절 또는 계정 정지.
+
+### 5.2 상품 설계
+
+타입: **자동 갱신 구독 (Auto-renewable Subscription)**.
+"첫 달 0원, 2개월부터 자동결제"는 각 스토어의 **Introductory Offer
+(Pay As You Go)** 로 구현.
+
+상품 ID(양 스토어 동일):
+```
+com.lottopick.studio.gold_monthly
+com.lottopick.studio.platinum_monthly
+com.lottopick.studio.master_monthly
+```
+
+### 5.3 가격 정책 — 미결정. 세 선택지
+
+| 옵션 | 사용자 가격 | 사업자 수령액 | 비고 |
+| --- | --- | --- | --- |
+| A. 웹과 동일 (₩9,900 / ₩14,900 / ₩19,900) | 통일 | 수수료 30%만큼 수익 ↓ | 단순, 사용자 친화 |
+| B. 앱 인상 (~₩14,000 / ₩21,000 / ₩28,000) | 앱 사용자 부담 ↑ | 웹과 동일 수령 | Spotify·Netflix 패턴 |
+| C. 앱은 인상하면서 "더 저렴한 웹 가입 안내" 명시 | 동일 | 웹 사용자 더 저렴 | Apple Reader App 룰 — Lotto는 적용 불가, 즉 안내만 가능하고 외부 결제 링크는 금지 |
+
+> 권장 진입점: **A로 출시 → 데이터 보고 B/C 검토**. 첫 출시에서 가격 인상은
+> 사용자 반발 큼.
+
+### 5.4 기술 스택
+
+권장: **RevenueCat** (`@revenuecat/purchases-capacitor`).
+- 양 플랫폼 추상화 (한 API)
+- Receipt 서버 검증 자동
+- Webhook으로 Firestore 동기화 가능
+- 환불·갱신실패·Grace Period·Family Sharing 이벤트 처리 내장
+- 매출 월 1만$ 까지 무료, 이후 매출의 1%
+
+대안: `@capacitor-community/in-app-purchases` (직접 통제, receipt 검증
+직접 구현 필요 — 한 달은 잡아야 함).
+
+### 5.5 백엔드 흐름
+
+```
+[앱]
+  ├─ Purchases.purchasePackage(package) — RevenueCat SDK
+  ▼
+[StoreKit / Play Billing]
+  ├─ receipt
+  ▼
+[RevenueCat]
+  ├─ verified entitlement
+  ├─ webhook → 우리 백엔드
+  ▼
+[Firestore] users/{uid}.membershipTier 업데이트
+  ▼
+[앱이 polling 또는 SDK 콜백으로 수신]
+```
+
+현재 `setMembershipTier()`의 분기 지점에서 `window.appAds.isApp`이면
+RevenueCat 호출, 아니면 기존 흐름 (또는 추후 도입될 웹 결제 게이트웨이).
+
+### 5.6 필수 UI 요소
+
+- 플랜 선택 화면 — 이미 있음. 가격은 RevenueCat이 반환하는 현지 통화로
+  바인딩 (하드코딩된 ₩ 문자열을 동적 값으로 교체).
+- **"구매 복원" 버튼** — Apple 심사 필수. 누락 시 거절. `Purchases.restorePurchases()`
+- 구독 관리 링크 — iOS: `https://apps.apple.com/account/subscriptions`,
+  Android: `https://play.google.com/store/account/subscriptions?sku=<id>&package=<bundle>`
+- 자동갱신 약관 안내 — 가격 / 갱신 주기 / 취소 방법 명시. Apple 필수
+- 이용약관 / 개인정보처리방침 링크
+- 현재 구독 상태 표시 — 활성, 갱신 예정일, 만료 임박 등
+
+### 5.7 웹 ↔ 앱 동기화
+
+| 시나리오 | 처리 |
+| --- | --- |
+| 웹 가입 → 앱 사용 | 같은 Firebase Auth uid → Firestore `membershipTier` 공유. 앱은 entitlement 없어도 Firestore 값을 신뢰 (단, 만료일은 검증) |
+| 앱 가입 → 웹 사용 | RevenueCat webhook → Firestore 업데이트 → 웹이 그 값 사용 |
+| 양쪽 동시 가입 | UI에서 차단: 결제 직전 서버에 "이미 활성 구독 있나?" 체크 후 차단/안내 |
+| 구독 취소 | iOS는 앱 외부에서만 가능. 앱 UI는 "App Store에서 관리" 링크만 |
+
+### 5.8 단계별 구현 로드맵 (예상 8~12일)
+
+| # | 작업 | 작업 소요 | 사용자 의존 |
+| --- | --- | --- | --- |
+| 0 | App Store Connect / Play Console 앱 등록 (Bundle ID 매칭) | 0.5일 | Apple / Google 결제 프로필 |
+| 1 | RevenueCat 계정 + 양 스토어 연동 + Webhook URL 등록 | 0.5일 | RevenueCat 가입 |
+| 2 | 양 스토어에 상품 3개 등록 + Introductory Offer 설정 | 1일 (심사 대기 며칠 별도) | - |
+| 3 | `@revenuecat/purchases-capacitor` 설치, 초기화, plug-in 등록 | 0.5일 | API Key |
+| 4 | 플랜 선택 → `purchase()` 호출 → 결과 처리 | 1~2일 | - |
+| 5 | 구매 복원 / 구독 관리 / 자동갱신 고지 UI | 0.5일 | - |
+| 6 | `setMembershipTier()` 분기 — 앱은 RevenueCat 진실, 웹은 기존 | 1일 | - |
+| 7 | Sandbox 테스트 (iOS Sandbox account / Android tester) | 1~2일 | 테스트 계정 |
+| 8 | 환불 / 갱신 실패 / Grace Period 케이스 | 1일 | - |
+| 9 | 심사 제출 (인앱결제 활성 상태로) | - | - |
+
+### 5.9 사용자 사전 준비 자료
+
+- Apple Developer Program 가입 + 세금/은행 정보 등록 (Paid Apps 계약)
+- Google Play Console 결제 프로필 (Merchant account 연결)
+- RevenueCat 계정 (revenuecat.com — 무료 가입)
+- 가격 정책 결정 (위 5.3)
+- 자동갱신 약관 문구 (법무 검토 권장)
+- 개인정보처리방침 + 이용약관 URL (결제 활성화 전 필수)
+- 사업자 정보 (정기결제 운영 시)
+
+### 5.10 잠재 함정
+
+- **Apple Sandbox 빠른 갱신**: 월 구독이 5분 단위로 갱신됨. 갱신 동작
+  테스트 시 혼란 주의
+- **Family Sharing 충돌**: 한 명 결제로 가족 다 사용 가능. 디지털 상품은
+  Family Sharing 비활성화 권장
+- **카드 만료 등 갱신 실패**: Grace Period 동안 유저는 계속 쓸 수 있음.
+  UI에 "결제 정보 업데이트 필요" 안내 필요
+- **iOS 환불 정책**: Apple은 자동 환불 처리. 우리 서버는 RevenueCat
+  webhook으로 통보받아 entitlement 회수
+- **국가별 가격**: RevenueCat이 현지 통화 자동 표기. 한국 외 거주
+  한국인 사용자 대비
+
+---
+
+## 6. 빠른 빌드 검증 명령
 
 ```bash
 # 시뮬레이터 부팅 + iOS 빌드/설치/실행
