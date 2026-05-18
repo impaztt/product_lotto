@@ -16383,3 +16383,14 @@ html.is-app {
 html.is-app .tab-panel {
     scroll-margin-top: calc(var(--app-header-h, 100px) + 8px);
 }
+
+/* The draw wizard container has its own clamp(16-28px) padding on all
+   four sides (#tab-draw.draw-wizard-tab) plus a 22px top padding from
+   the base #tab-draw rule. On the app viewport that combined band shows
+   up as an empty strip between the sticky header and the intro card —
+   making it look like a leftover banner slot. Collapse the top padding
+   inside the app so the card sits flush against the header. */
+html.is-app #tab-draw,
+html.is-app #tab-draw.draw-wizard-tab {
+    padding-top: 0;
+}
